@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* ============================================
+   Design Tokens via Tailwind v4 @theme
+   ============================================ */
+@theme {
+  --color-primary: #0671A4;
+  --color-accent: #38BDF8;
+  --color-dark: #0A1628;
+  --color-body: #4B5563;
+  --color-heading: #111827;
+  --color-muted: #94A3B8;
+  --color-border: #E2E8F0;
+  --color-surface: #EFF3F8;
+  --color-footer-border: #1E3448;
+
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Poppins', sans-serif;
+
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-nav: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  --animate-breathe: breathe 8s ease-in-out infinite;
+}
+
+/* ============================================
+   Keyframes
+   ============================================ */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-body);
+  background-color: #F5F7FA;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-heading);
+  line-height: 1.2;
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dot-pattern {
+  background-image: radial-gradient(circle, var(--color-border) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+}

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AnimatedGradientBackground } from './ui/animated-gradient-background'
-import { Button } from './ui/button'
 import { heroStagger, heroChild } from '../lib/animations'
 
 const LENS_SIZE = 200
@@ -17,12 +16,14 @@ interface Greeting {
   text: string
   subtitle: string
   breakdown: WordBreakdown[]
+  showDuoIcon?: boolean
+  duoIconSrc?: string
 }
 
 const greetings: Greeting[] = [
   {
     text: "Hey, I'm Adi",
-    subtitle: 'English (Informal)',
+    subtitle: 'English (Fluent)',
     breakdown: [
       { phonetic: 'Hey', meaning: 'Hello' },
       { phonetic: "I'm", meaning: 'I am' },
@@ -30,17 +31,10 @@ const greetings: Greeting[] = [
     ],
   },
   {
-    text: 'నమస్కారం, నేను ఆది',
-    subtitle: 'Telugu (Phonetic)',
-    breakdown: [
-      { phonetic: 'Namaskāram', meaning: 'Hello' },
-      { phonetic: 'Nēnu', meaning: 'I' },
-      { phonetic: 'Ādi', meaning: 'Adi' },
-    ],
-  },
-  {
     text: 'Hola, soy Adi',
-    subtitle: 'Spanish (Phonetic)',
+    subtitle: 'Spanish (Conversational)',
+    showDuoIcon: true,
+    duoIconSrc: '/duo.png',
     breakdown: [
       { phonetic: 'Hola', meaning: 'Hello' },
       { phonetic: 'Soy', meaning: 'I am' },
@@ -49,12 +43,23 @@ const greetings: Greeting[] = [
   },
   {
     text: 'नमस्ते, मैं आदि हूँ',
-    subtitle: 'Hindi (Phonetic)',
+    subtitle: 'Hindi (Conversational)',
+    showDuoIcon: true,
+    duoIconSrc: '/duo.png',
     breakdown: [
       { phonetic: 'Namaste', meaning: 'Hello' },
       { phonetic: 'Main', meaning: 'I' },
       { phonetic: 'Ādi', meaning: 'Adi' },
       { phonetic: 'Hoon', meaning: 'Am' },
+    ],
+  },
+  {
+    text: 'నమస్కారం, నేను ఆది',
+    subtitle: 'Telugu (Native)',
+    breakdown: [
+      { phonetic: 'Namaskāram', meaning: 'Hello' },
+      { phonetic: 'Nēnu', meaning: 'I' },
+      { phonetic: 'Ādi', meaning: 'Adi' },
     ],
   },
 ]
@@ -127,10 +132,12 @@ function useTypewriter(
 }
 
 export function Hero() {
-  const [hovered, setHovered] = useState(false)
+  const [tooltipActive, setTooltipActive] = useState(false)
+  const [headingHovered, setHeadingHovered] = useState(false)
+  const [logoHovered, setLogoHovered] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const sectionRef = useRef<HTMLElement>(null)
-  const { displayText, current } = useTypewriter(greetings, hovered, 120, 60, 2000)
+  const { displayText, current } = useTypewriter(greetings, tooltipActive, 120, 60, 2000)
 
   const getSectionRect = useCallback(() => {
     return sectionRef.current?.getBoundingClientRect() ?? { left: 0, top: 0, width: 0, height: 0 }
@@ -149,15 +156,23 @@ export function Hero() {
         variants={heroStagger}
         initial="hidden"
         animate="visible"
+        onMouseEnter={() => setTooltipActive(true)}
+        onMouseLeave={() => {
+          setTooltipActive(false)
+          setHeadingHovered(false)
+        }}
       >
         {/* Heading with typewriter */}
         <motion.div
           variants={heroChild}
           className="relative inline-block mb-6"
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          onMouseEnter={() => {
+            setTooltipActive(true)
+            setHeadingHovered(true)
+          }}
+          onMouseLeave={() => setHeadingHovered(false)}
           onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
-          style={{ cursor: hovered ? 'none' : undefined }}
+          style={{ cursor: headingHovered ? 'none' : undefined }}
         >
           <h1
             className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-heading tracking-tight"
@@ -166,7 +181,7 @@ export function Hero() {
             <span className="text-primary">
               {displayText}
               <span
-                className={`ml-0.5 text-primary/60 ${hovered ? 'opacity-100' : 'animate-pulse'}`}
+                className={`ml-0.5 text-primary/60 ${tooltipActive ? 'opacity-100' : 'animate-pulse'}`}
               >
                 |
               </span>
@@ -175,24 +190,24 @@ export function Hero() {
 
           {/* Documentation Pop-up */}
           <AnimatePresence>
-            {hovered && (
+            {tooltipActive && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
+                exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="absolute left-1/2 -translate-x-1/2 mt-4"
+                className="absolute left-1/2 -translate-x-1/2 top-full mt-4"
                 style={{
                   background: 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
-                  borderRadius: 12,
+                  borderRadius: 9999,
                   pointerEvents: 'none',
                 }}
               >
                 <div className="px-5 py-4 whitespace-nowrap">
                   {/* Header row */}
-                  <div className="flex items-center justify-between gap-8 mb-3">
+                  <div className="flex items-center mb-3">
                     <div className="flex items-center gap-2">
                       {/* Info icon */}
                       <svg
@@ -207,24 +222,24 @@ export function Hero() {
                         <circle cx="8" cy="5" r="0.75" fill="currentColor" />
                       </svg>
                       <span
-                        className="text-sm font-medium text-heading"
+                        className="text-sm font-medium text-heading inline-flex items-center gap-2"
                         style={{ fontFamily: "'Fira Code', monospace" }}
                       >
                         {current.subtitle}
-                      </span>
-                    </div>
-
-                    {/* Pause indicator */}
-                    <div className="flex items-center gap-1.5 text-muted">
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <rect x="2" y="1.5" width="3" height="9" rx="0.75" fill="currentColor" />
-                        <rect x="7" y="1.5" width="3" height="9" rx="0.75" fill="currentColor" />
-                      </svg>
-                      <span
-                        className="text-xs"
-                        style={{ fontFamily: "'Fira Code', monospace" }}
-                      >
-                        Paused
+                        {current.showDuoIcon && (
+                          <img
+                            src={current.duoIconSrc ?? '/images-removebg-preview.png'}
+                            alt="Duolingo"
+                            onClick={() => window.open('https://www.duolingo.com/profile/adiP001', '_blank')}
+                            onMouseEnter={() => setLogoHovered(true)}
+                            onMouseLeave={() => setLogoHovered(false)}
+                            className="cursor-pointer shrink-0 relative -top-0.5 transition-all duration-300"
+                            style={{
+                              height: logoHovered ? '40px' : '32px',
+                              width: 'auto',
+                            }}
+                          />
+                        )}
                       </span>
                     </div>
                   </div>
@@ -252,20 +267,18 @@ export function Hero() {
         <motion.p
           variants={heroChild}
           className="text-lg md:text-xl text-body mb-10 max-w-md mx-auto"
+          style={{
+            marginTop: tooltipActive ? '92px' : '-76px',
+            transition: 'margin-top 280ms ease',
+          }}
         >
           Software engineer crafting thoughtful digital experiences.
         </motion.p>
 
-        {/* CTA */}
-        <motion.div variants={heroChild}>
-          <Button variant="primary" href="#projects">
-            See my work &rarr;
-          </Button>
-        </motion.div>
       </motion.div>
 
       {/* Magnifying Lens — shows a 1.5× scaled copy of the hero content */}
-      {hovered && (() => {
+      {headingHovered && (() => {
         const rect = getSectionRect()
         const relX = mousePos.x - rect.left
         const relY = mousePos.y - rect.top
@@ -340,7 +353,10 @@ export function Hero() {
                       </span>
                     </h1>
                   </div>
-                  <p className="text-lg md:text-xl text-body mb-10 max-w-md mx-auto">
+                  <p
+                    className="text-lg md:text-xl text-body mb-10 max-w-md mx-auto"
+                    style={{ marginTop: '92px' }}
+                  >
                     Software engineer crafting thoughtful digital experiences.
                   </p>
                 </div>

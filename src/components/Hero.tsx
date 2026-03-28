@@ -12,14 +12,18 @@ interface WordBreakdown {
   meaning: string
 }
 
+interface GreetingIcon {
+  src: string
+  link: string
+  height?: number
+}
+
 interface Greeting {
   text: string
   segments: string[]
   subtitle: string
   breakdown: WordBreakdown[]
-  showDuoIcon?: boolean
-  duoIconSrc?: string
-  duoIconLink?: string
+  icons?: GreetingIcon[]
 }
 
 const greetings: Greeting[] = [
@@ -37,9 +41,10 @@ const greetings: Greeting[] = [
     text: 'Hola, soy Adi',
     segments: ['Hola, ', 'soy ', 'Adi'],
     subtitle: 'Spanish (Conversational)',
-    showDuoIcon: true,
-    duoIconSrc: '/duo.png',
-    duoIconLink: 'https://www.duolingo.com/profile/adiP001',
+    icons: [
+      { src: '/duo.png', link: 'https://www.duolingo.com/profile/adiP001', height: 32 },
+      { src: '/nde.png', link: 'https://www.education.ne.gov/press_release/nebraska-students-awarded-seals-of-biliteracy-11/', height: 33 },
+    ],
     breakdown: [
       { phonetic: 'Hola', meaning: 'Hello' },
       { phonetic: 'Soy', meaning: 'I am' },
@@ -50,9 +55,9 @@ const greetings: Greeting[] = [
     text: 'नमस्ते, मैं आदि हूँ',
     segments: ['नमस्ते, ', 'मैं ', 'आदि ', 'हूँ'],
     subtitle: 'Hindi (Conversational)',
-    showDuoIcon: true,
-    duoIconSrc: '/duo.png',
-    duoIconLink: 'https://www.duolingo.com/profile/adiP001',
+    icons: [
+      { src: '/duo.png', link: 'https://www.duolingo.com/profile/adiP001', height: 32 },
+    ],
     breakdown: [
       { phonetic: 'Namaste', meaning: 'Hello' },
       { phonetic: 'Main', meaning: 'I' },
@@ -74,9 +79,9 @@ const greetings: Greeting[] = [
     text: '你好，我是 Adi',
     segments: ['你好，', '我是 ', 'Adi'],
     subtitle: 'Mandarin (Beginner)',
-    showDuoIcon: true,
-    duoIconSrc: '/nsli.png',
-    duoIconLink: 'https://www.virtualbadge.io/certificate-validator?credential=39cfa8cb-56a1-4e8e-be87-b5b67cbd8874',
+    icons: [
+      { src: '/nsli.png', link: 'https://www.virtualbadge.io/certificate-validator?credential=39cfa8cb-56a1-4e8e-be87-b5b67cbd8874', height: 18 },
+    ],
     breakdown: [
       { phonetic: 'Nǐ hǎo', meaning: 'Hello' },
       { phonetic: 'Wǒ shì', meaning: 'I am' },
@@ -293,19 +298,20 @@ export function Hero() {
                         style={{ fontFamily: "'Fira Code', monospace" }}
                       >
                         {current.subtitle}
-                        {current.showDuoIcon && (
+                        {current.icons?.map((icon, i) => (
                           <img
-                            src={current.duoIconSrc ?? '/images-removebg-preview.png'}
-                            alt="Duolingo"
-                            onClick={() => current.duoIconLink && window.open(current.duoIconLink, '_blank')}
-                            className="cursor-pointer shrink-0 relative -top-0.5 ml-1 hover:animate-[shake_0.4s_ease-in-out]"
+                            key={i}
+                            src={icon.src}
+                            alt=""
+                            onClick={() => window.open(icon.link, '_blank')}
+                            className="cursor-pointer shrink-0 relative -top-0.5 ml-0.5 hover:animate-[shake_0.4s_ease-in-out]"
                             style={{
-                              height: current.duoIconSrc === '/nsli.png' ? 18 : 32,
+                              height: icon.height ?? 32,
                               width: 'auto',
                               pointerEvents: 'auto',
                             }}
                           />
-                        )}
+                        ))}
                       </span>
                     </div>
                   </div>

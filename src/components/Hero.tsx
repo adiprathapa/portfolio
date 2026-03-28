@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MouseTrail } from '@stichiboi/react-elegant-mouse-trail'
 import { AnimatedGradientBackground } from './ui/animated-gradient-background'
 import { heroStagger, heroChild } from '../lib/animations'
 
@@ -215,18 +214,10 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden cursor-none"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{ paddingBottom: '20vh' }}
     >
       <AnimatedGradientBackground />
-      <div className="absolute inset-0 z-[1] pointer-events-none">
-        <MouseTrail
-          strokeColor="rgba(6, 113, 164, 0.3)"
-          lineWidthStart={30}
-          lineDuration={800}
-          lag={0.5}
-        />
-      </div>
 
       <motion.div
         className="relative z-10 text-center max-w-4xl px-6"
@@ -247,7 +238,7 @@ export function Hero() {
           >
             <span
               className="text-primary"
-              style={{ cursor: 'none' }}
+              style={{ cursor: headingHovered ? 'none' : undefined }}
               onMouseEnter={() => setHeadingHovered(true)}
               onMouseLeave={() => { setHeadingHovered(false); setHoveredWordIndex(null) }}
               onMouseMove={(e) => {

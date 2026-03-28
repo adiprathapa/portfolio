@@ -175,6 +175,8 @@ export function Hero() {
   const [headingHovered, setHeadingHovered] = useState(false)
   const [hoveredWordIndex, setHoveredWordIndex] = useState<number | null>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [coinFlipped, setCoinFlipped] = useState(false)
+  const coinHovered = useRef(false)
   const sectionRef = useRef<HTMLElement>(null)
   const h1Ref = useRef<HTMLHeadingElement>(null)
   const { displayText, current } = useTypewriter(greetings, tooltipActive, 120, 60, 2000)
@@ -225,11 +227,12 @@ export function Hero() {
       <AnimatedGradientBackground />
 
       <motion.div
-        className="relative z-10 text-center max-w-4xl px-6"
+        className="relative z-10 text-center md:text-left max-w-5xl w-full px-6 flex flex-col-reverse md:flex-row items-center md:items-center gap-8 md:gap-12"
         variants={heroStagger}
         initial="hidden"
         animate="visible"
       >
+        <div className="flex-1 min-w-0" style={{ marginLeft: -20 }}>
         {/* Heading with typewriter */}
         <motion.div
           variants={heroChild}
@@ -238,8 +241,8 @@ export function Hero() {
         >
           <h1
             ref={h1Ref}
-            className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-heading tracking-tight"
-            style={{ lineHeight: 1.2, minHeight: '2.4em' }}
+            className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-heading tracking-tight whitespace-nowrap"
+            style={{ lineHeight: 1.3, minHeight: '2.6em', fontSize: 'clamp(2rem, 5vw, 4.5rem)' }}
           >
             <span
               className="text-primary"
@@ -269,7 +272,7 @@ export function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="absolute left-1/2 -translate-x-1/2 top-full -mt-10"
+                className="absolute left-0 top-full -mt-10"
                 style={{
                   background: 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(12px)',
@@ -338,7 +341,7 @@ export function Hero() {
         {/* Subtitle */}
         <motion.p
           variants={heroChild}
-          className="text-lg md:text-xl text-body mb-10 max-w-md mx-auto"
+          className="text-lg md:text-xl text-body mb-10 max-w-md mx-auto md:mx-0"
           style={{
             marginTop: tooltipActive ? '92px' : '-76px',
             transition: 'margin-top 280ms ease',
@@ -346,6 +349,81 @@ export function Hero() {
         >
           Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI.
         </motion.p>
+        </div>
+
+        {/* Profile Coin */}
+        <motion.div
+          variants={heroChild}
+          className="shrink-0 w-62 md:w-84 relative"
+          style={{ aspectRatio: '1 / 1', marginRight: -30, perspective: 800 }}
+          onMouseEnter={() => {
+            if (coinHovered.current) return
+            coinHovered.current = true
+            setCoinFlipped(f => !f)
+          }}
+          onMouseLeave={() => { coinHovered.current = false }}
+        >
+          <a
+            href={coinFlipped ? 'https://github.com/adiprathapa' : 'https://www.linkedin.com/in/adi-prathapa/'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute block cursor-pointer"
+            style={{
+              width: '85%',
+              height: '85%',
+              top: '5%',
+              left: '5%',
+              borderRadius: '50%',
+              transformStyle: 'preserve-3d',
+              transition: 'transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1)',
+              transform: coinFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            }}
+          >
+            {/* Front — headshot */}
+            <div
+              className="absolute inset-0 overflow-hidden"
+              style={{
+                borderRadius: '50%',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+                border: '3px solid #F5F7FA',
+                backfaceVisibility: 'hidden',
+              }}
+            >
+              <img
+                src="/headshot.jpg"
+                alt="Adi Prathapa"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center 30%',
+                  transform: 'scale(1.1) translateY(-10px)',
+                }}
+              />
+            </div>
+            {/* Back — pixel cat */}
+            <div
+              className="absolute inset-0 overflow-hidden"
+              style={{
+                borderRadius: '50%',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+                border: '3px solid #F5F7FA',
+                backfaceVisibility: 'hidden',
+                transform: 'rotateY(180deg)',
+              }}
+            >
+              <img
+                src="/pfp.png"
+                alt="GitHub avatar"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </div>
+          </a>
+        </motion.div>
 
       </motion.div>
 

@@ -1,14 +1,26 @@
-import { motion } from 'framer-motion'
+import { motion, useTransform, useMotionValueEvent, type MotionValue } from 'framer-motion'
+import { useState } from 'react'
 import { GradientText } from './ui/gradient-text'
 
-export function About() {
+interface AboutProps {
+  scrollProgress?: MotionValue<number>
+}
+
+export function About({ scrollProgress }: AboutProps) {
+  const [visible, setVisible] = useState(!scrollProgress)
+
+  if (scrollProgress) {
+    useMotionValueEvent(scrollProgress, 'change', (v) => {
+      if (v > 0.4 && !visible) setVisible(true)
+    })
+  }
+
   return (
-    <section id="about" className="relative min-h-screen flex items-center px-4 md:px-6" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+    <section id="about" className="relative h-full flex items-center px-4 md:px-6" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
       <motion.div
         className="mx-auto max-w-7xl w-full"
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
+        animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
         <div className="grid md:grid-cols-2 gap-12 items-center">

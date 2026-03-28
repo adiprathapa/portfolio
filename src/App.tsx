@@ -1,6 +1,5 @@
 import { Navbar } from './components/Navbar'
-import { Hero } from './components/Hero'
-import { About } from './components/About'
+import { HorizontalScrollSection } from './components/HorizontalScrollSection'
 import { Projects } from './components/Projects'
 import { Experience } from './components/Experience'
 import { Contact } from './components/Contact'
@@ -11,8 +10,7 @@ function App() {
     <>
       <Navbar />
       <main>
-        <Hero />
-        <About />
+        <HorizontalScrollSection />
         <Projects />
         <Experience />
         <Contact />

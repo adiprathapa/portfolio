@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AnimatedGradientBackground } from './ui/animated-gradient-background'
 import { heroStagger, heroChild } from '../lib/animations'
@@ -221,7 +222,7 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative h-full flex items-center justify-center overflow-hidden"
       style={{ paddingBottom: '0' }}
     >
       <AnimatedGradientBackground />
@@ -443,7 +444,7 @@ export function Hero() {
         const originX = mousePos.x - hRect.left
         const originY = mousePos.y - hRect.top
 
-        return (
+        return createPortal(
           <div
             style={{
               position: 'fixed',
@@ -476,15 +477,17 @@ export function Hero() {
                 <span className="ml-0.5 text-primary/60">|</span>
               </span>
             </h1>
-          </div>
+          </div>,
+          document.body
         )
       })()}
 
-      {/* Bottom fade into About */}
+      {/* Right-edge fade into About */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-10"
+        className="absolute top-0 right-0 bottom-0 pointer-events-none z-[5]"
         style={{
-          background: 'linear-gradient(to bottom, transparent, var(--color-surface, #EFF3F8))',
+          width: '35%',
+          background: 'linear-gradient(to right, transparent, var(--color-surface, #EFF3F8))',
         }}
       />
     </section>

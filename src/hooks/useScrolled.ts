@@ -8,8 +8,10 @@ export function useScrolled(threshold = 10) {
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY
-      setScrolled(currentY > threshold)
-      setHidden(currentY > lastScrollY.current && currentY > 630)
+      // Don't activate navbar styling until past the horizontal scroll section (200vh)
+      const horizontalSectionEnd = window.innerHeight
+      setScrolled(currentY > horizontalSectionEnd + threshold)
+      setHidden(currentY > lastScrollY.current && currentY > horizontalSectionEnd + 630)
       lastScrollY.current = currentY
     }
 

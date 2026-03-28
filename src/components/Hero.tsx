@@ -222,7 +222,7 @@ export function Hero() {
     <section
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ paddingBottom: '20vh' }}
+      style={{ paddingBottom: '0' }}
     >
       <AnimatedGradientBackground />
 
@@ -479,6 +479,14 @@ export function Hero() {
           </div>
         )
       })()}
+
+      {/* Bottom fade into About */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-10"
+        style={{
+          background: 'linear-gradient(to bottom, transparent, var(--color-surface, #EFF3F8))',
+        }}
+      />
     </section>
   )
 }

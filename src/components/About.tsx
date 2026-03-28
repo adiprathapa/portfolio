@@ -1,48 +1,41 @@
-import { Section } from './ui/section'
+import { motion } from 'framer-motion'
 import { GradientText } from './ui/gradient-text'
 
 export function About() {
   return (
-    <Section id="about" className="bg-primary/5">
-      <div className="grid md:grid-cols-2 gap-12 items-center">
-        {/* Text */}
-        <div>
-          <GradientText as="h2" className="text-3xl md:text-4xl font-bold mb-6">
-            About me
-          </GradientText>
-          <p className="text-body text-lg leading-relaxed mb-4">
-            I'm a software engineer who loves turning complex problems into
-            elegant, user-friendly solutions. With a passion for clean code and
-            thoughtful design, I build products that people enjoy using.
-          </p>
-          <p className="text-body text-lg leading-relaxed">
-            When I'm not coding, you'll find me exploring new technologies,
-            contributing to open source, or tinkering with side projects that
-            push what's possible on the web.
-          </p>
-        </div>
-
-        {/* Decorative element */}
-        <div className="hidden md:flex items-center justify-center">
-          <div
-            className="w-72 h-72 rounded-3xl rotate-6 opacity-80"
-            style={{
-              background:
-                'linear-gradient(135deg, rgba(87, 84, 255, 0.15) 0%, rgba(78, 235, 243, 0.15) 100%)',
-            }}
-          >
-            <div
-              className="w-full h-full rounded-3xl -rotate-12 flex items-center justify-center"
-              style={{
-                background:
-                  'linear-gradient(225deg, rgba(87, 84, 255, 0.1) 0%, rgba(78, 235, 243, 0.1) 100%)',
-              }}
-            >
-              <div className="w-24 h-24 rounded-2xl bg-primary/20 animate-breathe" />
-            </div>
+    <section id="about" className="relative min-h-screen flex items-center px-4 md:px-6" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+      <motion.div
+        className="mx-auto max-w-7xl w-full"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Text */}
+          <div>
+            <GradientText as="h2" className="text-3xl md:text-4xl font-bold mb-6">
+              About me
+            </GradientText>
+            <p className="text-body text-lg leading-relaxed mb-4">
+              I'm a Computer Science student at Cornell minoring in AI, originally
+              from Nebraska. I am really interested in building and working with full stack web
+              apps and experimenting with ML models.
+            </p>
+            <p className="text-body text-lg leading-relaxed mb-4">
+              Lately I've been diving deep into web3, stablecoins, and IPFS, the idea of
+              programmable money and decentralized finance is something I enjoy working with and learning about. I'm always looking for ways to connect what I'm learning in AI
+              with applications outside of the classroom.
+            </p>
+            <p className="text-body text-lg leading-relaxed">
+              Outside of code, I'm an Eagle Scout who still loves getting outdoors,
+              camping, hiking, that kind of thing. When I'm not on a trail, you'll
+              probably find me gaming, tinkering with some new tech, or catching up
+              on anime and shows.
+            </p>
           </div>
         </div>
-      </div>
-    </Section>
+      </motion.div>
+    </section>
   )
 }

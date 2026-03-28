@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { MouseTrail } from '@stichiboi/react-elegant-mouse-trail'
 import { AnimatedGradientBackground } from './ui/animated-gradient-background'
 import { heroStagger, heroChild } from '../lib/animations'
 
-const LENS_SIZE = 200
+const LENS_SIZE = 140
 const LENS_RADIUS = LENS_SIZE / 2
 const MAGNIFY = 1.5
 
@@ -14,15 +15,18 @@ interface WordBreakdown {
 
 interface Greeting {
   text: string
+  segments: string[]
   subtitle: string
   breakdown: WordBreakdown[]
   showDuoIcon?: boolean
   duoIconSrc?: string
+  duoIconLink?: string
 }
 
 const greetings: Greeting[] = [
   {
     text: "Hey, I'm Adi",
+    segments: ["Hey, ", "I'm ", "Adi"],
     subtitle: 'English (Fluent)',
     breakdown: [
       { phonetic: 'Hey', meaning: 'Hello' },
@@ -32,9 +36,11 @@ const greetings: Greeting[] = [
   },
   {
     text: 'Hola, soy Adi',
+    segments: ['Hola, ', 'soy ', 'Adi'],
     subtitle: 'Spanish (Conversational)',
     showDuoIcon: true,
     duoIconSrc: '/duo.png',
+    duoIconLink: 'https://www.duolingo.com/profile/adiP001',
     breakdown: [
       { phonetic: 'Hola', meaning: 'Hello' },
       { phonetic: 'Soy', meaning: 'I am' },
@@ -43,9 +49,11 @@ const greetings: Greeting[] = [
   },
   {
     text: 'नमस्ते, मैं आदि हूँ',
+    segments: ['नमस्ते, ', 'मैं ', 'आदि ', 'हूँ'],
     subtitle: 'Hindi (Conversational)',
     showDuoIcon: true,
     duoIconSrc: '/duo.png',
+    duoIconLink: 'https://www.duolingo.com/profile/adiP001',
     breakdown: [
       { phonetic: 'Namaste', meaning: 'Hello' },
       { phonetic: 'Main', meaning: 'I' },
@@ -55,11 +63,25 @@ const greetings: Greeting[] = [
   },
   {
     text: 'నమస్కారం, నేను ఆది',
+    segments: ['నమస్కారం, ', 'నేను ', 'ఆది'],
     subtitle: 'Telugu (Native)',
     breakdown: [
       { phonetic: 'Namaskāram', meaning: 'Hello' },
       { phonetic: 'Nēnu', meaning: 'I' },
       { phonetic: 'Ādi', meaning: 'Adi' },
+    ],
+  },
+  {
+    text: '你好，我是 Adi',
+    segments: ['你好，', '我是 ', 'Adi'],
+    subtitle: 'Mandarin (Beginner)',
+    showDuoIcon: true,
+    duoIconSrc: '/nsli.png',
+    duoIconLink: 'https://www.virtualbadge.io/certificate-validator?credential=39cfa8cb-56a1-4e8e-be87-b5b67cbd8874',
+    breakdown: [
+      { phonetic: 'Nǐ hǎo', meaning: 'Hello' },
+      { phonetic: 'Wǒ shì', meaning: 'I am' },
+      { phonetic: 'Adi', meaning: 'Adi' },
     ],
   },
 ]
@@ -77,23 +99,36 @@ function useTypewriter(
   const [waiting, setWaiting] = useState(false)
   const [justUnpaused, setJustUnpaused] = useState(false)
   const wasPaused = useRef(false)
+  const wasDeletingOnPause = useRef(false)
 
   useEffect(() => {
     if (paused) {
       wasPaused.current = true
+      // If deleting when hovered, switch to retyping
+      if (isDeleting) {
+        wasDeletingOnPause.current = true
+        setIsDeleting(false)
+      }
       return
     }
     if (wasPaused.current) {
       wasPaused.current = false
-      setJustUnpaused(true)
-      const t = setTimeout(() => setJustUnpaused(false), 600)
-      return () => clearTimeout(t)
+      if (wasDeletingOnPause.current) {
+        // Resume deleting when unhovered
+        wasDeletingOnPause.current = false
+        setWaiting(false)
+        setIsDeleting(true)
+      } else {
+        setJustUnpaused(true)
+        const t = setTimeout(() => setJustUnpaused(false), 600)
+        return () => clearTimeout(t)
+      }
     }
   }, [paused])
 
   useEffect(() => {
-    // When paused (hovered), still finish typing the current word but don't delete or cycle
-    if (paused && (isDeleting || waiting)) return
+    // When paused and fully retyped (or was waiting), freeze
+    if (paused && waiting) return
 
     if (waiting) {
       const delay = justUnpaused ? 300 : pauseDuration
@@ -134,52 +169,94 @@ function useTypewriter(
 export function Hero() {
   const [tooltipActive, setTooltipActive] = useState(false)
   const [headingHovered, setHeadingHovered] = useState(false)
-  const [logoHovered, setLogoHovered] = useState(false)
+  const [hoveredWordIndex, setHoveredWordIndex] = useState<number | null>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const sectionRef = useRef<HTMLElement>(null)
+  const h1Ref = useRef<HTMLHeadingElement>(null)
   const { displayText, current } = useTypewriter(greetings, tooltipActive, 120, 60, 2000)
 
-  const getSectionRect = useCallback(() => {
-    return sectionRef.current?.getBoundingClientRect() ?? { left: 0, top: 0, width: 0, height: 0 }
-  }, [])
+  const renderSegmentedText = (text: string, segments: string[]) => {
+    let charCount = 0
+    return segments.map((seg, idx) => {
+      const start = charCount
+      charCount += seg.length
+      if (start >= text.length) return null
+      const visible = text.substring(start, Math.min(charCount, text.length))
+      return (
+        <span key={idx} data-word-index={idx}>
+          {visible}
+        </span>
+      )
+    })
+  }
+
+  // Track tooltip zone via h1 position — dismiss when cursor leaves the zone
+  useEffect(() => {
+    if (!tooltipActive) return
+    const handleMouseMove = (e: MouseEvent) => {
+      const hRect = h1Ref.current?.getBoundingClientRect()
+      if (!hRect) return
+      // Zone: generous box around h1 + tooltip below it
+      const pad = 40
+      const bottomExtra = 200 // space for tooltip below h1
+      const inZone =
+        e.clientX >= hRect.left - pad &&
+        e.clientX <= hRect.right + pad &&
+        e.clientY >= hRect.top - pad &&
+        e.clientY <= hRect.bottom + bottomExtra
+      if (!inZone) {
+        setTooltipActive(false)
+      }
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [tooltipActive])
 
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden cursor-none"
       style={{ paddingBottom: '20vh' }}
     >
       <AnimatedGradientBackground />
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        <MouseTrail
+          strokeColor="rgba(6, 113, 164, 0.3)"
+          lineWidthStart={30}
+          lineDuration={800}
+          lag={0.5}
+        />
+      </div>
 
       <motion.div
         className="relative z-10 text-center max-w-4xl px-6"
         variants={heroStagger}
         initial="hidden"
         animate="visible"
-        onMouseEnter={() => setTooltipActive(true)}
-        onMouseLeave={() => {
-          setTooltipActive(false)
-          setHeadingHovered(false)
-        }}
       >
         {/* Heading with typewriter */}
         <motion.div
           variants={heroChild}
           className="relative inline-block mb-6"
-          onMouseEnter={() => {
-            setTooltipActive(true)
-            setHeadingHovered(true)
-          }}
-          onMouseLeave={() => setHeadingHovered(false)}
-          onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
-          style={{ cursor: headingHovered ? 'none' : undefined }}
+          onMouseEnter={() => setTooltipActive(true)}
         >
           <h1
+            ref={h1Ref}
             className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-heading tracking-tight"
             style={{ lineHeight: 1.2, minHeight: '2.4em' }}
           >
-            <span className="text-primary">
-              {displayText}
+            <span
+              className="text-primary"
+              style={{ cursor: 'none' }}
+              onMouseEnter={() => setHeadingHovered(true)}
+              onMouseLeave={() => { setHeadingHovered(false); setHoveredWordIndex(null) }}
+              onMouseMove={(e) => {
+                setMousePos({ x: e.clientX, y: e.clientY })
+                const target = (e.target as HTMLElement).closest('[data-word-index]')
+                setHoveredWordIndex(target ? Number(target.getAttribute('data-word-index')) : null)
+              }}
+            >
+              {renderSegmentedText(displayText, current.segments)}
               <span
                 className={`ml-0.5 text-primary/60 ${tooltipActive ? 'opacity-100' : 'animate-pulse'}`}
               >
@@ -196,16 +273,15 @@ export function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="absolute left-1/2 -translate-x-1/2 top-full mt-4"
+                className="absolute left-1/2 -translate-x-1/2 top-full -mt-10"
                 style={{
                   background: 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
                   borderRadius: 9999,
-                  pointerEvents: 'none',
                 }}
               >
-                <div className="px-5 py-4 whitespace-nowrap">
+                <div className="px-5 pt-2.5 pb-4 whitespace-nowrap">
                   {/* Header row */}
                   <div className="flex items-center mb-3">
                     <div className="flex items-center gap-2">
@@ -230,13 +306,12 @@ export function Hero() {
                           <img
                             src={current.duoIconSrc ?? '/images-removebg-preview.png'}
                             alt="Duolingo"
-                            onClick={() => window.open('https://www.duolingo.com/profile/adiP001', '_blank')}
-                            onMouseEnter={() => setLogoHovered(true)}
-                            onMouseLeave={() => setLogoHovered(false)}
-                            className="cursor-pointer shrink-0 relative -top-0.5 transition-all duration-300"
+                            onClick={() => current.duoIconLink && window.open(current.duoIconLink, '_blank')}
+                            className="cursor-pointer shrink-0 relative -top-0.5 ml-1 hover:animate-[shake_0.4s_ease-in-out]"
                             style={{
-                              height: logoHovered ? '40px' : '32px',
+                              height: current.duoIconSrc === '/nsli.png' ? 18 : 32,
                               width: 'auto',
+                              pointerEvents: 'auto',
                             }}
                           />
                         )}
@@ -250,10 +325,10 @@ export function Hero() {
                     style={{ fontFamily: "'Fira Code', monospace" }}
                   >
                     {current.breakdown.map((word, i) => (
-                      <span key={i} className="flex items-center">
+                      <span key={i} className="flex items-center transition-colors duration-150">
                         {i > 0 && <span className="text-muted mx-2.5 select-none">|</span>}
-                        <span className="font-semibold text-heading">{word.phonetic}</span>
-                        <span className="text-muted ml-1.5">({word.meaning})</span>
+                        <span className={`font-semibold ${hoveredWordIndex === i ? 'text-primary' : 'text-heading'}`}>{word.phonetic}</span>
+                        <span className={`ml-1.5 ${hoveredWordIndex === i ? 'text-primary/70' : 'text-muted'}`}>({word.meaning})</span>
                       </span>
                     ))}
                   </div>
@@ -272,96 +347,60 @@ export function Hero() {
             transition: 'margin-top 280ms ease',
           }}
         >
-          Software engineer crafting thoughtful digital experiences.
+          Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI.
         </motion.p>
 
       </motion.div>
 
-      {/* Magnifying Lens — shows a 1.5× scaled copy of the hero content */}
+      {/* Magnifying Lens — scale from cursor point */}
       {headingHovered && (() => {
-        const rect = getSectionRect()
-        const relX = mousePos.x - rect.left
-        const relY = mousePos.y - rect.top
+        const hRect = h1Ref.current?.getBoundingClientRect()
+        if (!hRect) return null
+
+        const lensLeft = mousePos.x - LENS_RADIUS
+        const lensTop = mousePos.y - LENS_RADIUS
+
+        // h1 position relative to the lens viewport
+        const cloneLeft = hRect.left - lensLeft
+        const cloneTop = hRect.top - lensTop
+
+        // Transform origin: cursor position within the h1
+        const originX = mousePos.x - hRect.left
+        const originY = mousePos.y - hRect.top
+
         return (
           <div
             style={{
               position: 'fixed',
-              left: mousePos.x - LENS_RADIUS,
-              top: mousePos.y - LENS_RADIUS,
+              left: lensLeft,
+              top: lensTop,
               width: LENS_SIZE,
               height: LENS_SIZE,
               borderRadius: '50%',
               border: '1px solid rgba(255, 255, 255, 0.4)',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), inset 0 0 30px rgba(255, 255, 255, 0.1)',
-              background: '#e8f1f8',
+              background: 'linear-gradient(135deg, #eef6fb 0%, #e0f2fe 50%, #f0f9ff 100%)',
               overflow: 'hidden',
               pointerEvents: 'none',
               zIndex: 50,
             }}
           >
-            {/* Scaled clone of hero content */}
-            <div
+            {/* Text clone — scaled from cursor point */}
+            <h1
+              className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-heading tracking-tight absolute whitespace-nowrap"
               style={{
-                position: 'absolute',
-                left: -relX * MAGNIFY + LENS_RADIUS,
-                top: -relY * MAGNIFY + LENS_RADIUS,
-                width: rect.width,
-                height: rect.height,
+                left: cloneLeft,
+                top: cloneTop,
                 transform: `scale(${MAGNIFY})`,
-                transformOrigin: '0 0',
+                transformOrigin: `${originX}px ${originY}px`,
+                lineHeight: 1.2,
               }}
             >
-              {/* Gradient background clone */}
-              <div className="absolute inset-0 overflow-hidden">
-                <div
-                  className="absolute inset-0 animate-breathe"
-                  style={{
-                    background: `
-                      radial-gradient(ellipse at 20% 50%, rgba(6, 113, 164, 0.3) 0%, transparent 50%),
-                      radial-gradient(ellipse at 80% 20%, rgba(56, 189, 248, 0.25) 0%, transparent 50%),
-                      radial-gradient(ellipse at 40% 80%, rgba(6, 113, 164, 0.2) 0%, transparent 50%),
-                      radial-gradient(ellipse at 70% 60%, rgba(56, 189, 248, 0.15) 0%, transparent 40%),
-                      linear-gradient(135deg, #eef6fb 0%, #e0f2fe 50%, #f0f9ff 100%)
-                    `,
-                  }}
-                />
-                <div
-                  className="absolute inset-0 animate-breathe"
-                  style={{
-                    animationDelay: '4s',
-                    background: `
-                      radial-gradient(ellipse at 60% 30%, rgba(56, 189, 248, 0.2) 0%, transparent 50%),
-                      radial-gradient(ellipse at 30% 70%, rgba(6, 113, 164, 0.15) 0%, transparent 50%)
-                    `,
-                  }}
-                />
-              </div>
-              {/* Text clone */}
-              <div
-                className="relative z-10 flex items-center justify-center"
-                style={{ width: rect.width, height: rect.height, paddingBottom: '20vh' }}
-              >
-                <div className="text-center max-w-4xl px-6">
-                  <div className="inline-block mb-6">
-                    <h1
-                      className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-heading tracking-tight"
-                      style={{ lineHeight: 1.2, minHeight: '2.4em' }}
-                    >
-                      <span className="text-primary">
-                        {displayText}
-                        <span className="ml-0.5 text-primary/60">|</span>
-                      </span>
-                    </h1>
-                  </div>
-                  <p
-                    className="text-lg md:text-xl text-body mb-10 max-w-md mx-auto"
-                    style={{ marginTop: '92px' }}
-                  >
-                    Software engineer crafting thoughtful digital experiences.
-                  </p>
-                </div>
-              </div>
-            </div>
+              <span className="text-primary">
+                {renderSegmentedText(displayText, current.segments)}
+                <span className="ml-0.5 text-primary/60">|</span>
+              </span>
+            </h1>
           </div>
         )
       })()}

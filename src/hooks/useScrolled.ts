@@ -9,7 +9,7 @@ export function useScrolled(threshold = 10) {
     const handleScroll = () => {
       const currentY = window.scrollY
       setScrolled(currentY > threshold)
-      setHidden(currentY > lastScrollY.current && currentY > 1800)
+      setHidden(currentY > lastScrollY.current && currentY > 630)
       lastScrollY.current = currentY
     }
 

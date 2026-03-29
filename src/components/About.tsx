@@ -6,35 +6,12 @@ interface AboutProps {
   cardProgress?: MotionValue<number>
 }
 
-const HIGHLIGHTS = [
-  {
-    id: 'cornell',
-    emoji: '🎓',
-    title: 'Cornell CS + AI',
-    description: 'Computer Science major with a minor in Artificial Intelligence',
-    color: '#0671A4',
-  },
-  {
-    id: 'web3',
-    emoji: '🌐',
-    title: 'Web3 / DeFi',
-    description: 'Exploring stablecoins, IPFS, and programmable money',
-    color: '#38BDF8',
-  },
-  {
-    id: 'eagle-scout',
-    emoji: '⚜️',
-    title: 'Eagle Scout',
-    description: 'Leadership, service, and a love for the outdoors',
-    color: '#10B981',
-  },
-  {
-    id: 'gaming',
-    emoji: '🎮',
-    title: 'Gaming & Anime',
-    description: 'From competitive gaming to binge-watching anime',
-    color: '#8B5CF6',
-  },
+const CARDS: { id: string; image?: string; offsetY?: number; gradientAngle?: number }[] = [
+  { id: 'card-1', image: '/team-presentation.png' },
+  { id: 'card-2', image: '/card-3.png', offsetY: -420, gradientAngle: 135 },
+  { id: 'card-3' },
+  { id: 'card-4' },
+  { id: 'card-5' },
 ]
 
 export function About({ cardProgress }: AboutProps) {
@@ -65,35 +42,19 @@ export function About({ cardProgress }: AboutProps) {
         </div>
 
         {/* Animated Cards */}
-        <div className="flex items-center justify-center ml-[230px] -mt-[30px]">
+        <div className="flex items-center justify-center ml-[200px] -mt-[30px]">
           <ContainerScroll scrollYProgress={cardProgress}>
-            <CardsContainer className="w-full max-w-[700px] h-[525px]">
-              {HIGHLIGHTS.map((item, index) => (
+            <CardsContainer className="w-[400px] h-[420px]">
+              {CARDS.map((card, index) => (
                 <CardTransformed
-                  key={item.id}
-                  className="items-start justify-center border border-border bg-white shadow-card px-8 py-8"
-                  arrayLength={HIGHLIGHTS.length}
+                  key={card.id}
+                  className={card.image ? "border border-border shadow-card" : "border border-border bg-white shadow-card"}
+                  arrayLength={CARDS.length}
                   index={index + 1}
-                  variant="light"
-                >
-                  <div className="flex flex-col items-center text-center space-y-4 w-full">
-                    <span
-                      className="text-5xl"
-                      style={{ filter: `drop-shadow(0 2px 4px ${item.color}40)` }}
-                    >
-                      {item.emoji}
-                    </span>
-                    <h3
-                      className="text-xl font-bold"
-                      style={{ color: item.color, fontFamily: 'var(--font-heading)' }}
-                    >
-                      {item.title}
-                    </h3>
-                    <p className="text-body text-sm leading-relaxed max-w-[280px]">
-                      {item.description}
-                    </p>
-                  </div>
-                </CardTransformed>
+                  variant={card.image ? "image" : "light"}
+                  {...(card.offsetY ? { offsetY: card.offsetY } : {})}
+                  {...(card.image ? { style: { backgroundImage: `linear-gradient(${card.gradientAngle ?? 315}deg, rgba(6,113,164,0.3), rgba(56,189,248,0.2), transparent 60%), url('${card.image}')`, backgroundSize: "cover", backgroundPosition: "center", filter: "saturate(1.3) contrast(1.1) brightness(1.05)" } } : {})}
+                />
               ))}
             </CardsContainer>
           </ContainerScroll>

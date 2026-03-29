@@ -18,6 +18,8 @@ const cardVariants = cva("absolute will-change-transform", {
       dark: "flex size-full flex-col items-center justify-center gap-6 rounded-2xl border border-stone-700/50 bg-accent-foreground/80 p-6 backdrop-blur-md",
       light:
         "flex size-full flex-col items-center justify-center gap-6 rounded-2xl border bg-white/80 p-6 backdrop-blur-md",
+      image:
+        "relative size-full overflow-hidden rounded-2xl",
     },
   },
   defaultVariants: {
@@ -38,6 +40,7 @@ interface CardStickyProps
   incrementY?: number
   incrementZ?: number
   incrementRotation?: number
+  offsetY?: number
 }
 
 interface ContainerScrollContextValue {
@@ -115,6 +118,7 @@ export const CardTransformed = React.forwardRef<
       incrementY = 10,
       incrementZ = 10,
       incrementRotation = -index + 90,
+      offsetY = 0,
       className,
       variant,
       style,
@@ -149,7 +153,7 @@ export const CardTransformed = React.forwardRef<
         : "none"
 
     const cardStyle = {
-      top: index * incrementY,
+      top: index * incrementY + offsetY,
       transform,
       backfaceVisibility: "hidden" as const,
       zIndex: (arrayLength - index) * incrementZ,

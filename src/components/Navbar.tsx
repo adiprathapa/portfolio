@@ -15,9 +15,17 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [pinned, setPinned] = useState(false)
 
-  const handleNavClick = () => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setPinned(true)
     setTimeout(() => setPinned(false), 2000)
+
+    // About is inside the horizontal scroll section — native hash scroll
+    // would scroll right instead of down. Scroll vertically to the point
+    // where the horizontal translation has fully revealed the About panel.
+    if (href === '#about') {
+      e.preventDefault()
+      window.scrollTo({ top: window.innerHeight * 1.8, behavior: 'smooth' })
+    }
   }
 
   return (
@@ -47,7 +55,7 @@ export function Navbar() {
                 <a
                   key={link.href}
                   href={link.href}
-                  onClick={handleNavClick}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="relative text-base font-medium text-body hover:text-heading transition-colors after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-0.5 after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left"
                 >
                   {link.label}

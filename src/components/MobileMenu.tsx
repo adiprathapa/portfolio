@@ -33,7 +33,13 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={onClose}
+                onClick={(e) => {
+                  if (link.href === '#about') {
+                    e.preventDefault()
+                    window.scrollTo({ top: window.innerHeight * 1.8, behavior: 'smooth' })
+                  }
+                  onClose()
+                }}
                 className="text-2xl font-heading font-semibold text-heading hover:text-primary transition-colors"
               >
                 {link.label}

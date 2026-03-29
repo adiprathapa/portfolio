@@ -8,10 +8,10 @@ export function useScrolled(threshold = 10) {
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY
-      // Don't activate navbar styling until past the horizontal scroll section (200vh)
-      const horizontalSectionEnd = window.innerHeight
-      setScrolled(currentY > horizontalSectionEnd + threshold)
-      setHidden(currentY > lastScrollY.current && currentY > horizontalSectionEnd + 630)
+      // Containerize after the full horizontal scroll + card animation section ends (500vh element, fully past at 400vh scroll)
+      const sectionEnd = window.innerHeight * 4
+      setScrolled(currentY > sectionEnd + threshold)
+      setHidden(currentY > lastScrollY.current && currentY > sectionEnd + 630)
       lastScrollY.current = currentY
     }
 

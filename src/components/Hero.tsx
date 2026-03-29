@@ -17,6 +17,7 @@ interface GreetingIcon {
   src: string
   link: string
   height?: number
+  ml?: number
 }
 
 interface Greeting {
@@ -58,6 +59,7 @@ const greetings: Greeting[] = [
     subtitle: 'Hindi (Conversational)',
     icons: [
       { src: '/duo.png', link: 'https://www.duolingo.com/profile/adiP001', height: 32 },
+      { src: '/cornell.png', link: 'https://courses.cornell.edu/courses/hindi/', height: 26, ml: 1 },
     ],
     breakdown: [
       { phonetic: 'Namaste', meaning: 'Hello' },
@@ -315,6 +317,7 @@ export function Hero() {
                               height: icon.height ?? 32,
                               width: 'auto',
                               pointerEvents: 'auto',
+                              ...(icon.ml && { marginLeft: icon.ml }),
                             }}
                           />
                         ))}

@@ -18,20 +18,20 @@ interface Blob {
 }
 
 const blobs: Blob[] = [
-  { baseX: 15, baseY: 25, radiusX: 18, radiusY: 14, speed: 0.12, phase: 0, color: 'rgba(6, 113, 164, 0.35)', size: 45 },
-  { baseX: 80, baseY: 20, radiusX: 20, radiusY: 16, speed: 0.1, phase: 1.4, color: 'rgba(56, 189, 248, 0.3)', size: 50 },
-  { baseX: 25, baseY: 75, radiusX: 16, radiusY: 20, speed: 0.14, phase: 2.8, color: 'rgba(96, 205, 255, 0.28)', size: 48 },
-  { baseX: 70, baseY: 65, radiusX: 22, radiusY: 12, speed: 0.09, phase: 4.0, color: 'rgba(6, 113, 164, 0.3)', size: 45 },
-  { baseX: 50, baseY: 40, radiusX: 15, radiusY: 18, speed: 0.11, phase: 5.2, color: 'rgba(56, 189, 248, 0.25)', size: 55 },
-  { baseX: 90, baseY: 50, radiusX: 14, radiusY: 16, speed: 0.13, phase: 0.6, color: 'rgba(96, 205, 255, 0.22)', size: 50 },
-  { baseX: 10, baseY: 50, radiusX: 18, radiusY: 14, speed: 0.1, phase: 3.3, color: 'rgba(6, 113, 164, 0.2)', size: 55 },
+  { baseX: 15, baseY: 25, radiusX: 40, radiusY: 35, speed: 0.4, phase: 0, color: 'rgba(6, 113, 164, 0.45)', size: 45 },
+  { baseX: 80, baseY: 20, radiusX: 45, radiusY: 35, speed: 0.35, phase: 1.4, color: 'rgba(56, 189, 248, 0.4)', size: 50 },
+  { baseX: 25, baseY: 75, radiusX: 35, radiusY: 45, speed: 0.45, phase: 2.8, color: 'rgba(96, 205, 255, 0.38)', size: 48 },
+  { baseX: 70, baseY: 65, radiusX: 45, radiusY: 30, speed: 0.3, phase: 4.0, color: 'rgba(6, 113, 164, 0.4)', size: 45 },
+  { baseX: 50, baseY: 40, radiusX: 38, radiusY: 42, speed: 0.38, phase: 5.2, color: 'rgba(56, 189, 248, 0.35)', size: 55 },
+  { baseX: 90, baseY: 50, radiusX: 35, radiusY: 40, speed: 0.42, phase: 0.6, color: 'rgba(96, 205, 255, 0.32)', size: 50 },
+  { baseX: 10, baseY: 50, radiusX: 42, radiusY: 35, speed: 0.35, phase: 3.3, color: 'rgba(6, 113, 164, 0.3)', size: 55 },
 ]
 
 const blobs2: Blob[] = [
-  { baseX: 35, baseY: 30, radiusX: 20, radiusY: 18, speed: 0.13, phase: 1.8, color: 'rgba(56, 189, 248, 0.25)', size: 50 },
-  { baseX: 65, baseY: 40, radiusX: 16, radiusY: 20, speed: 0.1, phase: 3.5, color: 'rgba(6, 113, 164, 0.22)', size: 48 },
-  { baseX: 20, baseY: 60, radiusX: 18, radiusY: 14, speed: 0.11, phase: 5.0, color: 'rgba(96, 205, 255, 0.2)', size: 52 },
-  { baseX: 80, baseY: 75, radiusX: 14, radiusY: 18, speed: 0.14, phase: 0.3, color: 'rgba(56, 189, 248, 0.2)', size: 50 },
+  { baseX: 35, baseY: 30, radiusX: 42, radiusY: 38, speed: 0.42, phase: 1.8, color: 'rgba(56, 189, 248, 0.35)', size: 50 },
+  { baseX: 65, baseY: 40, radiusX: 36, radiusY: 44, speed: 0.35, phase: 3.5, color: 'rgba(6, 113, 164, 0.32)', size: 48 },
+  { baseX: 20, baseY: 60, radiusX: 40, radiusY: 34, speed: 0.38, phase: 5.0, color: 'rgba(96, 205, 255, 0.3)', size: 52 },
+  { baseX: 80, baseY: 75, radiusX: 34, radiusY: 42, speed: 0.45, phase: 0.3, color: 'rgba(56, 189, 248, 0.3)', size: 50 },
 ]
 
 function buildGradient(blobList: Blob[], t: number, base?: string) {

@@ -11,7 +11,7 @@ export function useScrolled(threshold = 10) {
       // Containerize after the full horizontal scroll + card animation section ends (500vh element, fully past at 400vh scroll)
       const sectionEnd = window.innerHeight * 4
       setScrolled(currentY > sectionEnd + threshold)
-      setHidden(currentY > lastScrollY.current && currentY > sectionEnd + 630)
+      setHidden(currentY > lastScrollY.current && currentY > sectionEnd + 315)
       lastScrollY.current = currentY
     }
 

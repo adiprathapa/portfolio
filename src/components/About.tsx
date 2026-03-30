@@ -7,9 +7,9 @@ interface AboutProps {
 }
 
 const CARDS: { id: string; image?: string; offsetY?: number; gradientAngle?: number; gradient?: string; filter?: string; caption?: string; bgSize?: string; bgPosition?: string }[] = [
-  { id: 'card-1', image: '/team-presentation.png', caption: 'Stablecoin Presentation at Cornell Hackathon' },
-  { id: 'card-2', image: '/img3.jpg', offsetY: -420, gradientAngle: 135, caption: 'Cornell Data & Strategy Meeting' },
-  { id: 'card-3', image: '/img3.png', offsetY: -840, gradientAngle: 180, gradient: 'linear-gradient(180deg, rgba(6,113,164,0.4), rgba(56,189,248,0.25), transparent 60%)', filter: 'saturate(1.3) contrast(1.05) brightness(1.1)', caption: 'Formal Organizing Group' },
+  { id: 'card-1', image: '/img3.jpg', gradientAngle: 135, caption: 'Cornell Data Strategy Meeting' },
+  { id: 'card-2', image: '/team-presentation.png', offsetY: -420, gradientAngle: 0, caption: 'Stablecoin Presentation at Cornell Hackathon' },
+  { id: 'card-3', image: '/img3.png', offsetY: -840, gradientAngle: 270, gradient: 'linear-gradient(270deg, rgba(6,113,164,0.4), rgba(56,189,248,0.25), transparent 60%)', filter: 'saturate(1.3) contrast(1.05) brightness(1.1)', caption: 'Formal Organizing Group' },
   { id: 'card-4', image: '/card-3.png', offsetY: -1260, gradientAngle: 135, caption: 'Eagle Scout Project' },
   { id: 'card-5', image: '/coh.png', offsetY: -1680, gradientAngle: 0, caption: 'After Eagle Scout Board of Review', bgSize: '180%', bgPosition: 'center center' },
 ]
@@ -37,7 +37,7 @@ export function About({ cardProgress }: AboutProps) {
             Outside of code, I'm an Eagle Scout who still loves getting outdoors,
             camping, hiking, that kind of thing. When I'm not on a trail, you'll
             probably find me gaming, tinkering with some new tech, or catching up
-            on anime and shows.
+            on anime and other shows.
           </p>
         </div>
 

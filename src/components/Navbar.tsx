@@ -17,7 +17,7 @@ export function Navbar() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setPinned(true)
-    setTimeout(() => setPinned(false), 2000)
+    setTimeout(() => setPinned(false), 500)
 
     // About is inside the horizontal scroll section — native hash scroll
     // would scroll right instead of down. Scroll vertically to the point
@@ -39,7 +39,7 @@ export function Navbar() {
         <header
           className={`w-full transition-all duration-500 ${
             scrolled
-              ? 'bg-white/80 backdrop-blur-[16px] shadow-sm rounded-full'
+              ? 'bg-white/60 backdrop-blur-[16px] shadow-sm rounded-full'
               : 'bg-transparent'
           }`}
         >
@@ -56,7 +56,7 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="relative text-base font-medium text-body hover:text-heading transition-colors after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-0.5 after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left"
+                  className="relative text-base font-medium text-heading hover:text-primary transition-colors after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-0.5 after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left"
                 >
                   {link.label}
                 </a>

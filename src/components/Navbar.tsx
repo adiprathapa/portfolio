@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useScrolled } from '../hooks/useScrolled'
 import { useActiveSection } from '../hooks/useActiveSection'
 import { Button } from './ui/button'
@@ -16,10 +16,28 @@ export function Navbar() {
   const activeSection = useActiveSection()
   const [menuOpen, setMenuOpen] = useState(false)
   const [pinned, setPinned] = useState(false)
+  const [forceHidden, setForceHidden] = useState(false)
+  const scrolledRef = useRef(scrolled)
+  scrolledRef.current = scrolled
+
+  // Clear forceHidden on any scroll-up
+  useEffect(() => {
+    let lastY = window.scrollY
+    const onScroll = () => {
+      if (window.scrollY < lastY) setForceHidden(false)
+      lastY = window.scrollY
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setPinned(true)
-    setTimeout(() => setPinned(false), 500)
+    setForceHidden(false)
+    setTimeout(() => {
+      setPinned(false)
+      if (scrolledRef.current) setForceHidden(true)
+    }, 2000)
 
     // About is inside the horizontal scroll section — native hash scroll
     // would scroll right instead of down. Scroll vertically to the point
@@ -35,7 +53,7 @@ export function Navbar() {
       <div className="fixed top-0 left-0 right-0 z-[999] flex justify-center transition-all duration-500"
         style={{
           padding: scrolled ? '0.75rem 2.5rem' : '0 2.5rem',
-          transform: hidden && !pinned ? 'translateY(-100%)' : 'translateY(0)',
+          transform: (hidden && !pinned) || forceHidden ? 'translateY(-100%)' : 'translateY(0)',
         }}
       >
         <header

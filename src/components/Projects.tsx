@@ -27,9 +27,9 @@ const projects = [
 
 export function Projects() {
   return (
-    <Section id="projects">
-      <Eyebrow>Projects</Eyebrow>
-      <h2 className="text-3xl md:text-4xl font-bold text-heading mt-3 mb-12">
+    <Section id="projects" className="bg-dark text-white min-h-screen flex items-center">
+      <Eyebrow className="text-accent">Projects</Eyebrow>
+      <h2 className="text-3xl md:text-4xl font-bold text-white mt-3 mb-12">
         Things I've built
       </h2>
 
@@ -42,14 +42,14 @@ export function Projects() {
       >
         {projects.map((project) => (
           <motion.div key={project.title} variants={fadeInUp}>
-            <Card>
+            <Card className="bg-white/5 border-white/10 hover:bg-white/10">
               {/* Dot pattern placeholder image */}
-              <div className="dot-pattern aspect-video rounded-sm mb-4 bg-surface" />
+              <div className="dot-pattern aspect-video rounded-sm mb-4 bg-white/5" />
 
-              <h3 className="text-lg font-semibold text-heading mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2">
                 {project.title}
               </h3>
-              <p className="text-body text-sm leading-relaxed mb-4">
+              <p className="text-white/80 text-sm leading-relaxed mb-4">
                 {project.description}
               </p>
 
@@ -57,7 +57,7 @@ export function Projects() {
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="bg-surface text-body text-xs px-2.5 py-1 rounded-full"
+                    className="bg-white/10 text-white/85 text-xs px-2.5 py-1 rounded-full"
                   >
                     {tag}
                   </span>

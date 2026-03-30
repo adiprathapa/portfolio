@@ -45,7 +45,7 @@ export function Navbar() {
         >
           <div className="flex items-center justify-between px-10 h-16">
             {/* Logo */}
-            <a href="#" className="font-heading font-semibold text-lg text-primary">
+            <a href="/" className="font-heading font-semibold text-lg text-primary">
               &#x0906;&#x0926;&#x093F;
             </a>
 

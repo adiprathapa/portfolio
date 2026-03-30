@@ -41,7 +41,7 @@ export function Projects() {
   const safariScale = 1.4
   const cloudSize = 845
   const cloudX = 154
-  const cloudY = -29
+  const cloudY = -10
 
   const images = slugs.map(
     (slug) => `https://cdn.simpleicons.org/${slug}/${slug}`

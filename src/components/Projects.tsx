@@ -43,10 +43,10 @@ export function Projects() {
     <section id="projects" className="relative bg-dark text-white h-screen overflow-hidden">
       <FlickeringGrid
         color="rgb(56, 189, 248)"
-        maxOpacity={0.4}
-        squareSize={4}
+        maxOpacity={0.9}
+        squareSize={5}
         gridGap={8}
-        flickerChance={0.05}
+        flickerChance={0.06}
         className="absolute inset-0 z-0"
         style={{
           maskImage: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%), linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 80%), radial-gradient(circle at 70% 70%, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 40%, black 60%)',

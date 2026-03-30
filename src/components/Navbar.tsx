@@ -81,7 +81,7 @@ export function Navbar() {
                     className={`relative text-base font-medium transition-colors after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-0.5 after:bg-primary after:transition-transform after:duration-300 after:origin-left ${
                       isActive
                         ? 'text-primary after:scale-x-100'
-                        : 'text-heading hover:text-primary after:scale-x-0 hover:after:scale-x-100'
+                        : 'text-heading hover:text-primary/70 after:scale-x-0'
                     }`}
                   >
                     {link.label}
@@ -92,7 +92,7 @@ export function Navbar() {
 
             {/* Desktop CTA */}
             <div className="hidden lg:block">
-              <Button variant="primary" href="#contact" className="text-base py-2.5 px-5" onClick={handleNavClick}>
+              <Button variant="primary" href="#contact" className="!text-base py-2.5 px-5" onClick={handleNavClick}>
                 Let's talk
               </Button>
             </div>

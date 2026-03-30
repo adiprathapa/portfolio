@@ -1,5 +1,6 @@
 import { FlickeringGrid } from './ui/flickering-grid'
 import { IconCloud } from './ui/icon-cloud'
+import { Safari } from './ui/safari'
 
 const slugs = [
   "typescript",
@@ -35,6 +36,13 @@ const slugs = [
 ]
 
 export function Projects() {
+  const safariX = -63
+  const safariY = -3
+  const safariScale = 1.4
+  const cloudSize = 845
+  const cloudX = 154
+  const cloudY = -29
+
   const images = slugs.map(
     (slug) => `https://cdn.simpleicons.org/${slug}/${slug}`
   )
@@ -55,14 +63,16 @@ export function Projects() {
           WebkitMaskComposite: 'destination-in',
         }}
       />
-      <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 h-full flex items-center">
-        <div className="flex flex-col md:flex-row items-center w-full gap-12">
-          {/* Left side — project content will go here */}
-          <div className="flex-1" />
+      <div className="relative z-10 mx-auto max-w-7xl px-12 h-full flex items-center">
+        <div className="flex flex-col md:flex-row items-center justify-center w-full gap-16">
+          {/* Left side — Safari browser mockup */}
+          <div className="flex items-center md:w-[50%] origin-center" style={{ transform: `translateX(${safariX}px) translateY(${safariY}px) scale(${safariScale})` }}>
+            <Safari url="adiprathapa.com" className="w-[calc(100%+30px)] h-[calc(80vh+30px)]" style={{ aspectRatio: 'auto' }} />
+          </div>
 
           {/* Right side — Icon Cloud */}
-          <div className="flex items-center justify-center md:w-1/2 md:translate-x-16">
-            <IconCloud images={images} size={900} />
+          <div className="flex items-center justify-center md:w-[40%]" style={{ transform: `translateX(${cloudX}px) translateY(${cloudY}px)` }}>
+            <IconCloud images={images} size={cloudSize} />
           </div>
         </div>
       </div>

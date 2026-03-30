@@ -6,12 +6,12 @@ interface AboutProps {
   cardProgress?: MotionValue<number>
 }
 
-const CARDS: { id: string; image?: string; offsetY?: number; gradientAngle?: number }[] = [
-  { id: 'card-1', image: '/team-presentation.png' },
-  { id: 'card-2', image: '/card-3.png', offsetY: -420, gradientAngle: 135 },
-  { id: 'card-3' },
-  { id: 'card-4' },
-  { id: 'card-5' },
+const CARDS: { id: string; image?: string; offsetY?: number; gradientAngle?: number; filter?: string; caption?: string }[] = [
+  { id: 'card-1', image: '/team-presentation.png', caption: 'Stablecoin Presentation at Cornell Hackathon' },
+  { id: 'card-2', image: '/img3.jpg', offsetY: -420, gradientAngle: 135, caption: 'Cornell Data & Strategy Meeting' },
+  { id: 'card-3', image: '/img3.png', offsetY: -840, gradientAngle: 225, filter: 'saturate(1.3) contrast(1.05) brightness(1.1)', caption: 'Formal Organizing Group' },
+  { id: 'card-4', image: '/card-3.png', offsetY: -1260, gradientAngle: 135, caption: 'Eagle Scout Project' },
+  { id: 'card-5', image: '/coh.png', offsetY: -1680, gradientAngle: 0, caption: 'After Eagle Scout Board of Review' },
 ]
 
 export function About({ cardProgress }: AboutProps) {
@@ -48,13 +48,19 @@ export function About({ cardProgress }: AboutProps) {
               {CARDS.map((card, index) => (
                 <CardTransformed
                   key={card.id}
-                  className={card.image ? "border border-border shadow-card" : "border border-border bg-white shadow-card"}
+                  className={card.image ? "group border border-border shadow-card" : "border border-border bg-white shadow-card"}
                   arrayLength={CARDS.length}
                   index={index + 1}
                   variant={card.image ? "image" : "light"}
                   {...(card.offsetY ? { offsetY: card.offsetY } : {})}
-                  {...(card.image ? { style: { backgroundImage: `linear-gradient(${card.gradientAngle ?? 315}deg, rgba(6,113,164,0.3), rgba(56,189,248,0.2), transparent 60%), url('${card.image}')`, backgroundSize: "cover", backgroundPosition: "center", filter: "saturate(1.3) contrast(1.1) brightness(1.05)" } } : {})}
-                />
+                  {...(card.image ? { style: { backgroundImage: `linear-gradient(${card.gradientAngle ?? 315}deg, rgba(6,113,164,0.3), rgba(56,189,248,0.2), transparent 60%), url('${card.image}')`, backgroundSize: "cover", backgroundPosition: "center", filter: card.filter ?? "saturate(1.3) contrast(1.1) brightness(1.05)" } } : {})}
+                >
+                  {card.caption && (
+                    <span className="absolute bottom-0 left-0 right-0 px-4 py-3 text-white text-xs font-medium bg-gradient-to-t from-[rgba(6,113,164,0.7)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-2xl">
+                      {card.caption}
+                    </span>
+                  )}
+                </CardTransformed>
               ))}
             </CardsContainer>
           </ContainerScroll>

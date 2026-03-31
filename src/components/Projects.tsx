@@ -48,7 +48,14 @@ export function Projects() {
   )
 
   return (
-    <section id="projects" className="relative bg-dark text-white h-screen overflow-hidden">
+    <section id="projects" className="relative bg-[#080d14] text-white h-screen overflow-hidden">
+      {/* Subtle radial gradient for depth */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background: 'radial-gradient(ellipse at 30% 50%, rgba(6, 113, 164, 0.12) 0%, transparent 60%), radial-gradient(ellipse at 70% 40%, rgba(56, 189, 248, 0.06) 0%, transparent 50%)',
+        }}
+      />
       <FlickeringGrid
         color="rgb(56, 189, 248)"
         maxOpacity={0.9}

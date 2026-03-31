@@ -7,12 +7,20 @@ import { Safari } from './ui/safari'
 const slugs = ["vuedotjs", "pinia", "githubactions", "yaml", "python", "codemirror", "pytorch", "fastapi", "react", "ollama", "d3", "anthropic", "googlegemini", "ipfs", "leaflet", "express", "mongodb", "vercel", "javascript", "palantir", "networkx", "typescript", "nextdotjs", "nodedotjs", "postgresql", "docker", "git", "github", "tensorflow", "html5", "css3", "flask", "openjdk", "c", "scikitlearn", "numpy", "pandas", "tailwindcss", "plotly", "mistralai", "redis", "sqlite", "confluence", "apache"
 ]
 
+const projectPrimarySlug: Record<string, string> = {
+  kiwix:     "vuedotjs",
+  tauron:    "fastapi",
+  helicity:  "pytorch",
+  zamsizing: "mongodb",
+  galatea:   "palantir",
+}
+
 const projectTechStacks: Record<string, string[]> = {
-  kiwix: ["vuedotjs"],
-  tauron: ["fastapi"],
-  helicity: ["pytorch"],
-  zamsizing: ["mongodb"],
-  galatea: ["palantir"],
+  kiwix:     ["vuedotjs", "pinia", "githubactions", "yaml", "python", "codemirror"],
+  tauron:    ["fastapi", "anthropic", "googlegemini", "ipfs", "leaflet", "react", "pandas", "numpy"],
+  helicity:  ["pytorch", "fastapi", "python", "react", "ollama", "d3", "mistralai", "numpy", "pandas", "scikitlearn", "networkx"],
+  zamsizing: ["javascript", "react", "nodedotjs", "express", "mongodb", "googlegemini", "vercel"],
+  galatea:   ["networkx", "palantir", "javascript"],
 }
 
 const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'galatea']
@@ -62,6 +70,12 @@ export function Projects() {
     return projectTechStacks[activeProject]
       .map(s => slugs.indexOf(s))
       .filter(i => i !== -1)
+  }, [activeProject])
+
+  const rotationTargetIndex = useMemo(() => {
+    if (!activeProject || !projectPrimarySlug[activeProject]) return null
+    const idx = slugs.indexOf(projectPrimarySlug[activeProject])
+    return idx !== -1 ? [idx] : null
   }, [activeProject])
 
   const safariX = -63
@@ -153,7 +167,7 @@ export function Projects() {
 
             {/* Right side — Icon Cloud */}
             <div className="flex items-center justify-center md:w-[40%]" style={{ transform: `translateX(${cloudX}px) translateY(${cloudY}px)` }}>
-              <IconCloud images={images} size={cloudSize} activeIconIndices={activeSlugIndices} />
+              <IconCloud images={images} size={cloudSize} activeIconIndices={activeSlugIndices} rotationTargetIndices={rotationTargetIndex} />
             </div>
           </div>
         </div>

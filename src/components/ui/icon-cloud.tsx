@@ -15,13 +15,14 @@ interface IconCloudProps {
   images?: string[]
   size?: number
   activeIconIndices?: number[] | null
+  rotationTargetIndices?: number[] | null
 }
 
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 }
 
-export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudProps) {
+export function IconCloud({ images, size = 400, activeIconIndices, rotationTargetIndices }: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [iconPositions, setIconPositions] = useState<Icon[]>([])
   const [isDragging, setIsDragging] = useState(false)
@@ -110,11 +111,12 @@ export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudPr
     setIconPositions(newIcons)
   }, [images, size])
 
-  // When activeIconIndices changes, compute centroid and rotate globe to bring them to front
+  // When rotationTargetIndices changes, compute centroid and rotate globe to bring them to front
   const prevActiveRef = useRef<number[] | null | undefined>(null)
   useEffect(() => {
-    if (!activeIconIndices || activeIconIndices.length === 0) {
-      prevActiveRef.current = activeIconIndices
+    const indices = rotationTargetIndices
+    if (!indices || indices.length === 0) {
+      prevActiveRef.current = indices
       return
     }
     if (iconPositions.length === 0) {
@@ -122,23 +124,23 @@ export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudPr
     }
     // Only trigger rotation if indices actually changed
     const prev = prevActiveRef.current
-    if (prev && prev.length === activeIconIndices.length && prev.every((v, i) => v === activeIconIndices[i])) {
+    if (prev && prev.length === indices.length && prev.every((v, i) => v === indices[i])) {
       return
     }
-    prevActiveRef.current = activeIconIndices
+    prevActiveRef.current = indices
 
     // Compute centroid of active icons in sphere coordinates
     let cx = 0, cy = 0, cz = 0
-    for (const idx of activeIconIndices) {
+    for (const idx of indices) {
       if (idx < iconPositions.length) {
         cx += iconPositions[idx].x
         cy += iconPositions[idx].y
         cz += iconPositions[idx].z
       }
     }
-    cx /= activeIconIndices.length
-    cy /= activeIconIndices.length
-    cz /= activeIconIndices.length
+    cx /= indices.length
+    cy /= indices.length
+    cz /= indices.length
 
     // Compute rotation to bring centroid to face viewer (positive z)
     const targetX = -Math.atan2(cy, Math.sqrt(cx * cx + cz * cz))
@@ -161,7 +163,7 @@ export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudPr
       duration,
     })
     lastTargetReachedTimeRef.current = 0
-  }, [activeIconIndices, iconPositions])
+  }, [rotationTargetIndices, iconPositions])
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = canvasRef.current?.getBoundingClientRect()
@@ -319,12 +321,24 @@ export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudPr
           ctx.scale(scale, scale)
           ctx.globalAlpha = opacity
 
+          const isActive = activeIconIndices?.includes(index) ?? false
+
           if (images) {
             if (
               iconCanvasesRef.current[index] &&
               imagesLoadedRef.current[index]
             ) {
-              ctx.drawImage(iconCanvasesRef.current[index], -40, -40, 80, 80)
+              if (isActive) {
+                ctx.shadowBlur = 18
+                ctx.shadowColor = "rgba(56, 189, 248, 0.45)"
+                ctx.shadowOffsetX = 0
+                ctx.shadowOffsetY = 0
+                ctx.drawImage(iconCanvasesRef.current[index], -40, -40, 80, 80)
+                ctx.shadowBlur = 0
+                ctx.drawImage(iconCanvasesRef.current[index], -40, -40, 80, 80)
+              } else {
+                ctx.drawImage(iconCanvasesRef.current[index], -40, -40, 80, 80)
+              }
             }
           } else {
             ctx.beginPath()

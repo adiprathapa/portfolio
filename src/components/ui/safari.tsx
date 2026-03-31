@@ -3,9 +3,9 @@ import type { HTMLAttributes } from "react"
 const SAFARI_WIDTH = 1203
 const SAFARI_HEIGHT = 753
 const SCREEN_X = 1
-const SCREEN_Y = 52
-const SCREEN_WIDTH = 1300
-const SCREEN_HEIGHT = 800
+const SCREEN_Y = 49
+const SCREEN_WIDTH = 1201
+const SCREEN_HEIGHT = 704
 
 const LEFT_PCT = (SCREEN_X / SAFARI_WIDTH) * 100
 const TOP_PCT = (SCREEN_Y / SAFARI_HEIGHT) * 100
@@ -49,7 +49,7 @@ export function Safari({
           }}
         >
           <video
-            className="block size-full object-cover"
+            className="block size-full object-cover object-top"
             src={videoSrc}
             autoPlay
             loop

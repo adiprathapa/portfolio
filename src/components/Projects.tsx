@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { FlickeringGrid } from './ui/flickering-grid'
 import { IconCloud } from './ui/icon-cloud'
 import { Safari } from './ui/safari'
@@ -37,7 +38,8 @@ const slugs = [
 
 export function Projects() {
   const safariX = -63
-  const safariY = -3
+  const [safariY, setSafariY] = useState(-40)
+  const [safariLength, setSafariLength] = useState(100)
   const safariScale = 1.4
   const cloudSize = 845
   const cloudX = 154
@@ -74,7 +76,11 @@ export function Projects() {
         <div className="flex flex-col md:flex-row items-center justify-center w-full gap-16">
           {/* Left side — Safari browser mockup */}
           <div className="flex items-center md:w-[50%] origin-center" style={{ transform: `translateX(${safariX}px) translateY(${safariY}px) scale(${safariScale})` }}>
-            <Safari url="adiprathapa.com" className="w-[calc(100%+30px)] h-[calc(80vh+30px)]" style={{ aspectRatio: 'auto' }} />
+            <Safari
+              url="adiprathapa.com"
+              videoSrc="/kiwix.mov"
+              style={{ width: `calc(100% + ${safariLength}px)` }}
+            />
           </div>
 
           {/* Right side — Icon Cloud */}

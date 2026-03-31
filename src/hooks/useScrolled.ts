@@ -5,6 +5,7 @@ export function useScrolled(threshold = 10) {
   const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
   const downDelta = useRef(0)
+  const upDelta = useRef(0)
   const scrolledAt = useRef<number | null>(null)
 
   useEffect(() => {
@@ -24,16 +25,22 @@ export function useScrolled(threshold = 10) {
       const delta = currentY - lastScrollY.current
       const containerized = scrolledAt.current !== null && Date.now() - scrolledAt.current > 600
 
-      if (delta > 0 && currentY > sectionEnd && containerized) {
-        // Scrolling down — accumulate delta, hide after 80px of downward travel
-        downDelta.current += delta
-        if (downDelta.current > 80) {
-          setHidden(true)
+      if (delta > 0) {
+        // Scrolling down
+        upDelta.current = 0
+        if (currentY > sectionEnd && containerized) {
+          downDelta.current += delta
+          if (downDelta.current > 80) {
+            setHidden(true)
+          }
         }
       } else if (delta < 0) {
-        // Scrolling up — show immediately
+        // Scrolling up — accumulate delta, show after 10px of upward travel
         downDelta.current = 0
-        setHidden(false)
+        upDelta.current -= delta // delta is negative
+        if (upDelta.current > 10 || currentY <= threshold) {
+          setHidden(false)
+        }
       }
 
       lastScrollY.current = currentY

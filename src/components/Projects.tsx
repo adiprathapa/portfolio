@@ -30,11 +30,19 @@ export function Projects() {
   const [activeProject, setActiveProject] = useState<string>(projectOrder[0])
   const activeProjectRef = useRef<string>(projectOrder[0])
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const prevProgressRef = useRef<number>(0)
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    const scrollingUp = latest < prevProgressRef.current
+    prevProgressRef.current = latest
+
+    // When scrolling up, offset thresholds so the switch triggers at the
+    // top of the Safari element rather than the bottom
+    const upOffset = scrollingUp ? -0.2 : 0
+
     let index = 0
     for (let i = thresholds.length - 1; i >= 0; i--) {
-      if (latest >= thresholds[i]) {
+      if (latest >= thresholds[i] + upOffset) {
         index = i
         break
       }

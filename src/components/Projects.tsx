@@ -16,8 +16,7 @@ const projectTechStacks: Record<string, string[]> = {
 }
 
 const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'galatea']
-const thresholdsDown = [0.0, 0.28, 0.52, 0.76, 0.96]
-const thresholdsUp = [0.0, 0.16, 0.40, 0.64, 0.84] // ~400px lower trigger when scrolling up
+const thresholds = [0.00, 0.23, 0.46, 0.73, 0.96]
 
 export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -32,16 +31,10 @@ export function Projects() {
   const activeProjectRef = useRef<string>(projectOrder[0])
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const lastProgressRef = useRef(0)
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const isScrollingDown = latest > lastProgressRef.current
-    lastProgressRef.current = latest
-
-    const activeThresholds = isScrollingDown ? thresholdsDown : thresholdsUp
-
     let index = 0
-    for (let i = activeThresholds.length - 1; i >= 0; i--) {
-      if (latest >= activeThresholds[i]) {
+    for (let i = thresholds.length - 1; i >= 0; i--) {
+      if (latest >= thresholds[i]) {
         index = i
         break
       }

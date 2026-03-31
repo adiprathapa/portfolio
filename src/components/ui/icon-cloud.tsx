@@ -38,6 +38,7 @@ export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudPr
   } | null>(null)
   const animationFrameRef = useRef<number>(0)
   const rotationRef = useRef({ x: 0, y: 0 })
+  const lastTargetReachedTimeRef = useRef<number>(0)
   const iconCanvasesRef = useRef<HTMLCanvasElement[]>([])
   const imagesLoadedRef = useRef<boolean[]>([])
 
@@ -159,6 +160,7 @@ export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudPr
       startTime: performance.now(),
       duration,
     })
+    lastTargetReachedTimeRef.current = 0
   }, [activeIconIndices, iconPositions])
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -167,6 +169,9 @@ export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudPr
 
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
+
+    // Reset pause on interaction
+    lastTargetReachedTimeRef.current = 0
 
     const ctx = canvasRef.current.getContext("2d")
     if (!ctx) return
@@ -244,6 +249,8 @@ export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudPr
 
   const handleMouseUp = () => {
     setIsDragging(false)
+    // Reset pause on interaction
+    lastTargetReachedTimeRef.current = 0
   }
 
   useEffect(() => {
@@ -277,11 +284,17 @@ export function IconCloud({ images, size = 400, activeIconIndices }: IconCloudPr
 
           if (progress >= 1) {
             setTargetRotation(null)
+            lastTargetReachedTimeRef.current = performance.now()
           }
         } else if (!isDragging) {
-          rotationRef.current = {
-            x: rotationRef.current.x + (dy / canvas.height) * speed,
-            y: rotationRef.current.y + (dx / canvas.width) * speed,
+          // Pause ambient rotation for 2 seconds after reaching a target
+          const isPaused = performance.now() - lastTargetReachedTimeRef.current < 200
+
+          if (!isPaused) {
+            rotationRef.current = {
+              x: rotationRef.current.x + (dy / canvas.height) * speed,
+              y: rotationRef.current.y + (dx / canvas.width) * speed,
+            }
           }
         }
 

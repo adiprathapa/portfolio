@@ -17,7 +17,7 @@ export function Section({ children, className = '', id, maxWidth = 'container' }
   return (
     <section id={id} className={`py-16 px-4 md:py-20 md:px-6 lg:py-24 ${className}`}>
       <motion.div
-        className={`mx-auto ${widthClasses[maxWidth]}`}
+        className={`mx-auto ${widthClasses[maxWidth]} w-full`}
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}

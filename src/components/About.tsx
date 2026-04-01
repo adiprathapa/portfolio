@@ -56,7 +56,7 @@ export function About({ cardProgress }: AboutProps) {
               {CARDS.map((card, index) => (
                 <CardTransformed
                   key={card.id}
-                  className={card.image ? "group border border-border shadow-card" : "border border-border bg-white shadow-card"}
+                  className={card.image ? "group border border-border shadow-2xl" : "border border-border bg-white shadow-2xl"}
                   arrayLength={CARDS.length}
                   index={index + 1}
                   variant={card.image ? "image" : "light"}

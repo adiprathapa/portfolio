@@ -39,7 +39,7 @@ export function FlipSafari({
         style={{
           backfaceVisibility: 'hidden',
           borderRadius: '12px',
-          boxShadow: '0 2px 12px rgba(56, 189, 248, 0.08)',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
           transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: showBack ? 'rotateY(180deg)' : 'rotateY(0deg)',
         }}
@@ -58,7 +58,7 @@ export function FlipSafari({
           position: 'absolute',
           inset: 0,
           background: 'linear-gradient(135deg, #0f1d2b 0%, #0a1520 100%)',
-          boxShadow: '0 2px 12px rgba(56, 189, 248, 0.08)',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
         }}
       >
           <h3

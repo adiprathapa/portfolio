@@ -50,7 +50,7 @@ export function Navbar() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 z-[999] flex justify-center transition-all duration-500"
+      <div data-navbar className="fixed top-0 left-0 right-0 z-[999] flex justify-center transition-all duration-500"
         style={{
           padding: scrolled ? '0.75rem 2.5rem' : '0 2.5rem',
           transform: (hidden && !pinned) || forceHidden ? 'translateY(-100%)' : 'translateY(0)',

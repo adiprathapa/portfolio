@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { FlickeringGrid } from './ui/flickering-grid'
 import { IconCloud } from './ui/icon-cloud'
-import { Safari } from './ui/safari'
+import { FlipSafari } from './ui/flip-safari'
 
 const slugs = ["vuedotjs", "pinia", "githubactions", "yaml", "python", "codemirror", "pytorch", "fastapi", "react", "ollama", "d3", "anthropic", "googlegemini", "ipfs", "leaflet", "express", "mongodb", "vercel", "javascript", "palantir", "networkx", "typescript", "nextdotjs", "nodedotjs", "postgresql", "docker", "git", "github", "tensorflow", "html5", "css3", "flask", "openjdk", "c", "scikitlearn", "numpy", "pandas", "tailwindcss", "plotly", "mistralai", "redis", "sqlite", "confluence", "apache"
 ]
@@ -21,6 +21,38 @@ const projectTechStacks: Record<string, string[]> = {
   helicity:  ["pytorch", "fastapi", "python", "react", "ollama", "d3", "mistralai", "numpy", "pandas", "scikitlearn", "networkx"],
   zamsizing: ["javascript", "react", "nodedotjs", "express", "mongodb", "googlegemini", "vercel"],
   galatea:   ["networkx", "palantir", "javascript"],
+}
+
+const projectDisplayNames: Record<string, string> = {
+  kiwix:     "Kiwix",
+  tauron:    "Tauron",
+  helicity:  "Helicity",
+  zamsizing: "ZAM",
+  galatea:   "Galatea",
+}
+
+const projectDescriptions: Record<string, string> = {
+  kiwix:     "Open source contributor on FreeCodeCamp which is part of openZIM and Kiwix projects. I engineered a YAML based CI suite for locale key validation, implemented system wide dark mode with CSS variables and CodeMirror, and refactored core Vue components for optimized markdown parsing.",
+  helicity:  "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up multimodel LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
+  tauron:    "Trained a GRU and GraphSAGE model over a 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
+  zamsizing: "Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.",
+  galatea:   "Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry. Its interactive web dashboard enables rapid exploration, investigation, and reporting.",
+}
+
+const projectLinks: Record<string, string> = {
+  kiwix:     "https://browse.library.kiwix.org/viewer#freecodecamp_en_all_2026-02",
+  tauron:    "https://adiprathapa.github.io/Tauron/reveal_slides",
+  helicity:  "https://helicity-theta.vercel.app/",
+  zamsizing: "https://zamsizing.vercel.app/",
+  galatea:   "https://galatea.usw-3.palantirfoundry.com/stargate/oidc/ee802905-77f2-44a2-a9d0-ed41e2caea0e/login",
+}
+
+const projectRepoLinks: Record<string, string> = {
+  kiwix:     "https://github.com/adiprathapa/freecodecamp",
+  tauron:    "https://github.com/adiprathapa/Tauron",
+  helicity:  "https://github.com/AI-HackathonNYC/helicity",
+  zamsizing: "https://github.com/adiprathapa/ZAM",
+  galatea:   "https://github.com/adiprathapa/galatea",
 }
 
 const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'galatea']
@@ -120,47 +152,77 @@ export function Projects() {
               className="flex items-center md:w-[50%] origin-center relative"
               style={{ x: safariX, y: animatedY, scale: safariScale }}
             >
-              <Safari
-                url="https://browse.library.kiwix.org/viewer#freecodecamp_en_all_2026-02"
-                videoSrc="/kiwix.mov"
-                style={{ width: `calc(100% + ${safariLength}px)` }}
+              <FlipSafari
+                safariProps={{
+                  url: projectLinks['kiwix'],
+                  videoSrc: "/kiwix.mov",
+                  style: { width: `calc(100% + ${safariLength}px)` },
+                }}
+                projectName={projectDisplayNames['kiwix']}
+                projectDescription={projectDescriptions['kiwix']}
+
+                projectUrl={projectRepoLinks['kiwix']}
               />
               {/* Second Project */}
               <div className="absolute top-[600px] left-0 right-0 flex items-center">
-                <Safari
-                  url="https://adiprathapa.github.io/Tauron/reveal_slides"
-                  videoSrc="/tauron.mov"
-                  videoCropTop={11}
-                  style={{ width: `calc(100% + ${safariLength}px)` }}
+                <FlipSafari
+                  safariProps={{
+                    url: projectLinks['tauron'],
+                    videoSrc: "/tauron.mov",
+                    videoCropTop: 11,
+                    style: { width: `calc(100% + ${safariLength}px)` },
+                  }}
+                  projectName={projectDisplayNames['tauron']}
+                  projectDescription={projectDescriptions['tauron']}
+
+                  projectUrl={projectRepoLinks['tauron']}
                 />
               </div>
               {/* Third Project */}
               <div className="absolute top-[1200px] left-0 right-0 flex items-center">
-                <Safari
-                  url="https://helicity-theta.vercel.app/"
-                  videoSrc="/helicity.mov"
-                  style={{ width: `calc(100% + ${safariLength}px)` }}
+                <FlipSafari
+                  safariProps={{
+                    url: projectLinks['helicity'],
+                    videoSrc: "/helicity.mov",
+                    style: { width: `calc(100% + ${safariLength}px)` },
+                  }}
+                  projectName={projectDisplayNames['helicity']}
+                  projectDescription={projectDescriptions['helicity']}
+
+                  projectUrl={projectRepoLinks['helicity']}
                 />
               </div>
               {/* Fourth Project */}
               <div className="absolute top-[1800px] left-0 right-0 flex items-center">
-                <Safari
-                  url="https://zamsizing.vercel.app/"
-                  videoSrc="/zam-copy.mp4"
-                  videoCropTop={42}
-                  videoCropBottom={42}
-                  videoCropLeft={112}
-                  videoCropRight={112}
-                  style={{ width: `calc(100% + ${safariLength}px)` }}
+                <FlipSafari
+                  safariProps={{
+                    url: projectLinks['zamsizing'],
+                    videoSrc: "/zam-copy.mp4",
+                    videoCropTop: 42,
+                    videoCropBottom: 42,
+                    videoCropLeft: 112,
+                    videoCropRight: 112,
+                    style: { width: `calc(100% + ${safariLength}px)` },
+                  }}
+                  projectName={projectDisplayNames['zamsizing']}
+                  projectDescription={projectDescriptions['zamsizing']}
+
+                  projectUrl={projectRepoLinks['zamsizing']}
                 />
               </div>
               {/* Fifth Project */}
               <div className="absolute top-[2400px] left-0 right-0 flex items-center">
-                <Safari
-                  url="https://galatea.usw-3.palantirfoundry.com/stargate/oidc/ee802905-77f2-44a2-a9d0-ed41e2caea0e/login"
-                  videoSrc="/recording-1.mov"
-                  videoCropTop={11}
-                  style={{ width: `calc(100% + ${safariLength}px)` }}
+                <FlipSafari
+                  safariProps={{
+                    url: projectLinks['galatea'],
+                    videoSrc: "/recording-1.mov",
+                    videoCropTop: 11,
+                    style: { width: `calc(100% + ${safariLength}px)` },
+                  }}
+                  projectName={projectDisplayNames['galatea']}
+                  projectDescription={projectDescriptions['galatea']}
+
+                  projectUrl={projectRepoLinks['galatea']}
                 />
               </div>
             </motion.div>

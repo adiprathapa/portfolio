@@ -34,6 +34,13 @@
   80% { transform: rotate(4deg); }
 }
 
+@keyframes rippling {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
 @keyframes breathe {
   0%, 100% {
     transform: scale(1);

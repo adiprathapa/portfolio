@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from "react"
+import { useState, type HTMLAttributes } from "react"
 
 const SAFARI_WIDTH = 1203
 const SAFARI_HEIGHT = 753
@@ -34,6 +34,7 @@ export function Safari({
   style,
   ...props
 }: SafariProps) {
+  const [videoLoaded, setVideoLoaded] = useState(false)
   const hasVideo = !!videoSrc
   const hasMedia = hasVideo || !!imageSrc
 
@@ -65,6 +66,7 @@ export function Safari({
             muted
             playsInline
             preload="metadata"
+            onCanPlay={() => setVideoLoaded(true)}
             style={{
               height: (videoCropTop || videoCropBottom) ? `calc(100% + ${(Number(videoCropTop) || 0) + (Number(videoCropBottom) || 0)}px)` : undefined,
               top: (videoCropTop || videoCropBottom) ? `-${Number(videoCropTop) || 0}px` : undefined,
@@ -74,6 +76,45 @@ export function Safari({
               objectFit: (videoCropTop || videoCropBottom || videoCropLeft || videoCropRight) ? "fill" : undefined
             }}
           />
+        </div>
+      )}
+
+      {hasVideo && !videoLoaded && (
+        <div
+          className="pointer-events-none absolute z-[1] flex flex-col items-center justify-center"
+          style={{
+            left: `${LEFT_PCT}%`,
+            top: `${TOP_PCT}%`,
+            width: `${WIDTH_PCT}%`,
+            height: `${HEIGHT_PCT}%`,
+            borderRadius: "0 0 11px 11px",
+            background: '#0f1d2b',
+          }}
+        >
+          {/* Safari-style spinner */}
+          <svg width="24" height="24" viewBox="0 0 24 24" className="animate-spin">
+            <circle cx="12" cy="12" r="10" stroke="#1a2a3a" strokeWidth="2.5" fill="none" />
+            <path d="M12 2a10 10 0 0 1 10 10" stroke="#6b8faa" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          </svg>
+          {/* Safari-style top progress bar */}
+          <div
+            className="absolute top-0 left-0 right-0 overflow-hidden"
+            style={{ height: '2px' }}
+          >
+            <div
+              className="h-full"
+              style={{
+                background: 'linear-gradient(90deg, transparent, #38BDF8, transparent)',
+                animation: 'safariProgress 1.5s ease-in-out infinite',
+              }}
+            />
+          </div>
+          <style>{`
+            @keyframes safariProgress {
+              0% { transform: translateX(-100%); }
+              100% { transform: translateX(100%); }
+            }
+          `}</style>
         </div>
       )}
 

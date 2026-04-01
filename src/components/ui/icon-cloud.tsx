@@ -329,8 +329,11 @@ export function IconCloud({ images, size = 400, activeIconIndices, rotationTarge
               imagesLoadedRef.current[index]
             ) {
               if (isActive) {
-                ctx.shadowBlur = 18
-                ctx.shadowColor = "rgba(56, 189, 248, 0.45)"
+                const pulse = (Math.sin(performance.now() / 400) + 1) / 2
+                const pulseScale = 1 + pulse * 0.15
+                ctx.scale(pulseScale, pulseScale)
+                ctx.shadowBlur = 8 + pulse * 8
+                ctx.shadowColor = `rgba(56, 189, 248, ${0.15 + pulse * 0.2})`
                 ctx.shadowOffsetX = 0
                 ctx.shadowOffsetY = 0
                 ctx.drawImage(iconCanvasesRef.current[index], -40, -40, 80, 80)

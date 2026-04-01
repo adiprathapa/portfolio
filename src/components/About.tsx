@@ -31,17 +31,17 @@ export function About({ cardProgress }: AboutProps) {
               About me
             </GradientText>
           </motion.div>
-          <motion.p variants={heroChild} className="text-body text-lg leading-relaxed mb-4">
+          <motion.p variants={heroChild} className="text-black text-lg leading-relaxed mb-4">
             I'm a Computer Science student at Cornell minoring in AI, originally
             from Nebraska. I am really interested in building and working with full stack web
             apps and experimenting with ML models.
           </motion.p>
-          <motion.p variants={heroChild} className="text-body text-lg leading-relaxed mb-4">
+          <motion.p variants={heroChild} className="text-black text-lg leading-relaxed mb-4">
             Lately I've been diving deep into web3, stablecoins, and IPFS, the idea of
             programmable money and decentralized finance is something I enjoy working with and learning about. I'm always looking for ways to connect what I'm learning in AI
             with applications outside of the classroom.
           </motion.p>
-          <motion.p variants={heroChild} className="text-body text-lg leading-relaxed">
+          <motion.p variants={heroChild} className="text-black text-lg leading-relaxed">
             Outside of code, I'm an Eagle Scout who still loves getting outdoors,
             camping, hiking, that kind of thing. When I'm not on a trail, you'll
             probably find me gaming, tinkering with some new tech, or catching up

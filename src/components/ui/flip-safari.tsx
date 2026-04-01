@@ -57,24 +57,25 @@ export function FlipSafari({
           transform: showBack ? 'rotateY(0deg)' : 'rotateY(-180deg)',
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(135deg, #0f1d2b 0%, #0a1520 100%)',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.25) 100%), rgb(6,113,164)',
+          border: '1px solid rgba(255,255,255,0.2)',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
         }}
       >
           <h3
-            className="font-bold font-heading gradient-text"
-            style={{ fontSize: '1.34rem' }}
+            className="font-bold font-heading"
+            style={{ fontSize: '1.34rem', color: '#0671A4' }}
           >
             {projectName}
           </h3>
-          <p className="mt-3 leading-relaxed text-white" style={{ fontSize: '0.8rem' }}>
+          <p className="mt-3 leading-relaxed" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.85)' }}>
             {projectDescription}
           </p>
 
           <RippleButton
             rippleColor="#38BDF8"
             className="mt-10 self-center"
-            style={{ backgroundColor: '#0671A4', color: '#0f1d2b', fontSize: '0.8rem' }}
+            style={{ backgroundColor: '#0671A4', color: '#ffffff', fontSize: '0.8rem' }}
             onClick={(e) => {
               e.stopPropagation()
               window.open(projectUrl, '_blank', 'noopener,noreferrer')

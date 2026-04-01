@@ -123,29 +123,23 @@ export function Projects() {
 
   return (
     <div ref={containerRef} className="relative h-[700vh]">
-      <section id="projects" className="sticky top-0 bg-[#080d14] text-white h-screen overflow-hidden">
-        {/* Subtle radial gradient for depth */}
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            background: 'radial-gradient(ellipse at 30% 50%, rgba(6, 113, 164, 0.12) 0%, transparent 60%), radial-gradient(ellipse at 70% 40%, rgba(56, 189, 248, 0.06) 0%, transparent 50%)',
-          }}
-        />
-        <FlickeringGrid
-          color="rgb(56, 189, 248)"
-          maxOpacity={0.9}
-          squareSize={5}
-          gridGap={8}
-          flickerChance={0.06}
-          className="absolute inset-0 z-0"
-          style={{
-            maskImage: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%), linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 80%), radial-gradient(circle at 70% 70%, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 40%, black 60%)',
-            WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%), linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 80%), radial-gradient(circle at 70% 70%, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 40%, black 60%)',
-            maskComposite: 'intersect',
-            WebkitMaskComposite: 'destination-in',
-          }}
-        />
-        <div className="relative z-10 mx-auto max-w-7xl px-12 h-full flex items-center">
+      <section id="projects" className="sticky top-0 bg-surface h-screen overflow-hidden">
+        <div className="relative h-full text-white" style={{ backgroundColor: 'var(--color-primary)' }}>
+          <FlickeringGrid
+            color="rgb(0, 0, 0)"
+            maxOpacity={0.95}
+            squareSize={5}
+            gridGap={3}
+            flickerChance={0.06}
+            className="absolute inset-0 z-0"
+            style={{
+              maskImage: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%), linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 80%), radial-gradient(circle at 70% 70%, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 40%, black 60%)',
+              WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%), linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 80%), radial-gradient(circle at 70% 70%, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 40%, black 60%)',
+              maskComposite: 'intersect',
+              WebkitMaskComposite: 'destination-in',
+            }}
+          />
+          <div className="relative z-10 mx-auto max-w-7xl px-12 h-full flex items-center">
           <div className="flex flex-col md:flex-row items-center justify-center w-full gap-16">
             {/* Left side — Safari browser mockups */}
             <motion.div
@@ -231,6 +225,7 @@ export function Projects() {
             <div className="flex items-center justify-center md:w-[40%]" style={{ transform: `translateX(${cloudX}px) translateY(${cloudY}px)` }}>
               <IconCloud images={images} size={cloudSize} activeIconIndices={activeSlugIndices} rotationTargetIndices={rotationTargetIndex} />
             </div>
+          </div>
           </div>
         </div>
       </section>

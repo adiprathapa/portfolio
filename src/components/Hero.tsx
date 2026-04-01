@@ -347,7 +347,7 @@ export function Hero() {
         {/* Subtitle */}
         <motion.p
           variants={heroChild}
-          className="text-lg md:text-xl text-body mb-10 max-w-md mx-auto md:mx-0"
+          className="text-lg md:text-xl text-black mb-10 max-w-md mx-auto md:mx-0"
           style={{
             marginTop: tooltipActive ? '92px' : '-76px',
             transition: 'margin-top 280ms ease',

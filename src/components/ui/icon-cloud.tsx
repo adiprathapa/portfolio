@@ -300,16 +300,22 @@ export function IconCloud({ images, size = 400, activeIconIndices, rotationTarge
           }
         }
 
-        iconPositions.forEach((icon, index) => {
-          const cosX = Math.cos(rotationRef.current.x)
-          const sinX = Math.sin(rotationRef.current.x)
-          const cosY = Math.cos(rotationRef.current.y)
-          const sinY = Math.sin(rotationRef.current.y)
+        const cosX = Math.cos(rotationRef.current.x)
+        const sinX = Math.sin(rotationRef.current.x)
+        const cosY = Math.cos(rotationRef.current.y)
+        const sinY = Math.sin(rotationRef.current.y)
 
-          const rotatedX = icon.x * cosY - icon.z * sinY
-          const rotatedZ = icon.x * sinY + icon.z * cosY
-          const rotatedY = icon.y * cosX + rotatedZ * sinX
+        // Sort icons back-to-front so closer icons paint on top
+        const sorted = iconPositions
+          .map((icon, index) => {
+            const rotatedX = icon.x * cosY - icon.z * sinY
+            const rotatedZ = icon.x * sinY + icon.z * cosY
+            const rotatedY = icon.y * cosX + rotatedZ * sinX
+            return { icon, index, rotatedX, rotatedY, rotatedZ }
+          })
+          .sort((a, b) => a.rotatedZ - b.rotatedZ)
 
+        sorted.forEach(({ index, rotatedX, rotatedY, rotatedZ }) => {
           const scale = (rotatedZ + 200) / 300
           const opacity = Math.max(0.2, Math.min(1, (rotatedZ + 150) / 200))
 
@@ -332,10 +338,10 @@ export function IconCloud({ images, size = 400, activeIconIndices, rotationTarge
                 const pulse = (Math.sin(performance.now() / 400) + 1) / 2
                 const pulseScale = 1 + pulse * 0.15
                 ctx.scale(pulseScale, pulseScale)
-                ctx.shadowBlur = 8 + pulse * 8
-                ctx.shadowColor = `rgba(56, 189, 248, ${0.15 + pulse * 0.2})`
-                ctx.shadowOffsetX = 0
-                ctx.shadowOffsetY = 0
+                ctx.shadowBlur = 10 + pulse * 6
+                ctx.shadowColor = `rgba(0, 0, 0, ${0.25 + pulse * 0.15})`
+                ctx.shadowOffsetX = 2
+                ctx.shadowOffsetY = 3
                 ctx.drawImage(iconCanvasesRef.current[index], -40, -40, 80, 80)
                 ctx.shadowBlur = 0
                 ctx.drawImage(iconCanvasesRef.current[index], -40, -40, 80, 80)

@@ -6,7 +6,7 @@ import { IconCloud } from './ui/icon-cloud'
 import { FlipSafari } from './ui/flip-safari'
 
 
-const slugs = ["vuedotjs", "pinia", "githubactions", "yaml", "python", "codemirror", "pytorch", "fastapi", "react", "ollama", "d3", "anthropic", "googlegemini", "ipfs", "leaflet", "express", "mongodb", "vercel", "javascript", "palantir", "networkx", "typescript", "nextdotjs", "nodedotjs", "postgresql", "docker", "git", "github", "tensorflow", "html5", "css3", "flask", "openjdk", "c", "scikitlearn", "numpy", "pandas", "tailwindcss", "plotly", "mistralai", "redis", "sqlite", "confluence", "apache"
+const slugs = ["vuedotjs", "pinia", "githubactions", "yaml", "python", "codemirror", "pytorch", "fastapi", "react", "ollama", "d3", "anthropic", "googlegemini", "ipfs", "leaflet", "express", "mongodb", "vercel", "javascript", "palantir", "networkx", "typescript", "nextdotjs", "nodedotjs", "postgresql", "docker", "git", "github", "tensorflow", "html5", "css3", "flask", "openjdk", "c", "scikitlearn", "numpy", "pandas", "plotly", "mistralai", "redis", "sqlite", "confluence", "apache", "google"
 ]
 
 const slugToName: Record<string, string> = {
@@ -47,13 +47,13 @@ const slugToName: Record<string, string> = {
   scikitlearn: "scikit-learn",
   numpy: "NumPy",
   pandas: "pandas",
-  tailwindcss: "Tailwind CSS",
   plotly: "Plotly",
   mistralai: "Mistral AI",
   redis: "Redis",
   sqlite: "SQLite",
   confluence: "Confluence",
   apache: "Apache",
+  google: "Google ADK",
 }
 
 const names = slugs.map(slug => slugToName[slug] || slug)
@@ -110,7 +110,6 @@ import { ProjectsBackground } from './ui/projects-background'
 
 const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'galatea']
 const thresholds = [0.00, 0.23, 0.46, 0.73, 0.96]
-
 export function Projects() {
   const { scrolled } = useScrolled(50)
 

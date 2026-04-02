@@ -179,16 +179,13 @@ export function Projects() {
     const containerEl = blueRef.current
     if (!containerEl) return
 
-    if (!scrolled) {
-      containerEl.style.transition = ''
-      containerEl.style.clipPath = 'inset(0 0 0 0 round 24px)'
-      return
-    }
-
-    // While scrolled, track the navbar's actual animated position via RAF.
-    // This follows both its entrance (translateY(0)) and exit (translateY(-100%))
-    // animations frame-by-frame, keeping the 20px gap perfectly synced.
     let rafId: number
+
+    // Read current clip from DOM so we can blend smoothly from wherever we are
+    const match = containerEl.style.clipPath.match(/inset\((\d+)px/)
+    const startClip = match ? parseInt(match[1]) : 0
+    const transitionStart = performance.now()
+    const BLEND_MS = 500
 
     const update = () => {
       const navEl = document.querySelector('[data-navbar]') as HTMLElement
@@ -197,18 +194,36 @@ export function Projects() {
         return
       }
 
-      const navBottom = navEl.getBoundingClientRect().bottom
-      const containerTop = containerEl.getBoundingClientRect().top
-      const gap = containerTop - navBottom
-
-      if (navBottom > 0 && gap <= 20) {
-        const clip = Math.max(0, Math.round(20 - gap))
-        containerEl.style.clipPath = `inset(${clip}px 0 0 0 round 24px)`
-      } else {
-        containerEl.style.clipPath = 'inset(0 0 0 0 round 24px)'
+      // Compute where the clip should be based on the navbar's actual position
+      let targetClip = 0
+      if (scrolled) {
+        const navBottom = navEl.getBoundingClientRect().bottom
+        const containerTop = containerEl.getBoundingClientRect().top
+        const gap = containerTop - navBottom
+        if (navBottom > 0 && gap <= 20) {
+          targetClip = Math.max(0, 20 - gap)
+        }
       }
 
-      rafId = requestAnimationFrame(update)
+      // Blend from startClip toward targetClip over BLEND_MS,
+      // then track the navbar directly after the blend completes
+      const elapsed = performance.now() - transitionStart
+      let clip: number
+      if (elapsed < BLEND_MS) {
+        const t = elapsed / BLEND_MS
+        const eased = 1 - (1 - t) * (1 - t) // ease-out quadratic
+        clip = startClip + (targetClip - startClip) * eased
+      } else {
+        clip = targetClip
+      }
+
+      containerEl.style.clipPath = `inset(${Math.round(clip)}px 0 0 0 round 24px)`
+
+      // Keep RAF running while scrolled (for navbar hide/show tracking)
+      // or while still blending out
+      if (scrolled || elapsed < BLEND_MS) {
+        rafId = requestAnimationFrame(update)
+      }
     }
 
     containerEl.style.transition = 'none'

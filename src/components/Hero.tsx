@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AnimatedGradientBackground } from './ui/animated-gradient-background'
+import { FluidCursor } from './ui/fluid-cursor'
 import { heroStagger, heroChild } from '../lib/animations'
 
 const LENS_SIZE = 140
@@ -230,6 +231,7 @@ export function Hero() {
       style={{ paddingBottom: '0' }}
     >
       <AnimatedGradientBackground />
+      <FluidCursor />
 
       <motion.div
         className="relative z-10 text-center md:text-left max-w-5xl w-full px-6 flex flex-col-reverse md:flex-row items-center md:items-center gap-8 md:gap-12"

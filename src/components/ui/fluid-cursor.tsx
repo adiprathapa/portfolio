@@ -6,18 +6,16 @@ import { useEffect, useRef } from 'react'
  * MIT License - Copyright (c) 2017 Pavel Dobryakov
  */
 
-const SPLAT_FORCE = 2000
-const SPLAT_RADIUS = 0.15
-const CURL_AMOUNT = 3
+const SPLAT_FORCE = 6000
+const SPLAT_RADIUS = 0.25
+const CURL_AMOUNT = 30
 const PRESSURE_ITERATIONS = 20
-const DENSITY_DISSIPATION = 3.5
-const VELOCITY_DISSIPATION = 2.0
+const DENSITY_DISSIPATION = 2.0
+const VELOCITY_DISSIPATION = 0.2
 const PRESSURE_VAL = 0.8
 const SIM_RESOLUTION = 128
 const DYE_RESOLUTION = 1024
-const COLOR_R = 0.8
-const COLOR_G = 0.8
-const COLOR_B = 0.8
+const SPLAT_COLOR = { r: 0.94, g: 0.95, b: 0.97 }
 
 // --- Shader Sources ---
 
@@ -65,9 +63,28 @@ const displayShaderSource = `
   precision highp float;
   precision highp sampler2D;
   varying vec2 vUv;
+  varying vec2 vL;
+  varying vec2 vR;
+  varying vec2 vT;
+  varying vec2 vB;
   uniform sampler2D uTexture;
+  uniform vec2 texelSize;
   void main () {
     vec3 c = texture2D(uTexture, vUv).rgb;
+
+    vec3 lc = texture2D(uTexture, vL).rgb;
+    vec3 rc = texture2D(uTexture, vR).rgb;
+    vec3 tc = texture2D(uTexture, vT).rgb;
+    vec3 bc = texture2D(uTexture, vB).rgb;
+
+    float dx = length(rc) - length(lc);
+    float dy = length(tc) - length(bc);
+
+    vec3 n = normalize(vec3(dx, dy, length(texelSize)));
+    vec3 l = vec3(0.0, 0.0, 1.0);
+    float diffuse = clamp(dot(n, l) + 0.7, 0.7, 1.0);
+    c *= diffuse;
+
     float intensity = max(c.r, max(c.g, c.b));
     float a = min(intensity, 1.0);
     gl_FragColor = vec4(a, a, a, a);
@@ -258,7 +275,7 @@ export function FluidCursor() {
       deltaY: 0,
       down: false,
       moved: false,
-      color: { r: COLOR_R, g: COLOR_G, b: COLOR_B },
+      color: SPLAT_COLOR,
     }
 
     const ctx = getWebGLContext(canvas)
@@ -636,6 +653,7 @@ export function FluidCursor() {
     function applyInputs() {
       if (pointer.moved) {
         pointer.moved = false
+        pointer.color = SPLAT_COLOR
         const dx = pointer.deltaX * SPLAT_FORCE
         const dy = pointer.deltaY * SPLAT_FORCE
         splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color)
@@ -710,6 +728,7 @@ export function FluidCursor() {
     function render() {
       gl.disable(gl.BLEND)
       displayProgram.bind()
+      gl.uniform2f(displayProgram.uniforms.texelSize, 1.0 / gl.drawingBufferWidth, 1.0 / gl.drawingBufferHeight)
       gl.uniform1i(displayProgram.uniforms.uTexture, dye.read.attach(0))
       blit(null)
     }
@@ -781,7 +800,7 @@ export function FluidCursor() {
         height: '100%',
         pointerEvents: 'none',
         zIndex: 1,
-        opacity: 0.35,
+        opacity: 0.4,
       }}
     />
   )

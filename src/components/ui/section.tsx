@@ -6,6 +6,7 @@ interface SectionProps {
   className?: string
   id?: string
   maxWidth?: 'container' | 'text'
+  style?: React.CSSProperties
 }
 
 const widthClasses = {
@@ -13,9 +14,9 @@ const widthClasses = {
   text: 'max-w-3xl',
 }
 
-export function Section({ children, className = '', id, maxWidth = 'container' }: SectionProps) {
+export function Section({ children, className = '', id, maxWidth = 'container', style }: SectionProps) {
   return (
-    <section id={id} className={`py-16 px-4 md:py-20 md:px-6 lg:py-24 ${className}`}>
+    <section id={id} className={`py-16 px-4 md:py-20 md:px-6 lg:py-24 ${className}`} style={style}>
       <motion.div
         className={`mx-auto ${widthClasses[maxWidth]} w-full`}
         initial={{ opacity: 0, y: 20 }}

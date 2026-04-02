@@ -18,56 +18,29 @@ export function FlipSafari({
   projectUrl,
   logoSrc,
 }: FlipSafariProps) {
-  const [isHovered, setIsHovered] = useState(false)
-  const [isLocked, setIsLocked] = useState(false)
+  const [showVideo, setShowVideo] = useState(false)
   const [isRepoHovered, setIsRepoHovered] = useState(false)
-
-  const showBack = isLocked || isHovered
-
-  const handleClick = () => {
-    setIsLocked((prev) => !prev)
-  }
 
   const { style: safariStyle, ...restSafariProps } = safariProps
 
   return (
     <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ perspective: '1000px', cursor: 'pointer', position: 'relative', ...safariStyle }}
+      style={{ perspective: '1000px', position: 'relative', ...safariStyle }}
     >
-      {/* Front face */}
+      {/* Front face — description (shown by default) */}
       <div
-        onClick={handleClick}
-        style={{
-          backfaceVisibility: 'hidden',
-          borderRadius: '12px',
-          border: '1px solid #FFFFFF',
-          backgroundColor: '#F4F4F4',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
-          transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease',
-          transform: showBack ? 'rotateY(180deg)' : 'rotateY(0deg)',
-          opacity: showBack ? 0 : 1,
-        }}
-      >
-        <Safari {...restSafariProps} />
-      </div>
-
-      {/* Back face */}
-      <div
-        onClick={handleClick}
         className="flex flex-col justify-center px-10"
         style={{
           backfaceVisibility: 'hidden',
-          transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-          transform: showBack ? 'rotateY(0deg)' : 'rotateY(-180deg)',
-          position: 'absolute',
-          inset: 0,
-          backgroundColor: '#F4F4F4',
-          border: '1px solid #FFFFFF',
           borderRadius: '12px',
+          border: '1px solid #FFFFFF',
+          backgroundColor: '#F4F4F4',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
-          aspectRatio: '1203/753', // Match Safari aspect ratio exactly
+          transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: showVideo ? 'rotateY(180deg)' : 'rotateY(0deg)',
+          zIndex: 2,
+          position: 'relative',
+          aspectRatio: '1203/753',
         }}
       >
         {logoSrc ? (
@@ -115,13 +88,10 @@ export function FlipSafari({
               e.currentTarget.style.color = '#FFFFFF'
               e.currentTarget.style.borderColor = 'transparent'
             }}
-            onClick={(e) => {
-              e.stopPropagation()
-              window.open(projectUrl, '_blank', 'noopener,noreferrer')
-            }}
+            onClick={() => setShowVideo(true)}
           >
             <span className="inline-flex items-center gap-1.5">
-              <span>View Repository</span>
+              <span>View Video</span>
               <svg
                 width="14"
                 height="14"
@@ -145,6 +115,25 @@ export function FlipSafari({
             </span>
           </RippleButton>
         </div>
+      </div>
+
+      {/* Back face — Safari video (shown on click) */}
+      <div
+        onClick={() => setShowVideo(false)}
+        style={{
+          cursor: 'pointer',
+          backfaceVisibility: 'hidden',
+          transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: showVideo ? 'rotateY(0deg)' : 'rotateY(-180deg)',
+          position: 'absolute',
+          inset: 0,
+          borderRadius: '12px',
+          border: '1px solid #FFFFFF',
+          backgroundColor: '#F4F4F4',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+        }}
+      >
+        <Safari {...restSafariProps} playing={showVideo} />
       </div>
     </div>
   )

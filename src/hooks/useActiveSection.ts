@@ -15,14 +15,14 @@ export function useActiveSection() {
     // "about" lives inside the horizontal-scroll sticky container, so its
     // getBoundingClientRect doesn't move until the sticky context ends.
     // Detect it via scroll position instead: the horizontal slide occupies
-    // the first 40% of the 500vh container (= 2×vh of scroll).
-    const aboutStart = () => window.innerHeight * 1.6
+    // the first 40% of the 350vh container (= 1.4×vh of scroll).
+    const aboutStart = () => window.innerHeight * 1.1
     const aboutEnd = () => {
       // About section ends where "projects" begins (fall back to 4×vh)
       const projects = document.getElementById('projects')
       return projects
         ? projects.getBoundingClientRect().top + window.scrollY
-        : window.innerHeight * 4
+        : window.innerHeight * 3.5
     }
 
     const handleScroll = () => {

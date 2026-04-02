@@ -11,7 +11,7 @@ export function useScrolled(threshold = 10) {
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY
-      const sectionEnd = window.innerHeight * 4
+      const sectionEnd = window.innerHeight * 2.2
       const isScrolled = currentY > sectionEnd + threshold
       setScrolled(isScrolled)
 

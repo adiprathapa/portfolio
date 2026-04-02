@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useScrolled } from '../hooks/useScrolled'
 import { useActiveSection } from '../hooks/useActiveSection'
 import { Button } from './ui/button'
+import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
 
 const navLinks = [
@@ -16,6 +17,7 @@ export function Navbar() {
   const activeSection = useActiveSection()
   const [menuOpen, setMenuOpen] = useState(false)
   const [pinned, setPinned] = useState(false)
+  const [ctaHovered, setCtaHovered] = useState(false)
   const [forceHidden, setForceHidden] = useState(false)
   const scrolledRef = useRef(scrolled)
   scrolledRef.current = scrolled
@@ -44,7 +46,7 @@ export function Navbar() {
     // where the horizontal translation has fully revealed the About panel.
     if (href === '#about') {
       e.preventDefault()
-      window.scrollTo({ top: window.innerHeight * 1.8, behavior: 'smooth' })
+      window.scrollTo({ top: window.innerHeight * 1.3, behavior: 'smooth' })
     }
   }
 
@@ -96,10 +98,10 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`relative text-base font-medium transition-colors after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-0.5 after:bg-primary after:transition-transform after:duration-300 after:origin-left ${
+                    className={`relative text-base font-medium rounded-full px-4 py-1.5 transition-all duration-300 ${
                       isActive
-                        ? 'text-primary after:scale-x-100'
-                        : 'text-heading hover:text-primary/70 after:scale-x-0'
+                        ? 'text-primary bg-primary/10'
+                        : 'text-heading hover:text-primary/70'
                     }`}
                   >
                     {link.label}
@@ -110,9 +112,52 @@ export function Navbar() {
 
             {/* Desktop CTA */}
             <div className="hidden lg:block">
-              <Button variant="primary" href="#contact" className="!text-base py-2.5 px-5" onClick={(e) => handleNavClick(e as any, '#contact')}>
-                Let's talk
-              </Button>
+              <RippleButton
+                className="px-5 py-2.5 !text-base"
+                rippleColor="#38BDF8"
+                style={{
+                  backgroundColor: '#0671A4',
+                  color: '#FFFFFF',
+                  border: '2px solid transparent',
+                  boxShadow: '0 2px 8px rgba(6, 113, 164, 0.12)',
+                  transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
+                }}
+                onMouseEnter={(e) => {
+                  setCtaHovered(true)
+                  e.currentTarget.style.backgroundColor = '#055a84'
+                }}
+                onMouseLeave={(e) => {
+                  setCtaHovered(false)
+                  e.currentTarget.style.backgroundColor = '#0671A4'
+                }}
+                onClick={(e) => {
+                  handleNavClick(e as any, '#contact')
+                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
+                }}
+              >
+                <span className="inline-flex items-center gap-1.5">
+                  <span>Let's talk</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    {ctaHovered ? (
+                      <>
+                        <path d="M5 12h14" />
+                        <path d="M12 5l7 7-7 7" />
+                      </>
+                    ) : (
+                      <path d="M8 5l7 7-7 7" />
+                    )}
+                  </svg>
+                </span>
+              </RippleButton>
             </div>
 
             {/* Mobile hamburger */}

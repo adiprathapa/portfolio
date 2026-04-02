@@ -1,4 +1,4 @@
-import { useState, type HTMLAttributes } from "react"
+import { useState, useRef, useEffect, type HTMLAttributes } from "react"
 
 const SAFARI_WIDTH = 1203
 const SAFARI_HEIGHT = 753
@@ -20,6 +20,7 @@ export interface SafariProps extends HTMLAttributes<HTMLDivElement> {
   videoCropBottom?: number | string
   videoCropLeft?: number | string
   videoCropRight?: number | string
+  playing?: boolean
 }
 
 export function Safari({
@@ -30,11 +31,23 @@ export function Safari({
   videoCropBottom,
   videoCropLeft,
   videoCropRight,
+  playing,
   className,
   style,
   ...props
 }: SafariProps) {
   const [videoLoaded, setVideoLoaded] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    if (!videoRef.current || playing === undefined) return
+    if (playing) {
+      videoRef.current.play().catch(() => {})
+    } else {
+      videoRef.current.pause()
+      videoRef.current.currentTime = 0
+    }
+  }, [playing])
   const hasVideo = !!videoSrc
   const hasMedia = hasVideo || !!imageSrc
 
@@ -61,9 +74,10 @@ export function Safari({
           }}
         >
           <video
+            ref={videoRef}
             className="block size-full max-w-none object-cover object-top"
             src={videoSrc}
-            autoPlay
+            autoPlay={playing === undefined}
             loop
             muted
             playsInline

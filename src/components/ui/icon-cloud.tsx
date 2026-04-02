@@ -315,7 +315,7 @@ export function IconCloud({ images, size = 400, activeIconIndices, rotationTarge
           })
           .sort((a, b) => a.rotatedZ - b.rotatedZ)
 
-        sorted.forEach(({ index, rotatedX, rotatedY, rotatedZ }) => {
+        sorted.forEach(({ icon, index, rotatedX, rotatedY, rotatedZ }) => {
           const scale = (rotatedZ + 200) / 300
           const opacity = Math.max(0.2, Math.min(1, (rotatedZ + 150) / 200))
 
@@ -354,7 +354,7 @@ export function IconCloud({ images, size = 400, activeIconIndices, rotationTarge
             ctx.arc(0, 0, 20, 0, Math.PI * 2)
             ctx.fillStyle = "#4444ff"
             ctx.fill()
-            ctx.fillStyle = "white"
+            ctx.fillStyle = "#f4f4f4"
             ctx.textAlign = "center"
             ctx.textBaseline = "middle"
             ctx.font = "16px Arial"

@@ -48,7 +48,7 @@ export function Contact() {
               required
               className="flex-1 bg-transparent text-white placeholder:text-white/60 px-5 py-3 outline-none text-sm"
             />
-            <Button type="submit" variant="primary" className="bg-white text-primary hover:bg-white/90">
+            <Button type="submit" variant="primary" className="bg-[#F4F4F4] text-primary hover:bg-[#F4F4F4]/90">
               Get in touch
             </Button>
           </div>

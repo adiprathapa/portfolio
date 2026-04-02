@@ -16,7 +16,7 @@ export function Experience() {
           className="text-base font-semibold transition-all duration-300 cursor-pointer"
           style={
             active === 'work'
-              ? { color: '#ffffff', backgroundColor: '#0671A4', borderRadius: '9999px', padding: '6px 20px' }
+              ? { color: '#F4F4F4', backgroundColor: '#0671A4', borderRadius: '9999px', padding: '6px 20px' }
               : { color: '#4B5563', backgroundColor: 'transparent', border: 'none', padding: '6px 20px' }
           }
         >
@@ -27,7 +27,7 @@ export function Experience() {
           className="text-base font-semibold transition-all duration-300 cursor-pointer"
           style={
             active === 'involvement'
-              ? { color: '#ffffff', backgroundColor: '#0671A4', borderRadius: '9999px', padding: '6px 20px' }
+              ? { color: '#F4F4F4', backgroundColor: '#0671A4', borderRadius: '9999px', padding: '6px 20px' }
               : { color: '#4B5563', backgroundColor: 'transparent', border: 'none', padding: '6px 20px' }
           }
         >

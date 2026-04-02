@@ -11,6 +11,7 @@ html::-webkit-scrollbar {
    Design Tokens via Tailwind v4 @theme
    ============================================ */
 @theme {
+  --color-white: #f4f4f4;
   --color-primary: #0671A4;
   --color-accent: #38BDF8;
   --color-dark: #0D1117;

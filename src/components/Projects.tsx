@@ -1,9 +1,10 @@
 import { useState, useRef, useMemo, useEffect } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { useScrolled } from '../hooks/useScrolled'
-import { FlickeringGrid } from './ui/flickering-grid'
+
 import { IconCloud } from './ui/icon-cloud'
 import { FlipSafari } from './ui/flip-safari'
+
 
 const slugs = ["vuedotjs", "pinia", "githubactions", "yaml", "python", "codemirror", "pytorch", "fastapi", "react", "ollama", "d3", "anthropic", "googlegemini", "ipfs", "leaflet", "express", "mongodb", "vercel", "javascript", "palantir", "networkx", "typescript", "nextdotjs", "nodedotjs", "postgresql", "docker", "git", "github", "tensorflow", "html5", "css3", "flask", "openjdk", "c", "scikitlearn", "numpy", "pandas", "tailwindcss", "plotly", "mistralai", "redis", "sqlite", "confluence", "apache"
 ]
@@ -56,12 +57,14 @@ const projectRepoLinks: Record<string, string> = {
   galatea: "https://github.com/adiprathapa/galatea",
 }
 
+import { ProjectsBackground } from './ui/projects-background'
+
 const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'galatea']
 const thresholds = [0.00, 0.23, 0.46, 0.73, 0.96]
 
 export function Projects() {
-  const { scrolled, hidden } = useScrolled(50)
-  const navVisible = scrolled && !hidden
+  const { scrolled } = useScrolled(50)
+
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -123,59 +126,53 @@ export function Projects() {
 
   const blueRef = useRef<HTMLDivElement>(null)
 
-  const [clipTop, setClipTop] = useState(0)
-
   useEffect(() => {
-    if (!navVisible) {
-      setClipTop(0)
+    const containerEl = blueRef.current
+    if (!containerEl) return
+
+    if (!scrolled) {
+      containerEl.style.transition = ''
+      containerEl.style.clipPath = 'inset(0 0 0 0 round 24px)'
       return
     }
 
-    const computeClip = () => {
-      const containerEl = blueRef.current
-      if (!containerEl) return
+    // While scrolled, track the navbar's actual animated position via RAF.
+    // This follows both its entrance (translateY(0)) and exit (translateY(-100%))
+    // animations frame-by-frame, keeping the 20px gap perfectly synced.
+    let rafId: number
 
-      // Compute expected navbar bottom from CSS values (avoids transition timing issues)
-      // Navbar outer div: padding 0.75rem top + header h-16 (4rem) + padding 0.75rem bottom = 5.5rem
-      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
-      const navBottom = 5.5 * rem
+    const update = () => {
+      const navEl = document.querySelector('[data-navbar]') as HTMLElement
+      if (!navEl || !containerEl) {
+        rafId = requestAnimationFrame(update)
+        return
+      }
+
+      const navBottom = navEl.getBoundingClientRect().bottom
       const containerTop = containerEl.getBoundingClientRect().top
       const gap = containerTop - navBottom
 
-      if (gap <= 20) {
-        setClipTop(Math.round(20 - gap))
+      if (navBottom > 0 && gap <= 20) {
+        const clip = Math.max(0, Math.round(20 - gap))
+        containerEl.style.clipPath = `inset(${clip}px 0 0 0 round 24px)`
       } else {
-        setClipTop(0)
+        containerEl.style.clipPath = 'inset(0 0 0 0 round 24px)'
       }
+
+      rafId = requestAnimationFrame(update)
     }
 
-    computeClip()
-    window.addEventListener('scroll', computeClip, { passive: true })
-    window.addEventListener('resize', computeClip)
-    return () => {
-      window.removeEventListener('scroll', computeClip)
-      window.removeEventListener('resize', computeClip)
-    }
-  }, [navVisible])
+    containerEl.style.transition = 'none'
+    rafId = requestAnimationFrame(update)
+    return () => cancelAnimationFrame(rafId)
+  }, [scrolled])
 
   return (
     <div ref={containerRef} className="relative h-[700vh]">
       <section id="projects" className="sticky top-0 bg-surface h-screen overflow-hidden flex items-center justify-center px-6 pb-6 pt-6">
-        <div ref={blueRef} className="relative w-full h-full text-white overflow-hidden" style={{ backgroundColor: 'var(--color-primary)', clipPath: clipTop > 0 ? `inset(${clipTop}px 0 0 0 round 24px)` : 'inset(0 0 0 0 round 24px)', transition: clipTop > 0 ? 'clip-path 0ms' : 'clip-path 500ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
-          <FlickeringGrid
-            color="rgb(0, 0, 0)"
-            maxOpacity={0.95}
-            squareSize={5}
-            gridGap={3}
-            flickerChance={0.06}
-            className="absolute inset-0 z-0"
-            style={{
-              maskImage: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%), linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 80%), radial-gradient(circle at 70% 70%, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 40%, black 60%)',
-              WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%), linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 80%), radial-gradient(circle at 70% 70%, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 40%, black 60%)',
-              maskComposite: 'intersect',
-              WebkitMaskComposite: 'destination-in',
-            }}
-          />
+        <div ref={blueRef} className="relative w-full h-full text-foreground overflow-hidden" style={{ clipPath: 'inset(0 0 0 0 round 24px)' }}>
+          <ProjectsBackground />
+
           <div className="relative z-10 mx-auto max-w-7xl px-12 h-full flex items-center">
             <div className="flex flex-col md:flex-row items-center justify-center w-full gap-16">
               {/* Left side — Safari browser mockups */}
@@ -194,7 +191,6 @@ export function Projects() {
 
                   projectUrl={projectRepoLinks['kiwix']}
                 />
-                {/* Second Project */}
                 <div className="absolute top-[600px] left-0 right-0 flex items-center">
                   <FlipSafari
                     safariProps={{

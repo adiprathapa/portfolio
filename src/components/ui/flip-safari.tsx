@@ -50,32 +50,34 @@ export function FlipSafari({
       {/* Back face */}
       <div
         onClick={handleClick}
-        className="flex flex-col justify-center rounded-xl px-10"
+        className="flex flex-col items-center justify-center px-12 text-center"
         style={{
           backfaceVisibility: 'hidden',
           transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: showBack ? 'rotateY(0deg)' : 'rotateY(-180deg)',
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.25) 100%), rgb(6,113,164)',
-          border: '1px solid rgba(255,255,255,0.2)',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
+          background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+          border: '1px solid rgba(6, 113, 164, 0.2)',
+          borderRadius: '12px',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
+          aspectRatio: '1203/753', // Match Safari aspect ratio exactly
         }}
       >
           <h3
             className="font-bold font-heading"
-            style={{ fontSize: '1.34rem', color: '#0671A4' }}
+            style={{ fontSize: '1.5rem', color: '#0671A4' }}
           >
             {projectName}
           </h3>
-          <p className="mt-3 leading-relaxed" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.85)' }}>
+          <p className="mt-4 leading-relaxed max-w-[320px]" style={{ fontSize: '0.9rem', color: '#4B5563' }}>
             {projectDescription}
           </p>
 
           <RippleButton
             rippleColor="#38BDF8"
-            className="mt-10 self-center"
-            style={{ backgroundColor: '#0671A4', color: '#ffffff', fontSize: '0.8rem' }}
+            className="mt-10"
+            style={{ backgroundColor: '#0671A4', color: '#f4f4f4', fontSize: '0.9rem' }}
             onClick={(e) => {
               e.stopPropagation()
               window.open(projectUrl, '_blank', 'noopener,noreferrer')

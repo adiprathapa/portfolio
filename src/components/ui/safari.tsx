@@ -46,7 +46,7 @@ export function Safari({
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderRadius: '12px',
-        border: '1px solid rgba(255,255,255,0.15)',
+        border: '1px solid rgba(244,244,244,0.15)',
         ...style,
       }}
       {...props}
@@ -92,13 +92,13 @@ export function Safari({
             width: `${WIDTH_PCT}%`,
             height: `${HEIGHT_PCT}%`,
             borderRadius: "0 0 11px 11px",
-            background: 'rgba(255,255,255,0.15)',
+            background: 'rgba(244,244,244,0.15)',
           }}
         >
           {/* Safari-style spinner */}
           <svg width="24" height="24" viewBox="0 0 24 24" className="animate-spin">
-            <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.2)" strokeWidth="2.5" fill="none" />
-            <path d="M12 2a10 10 0 0 1 10 10" stroke="rgba(255,255,255,0.6)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+            <circle cx="12" cy="12" r="10" stroke="rgba(244,244,244,0.2)" strokeWidth="2.5" fill="none" />
+            <path d="M12 2a10 10 0 0 1 10 10" stroke="rgba(244,244,244,0.6)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
           </svg>
           {/* Safari-style top progress bar */}
           <div
@@ -155,7 +155,7 @@ export function Safari({
               y="0"
               width={SAFARI_WIDTH}
               height={SAFARI_HEIGHT}
-              fill="white"
+              fill="#F4F4F4"
             />
             <path
               d="M1 52H1201V741C1201 747.075 1196.08 752 1190 752H12C5.92486 752 1 747.075 1 741V52Z"
@@ -164,13 +164,13 @@ export function Safari({
           </mask>
 
           <clipPath id="path0">
-            <rect width={SAFARI_WIDTH} height={SAFARI_HEIGHT} fill="white" />
+            <rect width={SAFARI_WIDTH} height={SAFARI_HEIGHT} fill="#F4F4F4" />
           </clipPath>
 
           <clipPath id="roundedBottom">
             <path
               d="M1 52H1201V741C1201 747.075 1196.08 752 1190 752H12C5.92486 752 1 747.075 1 741V52Z"
-              fill="white"
+              fill="#F4F4F4"
             />
           </clipPath>
         </defs>

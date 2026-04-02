@@ -95,7 +95,7 @@ const projectLinks: Record<string, string> = {
   tauron: "https://adiprathapa.github.io/Tauron/reveal_slides",
   helicity: "https://helicity-theta.vercel.app/",
   zamsizing: "https://zamsizing.vercel.app/",
-  galatea: "https://galatea.usw-3.palantirfoundry.com/stargate/oidc/ee802905-77f2-44a2-a9d0-ed41e2caea0e/login",
+  galatea: "https://galatea.usw-3.palantirfoundry.com/stargate/oidc/ee802905-77f2-44a2-a9d0-ed41e2caea0e",
 }
 
 const projectRepoLinks: Record<string, string> = {

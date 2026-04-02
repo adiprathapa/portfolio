@@ -63,8 +63,8 @@ export function Navbar() {
             backgroundColor: scrolled ? 'rgba(255,255,255,0.8)' : 'transparent',
             backdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)',
             WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)',
-            boxShadow: scrolled ? '0 2px 8px rgba(6,113,164,0.15)' : '0 2px 8px rgba(6,113,164,0)',
-            border: scrolled ? '1px solid rgba(6,113,164,0.15)' : '1px solid rgba(6,113,164,0)',
+            boxShadow: scrolled ? '0 4px 12px rgba(0, 0, 0, 0.08)' : '0 4px 12px rgba(0, 0, 0, 0)',
+            border: scrolled ? '1px solid rgba(0, 0, 0, 0.05)' : '1px solid rgba(0, 0, 0, 0)',
             transition: 'max-width 500ms cubic-bezier(0.4,0,0.2,1), background-color 500ms cubic-bezier(0.4,0,0.2,1), backdrop-filter 500ms cubic-bezier(0.4,0,0.2,1), box-shadow 500ms cubic-bezier(0.4,0,0.2,1), border 500ms cubic-bezier(0.4,0,0.2,1)',
           }}
         >
@@ -110,7 +110,7 @@ export function Navbar() {
 
             {/* Desktop CTA */}
             <div className="hidden lg:block">
-              <Button variant="primary" href="#contact" className="!text-base py-2.5 px-5" onClick={handleNavClick}>
+              <Button variant="primary" href="#contact" className="!text-base py-2.5 px-5" onClick={(e) => handleNavClick(e as any, '#contact')}>
                 Let's talk
               </Button>
             </div>

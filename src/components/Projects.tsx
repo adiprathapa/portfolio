@@ -9,6 +9,55 @@ import { FlipSafari } from './ui/flip-safari'
 const slugs = ["vuedotjs", "pinia", "githubactions", "yaml", "python", "codemirror", "pytorch", "fastapi", "react", "ollama", "d3", "anthropic", "googlegemini", "ipfs", "leaflet", "express", "mongodb", "vercel", "javascript", "palantir", "networkx", "typescript", "nextdotjs", "nodedotjs", "postgresql", "docker", "git", "github", "tensorflow", "html5", "css3", "flask", "openjdk", "c", "scikitlearn", "numpy", "pandas", "tailwindcss", "plotly", "mistralai", "redis", "sqlite", "confluence", "apache"
 ]
 
+const slugToName: Record<string, string> = {
+  vuedotjs: "Vue.js",
+  pinia: "Pinia",
+  githubactions: "GitHub Actions",
+  yaml: "YAML",
+  python: "Python",
+  codemirror: "CodeMirror",
+  pytorch: "PyTorch",
+  fastapi: "FastAPI",
+  react: "React",
+  ollama: "Ollama",
+  d3: "D3.js",
+  anthropic: "Claude API",
+  googlegemini: "Gemini API",
+  ipfs: "IPFS",
+  leaflet: "Leaflet",
+  express: "Express",
+  mongodb: "MongoDB",
+  vercel: "Vercel",
+  javascript: "JavaScript",
+  palantir: "Palantir",
+  networkx: "NetworkX",
+  typescript: "TypeScript",
+  nextdotjs: "Next.js",
+  nodedotjs: "Node.js",
+  postgresql: "PostgreSQL",
+  docker: "Docker",
+  git: "Git",
+  github: "GitHub",
+  tensorflow: "TensorFlow",
+  html5: "HTML5",
+  css3: "CSS3",
+  flask: "Flask",
+  openjdk: "Java",
+  c: "C",
+  scikitlearn: "scikit-learn",
+  numpy: "NumPy",
+  pandas: "pandas",
+  tailwindcss: "Tailwind CSS",
+  plotly: "Plotly",
+  mistralai: "Mistral AI",
+  redis: "Redis",
+  sqlite: "SQLite",
+  confluence: "Confluence",
+  apache: "Apache",
+}
+
+const names = slugs.map(slug => slugToName[slug] || slug)
+
 const projectPrimarySlug: Record<string, string> = {
   kiwix: "vuedotjs",
   tauron: "fastapi",
@@ -121,7 +170,7 @@ export function Projects() {
   const cloudY = 35
 
   const images = slugs.map(
-    (slug) => slug === "networkx" ? "/networkx.png" : `https://cdn.simpleicons.org/${slug}/${slug}`
+    (slug) => slug === "networkx" ? "/networkx.png" : `https://cdn.simpleicons.org/${slug}/0671A4`
   )
 
   const blueRef = useRef<HTMLDivElement>(null)
@@ -256,7 +305,7 @@ export function Projects() {
 
               {/* Right side — Icon Cloud */}
               <div className="flex items-center justify-center md:w-[40%]" style={{ transform: `translateX(${cloudX}px) translateY(${cloudY}px)` }}>
-                <IconCloud images={images} size={cloudSize} activeIconIndices={activeSlugIndices} rotationTargetIndices={rotationTargetIndex} />
+                <IconCloud images={images} names={names} size={cloudSize} activeIconIndices={activeSlugIndices} rotationTargetIndices={rotationTargetIndex} />
               </div>
             </div>
           </div>

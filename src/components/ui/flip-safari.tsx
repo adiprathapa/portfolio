@@ -39,9 +39,12 @@ export function FlipSafari({
         style={{
           backfaceVisibility: 'hidden',
           borderRadius: '12px',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
-          transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+          border: '1px solid #FFFFFF',
+          backgroundColor: '#F4F4F4',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+          transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease',
           transform: showBack ? 'rotateY(180deg)' : 'rotateY(0deg)',
+          opacity: showBack ? 0 : 1,
         }}
       >
         <Safari {...restSafariProps} />
@@ -50,33 +53,33 @@ export function FlipSafari({
       {/* Back face */}
       <div
         onClick={handleClick}
-        className="flex flex-col items-center justify-center px-12 text-center"
+        className="flex flex-col justify-center px-10"
         style={{
           backfaceVisibility: 'hidden',
           transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: showBack ? 'rotateY(0deg)' : 'rotateY(-180deg)',
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
-          border: '1px solid rgba(6, 113, 164, 0.2)',
+          backgroundColor: '#F4F4F4',
+          border: '1px solid #FFFFFF',
           borderRadius: '12px',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
           aspectRatio: '1203/753', // Match Safari aspect ratio exactly
         }}
       >
-          <h3
-            className="font-bold font-heading"
-            style={{ fontSize: '1.5rem', color: '#0671A4' }}
-          >
-            {projectName}
-          </h3>
-          <p className="mt-4 leading-relaxed max-w-[320px]" style={{ fontSize: '0.9rem', color: '#4B5563' }}>
-            {projectDescription}
-          </p>
+        <h3
+          className="font-bold font-heading text-left"
+          style={{ fontSize: '1.5rem', color: '#0671A4' }}
+        >
+          {projectName}
+        </h3>
+        <p className="mt-4 leading-relaxed text-left text-heading" style={{ fontSize: '0.9rem' }}>
+          {projectDescription}
+        </p>
 
+        <div className="w-full flex justify-center mt-10">
           <RippleButton
             rippleColor="#38BDF8"
-            className="mt-10"
             style={{ backgroundColor: '#0671A4', color: '#f4f4f4', fontSize: '0.9rem' }}
             onClick={(e) => {
               e.stopPropagation()
@@ -85,6 +88,7 @@ export function FlipSafari({
           >
             View Repository
           </RippleButton>
+        </div>
       </div>
     </div>
   )

@@ -13,6 +13,7 @@ interface Icon {
 
 interface IconCloudProps {
   images?: string[]
+  names?: string[]
   size?: number
   activeIconIndices?: number[] | null
   rotationTargetIndices?: number[] | null
@@ -22,12 +23,13 @@ function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 }
 
-export function IconCloud({ images, size = 400, activeIconIndices, rotationTargetIndices }: IconCloudProps) {
+export function IconCloud({ images, names, size = 400, activeIconIndices, rotationTargetIndices }: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [iconPositions, setIconPositions] = useState<Icon[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 })
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [targetRotation, setTargetRotation] = useState<{
     x: number
     y: number
@@ -73,6 +75,12 @@ export function IconCloud({ images, size = 400, activeIconIndices, rotationTarge
           const offsetX = (iconSize - drawW) / 2
           const offsetY = (iconSize - drawH) / 2
           offCtx.drawImage(img, offsetX, offsetY, drawW, drawH)
+
+          // Force all icons to the theme blue color
+          offCtx.globalCompositeOperation = "source-in"
+          offCtx.fillStyle = "#0671A4"
+          offCtx.fillRect(0, 0, iconSize, iconSize)
+
           imagesLoadedRef.current[index] = true
         }
       }
@@ -230,11 +238,41 @@ export function IconCloud({ images, size = 400, activeIconIndices, rotationTarge
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = canvasRef.current?.getBoundingClientRect()
-    if (rect) {
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
-      setMousePos({ x, y })
-    }
+    if (!rect) return
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    setMousePos({ x, y })
+
+    // Hover detection
+    let currentHover: number | null = null
+    let maxZ = -Infinity
+
+    const cosX = Math.cos(rotationRef.current.x)
+    const sinX = Math.sin(rotationRef.current.x)
+    const cosY = Math.cos(rotationRef.current.y)
+    const sinY = Math.sin(rotationRef.current.y)
+
+    iconPositions.forEach((icon, index) => {
+      const rotatedX = icon.x * cosY - icon.z * sinY
+      const rotatedZ = icon.x * sinY + icon.z * cosY
+      const rotatedY = icon.y * cosX + rotatedZ * sinX
+
+      const screenX = canvasRef.current!.width / 2 + rotatedX
+      const screenY = canvasRef.current!.height / 2 + rotatedY
+
+      const scale = (rotatedZ + 200) / 300
+      const radius = 40 * scale
+      const dx = x - screenX
+      const dy = y - screenY
+
+      if (dx * dx + dy * dy < radius * radius) {
+        if (rotatedZ > maxZ) {
+          maxZ = rotatedZ
+          currentHover = index
+        }
+      }
+    })
+    setHoveredIndex(currentHover)
 
     if (isDragging) {
       const deltaX = e.clientX - lastMousePos.x
@@ -363,6 +401,55 @@ export function IconCloud({ images, size = 400, activeIconIndices, rotationTarge
 
           ctx.restore()
         })
+        // Draw tooltip for hovered icon
+        if (hoveredIndex !== null && names && names[hoveredIndex]) {
+          const hoveredIcon = iconPositions[hoveredIndex]
+          const rotatedX = hoveredIcon.x * cosY - hoveredIcon.z * sinY
+          const rotatedZ = hoveredIcon.z * cosY + hoveredIcon.x * sinY
+          const rotatedY = hoveredIcon.y * cosX + rotatedZ * sinX
+
+          const scale = (rotatedZ + 200) / 300
+          const screenX = canvas.width / 2 + rotatedX
+          const screenY = canvas.height / 2 + rotatedY
+
+          const name = names[hoveredIndex]
+          ctx.font = "bold 18px Poppins, sans-serif"
+          const textMetrics = ctx.measureText(name)
+          const padding = 18
+          const rectW = textMetrics.width + padding * 2
+          const rectH = 42
+
+          ctx.save()
+          ctx.translate(screenX, screenY - 85 * scale)
+
+          // Tooltip background
+          ctx.beginPath()
+          const r = rectH / 2 // Pill shape / rounded-full
+          ctx.roundRect(-rectW / 2, -rectH / 2, rectW, rectH, r)
+          ctx.fillStyle = "rgba(255, 255, 255, 0.98)"
+          ctx.shadowBlur = 28
+          ctx.shadowColor = "rgba(0, 0, 0, 0.15)"
+          ctx.fill()
+
+          // Tooltip arrow
+          ctx.beginPath()
+          ctx.moveTo(-10, rectH / 2)
+          ctx.lineTo(10, rectH / 2)
+          ctx.lineTo(0, rectH / 2 + 10)
+          ctx.closePath()
+          ctx.fillStyle = "rgba(255, 255, 255, 0.98)"
+          ctx.fill()
+
+          // Text
+          ctx.fillStyle = "#0671A4"
+          ctx.textAlign = "center"
+          ctx.textBaseline = "middle"
+          ctx.shadowBlur = 0
+          ctx.fillText(name, 0, 0)
+
+          ctx.restore()
+        }
+
         animationFrameRef.current = requestAnimationFrame(animate)
       }
 
@@ -385,7 +472,7 @@ export function IconCloud({ images, size = 400, activeIconIndices, rotationTarge
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      className="rounded-lg"
+      className="rounded-lg relative z-[1001]"
       aria-label="Interactive 3D Icon Cloud"
       role="img"
     />

@@ -8,6 +8,7 @@ interface FlipSafariProps {
   projectName: string
   projectDescription: string
   projectUrl: string
+  logoSrc?: string
 }
 
 export function FlipSafari({
@@ -15,6 +16,7 @@ export function FlipSafari({
   projectName,
   projectDescription,
   projectUrl,
+  logoSrc,
 }: FlipSafariProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
@@ -67,12 +69,23 @@ export function FlipSafari({
           aspectRatio: '1203/753', // Match Safari aspect ratio exactly
         }}
       >
-        <h3
-          className="font-bold font-heading text-left"
-          style={{ fontSize: '1.5rem', color: '#0671A4' }}
-        >
-          {projectName}
-        </h3>
+        {logoSrc ? (
+          <img
+            src={logoSrc}
+            alt={projectName}
+            className="h-10 object-contain object-left"
+            style={{
+              filter: 'brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(700%) hue-rotate(170deg) brightness(90%) contrast(95%)',
+            }}
+          />
+        ) : (
+          <h3
+            className="font-bold font-heading text-left"
+            style={{ fontSize: '1.5rem', color: '#0671A4' }}
+          >
+            {projectName}
+          </h3>
+        )}
         <p className="mt-4 leading-relaxed text-left text-heading" style={{ fontSize: '0.9rem' }}>
           {projectDescription}
         </p>
@@ -80,7 +93,22 @@ export function FlipSafari({
         <div className="w-full flex justify-center mt-10">
           <RippleButton
             rippleColor="#38BDF8"
-            style={{ backgroundColor: '#0671A4', color: '#f4f4f4', fontSize: '0.9rem' }}
+            style={{
+              backgroundColor: '#d4e9f2',
+              color: '#0671A4',
+              fontSize: '0.9rem',
+              border: '2px solid transparent',
+              boxShadow: '0 2px 8px rgba(6, 113, 164, 0.12)',
+              transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#ffffff'
+              e.currentTarget.style.borderColor = '#d4e9f2'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#d4e9f2'
+              e.currentTarget.style.borderColor = 'transparent'
+            }}
             onClick={(e) => {
               e.stopPropagation()
               window.open(projectUrl, '_blank', 'noopener,noreferrer')

@@ -87,7 +87,7 @@ const projectDescriptions: Record<string, string> = {
   helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up multimodel LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
   tauron: "Trained a GRU and GraphSAGE model over a 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
   zamsizing: "Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.",
-  galatea: "Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry. Its interactive web dashboard enables rapid exploration, investigation, and reporting.",
+  galatea: "Built for the Palantir FDSE technical assessment. Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry.",
 }
 
 const projectLinks: Record<string, string> = {
@@ -173,7 +173,6 @@ export function Projects() {
   )
 
   const blueRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
     const containerEl = blueRef.current
     if (!containerEl) return
@@ -232,7 +231,7 @@ export function Projects() {
 
   return (
     <div ref={containerRef} className="relative h-[700vh]">
-      <section id="projects" className="sticky top-0 bg-surface h-screen overflow-hidden flex items-center justify-center px-6 pb-6 pt-6">
+      <section id="projects" className="sticky top-0 bg-surface h-screen flex items-center justify-center px-6 pb-12 pt-6">
         <div ref={blueRef} className="relative w-full h-full text-foreground overflow-hidden" style={{ clipPath: 'inset(0 0 0 0 round 24px)' }}>
           <ProjectsBackground />
 
@@ -251,8 +250,8 @@ export function Projects() {
                   }}
                   projectName={projectDisplayNames['kiwix']}
                   projectDescription={projectDescriptions['kiwix']}
-
                   projectUrl={projectRepoLinks['kiwix']}
+                  logoSrc="/logo-kiwix.png"
                 />
                 <div className="absolute top-[600px] left-0 right-0 flex items-center">
                   <FlipSafari
@@ -264,8 +263,8 @@ export function Projects() {
                     }}
                     projectName={projectDisplayNames['tauron']}
                     projectDescription={projectDescriptions['tauron']}
-
                     projectUrl={projectRepoLinks['tauron']}
+                    logoSrc="/logo-tauron.png"
                   />
                 </div>
                 {/* Third Project */}
@@ -278,8 +277,8 @@ export function Projects() {
                     }}
                     projectName={projectDisplayNames['helicity']}
                     projectDescription={projectDescriptions['helicity']}
-
                     projectUrl={projectRepoLinks['helicity']}
+                    logoSrc="/logo-helicity.png"
                   />
                 </div>
                 {/* Fourth Project */}
@@ -296,8 +295,8 @@ export function Projects() {
                     }}
                     projectName={projectDisplayNames['zamsizing']}
                     projectDescription={projectDescriptions['zamsizing']}
-
                     projectUrl={projectRepoLinks['zamsizing']}
+                    logoSrc="/logo-zamsizing.png"
                   />
                 </div>
                 {/* Fifth Project */}
@@ -311,8 +310,8 @@ export function Projects() {
                     }}
                     projectName={projectDisplayNames['galatea']}
                     projectDescription={projectDescriptions['galatea']}
-
                     projectUrl={projectRepoLinks['galatea']}
+                    logoSrc="/logo-galatea.png"
                   />
                 </div>
               </motion.div>
@@ -324,6 +323,31 @@ export function Projects() {
             </div>
           </div>
         </div>
+
+        <button
+          onClick={() => document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' })}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[999] rounded-full flex items-center justify-center cursor-pointer transition-all duration-300"
+          style={{
+            width: 64,
+            height: 64,
+            background: '#d4e9f2',
+            border: '2px solid transparent',
+            boxShadow: '0 4px 20px rgba(6, 113, 164, 0.25)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#ffffff'
+            e.currentTarget.style.borderColor = '#d4e9f2'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#d4e9f2'
+            e.currentTarget.style.borderColor = 'transparent'
+          }}
+          aria-label="Scroll to next section"
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0671A4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
       </section>
     </div>
   )

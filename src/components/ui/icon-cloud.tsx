@@ -384,6 +384,10 @@ export function IconCloud({ images, names, size = 400, activeIconIndices, rotati
                 ctx.shadowBlur = 0
                 ctx.drawImage(iconCanvasesRef.current[index], -40, -40, 80, 80)
               } else {
+                ctx.shadowBlur = 4
+                ctx.shadowColor = "rgba(0, 0, 0, 0.15)"
+                ctx.shadowOffsetX = 1
+                ctx.shadowOffsetY = 2
                 ctx.drawImage(iconCanvasesRef.current[index], -40, -40, 80, 80)
               }
             }

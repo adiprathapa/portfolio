@@ -20,6 +20,7 @@ export function FlipSafari({
 }: FlipSafariProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
+  const [isRepoHovered, setIsRepoHovered] = useState(false)
 
   const showBack = isLocked || isHovered
 
@@ -92,21 +93,24 @@ export function FlipSafari({
 
         <div className="w-full flex justify-center mt-10">
           <RippleButton
+            className="px-5 py-1.5"
             rippleColor="#38BDF8"
             style={{
               backgroundColor: '#0671A4',
               color: '#FFFFFF',
-              fontSize: '0.9rem',
+              fontSize: '0.82rem',
               border: '2px solid transparent',
               boxShadow: '0 2px 8px rgba(6, 113, 164, 0.12)',
               transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#d4e9f2'
-              e.currentTarget.style.color = '#0671A4'
+              setIsRepoHovered(true)
+              e.currentTarget.style.backgroundColor = '#055a84'
+              e.currentTarget.style.color = '#FFFFFF'
               e.currentTarget.style.borderColor = 'transparent'
             }}
             onMouseLeave={(e) => {
+              setIsRepoHovered(false)
               e.currentTarget.style.backgroundColor = '#0671A4'
               e.currentTarget.style.color = '#FFFFFF'
               e.currentTarget.style.borderColor = 'transparent'
@@ -116,7 +120,29 @@ export function FlipSafari({
               window.open(projectUrl, '_blank', 'noopener,noreferrer')
             }}
           >
-            View Repository
+            <span className="inline-flex items-center gap-1.5">
+              <span>View Repository</span>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                {isRepoHovered ? (
+                  <>
+                    <path d="M5 12h14" />
+                    <path d="M12 5l7 7-7 7" />
+                  </>
+                ) : (
+                  <path d="M8 5l7 7-7 7" />
+                )}
+              </svg>
+            </span>
           </RippleButton>
         </div>
       </div>

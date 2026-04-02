@@ -94,19 +94,21 @@ export function FlipSafari({
           <RippleButton
             rippleColor="#38BDF8"
             style={{
-              backgroundColor: '#d4e9f2',
-              color: '#0671A4',
+              backgroundColor: '#0671A4',
+              color: '#FFFFFF',
               fontSize: '0.9rem',
               border: '2px solid transparent',
               boxShadow: '0 2px 8px rgba(6, 113, 164, 0.12)',
               transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#ffffff'
-              e.currentTarget.style.borderColor = '#d4e9f2'
+              e.currentTarget.style.backgroundColor = '#d4e9f2'
+              e.currentTarget.style.color = '#0671A4'
+              e.currentTarget.style.borderColor = 'transparent'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#d4e9f2'
+              e.currentTarget.style.backgroundColor = '#0671A4'
+              e.currentTarget.style.color = '#FFFFFF'
               e.currentTarget.style.borderColor = 'transparent'
             }}
             onClick={(e) => {

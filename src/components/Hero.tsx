@@ -399,7 +399,7 @@ export function Hero() {
               style={{
                 borderRadius: '50%',
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-                border: '3px solid #F5F7FA',
+                border: '3px solid rgba(6, 113, 164, 0.3)',
                 backfaceVisibility: 'hidden',
               }}
             >
@@ -435,7 +435,7 @@ export function Hero() {
               style={{
                 borderRadius: '50%',
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-                border: '3px solid #F5F7FA',
+                border: '3px solid rgba(6, 113, 164, 0.3)',
                 backfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg)',
               }}

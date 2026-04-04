@@ -162,12 +162,19 @@ export function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn profile"
-                className="group inline-flex items-center justify-center w-10 h-10 rounded-full overflow-hidden transition-shadow duration-200 hover:shadow-[0_0_0_2px_rgba(6,113,164,0.28)]"
+                className="group inline-flex items-center justify-center w-10 h-10 rounded-full overflow-hidden transition-colors duration-200"
                 style={{
                   opacity: showSocialActions ? 1 : 0,
                   transform: showSocialActions ? 'translateY(0) scale(1)' : 'translateY(-4px) scale(0.98)',
                   pointerEvents: showSocialActions ? 'auto' : 'none',
+                  border: '0.75px solid transparent',
                   transition: 'opacity 240ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#0671A4'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'transparent'
                 }}
               >
                 <img

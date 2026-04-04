@@ -46,7 +46,10 @@ const techAccentColorsBySlug: Record<string, string> = {
   leaflet: '#199900',
   ollama: '#000000',
   palantir: '#101820',
+  clerk: '#6C47FF',
   pinia: '#FFD859',
+  supabase: '#3ECF8E',
+  redis: '#DC382D',
 }
 
 function getTechAccentColor(tech: TechItem) {
@@ -80,6 +83,8 @@ const minorTech: TechItem[] = [
   { name: 'Vue.js', icon: 'https://cdn.simpleicons.org/vuedotjs/0671A4', url: 'https://vuejs.org' },
   { name: 'JavaScript', icon: 'https://cdn.simpleicons.org/javascript/0671A4', url: 'https://developer.mozilla.org/docs/Web/JavaScript' },
   { name: 'FastAPI', icon: 'https://cdn.simpleicons.org/fastapi/0671A4', url: 'https://fastapi.tiangolo.com' },
+  { name: 'Supabase', icon: 'https://cdn.simpleicons.org/supabase/0671A4', url: 'https://supabase.com' },
+  { name: 'Redis', icon: 'https://cdn.simpleicons.org/redis/0671A4', url: 'https://redis.io' },
   { name: 'pandas', icon: 'https://cdn.simpleicons.org/pandas/0671A4', url: 'https://pandas.pydata.org' },
   { name: 'NumPy', icon: 'https://cdn.simpleicons.org/numpy/0671A4', url: 'https://numpy.org' },
   { name: 'MongoDB', icon: 'https://cdn.simpleicons.org/mongodb/0671A4', url: 'https://mongodb.com' },
@@ -98,15 +103,42 @@ const minorTech: TechItem[] = [
   { name: 'Leaflet', icon: 'https://cdn.simpleicons.org/leaflet/0671A4', url: 'https://leafletjs.com' },
   { name: 'Ollama', icon: 'https://cdn.simpleicons.org/ollama/0671A4', url: 'https://ollama.com', blurb: 'Ran local LLM inference pipelines for rapid prototyping and evaluation' },
   { name: 'Palantir Foundry', icon: 'https://cdn.simpleicons.org/palantir/0671A4', url: 'https://www.palantir.com/platforms/foundry/' },
+  { name: 'Clerk', icon: 'https://cdn.simpleicons.org/clerk/0671A4', url: 'https://clerk.com' },
   { name: 'Pinia', icon: 'https://cdn.simpleicons.org/pinia/0671A4', url: 'https://pinia.vuejs.org' },
 ]
 
 function SmallCard({ tech }: { tech: TechItem }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
+  const [iconLoaded, setIconLoaded] = useState(false)
   const accentColor = getTechAccentColor(tech)
   const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
   const textColor = hovered ? accentColor : '#0671A4'
+
+  useEffect(() => {
+    let cancelled = false
+
+    const baseSrc = getIconSrc(tech.icon, false)
+    const hoverSrc = getIconSrc(tech.icon, true)
+    const base = new Image()
+    base.src = baseSrc
+    base.onload = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
+    base.onerror = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
+
+    // Preload hover variant to avoid flicker during first hover swap.
+    if (hoverSrc !== baseSrc) {
+      const hoverImg = new Image()
+      hoverImg.src = hoverSrc
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [tech.icon])
 
   return (
     <div
@@ -128,16 +160,29 @@ function SmallCard({ tech }: { tech: TechItem }) {
       onMouseUp={() => setPressed(false)}
       onClick={() => window.open(tech.url, '_blank')}
     >
-      <img
-        src={getIconSrc(tech.icon, hovered)}
-        alt={tech.name}
-        className="w-8 h-8 shrink-0"
-        style={{
-          filter: tech.name === 'NetworkX' && !hovered ? networkxBlueFilter : undefined,
-          transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
-          transition: 'transform 0.2s ease',
-        }}
-      />
+      <div className="relative w-8 h-8 shrink-0">
+        {!iconLoaded && (
+          <div
+            className="absolute inset-0 rounded-md animate-pulse"
+            style={{ background: 'rgba(6, 113, 164, 0.14)' }}
+          />
+        )}
+        <img
+          src={getIconSrc(tech.icon, hovered)}
+          alt={tech.name}
+          className="w-8 h-8 shrink-0"
+          loading="eager"
+          decoding="async"
+          style={{
+            opacity: iconLoaded ? 1 : 0,
+            filter: tech.name === 'NetworkX' && !hovered ? networkxBlueFilter : undefined,
+            transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
+            transition: 'transform 0.2s ease, opacity 0.22s ease',
+          }}
+          onLoad={() => setIconLoaded(true)}
+          onError={() => setIconLoaded(true)}
+        />
+      </div>
       <span className="text-base font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
       <svg
         width="14"
@@ -165,11 +210,36 @@ function SmallCard({ tech }: { tech: TechItem }) {
 function TallCard({ tech }: { tech: TechItem }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
+  const [iconLoaded, setIconLoaded] = useState(false)
   const tallBlurb = tech.blurb ?? `Built production features and workflows using ${tech.name}.`
   const accentColor = getTechAccentColor(tech)
   const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
   const textColor = hovered ? accentColor : '#0671A4'
   const blurbColor = hovered ? hexToRgba(accentColor, 0.75) : 'rgba(6, 113, 164, 0.7)'
+
+  useEffect(() => {
+    let cancelled = false
+
+    const baseSrc = getIconSrc(tech.icon, false)
+    const hoverSrc = getIconSrc(tech.icon, true)
+    const base = new Image()
+    base.src = baseSrc
+    base.onload = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
+    base.onerror = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
+
+    if (hoverSrc !== baseSrc) {
+      const hoverImg = new Image()
+      hoverImg.src = hoverSrc
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [tech.icon])
 
   return (
     <div
@@ -191,16 +261,29 @@ function TallCard({ tech }: { tech: TechItem }) {
       onMouseUp={() => setPressed(false)}
       onClick={() => window.open(tech.url, '_blank')}
     >
-      <img
-        src={getIconSrc(tech.icon, hovered)}
-        alt={tech.name}
-        className="w-10 h-10"
-        style={{
-          filter: tech.name === 'NetworkX' && !hovered ? networkxBlueFilter : undefined,
-          transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
-          transition: 'transform 0.2s ease',
-        }}
-      />
+      <div className="relative w-10 h-10">
+        {!iconLoaded && (
+          <div
+            className="absolute inset-0 rounded-md animate-pulse"
+            style={{ background: 'rgba(6, 113, 164, 0.14)' }}
+          />
+        )}
+        <img
+          src={getIconSrc(tech.icon, hovered)}
+          alt={tech.name}
+          className="w-10 h-10"
+          loading="eager"
+          decoding="async"
+          style={{
+            opacity: iconLoaded ? 1 : 0,
+            filter: tech.name === 'NetworkX' && !hovered ? networkxBlueFilter : undefined,
+            transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
+            transition: 'transform 0.2s ease, opacity 0.22s ease',
+          }}
+          onLoad={() => setIconLoaded(true)}
+          onError={() => setIconLoaded(true)}
+        />
+      </div>
       <span className="text-lg font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
       <span className="text-sm leading-relaxed" style={{ color: blurbColor }}>{tallBlurb}</span>
       <svg
@@ -323,10 +406,11 @@ const CARDS: { id: string; image: string; caption: string; bgSize?: string; bgPo
   { id: 'card-5', image: '/coh.png', caption: 'After Eagle Scout Board of Review', bgSize: '180%', bgPosition: 'center center' },
 ]
 
-function ThrowableCard({ card, zIndex, rotation, onGone, onGrab }: {
+function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab }: {
   card: typeof CARDS[number]
   zIndex: number
   rotation: number
+  imageLoaded: boolean
   onGone: (id: string) => void
   onGrab?: () => void
 }) {
@@ -370,18 +454,30 @@ function ThrowableCard({ card, zIndex, rotation, onGone, onGrab }: {
       animate={controls}
       initial={{ rotate: rotation }}
       whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
-      className="absolute group cursor-grab rounded-2xl border border-border shadow-2xl overflow-hidden"
+      className="absolute group cursor-grab rounded-2xl shadow-2xl overflow-hidden"
       style={{
         width: 400,
         height: 420,
         zIndex,
         rotate: rotation,
-        backgroundImage: `linear-gradient(135deg, rgba(6,113,164,0.3), rgba(56,189,248,0.2), transparent 60%), url('${card.image}')`,
+        border: '1.5px solid rgba(6, 113, 164, 0.3)',
+        boxSizing: 'border-box',
+        backgroundClip: 'padding-box',
+        backgroundImage: imageLoaded
+          ? `linear-gradient(135deg, rgba(6,113,164,0.3), rgba(56,189,248,0.2), transparent 60%), url('${card.image}')`
+          : 'linear-gradient(135deg, rgba(6,113,164,0.22), rgba(56,189,248,0.14), rgba(6,113,164,0.08))',
         backgroundSize: card.bgSize ?? 'cover',
         backgroundPosition: card.bgPosition ?? 'center',
         filter: 'saturate(1.3) contrast(1.1) brightness(1.05)',
+        transition: 'background-image 0.25s ease',
       }}
     >
+      {!imageLoaded && (
+        <div
+          className="absolute inset-0 animate-pulse"
+          style={{ background: 'rgba(255, 255, 255, 0.22)' }}
+        />
+      )}
       <span className="absolute bottom-0 left-0 right-0 px-4 py-3 text-white text-xs font-medium bg-gradient-to-t from-[rgba(6,113,164,0.7)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-2xl">
         {card.caption}
       </span>
@@ -394,6 +490,7 @@ export function About() {
   const [order, setOrder] = useState(() => CARDS.map((_, i) => i))
   const [hasGrabbed, setHasGrabbed] = useState(false)
   const [marqueeActive, setMarqueeActive] = useState(false)
+  const [loadedCardImages, setLoadedCardImages] = useState<Record<string, boolean>>({})
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -405,6 +502,29 @@ export function About() {
     )
     observer.observe(el)
     return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+
+    CARDS.forEach((card) => {
+      const img = new Image()
+      img.src = card.image
+      img.onload = () => {
+        if (!cancelled) {
+          setLoadedCardImages((prev) => ({ ...prev, [card.id]: true }))
+        }
+      }
+      img.onerror = () => {
+        if (!cancelled) {
+          setLoadedCardImages((prev) => ({ ...prev, [card.id]: true }))
+        }
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const handleGrab = useCallback(() => {
@@ -465,6 +585,7 @@ export function About() {
                 card={card}
                 zIndex={CARDS.length - order.indexOf(i)}
                 rotation={rotations[i]}
+                imageLoaded={!!loadedCardImages[card.id]}
                 onGone={handleGone}
                 onGrab={handleGrab}
               />

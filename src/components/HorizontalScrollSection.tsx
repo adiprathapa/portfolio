@@ -14,7 +14,7 @@ export function HorizontalScrollSection() {
   const translateX = useTransform(scrollYProgress, [0, 1], ['0%', '-50%'])
 
   return (
-    <div ref={outerRef} style={{ height: '200vh', position: 'relative' }}>
+    <div ref={outerRef} className="relative z-20" style={{ height: '200vh' }}>
       <div className="sticky top-0 h-screen" style={{ overflowX: 'clip', overflowY: 'visible' }}>
         <motion.div
           className="flex w-[200vw] h-screen"

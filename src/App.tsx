@@ -12,7 +12,7 @@ function App() {
       <Navbar />
       <main>
         <HorizontalScrollSection />
-        <div className="pt-[200px]" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+        <div className="-mt-[50px]" style={{ background: 'var(--color-surface, #EFF3F8)', paddingTop: 315 }}>
           <Projects />
         </div>
         <Experience />

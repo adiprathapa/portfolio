@@ -76,7 +76,7 @@ const projectBgImages: Record<string, string> = {
 
 const projectGradientColors: Record<string, string> = {
   kiwix: '#0A0A23',
-  tauron: '#2E8B57',
+  tauron: '#4C867A',
   helicity: '#6366F1',
   zamsizing: '#E8740C',
   galatea: '#2c2c2c',
@@ -178,7 +178,7 @@ export function Projects() {
   return (
     <div ref={containerRef} className="relative h-[400vh]">
       <section id="projects" className="sticky top-0 h-screen flex items-center justify-center px-6 bg-surface overflow-hidden">
-        <div className="relative w-full mx-auto" style={{ maxWidth: 1170, height: 500 }}>
+        <div className="relative w-full mx-auto" style={{ maxWidth: 1170, height: 500, transform: 'translateY(-147px)' }}>
           {projectOrder.map((key, i) => (
             <ProjectCard
               key={key}

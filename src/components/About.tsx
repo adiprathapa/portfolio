@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, useAnimation, type PanInfo } from 'framer-motion'
 import { GradientText } from './ui/gradient-text'
+import { heroStagger, heroChild, staggerContainer } from '../lib/animations'
 
 function ProjectMarquee({ active }: { active: boolean }) {
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -30,14 +31,14 @@ function ProjectMarquee({ active }: { active: boolean }) {
   const units = Array.from({ length: 16 })
 
   const smallCard = (
-    <div className="rounded-xl" style={{ width: 200, height: 80, background: 'rgba(186, 230, 253, 0.35)', border: '1.5px solid rgba(6, 113, 164, 0.3)' }} />
+    <div className="rounded-xl" style={{ width: 220, height: 96, background: 'rgba(186, 230, 253, 0.35)', border: '1.5px solid rgba(6, 113, 164, 0.3)' }} />
   )
   const tallCard = (
-    <div className="rounded-xl" style={{ width: 280, height: 168, background: 'rgba(186, 230, 253, 0.35)', border: '1.5px solid rgba(6, 113, 164, 0.3)' }} />
+    <div className="rounded-xl" style={{ width: 300, height: 200, background: 'rgba(186, 230, 253, 0.35)', border: '1.5px solid rgba(6, 113, 164, 0.3)' }} />
   )
 
   return (
-    <div className="overflow-hidden w-full">
+    <div className="w-full overflow-visible">
       <div
         ref={scrollRef}
         className="flex gap-4 w-max items-start"
@@ -166,41 +167,53 @@ export function About() {
   const rotations = [-8, -3, 2, 6, -5]
 
   return (
-    <section ref={sectionRef} id="about" className="relative h-full flex items-center px-4 md:px-6" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
-      <div className="mx-auto max-w-7xl w-full grid md:grid-cols-2 gap-12 items-center -mt-[111px]">
+    <section ref={sectionRef} id="about" className="relative h-full flex items-center px-4 md:px-6 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+      <motion.div
+        className="mx-auto max-w-7xl w-full grid md:grid-cols-2 gap-12 items-center -mt-[111px]"
+        variants={heroStagger}
+        initial="hidden"
+        animate={marqueeActive ? 'visible' : 'hidden'}
+      >
         {/* Text */}
-        <div>
-          <div className="mt-[249px]">
-            <GradientText as="h2" className="text-2xl md:text-3xl font-normal mb-1">
-              About me
-            </GradientText>
-            <p className="text-black text-lg md:text-xl leading-relaxed mb-4">
+        <motion.div variants={heroChild}>
+          <motion.div className="mt-[249px]" variants={staggerContainer}>
+            <motion.div variants={heroChild}>
+              <GradientText as="h2" className="text-2xl md:text-3xl font-normal mb-1">
+                About me
+              </GradientText>
+            </motion.div>
+            <motion.p variants={heroChild} className="text-black text-lg md:text-xl leading-relaxed mb-4">
               I'm a Computer Science student at Cornell minoring in AI, originally
               from Nebraska. I am really interested in building and working with full stack web
               apps and experimenting with ML models.
-            </p>
-            <p className="text-black text-lg md:text-xl leading-relaxed mb-4">
+            </motion.p>
+            <motion.p variants={heroChild} className="text-black text-lg md:text-xl leading-relaxed mb-4">
               Lately I've been diving deep into web3, stablecoins, and IPFS, the idea of
               programmable money and decentralized finance is something I enjoy working with and learning about. I'm always looking for ways to connect what I'm learning in AI
               with applications outside of the classroom.
-            </p>
-            <p className="text-black text-lg md:text-xl leading-relaxed">
+            </motion.p>
+            <motion.p variants={heroChild} className="text-black text-lg md:text-xl leading-relaxed">
               Outside of code, I'm an Eagle Scout who still loves getting outdoors,
               camping, hiking, that kind of thing. When I'm not on a trail, you'll
               probably find me gaming, tinkering with some new tech, or catching up
               on anime and other shows.
-            </p>
-          </div>
-          <GradientText as="h2" className="text-2xl md:text-3xl font-normal mt-[160px]">
-            Projects
-          </GradientText>
-          <p className="text-black text-lg md:text-xl leading-relaxed mt-1" style={{ width: 1200 }}>
-            I am a fullstack developer who mainly works in Python, Java, and for frontend in JavaScript and TypeScript. I have experience working with a variety of machine learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas, and more. My projects range from from fintech applications to machine learning focused projects to apps that combine both.
-          </p>
-        </div>
+            </motion.p>
+          </motion.div>
+
+          <motion.div className="mt-[160px]" variants={staggerContainer}>
+            <motion.div variants={heroChild}>
+              <GradientText as="h2" className="text-2xl md:text-3xl font-normal">
+                Projects
+              </GradientText>
+            </motion.div>
+            <motion.p variants={heroChild} className="text-black text-lg md:text-xl leading-relaxed mt-1" style={{ width: '100%', maxWidth: 1200 }}>
+              I am a fullstack developer who mainly works in Python, Java, and for frontend in JavaScript and TypeScript. I have experience working with a variety of machine learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas, and more. My projects range from from fintech applications to machine learning focused projects to apps that combine both.
+            </motion.p>
+          </motion.div>
+        </motion.div>
 
         {/* Throwable Cards */}
-        <div className="flex flex-col items-center justify-center ml-[200px] -mt-[30px]">
+        <motion.div variants={heroChild} className="flex flex-col items-center justify-center ml-[200px] -mt-[30px]">
           <div className="relative" style={{ width: 400, height: 420 }}>
             {CARDS.map((card, i) => (
               <ThrowableCard
@@ -227,10 +240,10 @@ export function About() {
             </svg>
             Drag to throw
           </motion.p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
       {/* Marquee conveyor */}
-      <div className="absolute bottom-[-169px] left-0 w-full overflow-hidden z-10">
+      <div className="absolute bottom-[-231px] left-0 w-full overflow-visible z-10">
         <ProjectMarquee active={marqueeActive} />
       </div>
     </section>

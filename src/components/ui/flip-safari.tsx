@@ -54,18 +54,18 @@ export function FlipSafari({
         {/* Left column — text content */}
         <div className="flex flex-col justify-center px-10 py-8" style={{ flex: 1, minWidth: 0 }}>
           <h3
-            className="font-bold font-heading text-left"
-            style={{ color: '#1a1a2e', fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', lineHeight: 1.2 }}
+            className="font-normal font-heading text-left"
+            style={{ color: '#0671A4', fontSize: 'clamp(1.4rem, 2.2vw, 1.85rem)', lineHeight: 1.2 }}
           >
             {projectTagline || projectName}
           </h3>
-          <p className="mt-4 leading-relaxed text-left text-heading text-lg">
+          <p className="mt-2 leading-relaxed text-left text-heading text-base">
             {projectDescription}
           </p>
 
           {/* Tech stack pills */}
           {techStack && techStack.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-5">
+            <div className="flex flex-wrap gap-2 mt-2">
               {techStack.map((tech) => (
                 <span
                   key={tech}
@@ -82,7 +82,7 @@ export function FlipSafari({
             </div>
           )}
 
-          <div className="flex gap-2.5 mt-6">
+          <div className="flex gap-2.5" style={{ marginTop: 18 }}>
             <RippleButton
               className="px-5 py-2.5 text-base"
               rippleColor="#38BDF8"
@@ -176,7 +176,9 @@ export function FlipSafari({
           {bgImage && (
             <div
               className="absolute inset-0"
-              style={{ backgroundColor: gradientColor, opacity: 0.90 }}
+              style={{
+                background: `linear-gradient(180deg, ${gradientColor}B3 0%, ${gradientColor}D9 55%, ${gradientColor}F5 100%)`,
+              }}
             />
           )}
           {logoSrc && (

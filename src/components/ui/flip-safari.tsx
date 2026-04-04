@@ -69,7 +69,7 @@ export function FlipSafari({
               {techStack.map((tech) => (
                 <span
                   key={tech}
-                  className="px-3 py-1 rounded-full text-sm font-medium"
+                  className="px-3 py-1 rounded-xl text-sm font-medium"
                   style={{
                     backgroundColor: 'rgba(6, 113, 164, 0.08)',
                     color: '#0671A4',

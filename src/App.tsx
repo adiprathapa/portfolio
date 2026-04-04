@@ -2,7 +2,6 @@ import { Navbar } from './components/Navbar'
 import { GradientText } from './components/ui/gradient-text'
 import { HorizontalScrollSection } from './components/HorizontalScrollSection'
 import { Projects } from './components/Projects'
-import { Experience } from './components/Experience'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 
@@ -12,10 +11,9 @@ function App() {
       <Navbar />
       <main>
         <HorizontalScrollSection />
-        <div className="-mt-[50px]" style={{ background: 'var(--color-surface, #EFF3F8)', paddingTop: 315 }}>
+        <div className="-mt-[50px]" style={{ background: 'var(--color-surface, #EFF3F8)', paddingTop: 385 }}>
           <Projects />
         </div>
-        <Experience />
         <Contact />
       </main>
       <Footer />

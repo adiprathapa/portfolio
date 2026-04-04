@@ -24,9 +24,8 @@ export function Contact() {
       <motion.div
         className="max-w-xl mx-auto text-center"
         variants={staggerContainer}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        initial="visible"
+        animate="visible"
       >
         <motion.h2
           variants={fadeInUp}
@@ -39,7 +38,7 @@ export function Contact() {
         </motion.p>
 
         <motion.form variants={fadeInUp} onSubmit={handleSubmit}>
-          <div className="glassmorphism rounded-full flex items-center p-1.5">
+          <div className="glassmorphism rounded-xl flex items-center p-1.5">
             <input
               type="email"
               placeholder="your@email.com"

@@ -74,9 +74,8 @@ export function ProjectsBackground({ className = '' }: ProjectsBackgroundProps) 
   return (
     <motion.div
       className={`absolute inset-0 z-0 overflow-hidden ${className}`}
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1.5, ease: 'easeOut' }}
     >
       <div
         ref={layer1Ref}

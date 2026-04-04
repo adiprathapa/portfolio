@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { FlipSafari } from './ui/flip-safari'
+import { Experience } from './Experience'
 
 // Globe data kept but not used
 // import { IconCloud } from './ui/icon-cloud'
@@ -166,6 +167,7 @@ export function Projects() {
     [0, seg, seg * 2, seg * 3, seg * 4, 1],
     [spacing * 4, spacing * 3 + stagger, spacing * 2 + stagger * 2, spacing + stagger * 3, stagger * 4, -700])
 
+
   // Once card 5 passes a card's position, that card moves with card 5
   const collapse1 = useTransform(() => Math.min(0, cardY5.get() - 0))
   const collapse2 = useTransform(() => Math.min(0, cardY5.get() - stagger))
@@ -176,8 +178,8 @@ export function Projects() {
   const collapseValues: (MotionValue<number> | null)[] = [collapse1, collapse2, collapse3, collapse4, null]
 
   return (
-    <div ref={containerRef} className="relative h-[400vh]">
-      <section id="projects" className="sticky top-0 h-screen flex items-center justify-center px-6 bg-surface overflow-hidden">
+    <div ref={containerRef} className="relative h-[300vh]">
+      <section id="projects" className="sticky top-0 h-screen flex items-center justify-center px-6 bg-surface" style={{ overflow: 'clip' }}>
         <div className="relative w-full mx-auto" style={{ maxWidth: 1170, height: 500, transform: 'translateY(-147px)' }}>
           {projectOrder.map((key, i) => (
             <ProjectCard
@@ -188,6 +190,13 @@ export function Projects() {
               zIndex={i + 1}
             />
           ))}
+          {/* Experience follows 145px below card 5 */}
+          <motion.div
+            className="absolute left-0 w-full"
+            style={{ y: cardY5, top: 500 + 145 }}
+          >
+            <Experience />
+          </motion.div>
         </div>
       </section>
     </div>

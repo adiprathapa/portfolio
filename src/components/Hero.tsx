@@ -284,7 +284,7 @@ export function Hero() {
                   background: 'rgba(255, 255, 255, 0.7)',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
-                  borderRadius: 9999,
+                  borderRadius: 12,
                 }}
               >
                 <div className="px-5 pt-2.5 pb-4 whitespace-nowrap">

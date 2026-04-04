@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import { Section } from './ui/section'
+import { GradientText } from './ui/gradient-text'
 
 export function Experience() {
   const [active, setActive] = useState<'work' | 'involvement'>('work')
 
   return (
-    <Section id="experience" className="bg-surface min-h-screen flex items-center">
-      <h2 className="text-3xl md:text-4xl font-bold" style={{ color: '#0671A4', transform: 'translateY(-50px)' }}>
-        Experience
-      </h2>
+    <Section id="experience" className="bg-surface min-h-screen flex items-center !pt-0">
+      <div style={{ transform: 'translateY(-50px)' }}>
+        <GradientText as="h2" className="text-2xl md:text-3xl font-normal">
+          Experience
+        </GradientText>
+      </div>
 
       <div className="flex items-center gap-4 mt-8" style={{ transform: 'translateY(-50px)' }}>
         <button
@@ -16,7 +19,7 @@ export function Experience() {
           className="text-base font-semibold transition-all duration-300 cursor-pointer"
           style={
             active === 'work'
-              ? { color: '#F4F4F4', backgroundColor: '#0671A4', borderRadius: '9999px', padding: '6px 20px' }
+              ? { color: '#F4F4F4', backgroundColor: '#0671A4', borderRadius: '12px', padding: '6px 20px' }
               : { color: '#4B5563', backgroundColor: 'transparent', border: 'none', padding: '6px 20px' }
           }
         >
@@ -27,7 +30,7 @@ export function Experience() {
           className="text-base font-semibold transition-all duration-300 cursor-pointer"
           style={
             active === 'involvement'
-              ? { color: '#F4F4F4', backgroundColor: '#0671A4', borderRadius: '9999px', padding: '6px 20px' }
+              ? { color: '#F4F4F4', backgroundColor: '#0671A4', borderRadius: '12px', padding: '6px 20px' }
               : { color: '#4B5563', backgroundColor: 'transparent', border: 'none', padding: '6px 20px' }
           }
         >

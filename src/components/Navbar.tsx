@@ -49,31 +49,25 @@ export function Navbar() {
 
   return (
     <>
-      <div data-navbar className="fixed top-0 left-0 right-0 z-[999] flex justify-center transition-all duration-500"
+      <div data-navbar className="fixed top-0 left-0 right-0 z-[999] transition-all duration-500"
         style={{
-          padding: scrolled ? '0.75rem 2.5rem' : '0 2.5rem',
           transform: (hidden && !pinned) || forceHidden ? 'translateY(-100%)' : 'translateY(0)',
         }}
       >
         <header
-          className="w-full rounded-full"
+          className="w-full"
           style={{
-            maxWidth: scrolled ? '48rem' : '100%',
             backgroundColor: scrolled ? 'rgba(255,255,255,0.8)' : 'transparent',
             backdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)',
             WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)',
-            boxShadow: scrolled ? '0 4px 12px rgba(0, 0, 0, 0.08)' : '0 4px 12px rgba(0, 0, 0, 0)',
-            border: scrolled ? '1px solid rgba(0, 0, 0, 0.05)' : '1px solid rgba(0, 0, 0, 0)',
-            transition: 'max-width 500ms cubic-bezier(0.4,0,0.2,1), background-color 500ms cubic-bezier(0.4,0,0.2,1), backdrop-filter 500ms cubic-bezier(0.4,0,0.2,1), box-shadow 500ms cubic-bezier(0.4,0,0.2,1), border 500ms cubic-bezier(0.4,0,0.2,1)',
+            boxShadow: scrolled ? '0 1px 0 rgba(0, 0, 0, 0.06)' : 'none',
+            borderBottom: scrolled ? '1px solid rgba(0, 0, 0, 0.05)' : '1px solid transparent',
+            transition: 'background-color 500ms cubic-bezier(0.4,0,0.2,1), backdrop-filter 500ms cubic-bezier(0.4,0,0.2,1), box-shadow 500ms cubic-bezier(0.4,0,0.2,1), border-bottom 500ms cubic-bezier(0.4,0,0.2,1)',
           }}
         >
           <div
-            className="flex items-center justify-between h-16"
-            style={{
-              padding: scrolled ? '0 1.5rem' : '0 2.5rem',
-              gap: scrolled ? '1.25rem' : '2rem',
-              transition: 'padding 500ms cubic-bezier(0.4,0,0.2,1), gap 500ms cubic-bezier(0.4,0,0.2,1)',
-            }}
+            className="flex items-center justify-between h-16 max-w-7xl mx-auto px-6"
+            style={{ gap: '2rem' }}
           >
             {/* Logo */}
             <a href="/" className="font-heading font-semibold text-lg text-primary">
@@ -83,10 +77,7 @@ export function Navbar() {
             {/* Desktop nav */}
             <nav
               className="hidden lg:flex items-center"
-              style={{
-                gap: scrolled ? '1.25rem' : '2rem',
-                transition: 'gap 500ms cubic-bezier(0.4,0,0.2,1)',
-              }}
+              style={{ gap: '2rem' }}
             >
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href.slice(1)
@@ -95,7 +86,7 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`relative text-base font-medium rounded-full px-4 py-1.5 transition-all duration-300 ${
+                    className={`relative text-base font-medium rounded-xl px-4 py-1.5 transition-all duration-300 ${
                       isActive
                         ? 'text-primary bg-primary/10'
                         : 'text-heading hover:text-primary/70'
@@ -110,7 +101,7 @@ export function Navbar() {
             {/* Desktop CTA */}
             <div className="hidden lg:block">
               <RippleButton
-                className="px-5 py-2.5 !text-base"
+                className="px-4 py-1.5 !text-base"
                 rippleColor="#38BDF8"
                 style={{
                   backgroundColor: '#0671A4',

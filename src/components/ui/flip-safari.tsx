@@ -118,7 +118,7 @@ export function FlipSafari({
             >
               {projectTagline || projectName}
             </h3>
-            <p className="mt-2 leading-relaxed text-left text-heading text-base">
+            <p className="mt-2 leading-relaxed text-left text-heading text-lg md:text-xl">
               {projectDescription}
             </p>
 

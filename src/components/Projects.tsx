@@ -190,14 +190,14 @@ export function Projects() {
               zIndex={i + 1}
             />
           ))}
-          {/* Experience follows 145px below card 5 */}
-          <motion.div
-            className="absolute left-0 w-full"
-            style={{ y: cardY5, top: 500 + 145 }}
-          >
-            <Experience />
-          </motion.div>
         </div>
+        {/* Experience follows 145px below card 5 */}
+        <motion.div
+          className="absolute left-0 w-full"
+          style={{ y: cardY5, top: 'calc(50% + 103px + 145px)' }}
+        >
+          <Experience />
+        </motion.div>
       </section>
     </div>
   )

@@ -191,10 +191,10 @@ export function Projects() {
             />
           ))}
         </div>
-        {/* Experience follows 145px below card 5 */}
+        {/* Experience follows 85px below card 5 */}
         <motion.div
           className="absolute left-0 w-full"
-          style={{ y: cardY5, top: 'calc(50% + 103px + 145px)' }}
+          style={{ y: cardY5, top: 'calc(50% + 103px + 85px)' }}
         >
           <Experience />
         </motion.div>

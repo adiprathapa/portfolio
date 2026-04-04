@@ -34,6 +34,12 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => {
+                  if (link.href === '#resume') {
+                    e.preventDefault()
+                    onClose()
+                    return
+                  }
+
                   if (link.href === '#about') {
                     e.preventDefault()
                     window.scrollTo({ top: window.innerHeight * 1.3, behavior: 'smooth' })

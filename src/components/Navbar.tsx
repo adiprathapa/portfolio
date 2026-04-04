@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useScrolled } from '../hooks/useScrolled'
 import { useActiveSection } from '../hooks/useActiveSection'
-import { Button } from './ui/button'
 import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
 
@@ -9,12 +8,19 @@ const navLinks = [
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
+  { label: 'Resume', href: '#resume' },
   { label: 'Contact', href: '#contact' },
 ]
 
 export function Navbar() {
   const { scrolled, hidden } = useScrolled(50)
   const activeSection = useActiveSection()
+  const showSocialActions =
+    scrolled ||
+    activeSection === 'about' ||
+    activeSection === 'projects' ||
+    activeSection === 'experience' ||
+    activeSection === 'contact'
   const [menuOpen, setMenuOpen] = useState(false)
   const [pinned, setPinned] = useState(false)
   const [ctaHovered, setCtaHovered] = useState(false)
@@ -34,6 +40,11 @@ export function Navbar() {
   }, [])
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href === '#resume') {
+      e.preventDefault()
+      return
+    }
+
     setPinned(true)
     setForceHidden(false)
     setTimeout(() => {
@@ -98,8 +109,8 @@ export function Navbar() {
               })}
             </nav>
 
-            {/* Desktop CTA */}
-            <div className="hidden lg:block">
+            {/* Desktop CTA + social */}
+            <div className="hidden lg:flex items-center" style={{ gap: '0.85rem' }}>
               <RippleButton
                 className="px-4 py-1.5 !text-base"
                 rippleColor="#38BDF8"
@@ -146,6 +157,26 @@ export function Navbar() {
                   </svg>
                 </span>
               </RippleButton>
+              <a
+                href="https://www.linkedin.com/in/adi-prathapa/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn profile"
+                className="group inline-flex items-center justify-center w-10 h-10 rounded-full overflow-hidden transition-shadow duration-200 hover:shadow-[0_0_0_2px_rgba(6,113,164,0.28)]"
+                style={{
+                  opacity: showSocialActions ? 1 : 0,
+                  transform: showSocialActions ? 'translateY(0) scale(1)' : 'translateY(-4px) scale(0.98)',
+                  pointerEvents: showSocialActions ? 'auto' : 'none',
+                  transition: 'opacity 240ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1)',
+                }}
+              >
+                <img
+                  src="/headshot.jpg"
+                  alt="Adi Prathapa"
+                  className="w-full h-full object-cover transition-[filter] duration-200 group-hover:brightness-75"
+                  style={{ objectPosition: 'center 28%' }}
+                />
+              </a>
             </div>
 
             {/* Mobile hamburger */}

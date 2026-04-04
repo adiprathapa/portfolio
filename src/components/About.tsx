@@ -12,6 +12,59 @@ interface TechItem {
 
 const networkxBlueFilter = 'brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(700%) hue-rotate(170deg) brightness(90%) contrast(95%)'
 
+function getIconSrc(icon: string, hovered: boolean) {
+  if (!hovered) return icon
+  return icon.replace('/0671A4', '')
+}
+
+const techAccentColorsBySlug: Record<string, string> = {
+  react: '#61DAFB',
+  python: '#3776AB',
+  typescript: '#3178C6',
+  pytorch: '#EE4C2C',
+  nodedotjs: '#5FA04E',
+  openjdk: '#111111',
+  google: '#4285F4',
+  vuedotjs: '#42B883',
+  javascript: '#F7DF1E',
+  fastapi: '#009688',
+  pandas: '#150458',
+  numpy: '#013243',
+  mongodb: '#47A248',
+  d3: '#F9A03C',
+  codemirror: '#D30707',
+  yaml: '#CB171E',
+  scikitlearn: '#F7931E',
+  express: '#000000',
+  vercel: '#000000',
+  tensorflow: '#FF6F00',
+  githubactions: '#2088FF',
+  ipfs: '#65C2CB',
+  anthropic: '#111111',
+  googlegemini: '#8E75B8',
+  mistralai: '#FF7000',
+  leaflet: '#199900',
+  ollama: '#000000',
+  palantir: '#101820',
+  pinia: '#FFD859',
+}
+
+function getTechAccentColor(tech: TechItem) {
+  if (tech.name === 'NetworkX') return '#2B7BBB'
+  const slugMatch = tech.icon.match(/simpleicons\.org\/([^/]+)/)
+  const slug = slugMatch?.[1]
+  return (slug && techAccentColorsBySlug[slug]) ?? '#0671A4'
+}
+
+function hexToRgba(hex: string, alpha: number) {
+  const normalized = hex.replace('#', '')
+  if (normalized.length !== 6) return `rgba(6, 113, 164, ${alpha})`
+  const r = parseInt(normalized.slice(0, 2), 16)
+  const g = parseInt(normalized.slice(2, 4), 16)
+  const b = parseInt(normalized.slice(4, 6), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
 const majorTech: TechItem[] = [
   { name: 'React', icon: 'https://cdn.simpleicons.org/react/0671A4', url: 'https://react.dev', blurb: 'Built interactive UIs and single page applications' },
   { name: 'Python', icon: 'https://cdn.simpleicons.org/python/0671A4', url: 'https://python.org', blurb: 'Trained ML models and shipped backend APIs' },
@@ -51,6 +104,9 @@ const minorTech: TechItem[] = [
 function SmallCard({ tech }: { tech: TechItem }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
+  const accentColor = getTechAccentColor(tech)
+  const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
+  const textColor = hovered ? accentColor : '#0671A4'
 
   return (
     <div
@@ -59,7 +115,7 @@ function SmallCard({ tech }: { tech: TechItem }) {
         width: 220,
         height: 143,
         background: hovered ? '#FFFFFF' : '#F5F5F5',
-        border: hovered ? '1.5px solid rgba(6, 113, 164, 0.5)' : '1.5px solid rgba(6, 113, 164, 0.3)',
+        border: `1.5px solid ${borderColor}`,
         transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-2px)' : 'scale(1)',
         boxShadow: hovered
           ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
@@ -73,22 +129,22 @@ function SmallCard({ tech }: { tech: TechItem }) {
       onClick={() => window.open(tech.url, '_blank')}
     >
       <img
-        src={tech.icon}
+        src={getIconSrc(tech.icon, hovered)}
         alt={tech.name}
         className="w-8 h-8 shrink-0"
         style={{
-          filter: tech.name === 'NetworkX' ? networkxBlueFilter : undefined,
+          filter: tech.name === 'NetworkX' && !hovered ? networkxBlueFilter : undefined,
           transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
           transition: 'transform 0.2s ease',
         }}
       />
-      <span className="text-sm font-medium" style={{ color: '#0671A4' }}>{tech.name}</span>
+      <span className="text-base font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
       <svg
         width="14"
         height="14"
         viewBox="0 0 24 24"
         fill="none"
-        stroke="#0671A4"
+        stroke={textColor}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -110,6 +166,10 @@ function TallCard({ tech }: { tech: TechItem }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
   const tallBlurb = tech.blurb ?? `Built production features and workflows using ${tech.name}.`
+  const accentColor = getTechAccentColor(tech)
+  const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
+  const textColor = hovered ? accentColor : '#0671A4'
+  const blurbColor = hovered ? hexToRgba(accentColor, 0.75) : 'rgba(6, 113, 164, 0.7)'
 
   return (
     <div
@@ -118,7 +178,7 @@ function TallCard({ tech }: { tech: TechItem }) {
         width: 300,
         height: 300,
         background: hovered ? '#FFFFFF' : '#F5F5F5',
-        border: hovered ? '1.5px solid rgba(6, 113, 164, 0.5)' : '1.5px solid rgba(6, 113, 164, 0.3)',
+        border: `1.5px solid ${borderColor}`,
         transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-3px)' : 'scale(1)',
         boxShadow: hovered
           ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
@@ -132,23 +192,23 @@ function TallCard({ tech }: { tech: TechItem }) {
       onClick={() => window.open(tech.url, '_blank')}
     >
       <img
-        src={tech.icon}
+        src={getIconSrc(tech.icon, hovered)}
         alt={tech.name}
         className="w-10 h-10"
         style={{
-          filter: tech.name === 'NetworkX' ? networkxBlueFilter : undefined,
+          filter: tech.name === 'NetworkX' && !hovered ? networkxBlueFilter : undefined,
           transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
           transition: 'transform 0.2s ease',
         }}
       />
-      <span className="text-base font-semibold" style={{ color: '#0671A4' }}>{tech.name}</span>
-      <span className="text-xs leading-relaxed" style={{ color: 'rgba(6, 113, 164, 0.7)' }}>{tallBlurb}</span>
+      <span className="text-lg font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
+      <span className="text-sm leading-relaxed" style={{ color: blurbColor }}>{tallBlurb}</span>
       <svg
         width="16"
         height="16"
         viewBox="0 0 24 24"
         fill="none"
-        stroke="#0671A4"
+        stroke={textColor}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

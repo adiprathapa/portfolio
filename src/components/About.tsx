@@ -10,24 +10,29 @@ interface TechItem {
   blurb?: string
 }
 
+const networkxBlueFilter = 'brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(700%) hue-rotate(170deg) brightness(90%) contrast(95%)'
+
 const majorTech: TechItem[] = [
-  { name: 'React', icon: 'https://cdn.simpleicons.org/react/0671A4', url: 'https://react.dev', blurb: 'Built interactive UIs and single-page applications' },
+  { name: 'React', icon: 'https://cdn.simpleicons.org/react/0671A4', url: 'https://react.dev', blurb: 'Built interactive UIs and single page applications' },
   { name: 'Python', icon: 'https://cdn.simpleicons.org/python/0671A4', url: 'https://python.org', blurb: 'Trained ML models and shipped backend APIs' },
-  { name: 'TypeScript', icon: 'https://cdn.simpleicons.org/typescript/0671A4', url: 'https://typescriptlang.org', blurb: 'Architected type-safe frontends and server logic' },
+  { name: 'TypeScript', icon: 'https://cdn.simpleicons.org/typescript/0671A4', url: 'https://typescriptlang.org', blurb: 'Architected type safe frontends and server logic' },
   { name: 'PyTorch', icon: 'https://cdn.simpleicons.org/pytorch/0671A4', url: 'https://pytorch.org', blurb: 'Trained GRU and GraphSAGE models for prediction' },
   { name: 'Node.js', icon: 'https://cdn.simpleicons.org/nodedotjs/0671A4', url: 'https://nodejs.org', blurb: 'Deployed fullstack apps and REST APIs to production' },
   { name: 'Java', icon: 'https://cdn.simpleicons.org/openjdk/0671A4', url: 'https://dev.java', blurb: 'Engineered backend systems and data structures' },
   { name: 'NetworkX', icon: '/networkx.png', url: 'https://networkx.org', blurb: 'Constructed knowledge graphs and contact networks' },
-  { name: 'Google ADK', icon: 'https://cdn.simpleicons.org/google/0671A4', url: 'https://google.github.io/adk-docs/', blurb: 'Orchestrated multi-agent AI workflows and pipelines' },
+  { name: 'Google ADK', icon: 'https://cdn.simpleicons.org/google/0671A4', url: 'https://google.github.io/adk-docs/', blurb: 'Orchestrated multi agent AI workflows and pipelines' },
 ]
 
 const minorTech: TechItem[] = [
   { name: 'Vue.js', icon: 'https://cdn.simpleicons.org/vuedotjs/0671A4', url: 'https://vuejs.org' },
+  { name: 'JavaScript', icon: 'https://cdn.simpleicons.org/javascript/0671A4', url: 'https://developer.mozilla.org/docs/Web/JavaScript' },
   { name: 'FastAPI', icon: 'https://cdn.simpleicons.org/fastapi/0671A4', url: 'https://fastapi.tiangolo.com' },
   { name: 'pandas', icon: 'https://cdn.simpleicons.org/pandas/0671A4', url: 'https://pandas.pydata.org' },
   { name: 'NumPy', icon: 'https://cdn.simpleicons.org/numpy/0671A4', url: 'https://numpy.org' },
   { name: 'MongoDB', icon: 'https://cdn.simpleicons.org/mongodb/0671A4', url: 'https://mongodb.com' },
   { name: 'D3.js', icon: 'https://cdn.simpleicons.org/d3/0671A4', url: 'https://d3js.org' },
+  { name: 'CodeMirror', icon: 'https://cdn.simpleicons.org/codemirror/0671A4', url: 'https://codemirror.net' },
+  { name: 'YAML', icon: 'https://cdn.simpleicons.org/yaml/0671A4', url: 'https://yaml.org' },
   { name: 'scikit-learn', icon: 'https://cdn.simpleicons.org/scikitlearn/0671A4', url: 'https://scikit-learn.org' },
   { name: 'Express', icon: 'https://cdn.simpleicons.org/express/0671A4', url: 'https://expressjs.com' },
   { name: 'Vercel', icon: 'https://cdn.simpleicons.org/vercel/0671A4', url: 'https://vercel.com' },
@@ -35,10 +40,11 @@ const minorTech: TechItem[] = [
   { name: 'GitHub Actions', icon: 'https://cdn.simpleicons.org/githubactions/0671A4', url: 'https://github.com/features/actions' },
   { name: 'IPFS', icon: 'https://cdn.simpleicons.org/ipfs/0671A4', url: 'https://ipfs.tech' },
   { name: 'Claude API', icon: 'https://cdn.simpleicons.org/anthropic/0671A4', url: 'https://docs.anthropic.com' },
-  { name: 'Gemini API', icon: 'https://cdn.simpleicons.org/googlegemini/0671A4', url: 'https://ai.google.dev' },
+  { name: 'Gemini API', icon: 'https://cdn.simpleicons.org/googlegemini/0671A4', url: 'https://ai.google.dev', blurb: 'Built multimodel AI workflows and fallback orchestration for production apps' },
+  { name: 'Mistral AI', icon: 'https://cdn.simpleicons.org/mistralai/0671A4', url: 'https://mistral.ai' },
   { name: 'Leaflet', icon: 'https://cdn.simpleicons.org/leaflet/0671A4', url: 'https://leafletjs.com' },
-  { name: 'Ollama', icon: 'https://cdn.simpleicons.org/ollama/0671A4', url: 'https://ollama.com' },
-  { name: 'Palantir', icon: 'https://cdn.simpleicons.org/palantir/0671A4', url: 'https://palantir.com' },
+  { name: 'Ollama', icon: 'https://cdn.simpleicons.org/ollama/0671A4', url: 'https://ollama.com', blurb: 'Ran local LLM inference pipelines for rapid prototyping and evaluation' },
+  { name: 'Palantir Foundry', icon: 'https://cdn.simpleicons.org/palantir/0671A4', url: 'https://www.palantir.com/platforms/foundry/' },
   { name: 'Pinia', icon: 'https://cdn.simpleicons.org/pinia/0671A4', url: 'https://pinia.vuejs.org' },
 ]
 
@@ -52,7 +58,7 @@ function SmallCard({ tech }: { tech: TechItem }) {
       style={{
         width: 220,
         height: 143,
-        background: hovered ? 'rgba(186, 230, 253, 0.55)' : 'rgba(186, 230, 253, 0.35)',
+        background: hovered ? '#FFFFFF' : '#F4F4F4',
         border: hovered ? '1.5px solid rgba(6, 113, 164, 0.5)' : '1.5px solid rgba(6, 113, 164, 0.3)',
         transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-2px)' : 'scale(1)',
         boxShadow: hovered ? '0 4px 16px rgba(6, 113, 164, 0.12)' : 'none',
@@ -69,6 +75,7 @@ function SmallCard({ tech }: { tech: TechItem }) {
         alt={tech.name}
         className="w-8 h-8 shrink-0"
         style={{
+          filter: tech.name === 'NetworkX' ? networkxBlueFilter : undefined,
           transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
           transition: 'transform 0.2s ease',
         }}
@@ -100,6 +107,7 @@ function SmallCard({ tech }: { tech: TechItem }) {
 function TallCard({ tech }: { tech: TechItem }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
+  const tallBlurb = tech.blurb ?? `Built production features and workflows using ${tech.name}.`
 
   return (
     <div
@@ -107,7 +115,7 @@ function TallCard({ tech }: { tech: TechItem }) {
       style={{
         width: 300,
         height: 300,
-        background: hovered ? 'rgba(186, 230, 253, 0.55)' : 'rgba(186, 230, 253, 0.35)',
+        background: hovered ? '#FFFFFF' : '#F4F4F4',
         border: hovered ? '1.5px solid rgba(6, 113, 164, 0.5)' : '1.5px solid rgba(6, 113, 164, 0.3)',
         transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-3px)' : 'scale(1)',
         boxShadow: hovered ? '0 6px 20px rgba(6, 113, 164, 0.15)' : 'none',
@@ -124,14 +132,13 @@ function TallCard({ tech }: { tech: TechItem }) {
         alt={tech.name}
         className="w-10 h-10"
         style={{
+          filter: tech.name === 'NetworkX' ? networkxBlueFilter : undefined,
           transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
           transition: 'transform 0.2s ease',
         }}
       />
       <span className="text-base font-semibold" style={{ color: '#0671A4' }}>{tech.name}</span>
-      {tech.blurb && (
-        <span className="text-xs leading-relaxed" style={{ color: 'rgba(6, 113, 164, 0.7)' }}>{tech.blurb}</span>
-      )}
+      <span className="text-xs leading-relaxed" style={{ color: 'rgba(6, 113, 164, 0.7)' }}>{tallBlurb}</span>
       <svg
         width="16"
         height="16"
@@ -189,29 +196,36 @@ function ProjectMarquee({ active }: { active: boolean }) {
     return () => cancelAnimationFrame(rafRef.current)
   }, [active])
 
-  // Build repeating pattern: tall, 2 smalls stacked, 2 smalls stacked
+  // Build a full pass that exhausts all tech items before repeating.
   const buildItems = (keyPrefix: string) => {
     const nodes: React.ReactNode[] = []
-    let majorIdx = 0
-    let minorIdx = 0
-    for (let i = 0; i < 18; i++) {
-      const mod = i % 3
-      if (mod === 0) {
-        nodes.push(
-          <div key={`${keyPrefix}-${i}`} className="shrink-0">
-            <TallCard tech={majorTech[majorIdx % majorTech.length]} />
-          </div>
-        )
-        majorIdx++
-      } else {
-        nodes.push(
-          <div key={`${keyPrefix}-${i}`} className="shrink-0 flex flex-col gap-2">
-            <SmallCard tech={minorTech[minorIdx % minorTech.length]} />
-            <SmallCard tech={minorTech[(minorIdx + 1) % minorTech.length]} />
-          </div>
-        )
-        minorIdx += 2
-      }
+    const majorQueue = [...majorTech]
+    const minorQueue = [...minorTech]
+    let i = 0
+
+    while (majorQueue.length > 0 || minorQueue.length > 0) {
+      const tallTech = majorQueue.shift() ?? minorQueue.shift()
+      if (!tallTech) break
+
+      nodes.push(
+        <div key={`${keyPrefix}-tall-${i}`} className="shrink-0">
+          <TallCard tech={tallTech} />
+        </div>
+      )
+
+      const firstSmall = minorQueue.shift() ?? majorQueue.shift()
+      const secondSmall = minorQueue.shift() ?? majorQueue.shift()
+
+      if (!firstSmall && !secondSmall) break
+
+      nodes.push(
+        <div key={`${keyPrefix}-small-${i}`} className="shrink-0 flex flex-col gap-2">
+          {firstSmall && <SmallCard tech={firstSmall} />}
+          {secondSmall && <SmallCard tech={secondSmall} />}
+        </div>
+      )
+
+      i++
     }
     return nodes
   }

@@ -89,12 +89,12 @@ export function FlipSafari({
           style={{
             backfaceVisibility: 'hidden',
             borderRadius: '12px',
-            border: cardHovered ? '1px solid rgba(6, 113, 164, 0.15)' : '1px solid #FFFFFF',
+            border: '1.5px solid rgba(6, 113, 164, 0.3)',
             backgroundColor: '#F4F4F4',
             boxShadow: cardHovered
               ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
               : '0 4px 12px rgba(0, 0, 0, 0.04)',
-            transition: 'box-shadow 0.3s ease, border 0.3s ease',
+            transition: 'box-shadow 0.3s ease',
             position: 'absolute',
             inset: 0,
             display: 'flex',
@@ -267,7 +267,7 @@ export function FlipSafari({
             inset: 0,
             overflow: 'hidden',
             borderRadius: '12px',
-            border: '1px solid #FFFFFF',
+            border: '1.5px solid rgba(6, 113, 164, 0.3)',
             backgroundColor: '#F4F4F4',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.04)',
           }}

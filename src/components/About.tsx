@@ -58,10 +58,12 @@ function SmallCard({ tech }: { tech: TechItem }) {
       style={{
         width: 220,
         height: 143,
-        background: hovered ? '#FFFFFF' : '#F4F4F4',
+        background: hovered ? '#FFFFFF' : '#F5F5F5',
         border: hovered ? '1.5px solid rgba(6, 113, 164, 0.5)' : '1.5px solid rgba(6, 113, 164, 0.3)',
         transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-2px)' : 'scale(1)',
-        boxShadow: hovered ? '0 4px 16px rgba(6, 113, 164, 0.12)' : 'none',
+        boxShadow: hovered
+          ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
+          : '0 4px 12px rgba(0, 0, 0, 0.04)',
         transition: 'all 0.2s ease',
       }}
       onMouseEnter={() => setHovered(true)}
@@ -115,10 +117,12 @@ function TallCard({ tech }: { tech: TechItem }) {
       style={{
         width: 300,
         height: 300,
-        background: hovered ? '#FFFFFF' : '#F4F4F4',
+        background: hovered ? '#FFFFFF' : '#F5F5F5',
         border: hovered ? '1.5px solid rgba(6, 113, 164, 0.5)' : '1.5px solid rgba(6, 113, 164, 0.3)',
         transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-3px)' : 'scale(1)',
-        boxShadow: hovered ? '0 6px 20px rgba(6, 113, 164, 0.15)' : 'none',
+        boxShadow: hovered
+          ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
+          : '0 4px 12px rgba(0, 0, 0, 0.04)',
         transition: 'all 0.2s ease',
       }}
       onMouseEnter={() => setHovered(true)}

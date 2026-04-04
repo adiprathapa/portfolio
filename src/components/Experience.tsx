@@ -59,11 +59,13 @@ export function Experience() {
         <div
           className="relative overflow-hidden"
           style={{
-            width: '840px',
-            height: '410px',
-            borderRadius: '1rem',
+            width: '860px',
+            height: '500px',
+            borderRadius: '12px',
+            border: '1.5px solid rgba(6, 113, 164, 0.3)',
             boxShadow: '0 4px 24px rgba(0, 0, 0, 0.10)',
             transform: 'translate(-96px, -34px)',
+            backgroundColor: '#F4F4F4',
           }}
         >
           <img
@@ -74,19 +76,28 @@ export function Experience() {
           <div
             className="absolute inset-0"
             style={{
-              background: 'linear-gradient(to bottom, rgba(6, 113, 164, 0.4) 0%, rgba(6, 113, 164, 0.55) 50%, rgba(6, 113, 164, 0.92) 80%, rgba(6, 113, 164, 0.97) 100%)',
+              background: 'linear-gradient(180deg, rgba(6, 113, 164, 0.7) 0%, rgba(6, 113, 164, 0.85) 55%, rgba(6, 113, 164, 0.96) 100%)',
             }}
           />
-          <div className="relative h-full flex flex-col justify-between p-8 md:p-10">
+          <div className="relative h-full p-8 md:p-10">
             <img
               src="/mitre.png"
               alt="MITRE"
-              className="h-[86px] w-auto object-contain self-start"
-              style={{ filter: 'brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.2))', transform: 'translate(-15px, -50px)' }}
+              className="absolute h-[86px] w-auto object-contain"
+              style={{
+                top: 24,
+                left: 26,
+                filter: 'brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
+              }}
             />
             <h3
-              className="font-medium leading-snug max-w-lg"
-              style={{ fontSize: 'clamp(1rem, 2vw, 1.35rem)', color: '#FFFFFF' }}
+              className="absolute text-lg md:text-xl font-medium leading-relaxed max-w-lg"
+              style={{
+                left: 32,
+                right: 32,
+                bottom: 36,
+                color: '#FFFFFF',
+              }}
             >
               Building scalable web applications and leading frontend architecture for national security
             </h3>

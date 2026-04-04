@@ -54,6 +54,7 @@ const techAccentColorsBySlug: Record<string, string> = {
 
 function getTechAccentColor(tech: TechItem) {
   if (tech.name === 'NetworkX') return '#2B7BBB'
+  if (tech.name === 'Claude API') return '#D97757'
   const slugMatch = tech.icon.match(/simpleicons\.org\/([^/]+)/)
   const slug = slugMatch?.[1]
   return (slug && techAccentColorsBySlug[slug]) ?? '#0671A4'
@@ -97,7 +98,7 @@ const minorTech: TechItem[] = [
   { name: 'TensorFlow', icon: 'https://cdn.simpleicons.org/tensorflow/0671A4', url: 'https://tensorflow.org' },
   { name: 'GitHub Actions', icon: 'https://cdn.simpleicons.org/githubactions/0671A4', url: 'https://github.com/features/actions' },
   { name: 'IPFS', icon: 'https://cdn.simpleicons.org/ipfs/0671A4', url: 'https://ipfs.tech' },
-  { name: 'Claude API', icon: 'https://cdn.simpleicons.org/anthropic/0671A4', url: 'https://docs.anthropic.com' },
+  { name: 'Claude API', icon: '/claude.svg', url: 'https://docs.anthropic.com' },
   { name: 'Gemini API', icon: 'https://cdn.simpleicons.org/googlegemini/0671A4', url: 'https://ai.google.dev', blurb: 'Built multimodel AI workflows and fallback orchestration for production apps' },
   { name: 'Mistral AI', icon: 'https://cdn.simpleicons.org/mistralai/0671A4', url: 'https://mistral.ai' },
   { name: 'Leaflet', icon: 'https://cdn.simpleicons.org/leaflet/0671A4', url: 'https://leafletjs.com' },
@@ -175,7 +176,7 @@ function SmallCard({ tech }: { tech: TechItem }) {
           decoding="async"
           style={{
             opacity: iconLoaded ? 1 : 0,
-            filter: tech.name === 'NetworkX' && !hovered ? networkxBlueFilter : undefined,
+            filter: (tech.name === 'NetworkX' || tech.name === 'Claude API') && !hovered ? networkxBlueFilter : undefined,
             transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease, opacity 0.22s ease',
           }}
@@ -276,7 +277,7 @@ function TallCard({ tech }: { tech: TechItem }) {
           decoding="async"
           style={{
             opacity: iconLoaded ? 1 : 0,
-            filter: tech.name === 'NetworkX' && !hovered ? networkxBlueFilter : undefined,
+            filter: (tech.name === 'NetworkX' || tech.name === 'Claude API') && !hovered ? networkxBlueFilter : undefined,
             transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease, opacity 0.22s ease',
           }}

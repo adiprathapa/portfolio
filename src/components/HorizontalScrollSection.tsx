@@ -11,15 +11,11 @@ export function HorizontalScrollSection() {
     offset: ['start start', 'end end'],
   })
 
-  // First 40% of scroll (160vh of 400vh) drives the horizontal slide
-  const translateX = useTransform(scrollYProgress, [0, 0.4], ['0%', '-50%'])
-
-  // Remaining 60% (240vh) drives the card animation
-  const cardProgress = useTransform(scrollYProgress, [0.4, 1], [0, 1])
+  const translateX = useTransform(scrollYProgress, [0, 1], ['0%', '-50%'])
 
   return (
-    <div ref={outerRef} style={{ height: '350vh', position: 'relative' }}>
-      <div className="sticky top-0 h-screen overflow-hidden">
+    <div ref={outerRef} style={{ height: '200vh', position: 'relative' }}>
+      <div className="sticky top-0 h-screen" style={{ overflowX: 'clip', overflowY: 'visible' }}>
         <motion.div
           className="flex w-[200vw] h-screen"
           style={{ x: translateX }}
@@ -28,7 +24,7 @@ export function HorizontalScrollSection() {
             <Hero />
           </div>
           <div className="w-screen h-screen shrink-0">
-            <About cardProgress={cardProgress} />
+            <About />
           </div>
         </motion.div>
       </div>

@@ -41,12 +41,9 @@ export function Navbar() {
       if (scrolledRef.current) setForceHidden(true)
     }, 2000)
 
-    // About is inside the horizontal scroll section — native hash scroll
-    // would scroll right instead of down. Scroll vertically to the point
-    // where the horizontal translation has fully revealed the About panel.
     if (href === '#about') {
       e.preventDefault()
-      window.scrollTo({ top: window.innerHeight * 1.3, behavior: 'smooth' })
+      window.scrollTo({ top: window.innerHeight * 0.9, behavior: 'smooth' })
     }
   }
 

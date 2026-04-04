@@ -1,78 +1,12 @@
-import { useState, useRef, useMemo, useEffect } from 'react'
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
-import { useScrolled } from '../hooks/useScrolled'
-
-import { IconCloud } from './ui/icon-cloud'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { FlipSafari } from './ui/flip-safari'
 
-
-const slugs = ["vuedotjs", "pinia", "githubactions", "yaml", "python", "codemirror", "pytorch", "fastapi", "react", "ollama", "d3", "anthropic", "googlegemini", "ipfs", "leaflet", "express", "mongodb", "vercel", "javascript", "palantir", "networkx", "typescript", "nextdotjs", "nodedotjs", "postgresql", "docker", "git", "github", "tensorflow", "html5", "css3", "flask", "openjdk", "c", "scikitlearn", "numpy", "pandas", "plotly", "mistralai", "redis", "sqlite", "confluence", "apache", "google"
-]
-
-const slugToName: Record<string, string> = {
-  vuedotjs: "Vue.js",
-  pinia: "Pinia",
-  githubactions: "GitHub Actions",
-  yaml: "YAML",
-  python: "Python",
-  codemirror: "CodeMirror",
-  pytorch: "PyTorch",
-  fastapi: "FastAPI",
-  react: "React",
-  ollama: "Ollama",
-  d3: "D3.js",
-  anthropic: "Claude API",
-  googlegemini: "Gemini API",
-  ipfs: "IPFS",
-  leaflet: "Leaflet",
-  express: "Express",
-  mongodb: "MongoDB",
-  vercel: "Vercel",
-  javascript: "JavaScript",
-  palantir: "Palantir",
-  networkx: "NetworkX",
-  typescript: "TypeScript",
-  nextdotjs: "Next.js",
-  nodedotjs: "Node.js",
-  postgresql: "PostgreSQL",
-  docker: "Docker",
-  git: "Git",
-  github: "GitHub",
-  tensorflow: "TensorFlow",
-  html5: "HTML5",
-  css3: "CSS3",
-  flask: "Flask",
-  openjdk: "Java",
-  c: "C",
-  scikitlearn: "scikit-learn",
-  numpy: "NumPy",
-  pandas: "pandas",
-  plotly: "Plotly",
-  mistralai: "Mistral AI",
-  redis: "Redis",
-  sqlite: "SQLite",
-  confluence: "Confluence",
-  apache: "Apache",
-  google: "Google ADK",
-}
-
-const names = slugs.map(slug => slugToName[slug] || slug)
-
-const projectPrimarySlug: Record<string, string> = {
-  kiwix: "vuedotjs",
-  tauron: "fastapi",
-  helicity: "pytorch",
-  zamsizing: "mongodb",
-  galatea: "palantir",
-}
-
-const projectTechStacks: Record<string, string[]> = {
-  kiwix: ["vuedotjs", "pinia", "githubactions", "yaml", "python", "codemirror"],
-  tauron: ["fastapi", "anthropic", "googlegemini", "ipfs", "leaflet", "react", "pandas", "numpy"],
-  helicity: ["pytorch", "fastapi", "python", "react", "ollama", "d3", "mistralai", "numpy", "pandas", "scikitlearn", "networkx"],
-  zamsizing: ["javascript", "react", "nodedotjs", "express", "mongodb", "googlegemini", "vercel"],
-  galatea: ["networkx", "palantir", "javascript"],
-}
+// Globe data kept but not used
+// import { IconCloud } from './ui/icon-cloud'
+// const slugs = [...]
+// const slugToName = {...}
+// const images = slugs.map(...)
 
 const projectDisplayNames: Record<string, string> = {
   kiwix: "Kiwix",
@@ -106,248 +40,155 @@ const projectRepoLinks: Record<string, string> = {
   galatea: "https://github.com/adiprathapa/galatea",
 }
 
-import { ProjectsBackground } from './ui/projects-background'
-
 const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'galatea']
-const thresholds = [0.00, 0.23, 0.46, 0.73, 0.96]
-export function Projects() {
-  const { scrolled } = useScrolled(50)
 
+const projectSafariProps: Record<string, { url: string; videoSrc: string; videoCropTop?: number; videoCropBottom?: number; videoCropLeft?: number; videoCropRight?: number }> = {
+  kiwix: { url: projectLinks['kiwix'], videoSrc: "/kiwix.mov" },
+  tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mov", videoCropTop: 25 },
+  helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mov" },
+  zamsizing: { url: projectLinks['zamsizing'], videoSrc: "/zam-copy.mp4", videoCropTop: 80, videoCropBottom: 30, videoCropLeft: 228, videoCropRight: 230 },
+  galatea: { url: projectLinks['galatea'], videoSrc: "/recording-1.mov", videoCropTop: 23 },
+}
+
+const projectLogos: Record<string, string> = {
+  kiwix: "/logo-kiwix.png",
+  tauron: "/logo-tauron.png",
+  helicity: "/logo-helicity.png",
+  zamsizing: "/logo-zamsizing.png",
+  galatea: "/logo-galatea.png",
+}
+
+const projectTaglines: Record<string, string> = {
+  kiwix: "Offline education for everyone, everywhere ",
+  tauron: "Predicting livestock disease 48 hours before symptoms appear ",
+  helicity: "AI powered liquidity stress scoring with verifiable audit trails ",
+  zamsizing: "One click AI market sizing with TAM/SAM/SOM visualization ",
+  galatea: "Real time blockchain risk analytics with Palantir Foundry ",
+}
+
+const projectBgImages: Record<string, string> = {
+  kiwix: '/kiwixbg.png',
+  tauron: '/tauronbg.jpg',
+  helicity: '/helicitybg.jpg',
+  zamsizing: '/zamsizingbg.jpg',
+  galatea: '/galateabg.jpg',
+}
+
+const projectGradientColors: Record<string, string> = {
+  kiwix: '#0A0A23',
+  tauron: '#2E8B57',
+  helicity: '#6366F1',
+  zamsizing: '#E8740C',
+  galatea: '#2c2c2c',
+}
+
+const projectTechStacks: Record<string, string[]> = {
+  kiwix: ["Vue.js", "Pinia", "GitHub Actions", "YAML", "Python", "CodeMirror"],
+  tauron: ["FastAPI", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas", "NumPy"],
+  helicity: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
+  zamsizing: ["JavaScript", "React", "Node.js", "Express", "MongoDB", "Gemini API", "Vercel"],
+  galatea: ["NetworkX", "Palantir", "JavaScript"],
+}
+
+const allTechStack = [...new Set(Object.values(projectTechStacks).flat())]
+
+function ProjectCard({ projectKey, yValue, collapseValue, zIndex }: { projectKey: string; yValue: MotionValue<number>; collapseValue: MotionValue<number> | null; zIndex: number }) {
+  const combinedY = useTransform(() => yValue.get() + (collapseValue ? collapseValue.get() : 0))
+  // Full size once the card's top reaches the bottom of the previous card (~500px),
+  // smallest at 1120px away, linear ramp between
+  const scale = useTransform(() => {
+    const y = yValue.get()
+    const minScale = 0.85
+    const fullSizeAt = 500
+    if (y <= fullSizeAt) return 1
+    const t = Math.min((y - fullSizeAt) / (1120 - fullSizeAt), 1)
+    return 1 - t * (1 - minScale)
+  })
+
+  return (
+    <motion.div
+      className="absolute inset-x-0 top-0 w-full origin-bottom"
+      style={{
+        y: combinedY,
+        scale,
+        zIndex,
+        filter: 'drop-shadow(0 -4px 8px rgba(0, 0, 0, 0.06))',
+      }}
+    >
+      <FlipSafari
+        safariProps={{
+          ...projectSafariProps[projectKey],
+          style: { width: '100%' },
+        }}
+        projectName={projectDisplayNames[projectKey]}
+        projectDescription={projectDescriptions[projectKey]}
+        projectTagline={projectTaglines[projectKey]}
+        projectUrl={projectRepoLinks[projectKey]}
+        logoSrc={projectLogos[projectKey]}
+        techStack={projectTechStacks[projectKey]}
+        gradientColor={projectGradientColors[projectKey]}
+        bgImage={projectBgImages[projectKey]}
+      />
+    </motion.div>
+  )
+}
+
+export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   })
 
-  const animatedY = useTransform(scrollYProgress, [0, 1], [55, -3365])
+  const stagger = 20
+  const spacing = 545
 
-  const [activeProject, setActiveProject] = useState<string>(projectOrder[0])
-  const activeProjectRef = useRef<string>(projectOrder[0])
-  const debounceTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
-  const prevProgressRef = useRef<number>(0)
+  // Cards maintain 545px spacing, stacking during 0–0.72.
+  // After stacking, card 5 keeps scrolling up and "eats" the others —
+  // each card joins card 5's motion once card 5 reaches its position.
+  const seg = 0.18
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const scrollingUp = latest < prevProgressRef.current
-    prevProgressRef.current = latest
+  const cardY1 = useTransform(scrollYProgress, [0, 1], [0, 0])
 
-    const upOffset = scrollingUp ? -0.2 : 0
-    let index = 0
-    for (let i = thresholds.length - 1; i >= 0; i--) {
-      if (latest >= thresholds[i] + upOffset) {
-        index = i
-        break
-      }
-    }
-    const newProject = projectOrder[index]
-    if (newProject !== activeProjectRef.current) {
-      activeProjectRef.current = newProject
-      clearTimeout(debounceTimerRef.current)
-      debounceTimerRef.current = setTimeout(() => {
-        setActiveProject(newProject)
-      }, 50)
-    }
-  })
+  const cardY2 = useTransform(scrollYProgress,
+    [0, seg, 1],
+    [spacing, stagger, stagger])
 
-  const activeSlugIndices = useMemo(() => {
-    if (!activeProject || !projectTechStacks[activeProject]) return null
-    return projectTechStacks[activeProject]
-      .map(s => slugs.indexOf(s))
-      .filter(i => i !== -1)
-  }, [activeProject])
+  const cardY3 = useTransform(scrollYProgress,
+    [0, seg, seg * 2, 1],
+    [spacing * 2, spacing + stagger, stagger * 2, stagger * 2])
 
-  const rotationTargetIndex = useMemo(() => {
-    if (!activeProject || !projectPrimarySlug[activeProject]) return null
-    const idx = slugs.indexOf(projectPrimarySlug[activeProject])
-    return idx !== -1 ? [idx] : null
-  }, [activeProject])
+  const cardY4 = useTransform(scrollYProgress,
+    [0, seg, seg * 2, seg * 3, 1],
+    [spacing * 3, spacing * 2 + stagger, spacing + stagger * 2, stagger * 3, stagger * 3])
 
-  const safariX = -63
-  const [safariLength] = useState(100)
-  const safariScale = 1.4
-  const cloudSize = 845
-  const cloudX = 154
-  const cloudY = 35
+  const cardY5 = useTransform(scrollYProgress,
+    [0, seg, seg * 2, seg * 3, seg * 4, 1],
+    [spacing * 4, spacing * 3 + stagger, spacing * 2 + stagger * 2, spacing + stagger * 3, stagger * 4, -700])
 
-  const images = slugs.map(
-    (slug) => slug === "networkx" ? "/networkx.png" : `https://cdn.simpleicons.org/${slug}/0671A4`
-  )
+  // Once card 5 passes a card's position, that card moves with card 5
+  const collapse1 = useTransform(() => Math.min(0, cardY5.get() - 0))
+  const collapse2 = useTransform(() => Math.min(0, cardY5.get() - stagger))
+  const collapse3 = useTransform(() => Math.min(0, cardY5.get() - stagger * 2))
+  const collapse4 = useTransform(() => Math.min(0, cardY5.get() - stagger * 3))
 
-  const blueRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const containerEl = blueRef.current
-    if (!containerEl) return
-
-    let rafId: number
-
-    // Read current clip from DOM so we can blend smoothly from wherever we are
-    const match = containerEl.style.clipPath.match(/inset\((\d+)px/)
-    const startClip = match ? parseInt(match[1]) : 0
-    const transitionStart = performance.now()
-    const BLEND_MS = 500
-
-    const update = () => {
-      const navEl = document.querySelector('[data-navbar]') as HTMLElement
-      if (!navEl || !containerEl) {
-        rafId = requestAnimationFrame(update)
-        return
-      }
-
-      // Compute where the clip should be based on the navbar's actual position
-      let targetClip = 0
-      if (scrolled) {
-        const navBottom = navEl.getBoundingClientRect().bottom
-        const containerTop = containerEl.getBoundingClientRect().top
-        const gap = containerTop - navBottom
-        if (navBottom > 0 && gap <= 20) {
-          targetClip = Math.max(0, 20 - gap)
-        }
-      }
-
-      // Blend from startClip toward targetClip over BLEND_MS,
-      // then track the navbar directly after the blend completes
-      const elapsed = performance.now() - transitionStart
-      let clip: number
-      if (elapsed < BLEND_MS) {
-        const t = elapsed / BLEND_MS
-        const eased = 1 - (1 - t) * (1 - t) // ease-out quadratic
-        clip = startClip + (targetClip - startClip) * eased
-      } else {
-        clip = targetClip
-      }
-
-      containerEl.style.clipPath = `inset(${Math.round(clip)}px 0 0 0 round 24px)`
-
-      // Keep RAF running while scrolled (for navbar hide/show tracking)
-      // or while still blending out
-      if (scrolled || elapsed < BLEND_MS) {
-        rafId = requestAnimationFrame(update)
-      }
-    }
-
-    containerEl.style.transition = 'none'
-    rafId = requestAnimationFrame(update)
-    return () => cancelAnimationFrame(rafId)
-  }, [scrolled])
+  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5]
+  const collapseValues: (MotionValue<number> | null)[] = [collapse1, collapse2, collapse3, collapse4, null]
 
   return (
-    <div ref={containerRef} className="relative h-[700vh]">
-      <section id="projects" className="sticky top-0 bg-surface h-screen flex items-center justify-center px-6 pb-12 pt-6">
-        <div ref={blueRef} className="relative w-full h-full text-foreground overflow-hidden" style={{ clipPath: 'inset(0 0 0 0 round 24px)' }}>
-          <ProjectsBackground />
-
-          <div className="relative z-10 mx-auto max-w-7xl px-12 h-full flex items-center">
-            <div className="flex flex-col md:flex-row items-center justify-center w-full gap-16">
-              {/* Left side — Safari browser mockups */}
-              <motion.div
-                className="flex items-center md:w-[50%] origin-center relative"
-                style={{ x: safariX, y: animatedY, scale: safariScale }}
-              >
-                <FlipSafari
-                  safariProps={{
-                    url: projectLinks['kiwix'],
-                    videoSrc: "/kiwix.mov",
-                    style: { width: `calc(100% + ${safariLength}px)` },
-                  }}
-                  projectName={projectDisplayNames['kiwix']}
-                  projectDescription={projectDescriptions['kiwix']}
-                  projectUrl={projectRepoLinks['kiwix']}
-                  logoSrc="/logo-kiwix.png"
-                />
-                <div className="absolute top-[600px] left-0 right-0 flex items-center">
-                  <FlipSafari
-                    safariProps={{
-                      url: projectLinks['tauron'],
-                      videoSrc: "/tauron.mov",
-                      videoCropTop: 11,
-                      style: { width: `calc(100% + ${safariLength}px)` },
-                    }}
-                    projectName={projectDisplayNames['tauron']}
-                    projectDescription={projectDescriptions['tauron']}
-                    projectUrl={projectRepoLinks['tauron']}
-                    logoSrc="/logo-tauron.png"
-                  />
-                </div>
-                {/* Third Project */}
-                <div className="absolute top-[1200px] left-0 right-0 flex items-center">
-                  <FlipSafari
-                    safariProps={{
-                      url: projectLinks['helicity'],
-                      videoSrc: "/helicity.mov",
-                      style: { width: `calc(100% + ${safariLength}px)` },
-                    }}
-                    projectName={projectDisplayNames['helicity']}
-                    projectDescription={projectDescriptions['helicity']}
-                    projectUrl={projectRepoLinks['helicity']}
-                    logoSrc="/logo-helicity.png"
-                  />
-                </div>
-                {/* Fourth Project */}
-                <div className="absolute top-[1800px] left-0 right-0 flex items-center">
-                  <FlipSafari
-                    safariProps={{
-                      url: projectLinks['zamsizing'],
-                      videoSrc: "/zam-copy.mp4",
-                      videoCropTop: 42,
-                      videoCropBottom: 42,
-                      videoCropLeft: 112,
-                      videoCropRight: 112,
-                      style: { width: `calc(100% + ${safariLength}px)` },
-                    }}
-                    projectName={projectDisplayNames['zamsizing']}
-                    projectDescription={projectDescriptions['zamsizing']}
-                    projectUrl={projectRepoLinks['zamsizing']}
-                    logoSrc="/logo-zamsizing.png"
-                  />
-                </div>
-                {/* Fifth Project */}
-                <div className="absolute top-[2400px] left-0 right-0 flex items-center">
-                  <FlipSafari
-                    safariProps={{
-                      url: projectLinks['galatea'],
-                      videoSrc: "/recording-1.mov",
-                      videoCropTop: 11,
-                      style: { width: `calc(100% + ${safariLength}px)` },
-                    }}
-                    projectName={projectDisplayNames['galatea']}
-                    projectDescription={projectDescriptions['galatea']}
-                    projectUrl={projectRepoLinks['galatea']}
-                    logoSrc="/logo-galatea.png"
-                  />
-                </div>
-              </motion.div>
-
-              {/* Right side — Icon Cloud */}
-              <div className="flex items-center justify-center md:w-[40%]" style={{ transform: `translateX(${cloudX}px) translateY(${cloudY}px)` }}>
-                <IconCloud images={images} names={names} size={cloudSize} activeIconIndices={activeSlugIndices} rotationTargetIndices={rotationTargetIndex} />
-              </div>
-            </div>
-          </div>
+    <div ref={containerRef} className="relative h-[400vh]">
+      <section id="projects" className="sticky top-0 h-screen flex items-center justify-center px-6 bg-surface overflow-hidden">
+        <div className="relative w-full mx-auto" style={{ maxWidth: 1170, height: 500 }}>
+          {projectOrder.map((key, i) => (
+            <ProjectCard
+              key={key}
+              projectKey={key}
+              yValue={cardYValues[i]}
+              collapseValue={collapseValues[i]}
+              zIndex={i + 1}
+            />
+          ))}
         </div>
-
-        <button
-          onClick={() => document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' })}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[999] rounded-full flex items-center justify-center cursor-pointer transition-all duration-300"
-          style={{
-            width: 64,
-            height: 64,
-            background: '#d4e9f2',
-            border: '2px solid transparent',
-            boxShadow: '0 4px 20px rgba(6, 113, 164, 0.25)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#ffffff'
-            e.currentTarget.style.borderColor = '#d4e9f2'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#d4e9f2'
-            e.currentTarget.style.borderColor = 'transparent'
-          }}
-          aria-label="Scroll to next section"
-        >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0671A4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 9l6 6 6-6" />
-          </svg>
-        </button>
       </section>
     </div>
   )

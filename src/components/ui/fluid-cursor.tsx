@@ -800,7 +800,7 @@ export function FluidCursor() {
         height: '100%',
         pointerEvents: 'none',
         zIndex: 1,
-        opacity: 0.4,
+        opacity: 0.025,
       }}
     />
   )

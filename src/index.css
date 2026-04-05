@@ -49,6 +49,11 @@ html::-webkit-scrollbar {
   }
 }
 
+@keyframes shimmer {
+  0% { background-position: 250% center; }
+  100% { background-position: -250% center; }
+}
+
 @keyframes breathe {
   0%, 100% {
     transform: scale(1);

@@ -236,7 +236,7 @@ export function FlipSafari({
               <div
                 className="absolute inset-0"
                 style={{
-                  background: `linear-gradient(180deg, ${gradientColor}B3 0%, ${gradientColor}D9 55%, ${gradientColor}F5 100%)`,
+                  background: `linear-gradient(180deg, ${gradientColor}73 0%, ${gradientColor}D9 55%, ${gradientColor}FF 100%)`,
                 }}
               />
             )}

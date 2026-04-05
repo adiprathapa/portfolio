@@ -69,14 +69,14 @@ export function Experience() {
           }}
         >
           <img
-            src="/mitre-bg.jpeg"
+            src="/pexels-pinamon-17647329.jpg"
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div
             className="absolute inset-0"
             style={{
-              background: 'linear-gradient(180deg, rgba(6, 113, 164, 0.7) 0%, rgba(6, 113, 164, 0.85) 55%, rgba(6, 113, 164, 0.96) 100%)',
+              background: 'linear-gradient(180deg, #0671A473 0%, #0671A4D9 55%, #0671A4FF 100%)',
             }}
           />
           <div className="relative h-full p-8 md:p-10">
@@ -85,7 +85,7 @@ export function Experience() {
               alt="MITRE"
               className="absolute h-[86px] w-auto object-contain"
               style={{
-                top: 24,
+                top: -1,
                 left: 26,
                 filter: 'brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
               }}

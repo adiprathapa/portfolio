@@ -462,10 +462,18 @@ function ProjectMarquee({ active }: { active: boolean }) {
   )
 }
 
-const CARDS: { id: string; image: string; caption: string; bgSize?: string; bgPosition?: string }[] = [
+const CARDS: {
+  id: string
+  image: string
+  caption: string
+  bgSize?: string
+  bgPosition?: string
+  topLeftBlue?: boolean
+}[] = [
   { id: 'card-1', image: '/img3.jpg', caption: 'Cornell Data Strategy Meeting' },
   { id: 'card-2', image: '/team-presentation.png', caption: 'Stablecoin Presentation at Cornell Hackathon' },
   { id: 'card-3', image: '/img3.png', caption: 'Formal Organizing Group' },
+  { id: 'card-6', image: '/treman-hiking.png', caption: 'Hiking in Robert H. Treman State Park', topLeftBlue: true },
   { id: 'card-4', image: '/card-3.png', caption: 'Eagle Scout Project' },
   { id: 'card-5', image: '/coh.png', caption: 'After Eagle Scout Board of Review', bgSize: '180%', bgPosition: 'center center' },
 ]
@@ -528,8 +536,12 @@ function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab }: 
         boxSizing: 'border-box',
         backgroundClip: 'padding-box',
         backgroundImage: imageLoaded
-          ? `linear-gradient(135deg, rgba(6,113,164,0.3), rgba(56,189,248,0.2), transparent 60%), url('${card.image}')`
-          : 'linear-gradient(135deg, rgba(6,113,164,0.22), rgba(56,189,248,0.14), rgba(6,113,164,0.08))',
+          ? card.topLeftBlue
+            ? `linear-gradient(145deg, rgba(6,113,164,0.5) 0%, rgba(56,189,248,0.3) 36%, transparent 65%), url('${card.image}')`
+            : `linear-gradient(135deg, rgba(6,113,164,0.3), rgba(56,189,248,0.2), transparent 60%), url('${card.image}')`
+          : card.topLeftBlue
+            ? 'linear-gradient(145deg, rgba(6,113,164,0.34), rgba(56,189,248,0.22), rgba(6,113,164,0.1))'
+            : 'linear-gradient(135deg, rgba(6,113,164,0.22), rgba(56,189,248,0.14), rgba(6,113,164,0.08))',
         backgroundSize: card.bgSize ?? 'cover',
         backgroundPosition: card.bgPosition ?? 'center',
         filter: 'saturate(1.3) contrast(1.1) brightness(1.05)',
@@ -602,7 +614,7 @@ export function About() {
     })
   }, [])
 
-  const rotations = [-8, -3, 2, 6, -5]
+  const rotations = [-8, -3, 2, 6, -5, 4]
 
   return (
     <section ref={sectionRef} id="about" className="relative h-full flex items-center px-4 md:px-6 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>

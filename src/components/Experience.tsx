@@ -18,6 +18,7 @@ interface ExperienceItem {
   role: string
   duration: string
   description: string
+  bullets?: string[]
   tech: { name: string; icon: string }[]
   logo: string
   logoHeight: number
@@ -36,6 +37,9 @@ const work: ExperienceItem[] = [
     duration: 'Incoming Summer 2026',
     description:
       'Working on graph neural networks for supply chain and transportation',
+    bullets: [
+      'Incoming',
+    ],
     tech: [
       { name: 'PyTorch Geometric', icon: 'https://cdn.simpleicons.org/pytorch' },
       { name: 'Dash', icon: 'https://cdn.simpleicons.org/plotly' },
@@ -52,6 +56,11 @@ const work: ExperienceItem[] = [
     duration: 'January 2026',
     description:
       'Implementing data structures, algorithms, and discrete mathematics',
+    bullets: [
+      'Developed modular Java applications using object-oriented design patterns, inheritance hierarchies, and encapsulation',
+      'Implemented and benchmarked linked lists, trees, hash maps, and graphs, analyzing time and space complexity tradeoffs',
+      'Traced execution across multi-class architectures and profiled runtime behavior to debug and resolve bottlenecks',
+    ],
     tech: [
       { name: 'Java', icon: 'https://cdn.simpleicons.org/openjdk' },
       { name: 'JUnit', icon: 'https://cdn.simpleicons.org/junit5' },
@@ -70,6 +79,11 @@ const work: ExperienceItem[] = [
     duration: 'June — July 2024',
     description:
       'Built an AI chatbot and tools to improve access to cybersecurity resources',
+    bullets: [
+      'Built an AI-powered chatbot module enabling real-time natural language question answering on a cybersecurity platform',
+      'Developed an interactive cybersecurity education site with phishing detection simulations using JavaScript, HTML, and CSS',
+      'Iterated rapidly through weekly prototyping cycles, prioritizing user experience, accessibility compliance, and product clarity',
+    ],
     tech: [
       { name: 'ChatGPT API', icon: 'https://cdn.simpleicons.org/chatbot' },
       { name: 'JavaScript', icon: 'https://cdn.simpleicons.org/javascript' },
@@ -88,6 +102,11 @@ const work: ExperienceItem[] = [
     duration: 'June — August 2023',
     description:
       'Data visualization through 3D printing for Bohmian trajectories',
+    bullets: [
+      'Created Python simulation programs to model Bohmian trajectories and visualize quantum behavior using Scikit-learn',
+      'Produced 3D printed models from simulation data using Matplotlib visualizations to support educational demonstrations',
+      'Presented findings at the Nebraska Summer Research Symposium after biweekly reviews with professor to refine methodology',
+    ],
     tech: [
       { name: 'scikit-learn', icon: 'https://cdn.simpleicons.org/scikitlearn' },
       { name: 'Python', icon: 'https://cdn.simpleicons.org/python' },
@@ -113,7 +132,7 @@ const companyLogos = [
 
 /* ── Sub-components ────────────────────────────────────────── */
 
-function FeatureCard({ item, direction }: { item: ExperienceItem; direction: number }) {
+function FeatureCard({ item, direction, paused }: { item: ExperienceItem; direction: number; paused: boolean }) {
   const [hovered, setHovered] = useState(false)
 
   return (
@@ -121,32 +140,29 @@ function FeatureCard({ item, direction }: { item: ExperienceItem; direction: num
       className="relative overflow-hidden w-full"
       style={{
         borderRadius: 12,
-        boxShadow: hovered ? SHADOW.xl : SHADOW.lg,
+        border: '1.5px solid rgba(6, 113, 164, 0.3)',
+        boxShadow: hovered
+          ? '0 16px 48px rgba(6, 113, 164, 0.14), 0 8px 24px rgba(0, 0, 0, 0.08)'
+          : '0 8px 24px rgba(6, 113, 164, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06)',
         transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
-        transition: 'box-shadow 0.6s ease, transform 0.6s ease',
+        transition: 'box-shadow 0.3s ease, transform 0.6s ease',
         aspectRatio: '16 / 9',
         minHeight: 340,
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Crossfade between slides */}
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         <motion.div
           key={item.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          transition={{ duration: 0.4, ease: 'easeInOut' }}
           className="absolute inset-0"
+          style={{ zIndex: 1 }}
         >
-          <div
-            className="absolute inset-0"
-            style={{
-              transform: hovered ? 'scale(1.015)' : 'scale(1)',
-              transition: 'transform 1s ease',
-            }}
-          >
+          <div className="absolute inset-0">
             <img
               src={item.bgImage}
               alt=""
@@ -155,16 +171,25 @@ function FeatureCard({ item, direction }: { item: ExperienceItem; direction: num
             <div
               className="absolute inset-0"
               style={{
-                background: `
-                  linear-gradient(
-                    180deg,
-                    ${item.gradientColor}D9 0%,
-                    ${item.gradientColor}66 30%,
-                    ${item.gradientColor}4D 50%,
-                    ${item.gradientColor}99 70%,
-                    ${item.gradientColor}F0 100%
-                  )
-                `,
+                background: hovered
+                  ? `linear-gradient(
+                      180deg,
+                      ${item.gradientColor}D9 0%,
+                      ${item.gradientColor}99 20%,
+                      ${item.gradientColor}B3 40%,
+                      ${item.gradientColor}CC 60%,
+                      ${item.gradientColor}F5 80%,
+                      ${item.gradientColor}FF 100%
+                    )`
+                  : `linear-gradient(
+                      180deg,
+                      ${item.gradientColor}D9 0%,
+                      ${item.gradientColor}66 30%,
+                      ${item.gradientColor}4D 50%,
+                      ${item.gradientColor}99 70%,
+                      ${item.gradientColor}F0 100%
+                    )`,
+                transition: 'background 0.4s ease',
               }}
             />
             <div
@@ -174,20 +199,34 @@ function FeatureCard({ item, direction }: { item: ExperienceItem; direction: num
               }}
             />
           </div>
-          <div className="relative h-full flex flex-col justify-between p-8 md:p-10">
-            <img
-              src={item.logo}
-              alt={item.company}
-              style={{
-                height: item.logoHeight,
-                width: 'auto',
-                objectFit: 'contain',
-                filter: 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.18))',
-                alignSelf: 'flex-start',
-                marginTop: (item.logoOffsetTop ?? 0) - 28,
-                marginLeft: item.logoOffsetLeft ?? 0,
-              }}
-            />
+          {/* Logo — top-left */}
+          <img
+            src={item.logo}
+            alt={item.company}
+            style={{
+              position: 'absolute',
+              top: 32 + (item.logoOffsetTop ?? 0) - 28,
+              left: 32 + (item.logoOffsetLeft ?? 0),
+              height: item.logoHeight,
+              width: 'auto',
+              objectFit: 'contain',
+              filter: 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.18))',
+              transform: hovered ? 'scale(1.08)' : 'scale(1)',
+              transition: 'transform 0.4s ease',
+              zIndex: 2,
+            }}
+          />
+          {/* Description — pinned to bottom */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 32,
+              left: 32,
+              right: 32,
+              transition: 'transform 0.4s ease',
+              zIndex: 2,
+            }}
+          >
             <h3
               className="text-lg md:text-xl font-medium leading-relaxed max-w-lg"
               style={{
@@ -197,22 +236,50 @@ function FeatureCard({ item, direction }: { item: ExperienceItem; direction: num
             >
               {item.description}
             </h3>
+            {item.bullets && item.bullets.length > 0 && (
+              <ul
+                className="max-w-lg flex flex-col gap-1.5"
+                style={{
+                  opacity: hovered ? 1 : 0,
+                  maxHeight: hovered ? 300 : 0,
+                  marginTop: hovered ? 12 : 0,
+                  overflow: 'hidden',
+                  transform: hovered ? 'translateY(0)' : 'translateY(8px)',
+                  transition: 'opacity 0.35s ease 0.1s, transform 0.35s ease 0.1s, max-height 0.35s ease 0.1s, margin-top 0.35s ease 0.1s',
+                }}
+              >
+                {item.bullets.map((b, i) => (
+                  <li
+                    key={i}
+                    className="text-sm leading-relaxed"
+                    style={{
+                      color: 'rgba(255,255,255,0.85)',
+                      textShadow: '0 1px 3px rgba(0,0,0,0.12)',
+                    }}
+                  >
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </motion.div>
       </AnimatePresence>
-      {/* Timer bar */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-10"
-        style={{ height: 3, background: 'rgba(255,255,255,0.15)' }}
-      >
-        <motion.div
-          key={item.id}
-          initial={{ width: '0%' }}
-          animate={{ width: '100%' }}
-          transition={{ duration: (ROTATION_INTERVAL - 300) / 1000, ease: 'linear' }}
-          style={{ height: '100%', background: '#0671A4' }}
-        />
-      </div>
+      {/* Timer bar — hidden when paused */}
+      {!paused && (
+        <div
+          className="absolute bottom-0 left-0 right-0 z-10"
+          style={{ height: 3, background: 'rgba(255,255,255,0.15)' }}
+        >
+          <motion.div
+            key={item.id}
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: (ROTATION_INTERVAL - 300) / 1000, ease: 'linear' }}
+            style={{ height: '100%', background: '#0671A4' }}
+          />
+        </div>
+      )}
     </div>
   )
 }
@@ -226,6 +293,7 @@ export function Experience() {
   const [tab, setTab] = useState<'work' | 'involvement' | 'education'>('work')
   const [activeId, setActiveId] = useState('mitre')
   const [direction, setDirection] = useState(1)
+  const [paused, setPaused] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined)
   const entries = tab === 'work' ? work : tab === 'involvement' ? involvement : education
   const active = entries.find((e) => e.id === activeId) ?? entries[0] ?? null
@@ -238,6 +306,7 @@ export function Experience() {
   }, [entries, activeId])
 
   const advanceToNext = useCallback(() => {
+    if (entries.length === 0) return
     const currentIdx = entries.findIndex((e) => e.id === activeId)
     const nextIdx = (currentIdx + 1) % entries.length
     setDirection(1)
@@ -250,9 +319,10 @@ export function Experience() {
   }, [advanceToNext])
 
   useEffect(() => {
+    if (paused) return
     timerRef.current = setInterval(advanceToNext, ROTATION_INTERVAL)
     return () => { if (timerRef.current) clearInterval(timerRef.current) }
-  }, [advanceToNext])
+  }, [advanceToNext, paused])
 
   return (
     <Section id="experience" className="bg-surface min-h-screen flex items-center !pt-0">
@@ -266,9 +336,9 @@ export function Experience() {
         <div
           className="inline-flex items-center p-1 mt-8"
           style={{
-            background: '#E2E7ED',
+            background: 'rgba(6, 113, 164, 0.08)',
             borderRadius: 10,
-            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.06)',
+            boxShadow: 'inset 0 1px 2px rgba(6, 113, 164, 0.06)',
           }}
         >
           {(['work', 'involvement', 'education'] as const).map((t) => (
@@ -277,7 +347,7 @@ export function Experience() {
               onClick={() => setTab(t)}
               className="relative text-sm font-semibold px-6 py-2 cursor-pointer"
               style={{
-                color: tab === t ? '#FFFFFF' : '#6B7280',
+                color: tab === t ? '#FFFFFF' : '#0671A4',
                 borderRadius: 8,
                 background: tab === t ? '#0671A4' : 'transparent',
                 boxShadow: tab === t ? SHADOW.sm : 'none',
@@ -289,46 +359,33 @@ export function Experience() {
           ))}
         </div>
 
-        {/* Content area with animated transitions */}
+        {/* Content area — outer AnimatePresence keyed by tab (not active.id)
+             so the inner AnimatePresence in FeatureCard can cross-fade cards */}
         <AnimatePresence mode="wait">
           {active ? (
             <motion.div
-              key={active.id}
-              initial={false}
+              key={tab}
+              initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
               className="mt-10 flex flex-col md:flex-row gap-10 w-full items-start"
             >
-              {/* Left column — metadata, fixed positions so multiline roles don't shift others */}
+              {/* Left column — metadata values only */}
               <div className="relative md:w-[260px] shrink-0 self-stretch">
                 <div className="absolute" style={{ top: 0 }}>
-                  <p
-                    className="text-[11px] font-semibold uppercase tracking-[0.12em]"
-                    style={{ color: '#0671A4' }}
-                  >
-                    Role
-                  </p>
-                  <p className="text-lg md:text-xl mt-1.5 text-heading leading-relaxed">
+                  <p className="text-lg md:text-xl text-heading leading-relaxed">
                     {active.role}
                   </p>
                 </div>
-                <div className="absolute" style={{ top: 120 }}>
-                  <p
-                    className="text-[11px] font-semibold uppercase tracking-[0.12em]"
-                    style={{ color: '#0671A4' }}
-                  >
-                    Duration
-                  </p>
-                  <p className="text-lg md:text-xl mt-1.5 text-heading leading-relaxed">
+                <div className="absolute" style={{ top: 200 }}>
+                  <p className="text-lg md:text-xl text-heading leading-relaxed">
                     {active.duration}
                   </p>
                 </div>
-                <div className="absolute" style={{ top: 230 }}>
-                  <p
-                    className="text-[11px] font-semibold uppercase tracking-[0.12em] mb-2.5"
-                    style={{ color: '#0671A4' }}
-                  >
-                    Stack
+                <div className="absolute" style={{ top: 400 }}>
+                  <p className="text-lg md:text-xl text-heading leading-relaxed mb-3">
+                    Tech Stack
                   </p>
                   <div className="flex flex-col gap-2 pl-3">
                     {active.tech.map((t) => (
@@ -338,7 +395,7 @@ export function Experience() {
                           alt={t.name}
                           className="w-5 h-5 object-contain"
                         />
-                        <span className="text-sm" style={{ color: '#4B5563' }}>
+                        <span className="text-lg md:text-xl text-heading">
                           {t.name}
                         </span>
                       </div>
@@ -348,8 +405,8 @@ export function Experience() {
               </div>
 
               {/* Right column — featured card */}
-              <div className="flex-1 w-full min-w-0">
-                <FeatureCard item={active} />
+              <div className="flex-1 w-full min-w-0" style={{ marginRight: 56 }}>
+                <FeatureCard item={active} direction={direction} paused={paused} />
               </div>
             </motion.div>
           ) : (
@@ -371,7 +428,7 @@ export function Experience() {
 
         {/* Logo bar with auto-rotation */}
         <div className="mt-16">
-          <div className="flex items-center justify-between py-8 w-full">
+          <div className="flex items-center justify-between py-8" style={{ width: 'calc(100% - 33px)' }}>
             {companyLogos.map((logo) => {
               const isActive = active?.id === logo.id
               return (
@@ -385,7 +442,8 @@ export function Experience() {
                     const match = entries.find((e) => e.id === logo.id)
                     if (match) {
                       navigateTo(match.id)
-                      resetTimer()
+                      if (timerRef.current) clearInterval(timerRef.current)
+                      setPaused(true)
                     }
                   }}
                 >

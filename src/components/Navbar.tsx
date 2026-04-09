@@ -4,11 +4,13 @@ import { useActiveSection } from '../hooks/useActiveSection'
 import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
 
+const RESUME_PAGE_URL = '/resume.html'
+
 const navLinks = [
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
-  { label: 'Resume', href: '#resume' },
+  { label: 'Resume', href: RESUME_PAGE_URL },
   { label: 'Contact', href: '#contact' },
 ]
 
@@ -26,7 +28,19 @@ export function Navbar() {
   const [ctaHovered, setCtaHovered] = useState(false)
   const [forceHidden, setForceHidden] = useState(false)
   const scrolledRef = useRef(scrolled)
-  scrolledRef.current = scrolled
+
+  useEffect(() => {
+    scrolledRef.current = scrolled
+  }, [scrolled])
+
+  const pinNavbarTemporarily = () => {
+    setPinned(true)
+    setForceHidden(false)
+    setTimeout(() => {
+      setPinned(false)
+      if (scrolledRef.current) setForceHidden(true)
+    }, 2000)
+  }
 
   // Clear forceHidden on any scroll-up
   useEffect(() => {
@@ -40,27 +54,33 @@ export function Navbar() {
   }, [])
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href === '#resume') {
-      e.preventDefault()
+    if (href === RESUME_PAGE_URL) {
       return
     }
 
-    setPinned(true)
-    setForceHidden(false)
-    setTimeout(() => {
-      setPinned(false)
-      if (scrolledRef.current) setForceHidden(true)
-    }, 2000)
+    pinNavbarTemporarily()
 
     if (href === '#about') {
       e.preventDefault()
       window.scrollTo({ top: window.innerHeight * 0.9, behavior: 'smooth' })
     }
+
+    if (href === '#experience') {
+      e.preventDefault()
+      // Experience is inside the sticky projects scroll container.
+      // Scroll to the end of the projects 300vh container so the
+      // sticky section shows the experience content.
+      const projectsContainer = document.getElementById('projects')?.parentElement
+      if (projectsContainer) {
+        const containerBottom = projectsContainer.offsetTop + projectsContainer.offsetHeight
+        window.scrollTo({ top: containerBottom - window.innerHeight, behavior: 'smooth' })
+      }
+    }
   }
 
   return (
     <>
-      <div data-navbar className="fixed top-0 left-0 right-0 z-[999] transition-all duration-500"
+      <div data-navbar className="fixed top-0 left-0 right-0 z-999 transition-all duration-500"
         style={{
           transform: (hidden && !pinned) || forceHidden ? 'translateY(-100%)' : 'translateY(0)',
         }}
@@ -112,7 +132,7 @@ export function Navbar() {
             {/* Desktop CTA + social */}
             <div className="hidden lg:flex items-center" style={{ gap: '0.85rem' }}>
               <RippleButton
-                className="px-4 py-1.5 !text-base"
+                className="px-4 py-1.5 text-base!"
                 rippleColor="#38BDF8"
                 style={{
                   backgroundColor: '#0671A4',
@@ -129,8 +149,8 @@ export function Navbar() {
                   setCtaHovered(false)
                   e.currentTarget.style.backgroundColor = '#0671A4'
                 }}
-                onClick={(e) => {
-                  handleNavClick(e as any, '#contact')
+                onClick={() => {
+                  pinNavbarTemporarily()
                   document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
                 }}
               >

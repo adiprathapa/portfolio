@@ -34,7 +34,7 @@ const work: ExperienceItem[] = [
     role: 'Software Engineering Intern',
     duration: 'Incoming Summer 2026',
     description:
-      'Working on graph neural networks',
+      'Working on graph neural networks and graph attention networks',
     bullets: ['Incoming'],
     tech: [
       { name: 'PyTorch Geometric', icon: 'https://cdn.simpleicons.org/pytorch' },

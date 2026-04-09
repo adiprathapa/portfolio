@@ -1,3 +1,5 @@
+const RESUME_PAGE_URL = '/resume.html'
+
 const footerLinks = [
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
@@ -13,7 +15,7 @@ const socialLinks = [
 ]
 
 const resourceLinks = [
-  { label: 'Resume', href: '#' },
+  { label: 'Resume', href: RESUME_PAGE_URL },
   { label: 'Blog', href: '#' },
   { label: 'Uses', href: '#' },
 ]

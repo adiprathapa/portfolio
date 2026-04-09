@@ -35,9 +35,11 @@ function App() {
         <div className="-mt-[50px]" style={{ background: 'var(--color-surface, #EFF3F8)', paddingTop: 385 }}>
           <Projects />
         </div>
-        <Contact />
+        <div style={{ background: 'linear-gradient(135deg, #0671A4 0%, #38BDF8 100%)' }}>
+          <Contact />
+          <Footer />
+        </div>
       </main>
-      <Footer />
     </>
   )
 }

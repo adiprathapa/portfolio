@@ -109,8 +109,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glassmorphism {
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Prevent browser autofill from overriding glassmorphism */
+.glassmorphism input:-webkit-autofill,
+.glassmorphism input:-webkit-autofill:hover,
+.glassmorphism input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
 }

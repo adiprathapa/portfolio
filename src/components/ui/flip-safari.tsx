@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Safari } from './safari'
 import { RippleButton } from './ripple-button'
 import type { SafariProps } from './safari'
@@ -30,24 +30,49 @@ export function FlipSafari({
   const [isVideoHovered, setIsVideoHovered] = useState(false)
   const [cardHovered, setCardHovered] = useState(false)
   const innerRef = useRef<HTMLDivElement>(null)
+  const rectRef = useRef<DOMRect | null>(null)
+  const pointerRef = useRef<{ x: number; y: number } | null>(null)
+  const tiltRafRef = useRef<number | null>(null)
   const { style: safariStyle, ...restSafariProps } = safariProps
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (showVideo || !innerRef.current) return
-    const rect = innerRef.current.getBoundingClientRect()
-    const x = (e.clientX - rect.left) / rect.width - 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5
-    innerRef.current.style.transition = 'transform 0.1s ease-out'
-    innerRef.current.style.transform = `rotateX(${y * -3}deg) rotateY(${x * 3}deg) translateY(-4px)`
+    if (!rectRef.current) {
+      rectRef.current = innerRef.current.getBoundingClientRect()
+    }
+    pointerRef.current = { x: e.clientX, y: e.clientY }
+
+    if (tiltRafRef.current !== null) return
+    tiltRafRef.current = requestAnimationFrame(() => {
+      tiltRafRef.current = null
+      if (!innerRef.current || !rectRef.current || !pointerRef.current) return
+      const rect = rectRef.current
+      const x = (pointerRef.current.x - rect.left) / rect.width - 0.5
+      const y = (pointerRef.current.y - rect.top) / rect.height - 0.5
+      innerRef.current.style.transform = `rotateX(${y * -3}deg) rotateY(${x * 3}deg) translateY(-4px)`
+    })
   }
 
   const handleMouseLeave = () => {
     setCardHovered(false)
+    rectRef.current = null
+    if (tiltRafRef.current !== null) {
+      cancelAnimationFrame(tiltRafRef.current)
+      tiltRafRef.current = null
+    }
     if (innerRef.current && !showVideo) {
       innerRef.current.style.transition = 'transform 0.4s ease'
       innerRef.current.style.transform = 'rotateX(0deg) rotateY(0deg) translateY(0px)'
     }
   }
+
+  useEffect(() => {
+    return () => {
+      if (tiltRafRef.current !== null) {
+        cancelAnimationFrame(tiltRafRef.current)
+      }
+    }
+  }, [])
 
   const handleFlipToVideo = () => {
     if (innerRef.current) {
@@ -69,7 +94,13 @@ export function FlipSafari({
   return (
     <div
       style={{ perspective: '1200px', position: 'relative', height: 500, ...safariStyle }}
-      onMouseEnter={() => { if (!showVideo) setCardHovered(true) }}
+      onMouseEnter={() => {
+        if (!showVideo && innerRef.current) {
+          setCardHovered(true)
+          rectRef.current = innerRef.current.getBoundingClientRect()
+          innerRef.current.style.transition = 'transform 0.1s ease-out'
+        }
+      }}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
     >
@@ -82,6 +113,7 @@ export function FlipSafari({
           height: '100%',
           transformStyle: 'preserve-3d',
           transform: 'rotateX(0deg) rotateY(0deg) translateY(0px)',
+          willChange: 'transform',
         }}
       >
         {/* Front face */}
@@ -272,7 +304,9 @@ export function FlipSafari({
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.04)',
           }}
         >
-          <Safari {...restSafariProps} playing={showVideo} style={{ width: '100%' }} />
+          {showVideo ? (
+            <Safari {...restSafariProps} playing={showVideo} style={{ width: '100%' }} />
+          ) : null}
         </div>
       </div>
     </div>

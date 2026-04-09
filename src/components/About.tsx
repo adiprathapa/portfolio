@@ -171,7 +171,7 @@ function SmallCard({ tech }: { tech: TechItem }) {
       className="rounded-xl flex items-center gap-3 px-5 cursor-pointer select-none relative"
       style={{
         width: 220,
-        height: 143,
+        height: 146,
         background: hovered ? '#FFFFFF' : '#F5F5F5',
         border: `1.5px solid ${borderColor}`,
         transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-2px)' : 'scale(1)',

@@ -746,7 +746,7 @@ export function Experience() {
 
   return (
     <Section id="experience" className="bg-surface min-h-screen flex items-center !pt-0">
-      <div ref={sectionRef} style={{ transform: 'translateY(-77px)' }}>
+      <div ref={sectionRef} style={{ transform: 'translateY(-27px)' }}>
         {/* Header row: description text + toggle */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>

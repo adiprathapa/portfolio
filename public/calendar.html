@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adi Prathapa | Resume</title>
+    <title>Adi Prathapa | Let's Talk</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -57,9 +57,7 @@
         line-height: 1.2;
       }
 
-      /* ============================================
-         Navbar
-         ============================================ */
+      /* Navbar */
       .top-nav {
         position: sticky;
         top: 0;
@@ -168,7 +166,6 @@
         filter: brightness(0.75);
       }
 
-      /* Mobile nav */
       .mobile-toggle {
         display: none;
         flex-direction: column;
@@ -190,11 +187,9 @@
       .mobile-toggle span:nth-child(2) { width: 1.5rem; }
       .mobile-toggle span:nth-child(3) { width: 1rem; }
 
-      /* ============================================
-         Page Content
-         ============================================ */
+      /* Page */
       .page {
-        padding: 32px 0 40px;
+        padding: 32px 1.5rem 40px;
         flex: 1;
       }
 
@@ -203,7 +198,7 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
-        margin-bottom: 50px;
+        margin-bottom: 32px;
         padding-left: 216px;
       }
 
@@ -214,107 +209,23 @@
         line-height: 1.2;
       }
 
-      .actions {
-        display: inline-flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      /* ============================================
-         Buttons
-         ============================================ */
-      .btn {
-        appearance: none;
-        font-family: 'Poppins', sans-serif;
-        border: 2px solid transparent;
-        border-radius: 0.75rem;
-        padding: 0.625rem 1.25rem;
-        font-size: 1rem;
-        font-weight: 500;
-        text-decoration: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-      }
-
-      .btn-primary {
-        background: var(--primary);
-        color: #fff;
-        border-color: transparent;
-        box-shadow: 0 2px 8px rgba(6, 113, 164, 0.12);
-      }
-
-      .btn-primary:hover {
-        background: var(--primary-hover);
-      }
-
-      .btn-secondary {
-        background: transparent;
-        color: var(--primary);
-        border-color: rgba(6, 113, 164, 0.3);
-        box-shadow: none;
-      }
-
-      .btn-secondary:hover {
-        background-color: rgba(6, 113, 164, 0.06);
-        border-color: var(--primary);
-      }
-
-      .btn[disabled] {
-        opacity: 0.72;
-        cursor: not-allowed;
-      }
-
-      /* ============================================
-         PDF Viewer
-         ============================================ */
-      .viewer {
-        width: 75%;
-        height: auto;
-        overflow: visible;
-        background: transparent;
-        border: 0;
-        border-radius: 0;
-        box-shadow: none;
+      .cal-container {
+        width: 80%;
         margin: 0 auto;
+        min-height: 600px;
       }
 
-      .pdf-stage {
-        min-height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 14px;
+      /* Hide Cal.com's default dark spinner */
+      .cal-container > div[style*="background-color"] {
+        display: none !important;
       }
 
-      .status {
-        margin-top: 10px;
-        color: var(--muted);
-        font-size: 0.95rem;
+      @keyframes cal-spin {
+        to { transform: rotate(360deg); }
       }
 
-      .pdf-page {
-        width: 100%;
-        background: #fff;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        border-radius: 6px;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
-        overflow: hidden;
-      }
 
-      .pdf-canvas {
-        width: 100%;
-        height: auto;
-        display: block;
-      }
-
-      /* ============================================
-         Footer
-         ============================================ */
+      /* Footer */
       .site-footer {
         background-color: var(--dark);
         color: var(--muted);
@@ -388,16 +299,15 @@
         font-size: 0.875rem;
       }
 
-      /* ============================================
-         Responsive
-         ============================================ */
       @media (max-width: 1024px) {
         .nav-links, .nav-right {
           display: none !important;
         }
-
         .mobile-toggle {
           display: flex;
+        }
+        .toolbar {
+          padding-left: 1.5rem;
         }
       }
 
@@ -405,25 +315,15 @@
         .footer-grid {
           grid-template-columns: repeat(2, 1fr);
         }
-
         .footer-brand {
           grid-column: span 2;
         }
-
         .footer-bottom {
           flex-direction: column;
           text-align: center;
         }
-      }
-
-      @media (max-width: 500px) {
-        .actions {
+        .cal-container {
           width: 100%;
-        }
-
-        .btn {
-          flex: 1;
-          min-width: 0;
         }
       }
     </style>
@@ -438,7 +338,7 @@
           <a class="nav-link" href="/#about">About</a>
           <a class="nav-link" href="/#projects">Projects</a>
           <a class="nav-link" href="/#experience">Experience</a>
-          <a class="nav-link active" href="/resume.html">Resume</a>
+          <a class="nav-link" href="/resume.html">Resume</a>
           <a class="nav-link" href="/#contact">Contact</a>
         </nav>
 
@@ -449,13 +349,7 @@
               <path d="M8 5l7 7-7 7" />
             </svg>
           </a>
-          <a
-            href="https://www.linkedin.com/in/adi-prathapa/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn profile"
-            class="avatar-link"
-          >
+          <a href="https://www.linkedin.com/in/adi-prathapa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" class="avatar-link">
             <img src="/headshot.jpg" alt="Adi Prathapa" class="avatar-img" />
           </a>
         </div>
@@ -481,7 +375,7 @@
         <a href="/#about" style="font-size:1.5rem;font-weight:600;color:#111827;text-decoration:none;font-family:'Poppins',sans-serif;">About</a>
         <a href="/#projects" style="font-size:1.5rem;font-weight:600;color:#111827;text-decoration:none;font-family:'Poppins',sans-serif;">Projects</a>
         <a href="/#experience" style="font-size:1.5rem;font-weight:600;color:#111827;text-decoration:none;font-family:'Poppins',sans-serif;">Experience</a>
-        <a href="/resume.html" style="font-size:1.5rem;font-weight:600;color:#0671A4;text-decoration:none;font-family:'Poppins',sans-serif;">Resume</a>
+        <a href="/resume.html" style="font-size:1.5rem;font-weight:600;color:#111827;text-decoration:none;font-family:'Poppins',sans-serif;">Resume</a>
         <a href="/#contact" style="font-size:1.5rem;font-weight:600;color:#111827;text-decoration:none;font-family:'Poppins',sans-serif;">Contact</a>
         <a href="/calendar.html" class="nav-cta" style="margin-top:1rem;padding:0.625rem 1.5rem;font-size:1rem;">Let's talk</a>
       </nav>
@@ -490,37 +384,15 @@
     <!-- Main content -->
     <main class="page">
       <div class="toolbar">
-        <h1 class="page-title">Resume</h1>
-        <div class="actions">
-          <a id="open-tab" class="btn btn-primary" target="_blank" rel="noopener noreferrer"
-            onmouseenter="var s=this.querySelector('.arrow-icon');s.innerHTML='<path d=\'M5 12h14\'/><path d=\'M12 5l7 7-7 7\'/>'"
-            onmouseleave="var s=this.querySelector('.arrow-icon');s.innerHTML='<path d=\'M8 5l7 7-7 7\'/>'"
-          >
-            <span style="display:inline-flex;align-items:center;gap:6px;">
-              <span>Open in new tab</span>
-              <svg class="arrow-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M8 5l7 7-7 7" />
-              </svg>
-            </span>
-          </a>
-          <button id="download-btn" class="btn btn-secondary" type="button">
-            <span style="display:inline-flex;align-items:center;gap:6px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              <span>Download PDF</span>
-            </span>
-          </button>
-        </div>
+        <h1 class="page-title">Let's talk</h1>
+        <p style="color: var(--body); font-size: 1rem; margin-top: 2px;">Schedule a quick call to chat about opportunities, collaborations, or anything else on your mind.</p>
       </div>
 
-      <section class="viewer" aria-label="Resume Viewer">
-        <div id="pdf-stage" class="pdf-stage">
-          <p id="viewer-status" class="status">Loading resume...</p>
+      <div id="cal-embed" class="cal-container">
+        <div id="cal-loader" style="display:flex;align-items:center;justify-content:center;min-height:600px;">
+          <div style="width:36px;height:36px;border:3px solid rgba(6,113,164,0.2);border-top-color:#0671A4;border-radius:50%;animation:cal-spin 0.8s linear infinite;"></div>
         </div>
-      </section>
+      </div>
     </main>
 
     <!-- Footer -->
@@ -569,112 +441,51 @@
       </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
     <script>
-      // Mobile menu toggle
       const overlay = document.querySelector('.mobile-overlay');
       const observer = new MutationObserver(() => {
         overlay.style.display = overlay.classList.contains('open') ? 'flex' : 'none';
       });
       observer.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+    </script>
 
-      const RESUME_URL = "https://amethyst-high-ostrich-443.mypinata.cloud/ipfs/bafkreigdcrqulkykhejdmqoit52srwh2xteaholosbbm7glapyjvx3cqte?pinataGatewayToken=YCdehKj-KuPPWufhll8PN9cqatvMJIAgcET5Q9Uj-v7uubLjBiivI-z8SGCGmYtH";
+    <!-- Cal.com embed -->
+    <script>
+      (function (C, A, L) {
+        let p = function (a, ar) { a.q.push(ar); };
+        let d = C.document;
+        C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); };
+      })(window, "https://app.cal.com/embed/embed.js", "init");
 
-      const PDF_JS_VERSION = "3.11.174";
+      Cal("init", { origin: "https://cal.com" });
 
-      const viewer = document.querySelector(".viewer");
-      const stage = document.getElementById("pdf-stage");
-      const status = document.getElementById("viewer-status");
-      const openTabLink = document.getElementById("open-tab");
-      const downloadBtn = document.getElementById("download-btn");
-
-      openTabLink.href = RESUME_URL;
-
-      if (window.pdfjsLib) {
-        window.pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDF_JS_VERSION}/pdf.worker.min.js`;
-      }
-
-      async function renderResumePdf() {
-        if (!window.pdfjsLib) {
-          status.textContent = "Unable to load inline viewer. Use Open in new tab.";
-          return;
+      Cal("inline", {
+        elementOrSelector: "#cal-embed",
+        calLink: "adiprathapa",
+        layout: "month_view",
+        config: {
+          theme: "light",
         }
-
-        status.textContent = "Loading resume...";
-
-        try {
-          const loadingTask = window.pdfjsLib.getDocument({ url: RESUME_URL, withCredentials: false });
-          const pdf = await loadingTask.promise;
-
-          const existingPages = stage.querySelectorAll(".pdf-page");
-          existingPages.forEach((node) => node.remove());
-
-          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum += 1) {
-            const page = await pdf.getPage(pageNum);
-            const baseViewport = page.getViewport({ scale: 1 });
-            const availableWidth = viewer.clientWidth;
-            const scale = availableWidth / baseViewport.width;
-            const viewport = page.getViewport({ scale });
-
-            const pageWrap = document.createElement("div");
-            pageWrap.className = "pdf-page";
-
-            const canvas = document.createElement("canvas");
-            canvas.className = "pdf-canvas";
-
-            const context = canvas.getContext("2d", { alpha: false });
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = Math.floor(viewport.width * dpr);
-            canvas.height = Math.floor(viewport.height * dpr);
-
-            context.setTransform(dpr, 0, 0, dpr, 0, 0);
-            await page.render({ canvasContext: context, viewport }).promise;
-
-            pageWrap.appendChild(canvas);
-            stage.appendChild(pageWrap);
-          }
-
-          status.remove();
-        } catch (error) {
-          status.textContent = "Could not render inline preview. Use Open in new tab to view your resume.";
-        }
-      }
-
-      let resizeTimer;
-      window.addEventListener("resize", () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          renderResumePdf();
-        }, 180);
       });
 
-      renderResumePdf();
-
-      downloadBtn.addEventListener("click", async () => {
-        const originalLabel = downloadBtn.textContent;
-        downloadBtn.textContent = "Preparing download...";
-        downloadBtn.disabled = true;
-
-        try {
-          const response = await fetch(RESUME_URL, { mode: "cors" });
-          if (!response.ok) throw new Error("Failed to fetch resume");
-
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = blobUrl;
-          link.download = "Adi_Prathapa_Resume.pdf";
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          URL.revokeObjectURL(blobUrl);
-        } catch (error) {
-          window.open(RESUME_URL, "_blank", "noopener,noreferrer");
-        } finally {
-          downloadBtn.textContent = originalLabel;
-          downloadBtn.disabled = false;
+      // Remove custom loader once Cal iframe renders
+      const calObserver = new MutationObserver(() => {
+        const iframe = document.querySelector('#cal-embed iframe');
+        if (iframe) {
+          const loader = document.getElementById('cal-loader');
+          if (loader) loader.remove();
+          calObserver.disconnect();
         }
+      });
+      calObserver.observe(document.getElementById('cal-embed'), { childList: true, subtree: true });
+
+      Cal("ui", {
+        theme: "light",
+        styles: {
+          branding: { brandColor: "#0671A4" },
+        },
+        hideEventTypeDetails: false,
+        layout: "month_view",
       });
     </script>
   </body>

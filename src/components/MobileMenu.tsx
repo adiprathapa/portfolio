@@ -45,7 +45,7 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
                 {link.label}
               </a>
             ))}
-            <Button variant="primary" href="#contact" onClick={onClose} className="mt-4">
+            <Button variant="primary" href="/calendar.html" onClick={onClose} className="mt-4">
               Let's talk
             </Button>
           </nav>

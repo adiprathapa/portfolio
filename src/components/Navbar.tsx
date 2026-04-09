@@ -5,6 +5,7 @@ import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
 
 const RESUME_PAGE_URL = '/resume.html'
+const CALENDAR_PAGE_URL = '/calendar.html'
 
 const navLinks = [
   { label: 'About', href: '#about' },
@@ -150,8 +151,7 @@ export function Navbar() {
                   e.currentTarget.style.backgroundColor = '#0671A4'
                 }}
                 onClick={() => {
-                  pinNavbarTemporarily()
-                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
+                  window.location.href = CALENDAR_PAGE_URL
                 }}
               >
                 <span className="inline-flex items-center gap-1.5">

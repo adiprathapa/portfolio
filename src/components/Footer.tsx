@@ -9,8 +9,7 @@ const footerLinks = [
 
 const resourceLinks = [
   { label: 'Resume', href: RESUME_PAGE_URL },
-  { label: 'Blog', href: '#' },
-  { label: 'Uses', href: '#' },
+  { label: 'Cal', href: '/calendar.html' },
 ]
 
 const socialLinks = [

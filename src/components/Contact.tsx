@@ -95,7 +95,7 @@ export function Contact() {
               className="mb-12"
             >
               {submitted ? (
-                <p className="text-white text-lg font-medium">Thanks! I'll be in touch soon.</p>
+                <p className="text-white text-lg md:text-xl leading-relaxed">Thanks! I'll be in touch soon.</p>
               ) : (
                 <>
                   <div className="glassmorphism rounded-xl flex items-center p-1.5 max-w-md">
@@ -225,6 +225,30 @@ export function Contact() {
                 }}
               />
 
+              {/* Stickers on lid */}
+              <img
+                src="/sticker-data.png"
+                alt="Cornell Data Strategy"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% - 55px)',
+                  left: 'calc(6% - 80px)',
+                  width: '41%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-tata.png"
+                alt="Tata-Cornell Institute"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% - 46px)',
+                  left: 'calc(30% - 80px)',
+                  width: '41%',
+                  height: 'auto',
+                }}
+              />
+
               {/* Apple logo — dark, like on real Midnight MacBook */}
               <img
                 src="/appl.png"
@@ -234,7 +258,7 @@ export function Contact() {
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  height: 52,
+                  height: 71,
                   width: 'auto',
                   opacity: 0.35,
                   filter: 'brightness(0)',

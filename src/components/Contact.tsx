@@ -1,10 +1,20 @@
-import { type FormEvent, useState } from 'react'
-import { motion } from 'framer-motion'
+import { type FormEvent, useRef, useState } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Button } from './ui/button'
 
 export function Contact() {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
+  const laptopRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: laptopRef,
+    offset: ['start end', 'end start'],
+  })
+  const rotateX = useTransform(scrollYProgress, [0, 0.4], [70, 0], { clamp: true })
+  const scale = useTransform(scrollYProgress, [0, 0.4], [0.935, 1.1], { clamp: true })
 
   const validateEmail = (value: string) => {
     if (!value) return 'Please enter your email.'
@@ -12,7 +22,7 @@ export function Contact() {
     return ''
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     const msg = validateEmail(email)
     if (msg) {
@@ -20,7 +30,24 @@ export function Contact() {
       return
     }
     setError('')
-    window.location.href = `mailto:aprathapa01@gmail.com?subject=Let's connect&body=Hi Adi, I'd love to chat! (from ${email})`
+    setSubmitting(true)
+    try {
+      await fetch('https://formsubmit.co/ajax/aprathapa01@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          email,
+          message: `${email} reached out from your portfolio site.`,
+          _subject: 'New contact from portfolio site',
+        }),
+      })
+      setSubmitted(true)
+      setEmail('')
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -55,7 +82,7 @@ export function Contact() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-black text-lg md:text-xl mb-10 max-w-lg leading-relaxed"
             >
-              Have a project or opportunity in mind or want to connect? Drop your email and
+              Have a project or opportunity in mind or just want to connect? Drop your email and
               I'll reach out.
             </motion.p>
 
@@ -67,26 +94,34 @@ export function Contact() {
               onSubmit={handleSubmit}
               className="mb-12"
             >
-              <div className="glassmorphism rounded-xl flex items-center p-1.5 max-w-md">
-                <input
-                  type="text"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); if (error) setError('') }}
-                  className="flex-1 bg-transparent text-white placeholder:text-white/60 px-5 py-3 outline-none text-lg"
-                />
-                <Button
-                  type="submit"
-                  variant="primary"
-                  className="bg-[#F4F4F4] text-primary hover:bg-[#F4F4F4]/90 !text-lg"
-                >
-                  Get in touch
-                </Button>
-              </div>
-              {error && (
-                <p className="mt-3 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                  {error}
-                </p>
+              {submitted ? (
+                <p className="text-white text-lg font-medium">Thanks! I'll be in touch soon.</p>
+              ) : (
+                <>
+                  <div className="glassmorphism rounded-xl flex items-center p-1.5 max-w-md">
+                    <input
+                      type="text"
+                      placeholder="your@email.com"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); if (error) setError('') }}
+                      disabled={submitting}
+                      className="flex-1 bg-transparent text-white placeholder:text-white/60 px-5 py-3 outline-none text-sm md:text-base min-w-0"
+                    />
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      disabled={submitting}
+                      className="bg-[#F4F4F4] text-primary hover:bg-[#F4F4F4]/90 !text-lg"
+                    >
+                      {submitting ? 'Sending...' : 'Get in touch'}
+                    </Button>
+                  </div>
+                  {error && (
+                    <p className="mt-3 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                      {error}
+                    </p>
+                  )}
+                </>
               )}
             </motion.form>
 
@@ -164,15 +199,22 @@ export function Contact() {
             </motion.div>
           </div>
 
-          {/* Right — MacBook lid (sticker area placeholder) */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+          {/* Right — MacBook lid with scroll-driven 3D closing animation */}
+          <div
+            ref={laptopRef}
             className="relative flex items-center justify-center"
+            style={{ perspective: 1200, marginLeft: 110 }}
           >
-            <div className="relative w-full" style={{ maxWidth: '78rem' }}>
+            <motion.div
+              className="relative w-full"
+              style={{
+                maxWidth: '78rem',
+                rotateX,
+                scale,
+                transformOrigin: 'center bottom',
+                transformStyle: 'preserve-3d',
+              }}
+            >
               {/* MacBook lid */}
               <img
                 src="/macbook-lid.svg"
@@ -198,8 +240,8 @@ export function Contact() {
                   filter: 'brightness(0)',
                 }}
               />
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

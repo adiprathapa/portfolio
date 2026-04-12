@@ -226,14 +226,116 @@ export function Contact() {
               />
 
               {/* Stickers on lid */}
+              {/* Row top */}
+              <img
+                src="/sticker-cu.png"
+                alt="CU mascot"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 310px)',
+                  left: 'calc(2% + 20px)',
+                  width: '14%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-tab.png"
+                alt="tabs+"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 310px)',
+                  left: 'calc(16% + 20px)',
+                  width: '14%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-tabs.png"
+                alt="Google for Education"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 310px)',
+                  left: 'calc(34% + 20px)',
+                  width: '18%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-claude.png"
+                alt="Keep thinking - Claude"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 310px)',
+                  left: 'calc(52% + 20px)',
+                  width: '18%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-nell.png"
+                alt="Cornell University"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 310px)',
+                  left: 'calc(70% + 20px)',
+                  width: '18%',
+                  height: 'auto',
+                }}
+              />
+              {/* Row middle */}
+              <img
+                src="/sticker-purple.png"
+                alt="Hackathons Cornell"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 230px)',
+                  left: 'calc(70% + 20px)',
+                  width: '22%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-gemini.png"
+                alt="Coneflower"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 90px)',
+                  left: 'calc(30% - 76px)',
+                  width: '31%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-c2s2.png"
+                alt="C2S2"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 115px)',
+                  left: 'calc(55% + 20px)',
+                  width: '16%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-frog.png"
+                alt="Blue frog"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 115px)',
+                  left: 'calc(70% + 20px)',
+                  width: '16%',
+                  height: 'auto',
+                }}
+              />
+              {/* Row bottom */}
               <img
                 src="/sticker-data.png"
                 alt="Cornell Data Strategy"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% - 55px)',
-                  left: 'calc(6% - 80px)',
-                  width: '41%',
+                  bottom: 'calc(10% - 40px)',
+                  left: 'calc(6% - 72px)',
+                  width: '37%',
                   height: 'auto',
                 }}
               />
@@ -242,9 +344,31 @@ export function Contact() {
                 alt="Tata-Cornell Institute"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% - 46px)',
-                  left: 'calc(30% - 80px)',
-                  width: '41%',
+                  bottom: 'calc(10% - 31px)',
+                  left: 'calc(30% - 76px)',
+                  width: '37%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-acsu.png"
+                alt="Next Gen of Kind Leaders"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% + 11px)',
+                  left: 'calc(55% + 0px)',
+                  width: '16%',
+                  height: 'auto',
+                }}
+              />
+              <img
+                src="/sticker-acsu2.png"
+                alt="ACSU"
+                className="absolute pointer-events-none select-none"
+                style={{
+                  bottom: 'calc(10% - 145px)',
+                  left: 'calc(68% + 20px)',
+                  width: '23%',
                   height: 'auto',
                 }}
               />

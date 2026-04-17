@@ -230,6 +230,7 @@ function CarouselCard({
         height: CARD_H,
         flexShrink: 0,
         borderRadius: 20,
+        border: '1.5px solid rgba(6, 113, 164, 0.3)',
         opacity: isActive ? 1 : 0.92,
         transition: 'opacity 0.4s ease',
       }}
@@ -375,7 +376,7 @@ function MobileCard({ item }: { item: ExperienceItem }) {
   return (
     <div
       className="relative overflow-hidden w-full"
-      style={{ borderRadius: 16, aspectRatio: '16 / 10', minHeight: 300 }}
+      style={{ borderRadius: 16, border: '1.5px solid rgba(6, 113, 164, 0.3)', aspectRatio: '16 / 10', minHeight: 300 }}
     >
       <img src={item.bgImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
       <div
@@ -441,18 +442,18 @@ function EducationBentoInline({ isActive, onClick, activeCard, setActiveCard }: 
     <div
       className="flex"
       style={{
-        width: BENTO_W,
+        width: isActive ? BENTO_W : CARD_W * 2 + BENTO_GAP,
         height: CARD_H,
         flexShrink: 0,
         gap: BENTO_GAP,
         opacity: isActive ? 1 : 0.92,
-        transition: 'opacity 0.4s ease',
+        transition: 'width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.4s ease',
       }}
     >
       {/* Cornell card */}
       <div
         className="relative overflow-hidden cursor-pointer"
-        style={{ borderRadius: 20, minWidth: 0, flex: activeCard === 'cornell' ? 3 : 2, transition: 'flex 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)' }}
+        style={{ borderRadius: 20, border: '1.5px solid rgba(6, 113, 164, 0.3)', minWidth: 0, flex: isActive ? (activeCard === 'cornell' ? 3 : 2) : 1, transition: 'flex 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)' }}
         onClick={() => { setActiveCard('cornell'); onClick() }}
         onMouseEnter={() => setCornellHovered(true)}
         onMouseLeave={() => setCornellHovered(false)}
@@ -536,7 +537,7 @@ function EducationBentoInline({ isActive, onClick, activeCard, setActiveCard }: 
       {/* Millard North High School card */}
       <div
         className="relative overflow-hidden cursor-pointer"
-        style={{ borderRadius: 20, minWidth: 0, flex: activeCard === 'highschool' ? 3 : 2, transition: 'flex 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)' }}
+        style={{ borderRadius: 20, border: '1.5px solid rgba(6, 113, 164, 0.3)', minWidth: 0, flex: isActive ? (activeCard === 'highschool' ? 3 : 2) : 1, transition: 'flex 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)' }}
         onClick={(e) => { e.stopPropagation(); setActiveCard('highschool'); onClick() }}
         onMouseEnter={() => setHsHovered(true)}
         onMouseLeave={() => setHsHovered(false)}

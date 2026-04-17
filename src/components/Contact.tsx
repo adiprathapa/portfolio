@@ -232,9 +232,9 @@ export function Contact() {
                 alt="CU mascot"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% + 310px)',
-                  left: 'calc(2% + 20px)',
-                  width: '14%',
+                  bottom: 'calc(10% + 280px)',
+                  left: 'calc(2% + 240px)',
+                  width: '12.6%',
                   height: 'auto',
                 }}
               />
@@ -243,9 +243,9 @@ export function Contact() {
                 alt="tabs+"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% + 310px)',
-                  left: 'calc(16% + 20px)',
-                  width: '14%',
+                  bottom: 'calc(10% + 243px)',
+                  left: 'calc(16% + 180px)',
+                  width: '12.6%',
                   height: 'auto',
                 }}
               />
@@ -254,9 +254,9 @@ export function Contact() {
                 alt="Google for Education"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% + 310px)',
-                  left: 'calc(34% + 20px)',
-                  width: '18%',
+                  bottom: 'calc(10% + 315px)',
+                  left: 'calc(34% + 130px)',
+                  width: '19.8%',
                   height: 'auto',
                 }}
               />
@@ -265,8 +265,8 @@ export function Contact() {
                 alt="Keep thinking - Claude"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% + 310px)',
-                  left: 'calc(52% + 20px)',
+                  bottom: 'calc(10% + 197px)',
+                  left: 'calc(52% + 25px)',
                   width: '18%',
                   height: 'auto',
                 }}
@@ -276,9 +276,9 @@ export function Contact() {
                 alt="Cornell University"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% + 310px)',
-                  left: 'calc(70% + 20px)',
-                  width: '18%',
+                  bottom: 'calc(10% + 260px)',
+                  left: 'calc(70% + 40px)',
+                  width: '16.2%',
                   height: 'auto',
                 }}
               />
@@ -288,7 +288,7 @@ export function Contact() {
                 alt="Hackathons Cornell"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% + 230px)',
+                  bottom: 'calc(10% + 210px)',
                   left: 'calc(70% + 20px)',
                   width: '22%',
                   height: 'auto',
@@ -301,7 +301,7 @@ export function Contact() {
                 style={{
                   bottom: 'calc(10% + 90px)',
                   left: 'calc(30% - 76px)',
-                  width: '31%',
+                  width: '28.52%',
                   height: 'auto',
                 }}
               />
@@ -310,9 +310,9 @@ export function Contact() {
                 alt="C2S2"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% + 115px)',
+                  bottom: 'calc(10% + 105px)',
                   left: 'calc(55% + 20px)',
-                  width: '16%',
+                  width: '15.04%',
                   height: 'auto',
                 }}
               />
@@ -321,9 +321,9 @@ export function Contact() {
                 alt="Blue frog"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% + 115px)',
-                  left: 'calc(70% + 20px)',
-                  width: '16%',
+                  bottom: 'calc(10% + 91px)',
+                  left: 'calc(70% + 40px)',
+                  width: '14.4%',
                   height: 'auto',
                 }}
               />
@@ -345,7 +345,7 @@ export function Contact() {
                 className="absolute pointer-events-none select-none"
                 style={{
                   bottom: 'calc(10% - 31px)',
-                  left: 'calc(30% - 76px)',
+                  left: 'calc(30% - 86px)',
                   width: '37%',
                   height: 'auto',
                 }}
@@ -356,7 +356,7 @@ export function Contact() {
                 className="absolute pointer-events-none select-none"
                 style={{
                   bottom: 'calc(10% + 11px)',
-                  left: 'calc(55% + 0px)',
+                  left: 'calc(55% - 13px)',
                   width: '16%',
                   height: 'auto',
                 }}
@@ -366,9 +366,9 @@ export function Contact() {
                 alt="ACSU"
                 className="absolute pointer-events-none select-none"
                 style={{
-                  bottom: 'calc(10% - 145px)',
-                  left: 'calc(68% + 20px)',
-                  width: '23%',
+                  bottom: 'calc(10% - 150px)',
+                  left: 'calc(68% + 17px)',
+                  width: '23.3%',
                   height: 'auto',
                 }}
               />

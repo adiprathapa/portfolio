@@ -11,45 +11,67 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-[1000] bg-white flex flex-col"
-          initial={{ opacity: 0, x: '100%' }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: '100%' }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
-        >
-          {/* Close button */}
-          <div className="flex justify-end p-6">
-            <button onClick={onClose} aria-label="Close menu" className="p-2">
-              <svg className="w-6 h-6 text-heading" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+        <>
+          {/* Blurred backdrop */}
+          <motion.div
+            className="fixed inset-0 z-[998]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={onClose}
+            style={{
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 100%)',
+            }}
+          />
 
-          {/* Links */}
-          <nav className="flex flex-col items-center justify-center flex-1 gap-8">
-            {links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => {
-                  if (link.href === '#about') {
-                    e.preventDefault()
-                    window.scrollTo({ top: window.innerHeight * 1.3, behavior: 'smooth' })
-                  }
-                  onClose()
-                }}
-                className="text-2xl font-heading font-semibold text-heading hover:text-primary transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
-            <Button variant="primary" href="/calendar.html" onClick={onClose} className="mt-4">
-              Let's talk
-            </Button>
-          </nav>
-        </motion.div>
+          {/* Menu container */}
+          <motion.div
+            className="fixed left-3 right-3 z-[999] rounded-xl overflow-hidden"
+            style={{
+              top: 72,
+              background: 'rgba(255,255,255,0.95)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)',
+              border: '1px solid rgba(0,0,0,0.06)',
+            }}
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <nav className="flex flex-col py-3 px-6">
+              {links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => {
+                    if (link.href === '#about') {
+                      e.preventDefault()
+                      window.scrollTo({ top: window.innerHeight * 1.3, behavior: 'smooth' })
+                    }
+                    onClose()
+                  }}
+                  className="text-base font-medium hover:text-primary transition-colors py-2.5"
+                  style={{
+                    color: 'var(--color-heading, #111827)',
+                    borderBottom: '1px solid rgba(0,0,0,0.05)',
+                  }}
+                >
+                  {link.label}
+                </a>
+              ))}
+              <div className="pt-2 pb-2">
+                <Button variant="primary" href="/calendar.html" onClick={onClose} className="w-full text-base!">
+                  Let's talk
+                </Button>
+              </div>
+            </nav>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   )

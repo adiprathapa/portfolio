@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { Navbar } from './components/Navbar'
-import { GradientText } from './components/ui/gradient-text'
 import { HorizontalScrollSection } from './components/HorizontalScrollSection'
 import { Projects } from './components/Projects'
 import { Contact } from './components/Contact'
@@ -91,9 +90,9 @@ function App() {
   return (
     <>
       <Navbar />
-      <main>
+      <main style={{ background: 'var(--color-surface, #EFF3F8)' }}>
         <HorizontalScrollSection />
-        <div className="-mt-[50px]" style={{ background: 'var(--color-surface, #EFF3F8)', paddingTop: 385 }}>
+        <div className="relative lg:mt-[331px]" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
           <Projects />
         </div>
         <div style={{ background: 'linear-gradient(135deg, #0671A4 0%, #38BDF8 100%)' }}>

@@ -81,7 +81,7 @@ export function Navbar() {
 
   return (
     <>
-      <div data-navbar className="fixed top-0 left-0 right-0 z-999 transition-all duration-500"
+      <div data-navbar className="fixed top-0 left-0 right-0 z-[1001] transition-all duration-500"
         style={{
           transform: (hidden && !pinned) || forceHidden ? 'translateY(-100%)' : 'translateY(0)',
         }}
@@ -89,9 +89,9 @@ export function Navbar() {
         <header
           className="w-full"
           style={{
-            backgroundColor: scrolled ? 'rgba(255,255,255,0.8)' : 'transparent',
-            backdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)',
-            WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)',
+            backgroundColor: scrolled || menuOpen ? 'rgba(255,255,255,0.8)' : 'transparent',
+            backdropFilter: scrolled || menuOpen ? 'blur(16px)' : 'blur(0px)',
+            WebkitBackdropFilter: scrolled || menuOpen ? 'blur(16px)' : 'blur(0px)',
             boxShadow: scrolled ? '0 1px 0 rgba(0, 0, 0, 0.06)' : 'none',
             borderBottom: scrolled ? '1px solid rgba(0, 0, 0, 0.05)' : '1px solid transparent',
             transition: 'background-color 500ms cubic-bezier(0.4,0,0.2,1), backdrop-filter 500ms cubic-bezier(0.4,0,0.2,1), box-shadow 500ms cubic-bezier(0.4,0,0.2,1), border-bottom 500ms cubic-bezier(0.4,0,0.2,1)',
@@ -206,15 +206,30 @@ export function Navbar() {
               </a>
             </div>
 
-            {/* Mobile hamburger */}
+            {/* Mobile hamburger / X toggle */}
             <button
-              className="lg:hidden flex flex-col gap-1.5 p-2"
-              onClick={() => setMenuOpen(true)}
-              aria-label="Open menu"
+              className="lg:hidden relative w-10 h-10 flex items-center justify-center"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             >
-              <span className="block w-6 h-0.5 bg-heading" />
-              <span className="block w-6 h-0.5 bg-heading" />
-              <span className="block w-4 h-0.5 bg-heading" />
+              <span
+                className="absolute block w-6 h-0.5 bg-heading transition-all duration-300 ease-in-out"
+                style={{
+                  transform: menuOpen ? 'rotate(45deg)' : 'translateY(-6px)',
+                }}
+              />
+              <span
+                className="absolute block w-6 h-0.5 bg-heading transition-all duration-300 ease-in-out"
+                style={{
+                  opacity: menuOpen ? 0 : 1,
+                }}
+              />
+              <span
+                className="absolute block w-6 h-0.5 bg-heading transition-all duration-300 ease-in-out"
+                style={{
+                  transform: menuOpen ? 'rotate(-45deg)' : 'translateY(6px)',
+                }}
+              />
             </button>
           </div>
         </header>

@@ -179,7 +179,14 @@ export function Hero() {
   const [headingHovered, setHeadingHovered] = useState(false)
   const [hoveredWordIndex, setHoveredWordIndex] = useState<number | null>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [coinFlipped, setCoinFlipped] = useState(false)
+  const [coinAngle, setCoinAngle] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
   const coinHovered = useRef(false)
   const [showCoinOverlay, setShowCoinOverlay] = useState(false)
   const coinOverlayTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
@@ -244,7 +251,7 @@ export function Hero() {
         <motion.div
           variants={heroChild}
           className="relative inline-block mb-6"
-          onMouseEnter={() => setTooltipActive(true)}
+          onMouseEnter={() => { if (window.innerWidth >= 768) setTooltipActive(true) }}
         >
           <h1
             ref={h1Ref}
@@ -254,9 +261,10 @@ export function Hero() {
             <span
               className="text-primary"
               style={{ cursor: headingHovered ? 'none' : undefined }}
-              onMouseEnter={() => setHeadingHovered(true)}
+              onMouseEnter={() => { if (window.innerWidth >= 768) setHeadingHovered(true) }}
               onMouseLeave={() => { setHeadingHovered(false); setHoveredWordIndex(null) }}
               onMouseMove={(e) => {
+                if (window.innerWidth < 768) return
                 setMousePos({ x: e.clientX, y: e.clientY })
                 const target = (e.target as HTMLElement).closest('[data-word-index]')
                 setHoveredWordIndex(target ? Number(target.getAttribute('data-word-index')) : null)
@@ -351,7 +359,7 @@ export function Hero() {
           variants={heroChild}
           className="text-lg md:text-xl text-black mb-10 max-w-md mx-auto md:mx-0"
           style={{
-            marginTop: tooltipActive ? '92px' : '-76px',
+            marginTop: isMobile ? '-20px' : tooltipActive ? '92px' : '-76px',
             transition: 'margin-top 280ms ease',
           }}
         >
@@ -364,10 +372,24 @@ export function Hero() {
           variants={heroChild}
           className="shrink-0 w-62 md:w-84 relative group"
           style={{ aspectRatio: '1 / 1', marginRight: -30, perspective: 800 }}
+          onTouchStart={(e) => {
+            const touch = e.touches[0]
+            ;(e.currentTarget as HTMLElement).dataset.touchX = String(touch.clientX)
+          }}
+          onTouchEnd={(e) => {
+            const startX = Number((e.currentTarget as HTMLElement).dataset.touchX ?? 0)
+            const endX = e.changedTouches[0].clientX
+            const diff = endX - startX
+            if (Math.abs(diff) > 30) {
+              e.preventDefault()
+              // Rotate in swipe direction: left → -180, right → +180
+              setCoinAngle(a => a + (diff < 0 ? -180 : 180))
+            }
+          }}
           onMouseEnter={() => {
             if (coinHovered.current) return
             coinHovered.current = true
-            setCoinFlipped(f => !f)
+            setCoinAngle(a => a + 180)
             clearTimeout(coinOverlayTimer.current)
             coinOverlayTimer.current = setTimeout(() => setShowCoinOverlay(true), 0)
           }}
@@ -377,11 +399,8 @@ export function Hero() {
             setShowCoinOverlay(false)
           }}
         >
-          <a
-            href={coinFlipped ? 'https://github.com/adiprathapa' : 'https://www.linkedin.com/in/adi-prathapa/'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute block cursor-pointer"
+          <div
+            className="absolute block"
             style={{
               width: '85%',
               height: '85%',
@@ -390,18 +409,19 @@ export function Hero() {
               borderRadius: '50%',
               transformStyle: 'preserve-3d',
               transition: 'transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1)',
-              transform: coinFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+              transform: `rotateY(${coinAngle}deg)`,
             }}
           >
             {/* Front — headshot */}
             <div
-              className="absolute inset-0 overflow-hidden"
+              className="absolute inset-0 overflow-hidden cursor-pointer"
               style={{
                 borderRadius: '50%',
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
                 border: '3px solid rgba(6, 113, 164, 0.3)',
                 backfaceVisibility: 'hidden',
               }}
+              onClick={() => window.open('https://www.linkedin.com/in/adi-prathapa/', '_blank')}
             >
               <img
                 src="/headshot.jpg"
@@ -414,9 +434,9 @@ export function Hero() {
                   transform: 'scale(1.1) translateY(-10px)',
                 }}
               />
-              {/* LinkedIn overlay */}
+              {/* LinkedIn overlay — desktop only */}
               <div
-                className="absolute inset-0"
+                className="absolute inset-0 hidden md:block"
                 style={{
                   borderRadius: '50%',
                   background: 'rgba(0, 0, 0, 0.35)',
@@ -431,7 +451,7 @@ export function Hero() {
             </div>
             {/* Back — pixel cat */}
             <div
-              className="absolute inset-0 overflow-hidden"
+              className="absolute inset-0 overflow-hidden cursor-pointer"
               style={{
                 borderRadius: '50%',
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
@@ -439,6 +459,7 @@ export function Hero() {
                 backfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg)',
               }}
+              onClick={() => window.open('https://github.com/adiprathapa', '_blank')}
             >
               <img
                 src="/pfp.png"
@@ -449,9 +470,9 @@ export function Hero() {
                   objectFit: 'cover',
                 }}
               />
-              {/* GitHub overlay */}
+              {/* GitHub overlay — desktop only */}
               <div
-                className="absolute inset-0"
+                className="absolute inset-0 hidden md:block"
                 style={{
                   borderRadius: '50%',
                   background: 'rgba(0, 0, 0, 0.35)',
@@ -464,7 +485,7 @@ export function Hero() {
                 </svg>
               </div>
             </div>
-          </a>
+          </div>
         </motion.div>
 
       </motion.div>

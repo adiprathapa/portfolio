@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { FlipSafari } from './ui/flip-safari'
 import { Experience } from './Experience'
@@ -153,15 +153,22 @@ function ProjectCard({ projectKey, yValue, collapseValue, zIndex }: { projectKey
 
 export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   })
 
-  const stagger = 20
-  const spacing = 545
+  const stagger = isMobile ? 16 : 20
+  const spacing = isMobile ? 400 : 545
 
-  // Cards maintain 545px spacing, stacking during scroll.
+  // Cards maintain spacing, stacking during scroll.
   // After stacking, the last card keeps scrolling up and "eats" the others —
   // each card joins the last card's motion once it reaches its position.
   const seg = 0.15
@@ -186,7 +193,7 @@ export function Projects() {
 
   const cardY6 = useTransform(scrollYProgress,
     [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, 1],
-    [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, -700])
+    [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, isMobile ? -300 : -700])
 
 
   // Once the last card passes a card's position, that card moves with it
@@ -200,9 +207,9 @@ export function Projects() {
   const collapseValues: (MotionValue<number> | null)[] = [collapse1, collapse2, collapse3, collapse4, collapse5, null]
 
   return (
-    <div ref={containerRef} className="relative h-[350vh]">
-      <section id="projects" className="sticky top-0 h-screen flex items-center justify-center px-6 bg-surface" style={{ overflow: 'clip' }}>
-        <div className="relative w-full mx-auto" style={{ maxWidth: 1170, height: 500, transform: 'translateY(-147px)' }}>
+    <div ref={containerRef} className="relative h-[260vh] lg:h-[280vh]">
+      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-4 lg:px-6 bg-surface" style={{ overflow: 'clip' }}>
+        <div className="relative w-full mx-auto lg:-translate-y-[147px]" style={{ maxWidth: 1170, height: isMobile ? 660 : 500, overflow: 'visible' }}>
           {projectOrder.map((key, i) => (
             <ProjectCard
               key={key}

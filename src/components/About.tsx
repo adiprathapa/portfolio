@@ -338,16 +338,14 @@ function TallCard({ tech }: { tech: TechItem }) {
 
 function ProjectMarquee({ active }: { active: boolean }) {
   const halfRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
   const offsetRef = useRef(0)
   const rafRef = useRef<number>(0)
   const pausedRef = useRef(false)
   const speedMultiplierRef = useRef(1)
-  const [offset, setOffset] = useState(0)
-  const [hovered, setHovered] = useState(false)
 
-  useEffect(() => {
-    pausedRef.current = hovered
-  }, [hovered])
+  const handleMouseEnter = useCallback(() => { pausedRef.current = true }, [])
+  const handleMouseLeave = useCallback(() => { pausedRef.current = false }, [])
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -391,7 +389,9 @@ function ProjectMarquee({ active }: { active: boolean }) {
             offsetRef.current += halfWidth
           }
         }
-        setOffset(offsetRef.current)
+        if (trackRef.current) {
+          trackRef.current.style.transform = `translateX(${offsetRef.current}px)`
+        }
       }
       rafRef.current = requestAnimationFrame(tick)
     }
@@ -400,7 +400,7 @@ function ProjectMarquee({ active }: { active: boolean }) {
   }, [active])
 
   // Build a full pass that exhausts all tech items before repeating.
-  const buildItems = (keyPrefix: string) => {
+  const buildItems = useCallback((keyPrefix: string) => {
     const nodes: React.ReactNode[] = []
     const majorQueue = [...majorTech]
     const minorQueue = [...minorTech]
@@ -439,17 +439,18 @@ function ProjectMarquee({ active }: { active: boolean }) {
       i++
     }
     return nodes
-  }
+  }, [])
 
   return (
     <div
       className="w-full overflow-visible"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div
+        ref={trackRef}
         className="flex gap-4 w-max items-start"
-        style={{ transform: `translateX(${offset}px)`, willChange: 'transform' }}
+        style={{ willChange: 'transform' }}
       >
         <div ref={halfRef} className="flex gap-4 items-start shrink-0">
           {buildItems('a')}
@@ -617,9 +618,9 @@ export function About() {
   const rotations = [-8, -3, 2, 6, -5, 4]
 
   return (
-    <section ref={sectionRef} id="about" className="relative h-full flex items-center px-4 md:px-6 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+    <section ref={sectionRef} id="about" className="relative min-h-full md:h-full flex flex-col md:flex-row items-center px-4 md:px-6 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
       <motion.div
-        className="mx-auto max-w-7xl w-full grid md:grid-cols-2 gap-12 items-center -mt-[111px]"
+        className="mx-auto max-w-7xl w-full grid md:grid-cols-2 gap-8 md:gap-12 items-center mt-[214px] md:-mt-[111px]"
         variants={heroStagger}
         initial="hidden"
         animate={marqueeActive ? 'visible' : 'hidden'}
@@ -653,8 +654,8 @@ export function About() {
         </motion.div>
 
         {/* Throwable Cards */}
-        <motion.div variants={heroChild} className="flex flex-col items-center justify-center ml-[200px] -mt-[30px]">
-          <div className="relative" style={{ width: 400, height: 420 }}>
+        <motion.div variants={heroChild} className="flex flex-col items-center justify-center md:ml-[200px] mt-[50px] md:mt-0 md:-mt-[30px] -mb-[67px] md:mb-0">
+          <div className="relative scale-[0.84] md:scale-100 origin-top" style={{ width: 400, height: 420 }}>
             {CARDS.map((card, i) => (
               <ThrowableCard
                 key={card.id}
@@ -668,7 +669,7 @@ export function About() {
             ))}
           </div>
           <motion.p
-            className="mt-6 flex items-center gap-2 text-sm select-none"
+            className="-mt-[40px] md:mt-6 flex items-center gap-2 text-sm select-none"
             style={{ color: 'rgba(6, 113, 164, 0.45)' }}
             animate={hasGrabbed ? { opacity: 0 } : { x: [0, 6, -6, 0] }}
             transition={hasGrabbed ? { duration: 0.2 } : { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
@@ -684,28 +685,40 @@ export function About() {
         </motion.div>
       </motion.div>
 
-      {/* Projects intro — full width, 250px below about text */}
-      <div
-        className="absolute left-0 w-full px-4 md:px-6"
-        style={{ bottom: 38 }}
-      >
+      {/* Projects intro — absolute on desktop, in-flow on mobile */}
+      <div className="hidden md:block absolute left-0 w-full px-6" style={{ bottom: 38 }}>
         <div className="mx-auto max-w-7xl">
-          <GradientText as="h2" className="text-2xl md:text-3xl font-normal">
+          <GradientText as="h2" className="text-3xl font-normal">
             Projects
           </GradientText>
-          <p className="text-black text-lg md:text-xl leading-relaxed mt-1">
+          <p className="text-black text-xl leading-relaxed mt-1">
             I am a fullstack developer who mainly works in Python, Java, and for frontend in JavaScript and TypeScript. I have experience working with a variety of machine learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas, and more. My projects range from from fintech applications to machine learning focused projects to apps that combine both.
           </p>
         </div>
       </div>
+      <div className="md:hidden w-full px-4 mt-[158px]">
+        <GradientText as="h2" className="text-2xl font-normal">
+          Projects
+        </GradientText>
+        <p className="text-black text-lg leading-relaxed mt-1">
+          I am a fullstack developer who mainly works in Python, Java, and for frontend in JavaScript and TypeScript. I have experience working with a variety of machine learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas, and more. My projects range from from fintech applications to machine learning focused projects to apps that combine both.
+        </p>
+      </div>
 
-      {/* Marquee conveyor */}
-      <div className="absolute bottom-[-331px] left-0 w-full overflow-visible z-10">
+      {/* Marquee conveyor — absolute on desktop, in-flow on mobile */}
+      <div className="hidden md:block absolute bottom-[-331px] left-0 w-full overflow-visible z-10">
         <div className="relative">
           <ProjectMarquee active={marqueeActive} />
           <div className="pointer-events-none absolute inset-y-0 left-0 w-32" style={{ background: 'linear-gradient(to right, var(--color-surface, #EFF3F8), transparent)' }} />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-32" style={{ background: 'linear-gradient(to left, var(--color-surface, #EFF3F8), transparent)' }} />
         </div>
+      </div>
+      <div className="md:hidden relative left-1/2 -translate-x-1/2 w-screen overflow-hidden z-10 mt-6 mb-8">
+        <div style={{ transform: 'scale(0.82)', transformOrigin: 'left center' }}>
+          <ProjectMarquee active={marqueeActive} />
+        </div>
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-8 z-10" style={{ background: 'linear-gradient(to right, var(--color-surface, #EFF3F8), transparent)' }} />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-8 z-10" style={{ background: 'linear-gradient(to left, var(--color-surface, #EFF3F8), transparent)' }} />
       </div>
     </section>
   )

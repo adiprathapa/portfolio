@@ -95,7 +95,8 @@ export function FlipSafari({
 
   return (
     <div
-      style={{ perspective: '1200px', position: 'relative', height: 500, ...safariStyle }}
+      style={{ perspective: '1200px', position: 'relative', ...safariStyle }}
+      className="h-[560px] lg:h-[500px]"
       onMouseEnter={() => {
         if (!showVideo && innerRef.current) {
           setCardHovered(true)
@@ -145,24 +146,24 @@ export function FlipSafari({
             }}
           />
           {/* Left column — text content */}
-          <div className="flex flex-col justify-center px-10 py-8" style={{ flex: 1, minWidth: 0 }}>
+          <div className="flex flex-col justify-center px-5 py-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0 }}>
             <h3
-              className="font-normal font-heading text-left"
-              style={{ color: '#0671A4', fontSize: 'clamp(1.4rem, 2.2vw, 1.85rem)', lineHeight: 1.2 }}
+              className="font-normal font-heading text-left text-lg lg:text-2xl"
+              style={{ color: '#0671A4', lineHeight: 1.2 }}
             >
               {projectTagline || projectName}
             </h3>
-            <p className="mt-2 leading-relaxed text-left text-heading text-lg md:text-xl">
+            <p className="mt-2 leading-relaxed text-left text-heading text-sm lg:text-xl">
               {projectDescription}
             </p>
 
             {/* Tech stack pills */}
             {techStack && techStack.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div className="flex flex-wrap gap-1.5 lg:gap-2 mt-2">
                 {techStack.map((tech) => (
                   <span
                     key={tech}
-                    className="px-3 py-1 rounded-xl text-sm font-medium"
+                    className="px-2 py-0.5 lg:px-3 lg:py-1 rounded-xl text-xs lg:text-sm font-medium"
                     style={{
                       backgroundColor: 'rgba(6, 113, 164, 0.08)',
                       color: '#0671A4',
@@ -251,9 +252,9 @@ export function FlipSafari({
             </div>
           </div>
 
-          {/* Right column — branded color block with logo */}
+          {/* Right column — branded color block with logo (hidden on mobile) */}
           <div
-            className="relative flex items-center justify-center overflow-hidden"
+            className="relative hidden lg:flex items-center justify-center overflow-hidden"
             style={{
               width: 530,
               flexShrink: 0,

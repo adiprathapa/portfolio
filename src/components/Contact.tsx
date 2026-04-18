@@ -110,35 +110,23 @@ export function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-16 lg:gap-24 items-center">
           {/* Left — Contact info */}
           <div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+            <h2
               className="text-2xl md:text-3xl font-normal mb-6 leading-tight"
               style={{ color: '#FFFFFF' }}
             >
               Let's work
               <br />
               together
-            </motion.h2>
+            </h2>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+            <p
               className="text-black text-lg md:text-xl mb-10 max-w-lg leading-relaxed"
             >
               Have a project or opportunity in mind or just want to connect? Drop your email and
               I'll reach out.
-            </motion.p>
+            </p>
 
-            <motion.form
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+            <form
               onSubmit={handleSubmit}
               className="mb-12"
             >
@@ -194,14 +182,10 @@ export function Contact() {
                   )}
                 </>
               )}
-            </motion.form>
+            </form>
 
             {/* Social links */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+            <div
               className="flex items-center gap-5"
             >
               <a
@@ -267,7 +251,7 @@ export function Contact() {
                   />
                 </svg>
               </a>
-            </motion.div>
+            </div>
           </div>
 
           {/* Right — MacBook lid with scroll-driven 3D closing animation */}

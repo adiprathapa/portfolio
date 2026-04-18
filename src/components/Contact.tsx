@@ -1,12 +1,58 @@
-import { type FormEvent, useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { type FormEvent, type CSSProperties, useRef, useState, useEffect } from 'react'
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { Button } from './ui/button'
+
+function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOffsetX, hoverArea, disabled }: { src: string; alt: string; label: string; style: CSSProperties; tooltipTop?: number; tooltipBottom?: number; tooltipOffsetX?: number; hoverArea?: CSSProperties; disabled?: boolean }) {
+  const [hovered, setHovered] = useState(false)
+  const mouseHandlers = disabled ? {} : {
+    onMouseEnter: () => setHovered(true),
+    onMouseLeave: () => setHovered(false),
+  }
+  return (
+    <div
+      className="absolute select-none"
+      style={{ ...style, zIndex: hovered ? 100 : undefined }}
+      {...(hoverArea ? {} : mouseHandlers)}
+    >
+      {hoverArea && (
+        <div className="absolute" style={{ ...hoverArea, cursor: 'default' }} {...mouseHandlers} />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-auto pointer-events-none"
+        style={{
+          transition: 'transform 0.2s ease',
+          transform: hovered ? 'scale(1.08)' : 'scale(1)',
+        }}
+      />
+      {hovered && (
+        <div
+          className="absolute whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-medium pointer-events-none"
+          style={{
+            left: '50%',
+            transform: `translateX(calc(-50% + ${tooltipOffsetX ?? 0}px))`,
+            ...(tooltipBottom != null ? { bottom: tooltipBottom } : { top: tooltipTop }),
+            zIndex: 9999,
+            background: 'rgba(15,15,15,0.85)',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.15)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
+          }}
+        >
+          {label}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export function Contact() {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [ctaHovered, setCtaHovered] = useState(false)
 
   const laptopRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -15,6 +61,8 @@ export function Contact() {
   })
   const rotateX = useTransform(scrollYProgress, [0, 0.4], [70, 0], { clamp: true })
   const scale = useTransform(scrollYProgress, [0, 0.4], [0.935, 1.1], { clamp: true })
+  const [laptopOpen, setLaptopOpen] = useState(false)
+  useMotionValueEvent(rotateX, 'change', (v) => setLaptopOpen(v <= 1))
 
   const validateEmail = (value: string) => {
     if (!value) return 'Please enter your email.'
@@ -112,8 +160,31 @@ export function Contact() {
                       variant="primary"
                       disabled={submitting}
                       className="bg-[#F4F4F4] text-primary hover:bg-[#F4F4F4]/90 !text-lg"
+                      onMouseEnter={() => setCtaHovered(true)}
+                      onMouseLeave={() => setCtaHovered(false)}
                     >
-                      {submitting ? 'Sending...' : 'Get in touch'}
+                      <span className="inline-flex items-center gap-1.5">
+                        <span>{submitting ? 'Sending...' : 'Get in touch'}</span>
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          {ctaHovered ? (
+                            <>
+                              <path d="M5 12h14" />
+                              <path d="M12 5l7 7-7 7" />
+                            </>
+                          ) : (
+                            <path d="M8 5l7 7-7 7" />
+                          )}
+                        </svg>
+                      </span>
                     </Button>
                   </div>
                   {error && (
@@ -225,153 +296,23 @@ export function Contact() {
                 }}
               />
 
-              {/* Stickers on lid */}
-              {/* Row top */}
-              <img
-                src="/sticker-cu.png"
-                alt="CU mascot"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 280px)',
-                  left: 'calc(2% + 240px)',
-                  width: '12.6%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-tab.png"
-                alt="tabs+"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 243px)',
-                  left: 'calc(16% + 180px)',
-                  width: '12.6%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-tabs.png"
-                alt="Google for Education"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 315px)',
-                  left: 'calc(34% + 130px)',
-                  width: '19.8%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-claude.png"
-                alt="Keep thinking - Claude"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 197px)',
-                  left: 'calc(52% + 25px)',
-                  width: '18%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-nell.png"
-                alt="Cornell University"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 260px)',
-                  left: 'calc(70% + 40px)',
-                  width: '16.2%',
-                  height: 'auto',
-                }}
-              />
-              {/* Row middle */}
-              <img
-                src="/sticker-purple.png"
-                alt="Hackathons Cornell"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 210px)',
-                  left: 'calc(70% + 20px)',
-                  width: '22%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-gemini.png"
-                alt="Coneflower"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 90px)',
-                  left: 'calc(30% - 76px)',
-                  width: '28.52%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-c2s2.png"
-                alt="C2S2"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 105px)',
-                  left: 'calc(55% + 20px)',
-                  width: '15.04%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-frog.png"
-                alt="Blue frog"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 91px)',
-                  left: 'calc(70% + 40px)',
-                  width: '14.4%',
-                  height: 'auto',
-                }}
-              />
+              {/* Stickers on lid — rendered bottom-to-top so upper stickers layer correctly */}
               {/* Row bottom */}
-              <img
-                src="/sticker-data.png"
-                alt="Cornell Data Strategy"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% - 40px)',
-                  left: 'calc(6% - 72px)',
-                  width: '37%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-tata.png"
-                alt="Tata-Cornell Institute"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% - 31px)',
-                  left: 'calc(30% - 86px)',
-                  width: '37%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-acsu.png"
-                alt="Next Gen of Kind Leaders"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% + 11px)',
-                  left: 'calc(55% - 13px)',
-                  width: '16%',
-                  height: 'auto',
-                }}
-              />
-              <img
-                src="/sticker-acsu2.png"
-                alt="ACSU"
-                className="absolute pointer-events-none select-none"
-                style={{
-                  bottom: 'calc(10% - 150px)',
-                  left: 'calc(68% + 17px)',
-                  width: '23.3%',
-                  height: 'auto',
-                }}
-              />
+              <Sticker disabled={!laptopOpen} src="/sticker-acsu2.png" alt="ACSU" label="From Association of Computer Science Undergraduates" tooltipTop={-56} style={{ bottom: 'calc(10% + 18px)', left: 'calc(68% + 17px)', width: '23.3%' }} hoverArea={{ top: '5%', left: '2%', width: '96%', height: '89%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-acsu.png" alt="Riley's Way" label="From Team Mentor Role at Riley's Way Retreat '26" tooltipTop={-56} style={{ bottom: 'calc(10% + 11px)', left: 'calc(55% - 13px)', width: '16%' }} hoverArea={{ top: '4%', left: '6%', width: '83%', height: '96%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-tata.png" alt="Tata-Cornell Institute" label="From Cornell Food Hackathon Sponsored by Tata-Cornell Institute" tooltipTop={0} style={{ bottom: 'calc(10% - 31px)', left: 'calc(30% - 86px)', width: '37%' }} hoverArea={{ top: '33%', left: '20%', width: '69%', height: '36%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-data.png" alt="Cornell Data Strategy" label="From Consulting Club at Cornell" tooltipTop={-19} style={{ bottom: 'calc(10% - 40px)', left: 'calc(6% - 72px)', width: '37%' }} hoverArea={{ top: '24%', left: '32%', width: '36%', height: '47%', zIndex: 10 }} />
+              {/* Row middle */}
+              <Sticker disabled={!laptopOpen} src="/sticker-frog.png" alt="TrexQuant" label="From first Career Fair at Cornell" tooltipTop={-56} style={{ bottom: 'calc(10% + 91px)', left: 'calc(70% + 40px)', width: '14.4%' }} hoverArea={{ top: '7%', left: '8%', width: '85%', height: '85%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-c2s2.png" alt="C2S2" label="From Cornell Custom Silicon Systems" tooltipTop={-56} style={{ bottom: 'calc(10% + 105px)', left: 'calc(55% + 20px)', width: '15.04%' }} hoverArea={{ top: '5%', left: '5%', width: '92%', height: '92%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-gemini.png" alt="Coneflower" label="From my favorite creamery in Omaha, NE" tooltipTop={-56} tooltipOffsetX={11} style={{ bottom: 'calc(10% + 90px)', left: 'calc(30% - 63px)', width: '28.52%' }} hoverArea={{ top: '5%', left: '14%', width: '78%', height: '91%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-purple.png" alt="Hackathons Cornell" label="From first hackathon at Cornell" tooltipTop={-56} style={{ bottom: 'calc(10% + 210px)', left: 'calc(70% + 20px)', width: '22%' }} hoverArea={{ top: '10%', left: '4%', width: '94%', height: '76%', zIndex: 10 }} />
+              {/* Row top */}
+              <Sticker disabled={!laptopOpen} src="/sticker-nell.png" alt="Cornell University" label="From Orientation Week" tooltipTop={-59} style={{ bottom: 'calc(10% + 260px)', left: 'calc(70% + 40px)', width: '16.2%' }} hoverArea={{ top: '0%', left: '2%', width: '96%', height: '97%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-claude.png" alt="Claude" label="From Claude Builders Club" tooltipTop={-37} style={{ bottom: 'calc(10% + 197px)', left: 'calc(52% + 25px)', width: '18%' }} hoverArea={{ top: '16%', left: '12%', width: '77%', height: '68%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-tabs.png" alt="Google for Education" label="From event at Okenshields" tooltipTop={-37} style={{ bottom: 'calc(10% + 315px)', left: 'calc(34% + 130px)', width: '19.8%' }} hoverArea={{ top: '25%', left: '3%', width: '95%', height: '72%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-tab.png" alt="tabs+" label="From Cornell AI Hackathon hosted at tabs" tooltipTop={-40} style={{ bottom: 'calc(10% + 243px)', left: 'calc(16% + 180px)', width: '12.6%' }} hoverArea={{ top: '12%', left: '5%', width: '91%', height: '71%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-cu.png" alt="CU mascot" label="From Georgetown '24 Civic Innovation Academy" tooltipTop={-35} style={{ bottom: 'calc(10% + 280px)', left: 'calc(2% + 240px)', width: '12.6%' }} hoverArea={{ top: '20%', left: '6%', width: '91%', height: '67%', zIndex: 10 }} />
 
               {/* Apple logo — dark, like on real Midnight MacBook */}
               <img

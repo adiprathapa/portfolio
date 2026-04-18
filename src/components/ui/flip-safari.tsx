@@ -10,6 +10,7 @@ interface FlipSafariProps {
   projectTagline?: string
   projectUrl: string
   logoSrc?: string
+  logoContent?: React.ReactNode
   techStack?: string[]
   gradientColor?: string
   bgImage?: string
@@ -22,6 +23,7 @@ export function FlipSafari({
   projectTagline,
   projectUrl,
   logoSrc,
+  logoContent,
   techStack,
   gradientColor = '#F4F4F4',
   bgImage,
@@ -174,6 +176,7 @@ export function FlipSafari({
             )}
 
             <div className="flex gap-2.5" style={{ marginTop: 18 }}>
+              {safariProps.videoSrc && (
               <RippleButton
                 className="px-5 py-2.5 text-base"
                 rippleColor="#38BDF8"
@@ -218,6 +221,7 @@ export function FlipSafari({
                   </svg>
                 </span>
               </RippleButton>
+              )}
               <RippleButton
                 className="px-5 py-2.5 text-base"
                 rippleColor="#38BDF8"
@@ -272,7 +276,19 @@ export function FlipSafari({
                 }}
               />
             )}
-            {logoSrc && (
+            {logoContent ? (
+              <div
+                className="relative"
+                style={{
+                  transform: cardHovered ? 'scale(1.08)' : 'scale(1)',
+                  transition: 'transform 0.4s ease',
+                  isolation: 'auto',
+                  mixBlendMode: 'screen',
+                }}
+              >
+                {logoContent}
+              </div>
+            ) : logoSrc ? (
               <img
                 src={logoSrc}
                 alt={projectName}
@@ -284,7 +300,7 @@ export function FlipSafari({
                   transition: 'transform 0.4s ease',
                 }}
               />
-            )}
+            ) : null}
           </div>
         </div>
 

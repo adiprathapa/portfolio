@@ -231,8 +231,11 @@ function CarouselCard({
         flexShrink: 0,
         borderRadius: 20,
         border: '1.5px solid rgba(6, 113, 164, 0.3)',
+        boxShadow: hovered || isActive
+          ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
+          : '0 4px 12px rgba(0, 0, 0, 0.04)',
         opacity: isActive ? 1 : 0.92,
-        transition: 'opacity 0.4s ease',
+        transition: 'opacity 0.4s ease, box-shadow 0.3s ease',
       }}
     >
       {/* Background image — zooms on hover for both active and inactive */}

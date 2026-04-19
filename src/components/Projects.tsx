@@ -167,7 +167,7 @@ export function Projects() {
   })
 
   const stagger = isMobile ? 36 : 28
-  const spacing = isMobile ? 620 : 545
+  const spacing = isMobile ? 520 : 545
 
   // Cards maintain spacing, stacking during scroll.
   // After stacking, the last card keeps scrolling up and "eats" the others —
@@ -212,7 +212,7 @@ export function Projects() {
 
   return (
     <div ref={containerRef} className="relative h-[260vh] lg:h-[280vh]">
-      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-4 lg:px-6 bg-surface" style={{ clipPath: 'inset(-200px 0px 0px 0px)' }}>
+      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-4 lg:px-6 bg-surface z-[3] lg:z-auto" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-380px' : '-500px'} 0px)` }}>
         <div className="relative w-full mx-auto lg:-translate-y-[147px]" style={{ maxWidth: 1170, height: isMobile ? 540 : 500, overflow: 'visible' }}>
           {projectOrder.map((key, i) => (
             <ProjectCard
@@ -227,7 +227,7 @@ export function Projects() {
         {/* Experience follows 85px below card 5 */}
         <motion.div
           className="absolute left-0 w-full"
-          style={{ y: cardY6, top: 'calc(50% + 103px + 85px)' }}
+          style={{ y: cardY6, top: isMobile ? 'calc(50% + 45px)' : 'calc(50% + 103px + 85px)' }}
         >
           <Experience />
         </motion.div>

@@ -95,7 +95,7 @@ function App() {
         <div className="relative mt-[calc(1900px-100vh)] lg:mt-[331px]" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
           <Projects />
         </div>
-        <div style={{ background: 'linear-gradient(135deg, #0671A4 0%, #38BDF8 100%)' }}>
+        <div className="relative z-[1] pt-[400px] lg:static lg:pt-0" style={{ background: 'linear-gradient(135deg, #0671A4 0%, #38BDF8 100%)', overflow: 'hidden' }}>
           <Contact />
           <Footer />
         </div>

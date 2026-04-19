@@ -101,17 +101,14 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="py-24 px-4 md:py-32 md:px-6 lg:py-40"
-      style={{
-        minHeight: '80vh',
-      }}
+      className="pt-12 pb-16 px-4 md:py-32 md:px-6 lg:py-40 lg:min-h-[80vh]"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-16 lg:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-8 lg:gap-24 items-center">
           {/* Left — Contact info */}
           <div>
             <h2
-              className="text-2xl md:text-3xl font-normal mb-6 leading-tight"
+              className="text-2xl md:text-3xl font-normal mb-6 leading-tight text-left"
               style={{ color: '#FFFFFF' }}
             >
               Let's work
@@ -120,7 +117,7 @@ export function Contact() {
             </h2>
 
             <p
-              className="text-black text-lg md:text-xl mb-10 max-w-lg leading-relaxed"
+              className="text-black text-lg md:text-xl mb-10 max-w-lg leading-relaxed text-center lg:text-left"
             >
               Have a project or opportunity in mind or just want to connect? Drop your email and
               I'll reach out.
@@ -134,7 +131,7 @@ export function Contact() {
                 <p className="text-white text-lg md:text-xl leading-relaxed">Thanks! I'll be in touch soon.</p>
               ) : (
                 <>
-                  <div className="glassmorphism rounded-xl flex items-center p-1.5 max-w-md">
+                  <div className="glassmorphism rounded-xl flex items-center p-1.5 max-w-md mx-auto lg:mx-0">
                     <input
                       type="text"
                       placeholder="your@email.com"
@@ -147,7 +144,7 @@ export function Contact() {
                       type="submit"
                       variant="primary"
                       disabled={submitting}
-                      className="bg-[#F4F4F4] text-primary hover:bg-[#F4F4F4]/90 !text-lg"
+                      className="!bg-black !text-white hover:!bg-black/85 !text-lg"
                       onMouseEnter={() => setCtaHovered(true)}
                       onMouseLeave={() => setCtaHovered(false)}
                     >
@@ -186,7 +183,7 @@ export function Contact() {
 
             {/* Social links */}
             <div
-              className="flex items-center gap-5"
+              className="flex items-center gap-5 justify-center lg:justify-start"
             >
               <a
                 href="https://github.com/adiprathapa"
@@ -255,10 +252,11 @@ export function Contact() {
           </div>
 
           {/* Right — MacBook lid with scroll-driven 3D closing animation */}
+          <div className="overflow-hidden lg:overflow-visible">
           <div
             ref={laptopRef}
-            className="relative flex items-center justify-center"
-            style={{ perspective: 1200, marginLeft: 110 }}
+            className="relative flex items-center justify-center lg:ml-[110px]"
+            style={{ perspective: 1200 }}
           >
             <motion.div
               className="relative w-full"
@@ -314,6 +312,7 @@ export function Contact() {
                 }}
               />
             </motion.div>
+          </div>
           </div>
         </div>
       </div>

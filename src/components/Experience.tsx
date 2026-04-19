@@ -22,6 +22,8 @@ interface ExperienceItem {
   logoInvert?: boolean
   logoOffsetY?: number
   logoOffsetX?: number
+  mobileLogoOffsetX?: number
+  mobileLogoOffsetY?: number
   bgImage: string
   gradientColor: string
 }
@@ -44,6 +46,8 @@ const work: ExperienceItem[] = [
     logoHeight: 91,
     logoInvert: true,
     logoOffsetY: -25,
+    mobileLogoOffsetX: -62,
+    mobileLogoOffsetY: -22,
     bgImage: '/pexels-pinamon-17647329.jpg',
     gradientColor: '#0671A4',
   },
@@ -89,6 +93,7 @@ const work: ExperienceItem[] = [
     logoHeight: 44,
     logoInvert: true,
     logoOffsetY: 0,
+    mobileLogoOffsetX: -42,
     bgImage: '/mines-bg.jpg',
     gradientColor: '#21314D',
   },
@@ -113,6 +118,7 @@ const work: ExperienceItem[] = [
     logoInvert: true,
     logoOffsetY: -1,
     logoOffsetX: -12,
+    mobileLogoOffsetX: -74,
     bgImage: '/unl-bg.jpg',
     gradientColor: '#D00000',
   },
@@ -135,6 +141,8 @@ const involvement: ExperienceItem[] = [
     logoHeight: 79,
     logoInvert: true,
     logoOffsetY: -16,
+    mobileLogoOffsetX: -61,
+    mobileLogoOffsetY: -17,
     bgImage: '/cornell data strategy.png',
     gradientColor: '#1C3D6B',
   },
@@ -155,6 +163,8 @@ const involvement: ExperienceItem[] = [
     logoInvert: true,
     logoOffsetY: -6,
     logoOffsetX: -4,
+    mobileLogoOffsetX: -72,
+    mobileLogoOffsetY: -8,
     bgImage: '/c2s2.jpeg',
     gradientColor: '#B31B1B',
   },
@@ -172,6 +182,8 @@ const involvement: ExperienceItem[] = [
     logoInvert: true,
     logoOffsetX: -8,
     logoOffsetY: -14,
+    mobileLogoOffsetX: -21,
+    mobileLogoOffsetY: -15,
     bgImage: '/cas.webp',
     gradientColor: '#6B1D2A',
   },
@@ -182,20 +194,32 @@ const education: ExperienceItem[] = [
     id: 'cornell-edu',
     company: 'Cornell University',
     role: 'B.A. Computer Science',
-    duration: 'August 2025 — May 2029',
+    duration: '',
     description:
-      'College of Arts & Sciences. Minoring in Artificial Intelligence.',
-    bullets: [],
-    tech: [
-      { name: 'Java', icon: 'https://cdn.simpleicons.org/openjdk' },
-      { name: 'Python', icon: 'https://cdn.simpleicons.org/python' },
-      { name: 'OCaml', icon: 'https://cdn.simpleicons.org/ocaml' },
-    ],
+      'College of Arts & Sciences \u00b7 Minor in Artificial Intelligence',
+    bullets: ['Relevant Coursework: Object-Oriented Programming \u00b7 Data Structures \u00b7 Python Design and Development'],
+    tech: [],
     logo: '/cornell.svg',
     logoHeight: 44,
     logoInvert: true,
-    bgImage: '/bowers.jpg',
+    bgImage: '/nell.webp',
     gradientColor: '#B31B1B',
+  },
+  {
+    id: 'mnhs-edu',
+    company: 'Millard North High School',
+    role: 'International Baccalaureate Diploma',
+    duration: '',
+    description:
+      'Activities: National Honors Society \u00b7 Spanish Honors Society \u00b7 Varsity Marching Band \u00b7 Speech \u00b7 Mustang Mentoring',
+    bullets: [],
+    tech: [],
+    logo: '/mnhs-removebg-preview.png',
+    logoHeight: 44,
+    logoInvert: true,
+    mobileLogoOffsetX: -45,
+    bgImage: '/mnhs.webp',
+    gradientColor: '#004d2c',
   },
 ]
 
@@ -379,7 +403,7 @@ function MobileCard({ item }: { item: ExperienceItem }) {
   return (
     <div
       className="relative overflow-hidden w-full"
-      style={{ borderRadius: 16, border: '1.5px solid rgba(6, 113, 164, 0.3)', aspectRatio: '16 / 10', minHeight: 300 }}
+      style={{ borderRadius: 16, border: '1.5px solid rgba(6, 113, 164, 0.3)', height: 440 }}
     >
       <img src={item.bgImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
       <div
@@ -401,18 +425,27 @@ function MobileCard({ item }: { item: ExperienceItem }) {
               ? 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.2))'
               : 'drop-shadow(0 2px 8px rgba(0,0,0,0.2))',
             borderRadius: item.logoInvert ? 0 : 8,
+            marginLeft: item.mobileLogoOffsetX ?? 0,
+            marginTop: item.mobileLogoOffsetY ?? 0,
           }}
         />
         <div>
-          <p className="text-xs font-medium tracking-wide uppercase" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            {item.duration}
-          </p>
+          {item.duration && (
+            <p className="text-xs font-medium tracking-wide uppercase" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              {item.duration}
+            </p>
+          )}
           <h3 className="text-lg font-semibold mt-1" style={{ color: '#FFFFFF' }}>
             {item.role}
           </h3>
           <p className="text-sm mt-2 leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
             {item.description}
           </p>
+          {item.bullets && item.bullets.length > 0 && (
+            <p className="text-sm mt-1.5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              {item.bullets[0]}
+            </p>
+          )}
           <div className="flex items-center gap-3 mt-3 flex-wrap">
             {item.tech.map((t) => (
               <div key={t.name} className="flex items-center gap-1.5">
@@ -623,14 +656,16 @@ function EducationBentoInline({ isActive, onClick, activeCard, setActiveCard }: 
 const ROTATION_INTERVAL = 7000
 
 export function Experience() {
-  // Carousel: work → involvement → education bento at the end
+  // Carousel: work → involvement → education
   const allEntries = [...work, ...involvement]
+  const allEntriesWithEdu = [...work, ...involvement, ...education]
 
   const [activeId, setActiveId] = useState('mitre')
   const [direction, setDirection] = useState(1)
   const [paused, setPaused] = useState(false)
   const [showEducation, setShowEducation] = useState(false)
   const [eduActiveCard, setEduActiveCard] = useState<'cornell' | 'highschool'>('cornell')
+  const [mobileCarouselIdx, setMobileCarouselIdx] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const [tabVisible, setTabVisible] = useState(!document.hidden)
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined)
@@ -640,11 +675,18 @@ export function Experience() {
   const active = allEntries[activeIdx]
 
   // Derive which tab is active
-  const tab: 'work' | 'involvement' | 'education' = showEducation
-    ? 'education'
-    : activeIdx < work.length
-      ? 'work'
-      : 'involvement'
+  const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768
+  const tab: 'work' | 'involvement' | 'education' = isMobileView
+    ? (mobileCarouselIdx >= allEntries.length
+      ? 'education'
+      : mobileCarouselIdx < work.length
+        ? 'work'
+        : 'involvement')
+    : (showEducation
+      ? 'education'
+      : activeIdx < work.length
+        ? 'work'
+        : 'involvement')
 
   // Offset: education bento sits right after the last card
   const activeOffset = showEducation
@@ -666,6 +708,7 @@ export function Experience() {
     (t: 'work' | 'involvement' | 'education') => {
       if (t === 'education') {
         setShowEducation(true)
+        setMobileCarouselIdx(allEntries.length) // first education card
         if (timerRef.current) clearInterval(timerRef.current)
         setPaused(true)
         return
@@ -674,11 +717,13 @@ export function Experience() {
       const target = t === 'work' ? work[0] : involvement[0]
       if (target) {
         navigateTo(target.id)
+        const idx = allEntriesWithEdu.findIndex(e => e.id === target.id)
+        if (idx >= 0) setMobileCarouselIdx(idx)
         if (timerRef.current) clearInterval(timerRef.current)
         setPaused(true)
       }
     },
-    [navigateTo],
+    [navigateTo, allEntries.length, allEntriesWithEdu],
   )
 
   const advanceToNext = useCallback(() => {
@@ -749,8 +794,8 @@ export function Experience() {
   }, [advanceToNext, running])
 
   return (
-    <Section id="experience" className="bg-surface min-h-screen flex items-center !pt-0">
-      <div ref={sectionRef} style={{ transform: 'translateY(-27px)' }}>
+    <Section id="experience" className="bg-surface lg:min-h-screen flex items-center !pt-0">
+      <div ref={sectionRef} style={{ transform: 'translateY(23px)' }}>
         {/* Header row: description text + toggle */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
@@ -768,7 +813,7 @@ export function Experience() {
 
           {/* Stripe-style segmented toggle */}
           <div
-            className="inline-flex items-center p-1.5 shrink-0"
+            className="inline-flex items-center p-1.5 shrink-0 self-center md:self-auto"
             style={{
               background: 'rgba(6, 113, 164, 0.08)',
               borderRadius: 12,
@@ -779,7 +824,7 @@ export function Experience() {
               <button
                 key={t}
                 onClick={() => handleTabClick(t)}
-                className="relative text-base font-semibold px-8 py-2.5 cursor-pointer"
+                className="relative text-base font-semibold px-4 md:px-8 py-2.5 cursor-pointer"
                 style={{
                   color: tab === t ? '#FFFFFF' : '#0671A4',
                   borderRadius: 10,
@@ -907,46 +952,56 @@ export function Experience() {
                 </div>
               </div>
 
-              {/* Mobile: single card + logo nav */}
-              <div className="md:hidden mt-10">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={active.id}
-                    initial={{ opacity: 0, x: direction * 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: direction * -30 }}
-                    transition={{ duration: 0.3 }}
+              {/* Mobile: peek carousel — centered card with equal peeks */}
+              <div className="md:hidden mt-10 overflow-hidden" style={{ margin: '40px -16px 0' }}>
+                <motion.div
+                  className="flex"
+                  style={{ gap: 12 }}
+                  animate={{ x: mobileCarouselIdx === 0 ? 16 : 42 - mobileCarouselIdx * (window.innerWidth - 84 + 12) }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                >
+                  {allEntriesWithEdu.map((item, i) => (
+                    <div
+                      key={item.id}
+                      className="shrink-0 cursor-pointer"
+                      style={{
+                        width: window.innerWidth - 84,
+                        opacity: i === mobileCarouselIdx ? 1 : 0.7,
+                        transform: i === mobileCarouselIdx ? 'scale(1)' : 'scale(0.95)',
+                        transition: 'opacity 0.3s, transform 0.3s',
+                      }}
+                      onClick={() => { if (i !== mobileCarouselIdx) setMobileCarouselIdx(i) }}
+                    >
+                      <MobileCard item={item} />
+                    </div>
+                  ))}
+                </motion.div>
+                {/* Arrow navigation */}
+                <div className="flex justify-end gap-3 mt-9 px-4">
+                  <button
+                    className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+                    style={{
+                      backgroundColor: 'rgba(6, 113, 164, 0.1)',
+                      opacity: mobileCarouselIdx === 0 ? 0.4 : 1,
+                      transition: 'opacity 0.2s',
+                    }}
+                    disabled={mobileCarouselIdx === 0}
+                    onClick={() => { if (mobileCarouselIdx > 0) setMobileCarouselIdx(mobileCarouselIdx - 1) }}
                   >
-                    <MobileCard item={active} />
-                  </motion.div>
-                </AnimatePresence>
-                <div className="flex items-center justify-center gap-6 mt-6">
-                  {allEntries.map((item) => {
-                    const isItemActive = active.id === item.id
-                    return (
-                      <button
-                        key={item.id}
-                        className="cursor-pointer p-2"
-                        onClick={() => {
-                          navigateTo(item.id)
-                          if (timerRef.current) clearInterval(timerRef.current)
-                          setPaused(true)
-                        }}
-                      >
-                        <img
-                          src={item.logo}
-                          alt={item.company}
-                          className="object-contain"
-                          style={{
-                            height: 24,
-                            filter: isItemActive ? 'grayscale(0%) opacity(1)' : 'grayscale(100%) opacity(0.35)',
-                            transform: isItemActive ? 'scale(1.1)' : 'scale(1)',
-                            transition: 'all 0.3s ease',
-                          }}
-                        />
-                      </button>
-                    )
-                  })}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0671A4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
+                  </button>
+                  <button
+                    className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+                    style={{
+                      backgroundColor: 'rgba(6, 113, 164, 0.1)',
+                      opacity: mobileCarouselIdx === allEntriesWithEdu.length - 1 ? 0.4 : 1,
+                      transition: 'opacity 0.2s',
+                    }}
+                    disabled={mobileCarouselIdx === allEntriesWithEdu.length - 1}
+                    onClick={() => { if (mobileCarouselIdx < allEntriesWithEdu.length - 1) setMobileCarouselIdx(mobileCarouselIdx + 1) }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0671A4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>
+                  </button>
                 </div>
               </div>
             </motion.div>

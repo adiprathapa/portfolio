@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { FlipSafari } from './ui/flip-safari'
 import { Experience } from './Experience'
+import { GradientText } from './ui/gradient-text'
 
 // Globe data kept but not used
 // import { IconCloud } from './ui/icon-cloud'
@@ -165,13 +166,16 @@ export function Projects() {
     offset: ["start start", "end end"]
   })
 
-  const stagger = isMobile ? 16 : 20
-  const spacing = isMobile ? 400 : 545
+  const stagger = isMobile ? 36 : 28
+  const spacing = isMobile ? 620 : 545
 
   // Cards maintain spacing, stacking during scroll.
   // After stacking, the last card keeps scrolling up and "eats" the others —
   // each card joins the last card's motion once it reaches its position.
-  const seg = 0.15
+  // seg is computed so stacking and collapse phases move at the same px/scroll rate.
+  const finalY = isMobile ? -100 : -700
+  const collapseDistance = stagger * 5 - finalY
+  const seg = spacing / (5 * spacing + collapseDistance)
 
   const cardY1 = useTransform(scrollYProgress, [0, 1], [0, 0])
 
@@ -193,7 +197,7 @@ export function Projects() {
 
   const cardY6 = useTransform(scrollYProgress,
     [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, 1],
-    [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, isMobile ? -300 : -700])
+    [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, finalY])
 
 
   // Once the last card passes a card's position, that card moves with it
@@ -208,8 +212,8 @@ export function Projects() {
 
   return (
     <div ref={containerRef} className="relative h-[260vh] lg:h-[280vh]">
-      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-4 lg:px-6 bg-surface" style={{ overflow: 'clip' }}>
-        <div className="relative w-full mx-auto lg:-translate-y-[147px]" style={{ maxWidth: 1170, height: isMobile ? 660 : 500, overflow: 'visible' }}>
+      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-4 lg:px-6 bg-surface" style={{ clipPath: 'inset(-200px 0px 0px 0px)' }}>
+        <div className="relative w-full mx-auto lg:-translate-y-[147px]" style={{ maxWidth: 1170, height: isMobile ? 540 : 500, overflow: 'visible' }}>
           {projectOrder.map((key, i) => (
             <ProjectCard
               key={key}

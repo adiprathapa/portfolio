@@ -96,7 +96,7 @@ export function FlipSafari({
   return (
     <div
       style={{ perspective: '1200px', position: 'relative', ...safariStyle }}
-      className="h-[560px] lg:h-[500px]"
+      className="h-[440px] lg:h-[500px]"
       onMouseEnter={() => {
         if (!showVideo && innerRef.current) {
           setCardHovered(true)
@@ -148,12 +148,12 @@ export function FlipSafari({
           {/* Left column — text content */}
           <div className="flex flex-col justify-center px-5 py-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0 }}>
             <h3
-              className="font-normal font-heading text-left text-lg lg:text-2xl"
+              className="font-normal font-heading text-left text-2xl lg:text-3xl"
               style={{ color: '#0671A4', lineHeight: 1.2 }}
             >
               {projectTagline || projectName}
             </h3>
-            <p className="mt-2 leading-relaxed text-left text-heading text-sm lg:text-xl">
+            <p className="mt-2 leading-relaxed text-left text-heading text-lg lg:text-xl">
               {projectDescription}
             </p>
 
@@ -176,10 +176,10 @@ export function FlipSafari({
               </div>
             )}
 
-            <div className="flex gap-2.5" style={{ marginTop: 18 }}>
+            <div className="flex justify-center lg:justify-start gap-2.5 mt-6 lg:mt-[18px]">
               {safariProps.videoSrc && (
               <RippleButton
-                className="px-5 py-2.5 text-base"
+                className="hidden lg:inline-flex px-5 py-2.5 text-base"
                 rippleColor="#38BDF8"
                 style={{
                   backgroundColor: '#0671A4',

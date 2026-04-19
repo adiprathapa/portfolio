@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    'inline-flex items-center justify-center rounded-xl bg-dark text-white px-6 py-3 text-sm font-semibold hover:bg-heading transition-colors',
+    'inline-flex items-center justify-center rounded-xl bg-primary text-white px-6 py-3 text-sm font-semibold hover:bg-primary/85 transition-colors',
   outline:
     'inline-flex items-center justify-center rounded-xl border border-border text-body px-6 py-3 text-sm font-medium hover:border-heading transition-colors',
   'outline-white':

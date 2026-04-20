@@ -68,7 +68,7 @@ export function Contact() {
   const MOBILE_REF_WIDTH = 700
   const laptopContainerRef = useRef<HTMLDivElement>(null)
   const [mobileScale, setMobileScale] = useState(1)
-  const [mobileContainerWidth, setMobileContainerWidth] = useState(375)
+  const [, setMobileContainerWidth] = useState(375)
   useEffect(() => {
     if (isLg) { setMobileScale(1); return }
     const el = laptopContainerRef.current

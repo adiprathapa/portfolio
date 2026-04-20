@@ -661,7 +661,7 @@ export function Experience() {
   const allEntriesWithEdu = [...work, ...involvement, ...education]
 
   const [activeId, setActiveId] = useState('mitre')
-  const [direction, setDirection] = useState(1)
+  const [, setDirection] = useState(1)
   const [paused, setPaused] = useState(false)
   const [showEducation, setShowEducation] = useState(false)
   const [eduActiveCard, setEduActiveCard] = useState<'cornell' | 'highschool'>('cornell')

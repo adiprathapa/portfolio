@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { FlipSafari } from './ui/flip-safari'
 import { Experience } from './Experience'
-import { GradientText } from './ui/gradient-text'
+// GradientText used in About section's desktop projects intro
 
 // Globe data kept but not used
 // import { IconCloud } from './ui/icon-cloud'
@@ -102,7 +102,7 @@ const projectTechStacks: Record<string, string[]> = {
   galatea: ["NetworkX", "Palantir Foundry", "JavaScript"],
 }
 
-const allTechStack = [...new Set(Object.values(projectTechStacks).flat())]
+// const allTechStack = [...new Set(Object.values(projectTechStacks).flat())]
 
 function ProjectCard({ projectKey, yValue, collapseValue, zIndex }: { projectKey: string; yValue: MotionValue<number>; collapseValue: MotionValue<number> | null; zIndex: number }) {
   const combinedY = useTransform(() => yValue.get() + (collapseValue ? collapseValue.get() : 0))

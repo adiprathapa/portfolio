@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Button } from './ui/button'
+import { scrollToSection } from '../lib/scrollToSection'
 
 interface MobileMenuProps {
   isOpen: boolean
@@ -49,9 +50,11 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
                   key={link.href}
                   href={link.href}
                   onClick={(e) => {
-                    if (link.href === '#about') {
+                    if (link.href.startsWith('#')) {
                       e.preventDefault()
-                      window.scrollTo({ top: window.innerHeight * 1.3, behavior: 'smooth' })
+                      onClose()
+                      setTimeout(() => scrollToSection(link.href), 100)
+                      return
                     }
                     onClose()
                   }}

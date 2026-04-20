@@ -953,11 +953,24 @@ export function Experience() {
               </div>
 
               {/* Mobile: peek carousel — centered card with equal peeks */}
-              <div className="md:hidden mt-10 overflow-hidden" style={{ margin: '40px -16px 0' }}>
+              <div className="md:hidden mt-10 overflow-hidden" style={{ margin: '40px -24px 0' }}>
                 <motion.div
                   className="flex"
-                  style={{ gap: 12 }}
-                  animate={{ x: mobileCarouselIdx === 0 ? 16 : 42 - mobileCarouselIdx * (window.innerWidth - 84 + 12) }}
+                  style={{ gap: 12, touchAction: 'pan-y' }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.1}
+                  dragSnapToOrigin
+                  onDragEnd={(_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
+                    const swipe = info.offset.x
+                    const velocity = info.velocity.x
+                    if ((swipe < -40 || velocity < -300) && mobileCarouselIdx < allEntriesWithEdu.length - 1) {
+                      setMobileCarouselIdx(prev => Math.min(prev + 1, allEntriesWithEdu.length - 1))
+                    } else if ((swipe > 40 || velocity > 300) && mobileCarouselIdx > 0) {
+                      setMobileCarouselIdx(prev => Math.max(prev - 1, 0))
+                    }
+                  }}
+                  animate={{ x: mobileCarouselIdx === 0 ? 24 : 42 - mobileCarouselIdx * (window.innerWidth - 84 + 12) }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >
                   {allEntriesWithEdu.map((item, i) => (

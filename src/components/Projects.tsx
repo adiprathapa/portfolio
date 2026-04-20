@@ -212,7 +212,7 @@ export function Projects() {
 
   return (
     <div ref={containerRef} className="relative h-[260vh] lg:h-[280vh]">
-      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-4 lg:px-6 bg-surface z-[3] lg:z-auto" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-380px' : '-500px'} 0px)` }}>
+      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-6 bg-surface z-[3] lg:z-auto" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-380px' : '-500px'} 0px)` }}>
         <div className="relative w-full mx-auto lg:-translate-y-[147px]" style={{ maxWidth: 1170, height: isMobile ? 540 : 500, overflow: 'visible' }}>
           {projectOrder.map((key, i) => (
             <ProjectCard

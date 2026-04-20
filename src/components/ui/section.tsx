@@ -16,7 +16,7 @@ const widthClasses = {
 
 export function Section({ children, className = '', id, maxWidth = 'container', style }: SectionProps) {
   return (
-    <section id={id} className={`py-16 px-4 md:py-20 md:px-6 lg:py-24 ${className}`} style={style}>
+    <section id={id} className={`py-16 px-6 md:py-20 lg:py-24 ${className}`} style={style}>
       <motion.div
         className={`mx-auto ${widthClasses[maxWidth]} w-full`}
         initial={{ opacity: 1, y: 0 }}

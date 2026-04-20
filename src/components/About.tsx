@@ -618,7 +618,7 @@ export function About() {
   const rotations = [-8, -3, 2, 6, -5, 4]
 
   return (
-    <section ref={sectionRef} id="about" className="relative min-h-full md:h-full flex flex-col md:flex-row items-center px-4 md:px-6 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+    <section ref={sectionRef} id="about" className="relative min-h-full md:h-full flex flex-col md:flex-row items-center px-6 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
       <motion.div
         className="mx-auto max-w-7xl w-full grid md:grid-cols-2 gap-8 md:gap-12 items-center mt-[214px] md:-mt-[111px]"
         variants={heroStagger}
@@ -696,7 +696,7 @@ export function About() {
           </p>
         </div>
       </div>
-      <div className="md:hidden w-full px-4 mt-[158px]">
+      <div id="projects-intro" className="md:hidden w-full px-6 mt-[158px]">
         <GradientText as="h2" className="text-2xl font-normal">
           Projects
         </GradientText>

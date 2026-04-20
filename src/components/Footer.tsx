@@ -1,3 +1,5 @@
+import { scrollToSection } from '../lib/scrollToSection'
+
 const RESUME_PAGE_URL = '/resume.html'
 
 const footerLinks = [
@@ -52,9 +54,9 @@ export function Footer() {
           borderRadius: 24,
         }}
       >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-8">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-3 md:col-span-1">
             <div className="mb-3">
               <a href="/" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }} className="font-heading font-bold hover:opacity-80 transition-opacity cursor-pointer" style={{ color: 'var(--color-primary)', fontSize: '1.5rem', textDecoration: 'none' }}>&#x0906;&#x0926;&#x093F;</a>
             </div>
@@ -66,7 +68,17 @@ export function Footer() {
             <ul className="space-y-2.5" style={{ fontSize: '1.125rem' }}>
               {footerLinks.map((link) => (
                 <li key={link.href}>
-                  <a href={link.href} className="hover:opacity-80 transition-opacity" style={{ color: '#FFFFFF' }}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => {
+                      if (link.href.startsWith('#')) {
+                        e.preventDefault()
+                        scrollToSection(link.href)
+                      }
+                    }}
+                    className="hover:opacity-80 transition-opacity"
+                    style={{ color: '#FFFFFF' }}
+                  >
                     {link.label}
                   </a>
                 </li>

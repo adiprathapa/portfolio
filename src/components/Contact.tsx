@@ -54,6 +54,34 @@ export function Contact() {
   const [submitting, setSubmitting] = useState(false)
   const [ctaHovered, setCtaHovered] = useState(false)
 
+  const [isLg, setIsLg] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    setIsLg(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsLg(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  const MOBILE_REF_WIDTH = 700
+  const laptopContainerRef = useRef<HTMLDivElement>(null)
+  const [mobileScale, setMobileScale] = useState(1)
+  const [mobileContainerWidth, setMobileContainerWidth] = useState(375)
+  useEffect(() => {
+    if (isLg) { setMobileScale(1); return }
+    const el = laptopContainerRef.current
+    if (!el) return
+    const update = () => {
+      const w = el.clientWidth
+      setMobileContainerWidth(w)
+      setMobileScale((w * 0.85) / MOBILE_REF_WIDTH)
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [isLg])
+
   const laptopRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: laptopRef,
@@ -101,12 +129,12 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="pt-12 pb-16 px-4 md:py-32 md:px-6 lg:py-40 lg:min-h-[80vh]"
+      className="pt-12 pb-16 px-6 md:py-32 lg:py-40 lg:min-h-[80vh]"
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-8 lg:gap-24 items-center">
-          {/* Left — Contact info */}
-          <div>
+          {/* Top text — heading + description */}
+          <div className="order-1 lg:col-start-1 lg:row-start-1">
             <h2
               className="text-2xl md:text-3xl font-normal mb-6 leading-tight text-left"
               style={{ color: '#FFFFFF' }}
@@ -117,15 +145,18 @@ export function Contact() {
             </h2>
 
             <p
-              className="text-black text-lg md:text-xl mb-10 max-w-lg leading-relaxed text-center lg:text-left"
+              className="text-black text-lg md:text-xl lg:mb-10 max-w-lg leading-relaxed"
             >
               Have a project or opportunity in mind or just want to connect? Drop your email and
               I'll reach out.
             </p>
+          </div>
 
+          {/* Form + social links — below laptop on mobile */}
+          <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-2">
             <form
               onSubmit={handleSubmit}
-              className="mb-12"
+              className="mb-12 text-center lg:text-left"
             >
               {submitted ? (
                 <p className="text-white text-lg md:text-xl leading-relaxed">Thanks! I'll be in touch soon.</p>
@@ -252,11 +283,18 @@ export function Contact() {
           </div>
 
           {/* Right — MacBook lid with scroll-driven 3D closing animation */}
-          <div className="overflow-hidden lg:overflow-visible">
+          <div ref={laptopContainerRef} className="mt-[30px] lg:mt-0 order-2 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2">
           <div
             ref={laptopRef}
             className="relative flex items-center justify-center lg:ml-[110px]"
-            style={{ perspective: 1200 }}
+            style={{
+              perspective: 1200,
+              ...(isLg ? {} : {
+                width: MOBILE_REF_WIDTH,
+                zoom: mobileScale,
+                margin: '0 auto',
+              }),
+            }}
           >
             <motion.div
               className="relative w-full"
@@ -286,15 +324,16 @@ export function Contact() {
               <Sticker disabled={!laptopOpen} src="/sticker-data.png" alt="Cornell Data Strategy" label="From Consulting Club at Cornell" tooltipTop={-19} style={{ bottom: 'calc(10% - 40px)', left: 'calc(6% - 72px)', width: '37%' }} hoverArea={{ top: '24%', left: '32%', width: '36%', height: '47%', zIndex: 10 }} />
               {/* Row middle */}
               <Sticker disabled={!laptopOpen} src="/sticker-frog.png" alt="TrexQuant" label="From first Career Fair at Cornell" tooltipTop={-56} style={{ bottom: 'calc(10% + 91px)', left: 'calc(70% + 40px)', width: '14.4%' }} hoverArea={{ top: '7%', left: '8%', width: '85%', height: '85%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-c2s2.png" alt="C2S2" label="From Cornell Custom Silicon Systems" tooltipTop={-56} style={{ bottom: 'calc(10% + 105px)', left: 'calc(55% + 20px)', width: '15.04%' }} hoverArea={{ top: '5%', left: '5%', width: '92%', height: '92%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-c2s2.png" alt="C2S2" label="From Cornell Custom Silicon Systems" tooltipTop={-56} style={{ bottom: isLg ? 'calc(10% + 105px)' : 'calc(10% + 110px)', left: 'calc(55% + 20px)', width: '15.04%' }} hoverArea={{ top: '5%', left: '5%', width: '92%', height: '92%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-gemini-char.png" alt="Ampersand" label="From Cornell Days '26" tooltipTop={-56} style={{ bottom: 'calc(10% + 130px)', left: 'calc(8% - 10px)', width: '18%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
               <Sticker disabled={!laptopOpen} src="/sticker-gemini.png" alt="Coneflower" label="From my favorite creamery in Omaha, NE" tooltipTop={-56} tooltipOffsetX={11} style={{ bottom: 'calc(10% + 90px)', left: 'calc(30% - 63px)', width: '28.52%' }} hoverArea={{ top: '5%', left: '14%', width: '78%', height: '91%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-purple.png" alt="Hackathons Cornell" label="From first hackathon at Cornell" tooltipTop={-56} style={{ bottom: 'calc(10% + 210px)', left: 'calc(70% + 20px)', width: '22%' }} hoverArea={{ top: '10%', left: '4%', width: '94%', height: '76%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-purple.png" alt="Hackathons Cornell" label="From first hackathon at Cornell" tooltipTop={-56} style={{ bottom: isLg ? 'calc(10% + 210px)' : 'calc(10% + 215px)', left: 'calc(70% + 20px)', width: '22%' }} hoverArea={{ top: '10%', left: '4%', width: '94%', height: '76%', zIndex: 10 }} />
               {/* Row top */}
-              <Sticker disabled={!laptopOpen} src="/sticker-nell.png" alt="Cornell University" label="From Orientation Week" tooltipTop={-59} style={{ bottom: 'calc(10% + 260px)', left: 'calc(70% + 40px)', width: '16.2%' }} hoverArea={{ top: '0%', left: '2%', width: '96%', height: '97%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-claude.png" alt="Claude" label="From Claude Builders Club" tooltipTop={-37} style={{ bottom: 'calc(10% + 197px)', left: 'calc(52% + 25px)', width: '18%' }} hoverArea={{ top: '16%', left: '12%', width: '77%', height: '68%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-tabs.png" alt="Google for Education" label="From event at Okenshields" tooltipTop={-37} style={{ bottom: 'calc(10% + 315px)', left: 'calc(34% + 130px)', width: '19.8%' }} hoverArea={{ top: '25%', left: '3%', width: '95%', height: '72%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-tab.png" alt="tabs+" label="From Cornell AI Hackathon hosted at tabs" tooltipTop={-40} style={{ bottom: 'calc(10% + 243px)', left: 'calc(16% + 180px)', width: '12.6%' }} hoverArea={{ top: '12%', left: '5%', width: '91%', height: '71%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-cu.png" alt="CU mascot" label="From Georgetown '24 Civic Innovation Academy" tooltipTop={-35} style={{ bottom: 'calc(10% + 280px)', left: 'calc(2% + 240px)', width: '12.6%' }} hoverArea={{ top: '20%', left: '6%', width: '91%', height: '67%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-nell.png" alt="Cornell University" label="From Orientation Week" tooltipTop={-59} style={{ bottom: isLg ? 'calc(10% + 260px)' : 'calc(10% + 285px)', left: 'calc(70% + 40px)', width: '16.2%' }} hoverArea={{ top: '0%', left: '2%', width: '96%', height: '97%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-claude.png" alt="Claude" label="From Claude Builders Club" tooltipTop={-37} style={{ bottom: isLg ? 'calc(10% + 197px)' : 'calc(10% + 202px)', left: 'calc(52% + 25px)', width: '18%' }} hoverArea={{ top: '16%', left: '12%', width: '77%', height: '68%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-tabs.png" alt="Google for Education" label="From event at Okenshields" tooltipTop={-37} style={{ bottom: isLg ? 'calc(10% + 315px)' : 'calc(10% + 340px)', left: 'calc(34% + 130px)', width: '19.8%' }} hoverArea={{ top: '25%', left: '3%', width: '95%', height: '72%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-tab.png" alt="tabs+" label="From Cornell AI Hackathon hosted at tabs" tooltipTop={-40} style={{ bottom: isLg ? 'calc(10% + 243px)' : 'calc(10% + 253px)', left: isLg ? 'calc(16% + 180px)' : 'calc(16% + 185px)', width: '12.6%' }} hoverArea={{ top: '12%', left: '5%', width: '91%', height: '71%', zIndex: 10 }} />
+              <Sticker disabled={!laptopOpen} src="/sticker-cu.png" alt="CU mascot" label="From Georgetown '24 Civic Innovation Academy" tooltipTop={-35} style={{ bottom: isLg ? 'calc(10% + 280px)' : 'calc(10% + 305px)', left: 'calc(2% + 240px)', width: '12.6%' }} hoverArea={{ top: '20%', left: '6%', width: '91%', height: '67%', zIndex: 10 }} />
 
               {/* Apple logo — dark, like on real Midnight MacBook */}
               <img

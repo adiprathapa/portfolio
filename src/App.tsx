@@ -73,16 +73,25 @@ function App() {
     // Delay to let React render the target elements
     setTimeout(() => {
       if (hash === '#about') {
-        window.scrollTo({ top: window.innerHeight * 0.9, behavior: 'smooth' })
+        window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
       } else if (hash === '#experience') {
-        const projectsContainer = document.getElementById('projects')?.parentElement
-        if (projectsContainer) {
-          const containerBottom = projectsContainer.offsetTop + projectsContainer.offsetHeight
-          window.scrollTo({ top: containerBottom - window.innerHeight, behavior: 'smooth' })
+        const container = document.getElementById('projects')?.parentElement
+        if (container) {
+          const absTop = container.getBoundingClientRect().top + window.scrollY
+          window.scrollTo({ top: absTop + container.offsetHeight - window.innerHeight, behavior: 'smooth' })
+        }
+      } else if (hash === '#projects') {
+        const container = document.getElementById('projects')?.parentElement
+        if (container) {
+          const absTop = container.getBoundingClientRect().top + window.scrollY
+          window.scrollTo({ top: absTop, behavior: 'smooth' })
         }
       } else {
         const el = document.querySelector(hash)
-        if (el) el.scrollIntoView({ behavior: 'smooth' })
+        if (el) {
+          const absTop = el.getBoundingClientRect().top + window.scrollY - 64
+          window.scrollTo({ top: absTop, behavior: 'smooth' })
+        }
       }
     }, 500)
   }, [])

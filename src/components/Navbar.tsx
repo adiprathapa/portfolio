@@ -69,12 +69,12 @@ export function Navbar() {
     if (href === '#experience') {
       e.preventDefault()
       // Experience is inside the sticky projects scroll container.
-      // Scroll to the end of the projects 300vh container so the
+      // Scroll to the end of the projects container so the
       // sticky section shows the experience content.
-      const projectsContainer = document.getElementById('projects')?.parentElement
-      if (projectsContainer) {
-        const containerBottom = projectsContainer.offsetTop + projectsContainer.offsetHeight
-        window.scrollTo({ top: containerBottom - window.innerHeight, behavior: 'smooth' })
+      const container = document.getElementById('projects')?.parentElement
+      if (container) {
+        const absTop = container.getBoundingClientRect().top + window.scrollY
+        window.scrollTo({ top: absTop + container.offsetHeight - window.innerHeight, behavior: 'smooth' })
       }
     }
   }

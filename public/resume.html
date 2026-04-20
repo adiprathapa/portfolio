@@ -299,7 +299,7 @@
          Page Content
          ============================================ */
       .page {
-        padding: 32px 0 40px;
+        padding: 32px 24px 40px;
         flex: 1;
       }
 
@@ -309,7 +309,13 @@
         align-items: flex-start;
         gap: 10px;
         margin-bottom: 50px;
-        padding-left: 216px;
+        padding-left: 0;
+      }
+
+      @media (min-width: 769px) {
+        .toolbar {
+          padding-left: 180px;
+        }
       }
 
       h1.page-title {
@@ -377,7 +383,7 @@
          PDF Viewer
          ============================================ */
       .viewer {
-        width: 75%;
+        width: 100%;
         height: auto;
         overflow: visible;
         background: transparent;
@@ -385,6 +391,12 @@
         border-radius: 0;
         box-shadow: none;
         margin: 0 auto;
+      }
+
+      @media (min-width: 769px) {
+        .viewer {
+          width: 75%;
+        }
       }
 
       .pdf-stage {
@@ -513,11 +525,11 @@
 
       @media (max-width: 768px) {
         .footer-grid {
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(3, 1fr);
         }
 
         .footer-brand {
-          grid-column: span 2;
+          grid-column: span 3;
         }
 
         .footer-bottom {

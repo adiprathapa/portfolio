@@ -3,6 +3,7 @@ import { useScrolled } from '../hooks/useScrolled'
 import { useActiveSection } from '../hooks/useActiveSection'
 import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
+import { usePostHog } from '@posthog/react'
 
 const RESUME_PAGE_URL = '/resume.html'
 const CALENDAR_PAGE_URL = '/calendar.html'
@@ -16,6 +17,7 @@ const navLinks = [
 ]
 
 export function Navbar() {
+  const posthog = usePostHog()
   const { scrolled, hidden } = useScrolled(50)
   const activeSection = useActiveSection()
   const showSocialActions =
@@ -56,9 +58,11 @@ export function Navbar() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href === RESUME_PAGE_URL) {
+      posthog?.capture('resume_viewed')
       return
     }
 
+    posthog?.capture('nav_link_clicked', { section: href.replace('#', '') })
     pinNavbarTemporarily()
 
     if (href === '#about') {
@@ -151,6 +155,7 @@ export function Navbar() {
                   e.currentTarget.style.backgroundColor = '#0671A4'
                 }}
                 onClick={() => {
+                  posthog?.capture('lets_talk_clicked')
                   window.location.href = CALENDAR_PAGE_URL
                 }}
               >

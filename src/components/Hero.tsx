@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { AnimatedGradientBackground } from './ui/animated-gradient-background'
 import { FluidCursor } from './ui/fluid-cursor'
 import { heroStagger, heroChild } from '../lib/animations'
+import { usePostHog } from '@posthog/react'
 
 const LENS_SIZE = 140
 const LENS_RADIUS = LENS_SIZE / 2
@@ -175,6 +176,7 @@ function useTypewriter(
 }
 
 export function Hero() {
+  const posthog = usePostHog()
   const [tooltipActive, setTooltipActive] = useState(false)
   const [headingHovered, setHeadingHovered] = useState(false)
   const [hoveredWordIndex, setHoveredWordIndex] = useState<number | null>(null)
@@ -251,7 +253,7 @@ export function Hero() {
         <motion.div
           variants={heroChild}
           className="relative inline-block mb-6"
-          onMouseEnter={() => { if (window.innerWidth >= 768) setTooltipActive(true) }}
+          onMouseEnter={() => { if (window.innerWidth >= 768) { setTooltipActive(true); posthog?.capture('hero_language_tooltip_viewed', { language: current.subtitle }) } }}
         >
           <h1
             ref={h1Ref}
@@ -421,7 +423,7 @@ export function Hero() {
                 border: '3px solid rgba(6, 113, 164, 0.3)',
                 backfaceVisibility: 'hidden',
               }}
-              onClick={() => window.open('https://www.linkedin.com/in/adi-prathapa/', '_blank')}
+              onClick={() => { posthog?.capture('linkedin_profile_clicked', { location: 'hero_coin' }); window.open('https://www.linkedin.com/in/adi-prathapa/', '_blank') }}
             >
               <img
                 src="/headshot.jpg"
@@ -459,7 +461,7 @@ export function Hero() {
                 backfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg)',
               }}
-              onClick={() => window.open('https://github.com/adiprathapa', '_blank')}
+              onClick={() => { posthog?.capture('github_profile_clicked', { location: 'hero_coin' }); window.open('https://github.com/adiprathapa', '_blank') }}
             >
               <img
                 src="/pfp.png"

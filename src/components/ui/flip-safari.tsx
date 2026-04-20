@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Safari } from './safari'
 import { RippleButton } from './ripple-button'
 import type { SafariProps } from './safari'
+import { usePostHog } from '@posthog/react'
 
 interface FlipSafariProps {
   safariProps: SafariProps
@@ -28,6 +29,7 @@ export function FlipSafari({
   gradientColor = '#F4F4F4',
   bgImage,
 }: FlipSafariProps) {
+  const posthog = usePostHog()
   const [showVideo, setShowVideo] = useState(false)
   const [isVideoHovered, setIsVideoHovered] = useState(false)
   const [cardHovered, setCardHovered] = useState(false)
@@ -77,6 +79,7 @@ export function FlipSafari({
   }, [])
 
   const handleFlipToVideo = () => {
+    posthog?.capture('project_video_viewed', { project_name: projectName })
     if (innerRef.current) {
       innerRef.current.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
       innerRef.current.style.transform = 'rotateY(180deg)'
@@ -240,7 +243,7 @@ export function FlipSafari({
                   e.currentTarget.style.backgroundColor = 'transparent'
                   e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.3)'
                 }}
-                onClick={() => window.open(projectUrl, '_blank')}
+                onClick={() => { posthog?.capture('project_repo_opened', { project_name: projectName, url: projectUrl }); window.open(projectUrl, '_blank') }}
               >
                 <span className="inline-flex items-center gap-1.5">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

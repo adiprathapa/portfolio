@@ -1,4 +1,5 @@
 import { scrollToSection } from '../lib/scrollToSection'
+import { usePostHog } from '@posthog/react'
 
 const RESUME_PAGE_URL = '/resume.html'
 
@@ -45,6 +46,7 @@ const socialLinks = [
 ]
 
 export function Footer() {
+  const posthog = usePostHog()
   return (
     <footer className="text-muted pt-0" style={{ padding: '0 12px 12px 12px' }}>
       <div
@@ -98,6 +100,7 @@ export function Footer() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity"
                     style={{ color: '#FFFFFF' }}
+                    onClick={() => posthog?.capture('footer_social_link_clicked', { platform: link.label.toLowerCase(), location: 'footer' })}
                   >
                     {link.icon}
                     {link.label}

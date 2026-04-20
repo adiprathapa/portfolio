@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import { Navbar } from './components/Navbar'
 import { HorizontalScrollSection } from './components/HorizontalScrollSection'
 import { Projects } from './components/Projects'
@@ -98,6 +99,7 @@ function App() {
 
   return (
     <>
+      <Analytics />
       <Navbar />
       <main style={{ background: 'var(--color-surface, #EFF3F8)' }}>
         <HorizontalScrollSection />

@@ -99,7 +99,7 @@ export function FlipSafari({
   return (
     <div
       style={{ perspective: '1200px', position: 'relative', ...safariStyle }}
-      className="h-auto min-h-0 lg:h-[500px]"
+      className="h-[360px] lg:h-[500px]"
       onMouseEnter={() => {
         if (!showVideo && innerRef.current) {
           setCardHovered(true)
@@ -113,7 +113,7 @@ export function FlipSafari({
       {/* Single rotating wrapper — both faces rotate together */}
       <div
         ref={innerRef}
-        className="relative w-full h-auto lg:h-full"
+        className="relative w-full h-full"
         style={{
           transformStyle: 'preserve-3d',
           transform: 'rotateX(0deg) rotateY(0deg) translateY(0px)',
@@ -122,7 +122,6 @@ export function FlipSafari({
       >
         {/* Front face */}
         <div
-          className="relative lg:absolute lg:inset-0"
           style={{
             backfaceVisibility: 'hidden',
             borderRadius: '12px',
@@ -132,6 +131,8 @@ export function FlipSafari({
               ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
               : '0 4px 12px rgba(0, 0, 0, 0.04)',
             transition: 'box-shadow 0.3s ease',
+            position: 'absolute',
+            inset: 0,
             display: 'flex',
             overflow: 'hidden',
           }}
@@ -146,7 +147,7 @@ export function FlipSafari({
             }}
           />
           {/* Left column — text content */}
-          <div className="flex flex-col px-4 py-4 lg:justify-center lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0 }}>
+          <div className="flex flex-col justify-between lg:justify-center px-4 py-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
             <h3
               className="font-normal font-heading text-left text-lg lg:text-3xl"
               style={{ color: '#0671A4', lineHeight: 1.2 }}

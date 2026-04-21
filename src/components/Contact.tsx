@@ -1,39 +1,60 @@
-import { type FormEvent, type CSSProperties, useRef, useState, useEffect } from 'react'
+import { type FormEvent, type CSSProperties, useRef, useState, useEffect, useCallback } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { Button } from './ui/button'
 import { usePostHog } from '@posthog/react'
 
 function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOffsetX, hoverArea, disabled }: { src: string; alt: string; label: string; style: CSSProperties; tooltipTop?: number; tooltipBottom?: number; tooltipOffsetX?: number; hoverArea?: CSSProperties; disabled?: boolean }) {
   const [hovered, setHovered] = useState(false)
-  const tooltipRef = useRef<HTMLDivElement>(null)
-  const [tooltipLeft, setTooltipLeft] = useState<string>('50%')
-  const [tooltipTransform, setTooltipTransform] = useState(`translateX(calc(-50% + ${tooltipOffsetX ?? 0}px))`)
+  const stickerRef = useRef<HTMLDivElement>(null)
+
+  // Desktop: mouse enter/leave. Mobile: tap to toggle.
   const mouseHandlers = disabled ? {} : {
     onMouseEnter: () => setHovered(true),
     onMouseLeave: () => setHovered(false),
+    onClick: (e: React.MouseEvent) => {
+      // Only use click-to-toggle on touch devices
+      if ('ontouchstart' in window) {
+        e.stopPropagation()
+        setHovered((h) => !h)
+      }
+    },
   }
 
+  // Close tooltip on outside tap (mobile)
   useEffect(() => {
-    if (!hovered || !tooltipRef.current) return
-    const el = tooltipRef.current
+    if (!hovered || !('ontouchstart' in window)) return
+    const handleTouch = (e: TouchEvent) => {
+      if (stickerRef.current && !stickerRef.current.contains(e.target as Node)) {
+        setHovered(false)
+      }
+    }
+    document.addEventListener('touchstart', handleTouch, { passive: true })
+    return () => document.removeEventListener('touchstart', handleTouch)
+  }, [hovered])
+
+  // Ref callback: measure tooltip on mount and clamp within viewport
+  const tooltipRefCb = useCallback((el: HTMLDivElement | null) => {
+    if (!el) return
+    // Reset to default position first so measurement is from center
+    el.style.left = '50%'
+    el.style.transform = `translateX(calc(-50% + ${tooltipOffsetX ?? 0}px))`
     const rect = el.getBoundingClientRect()
     const pad = 8
+    const vw = document.documentElement.clientWidth
     if (rect.left < pad) {
       const shift = pad - rect.left
-      setTooltipLeft(`calc(50% + ${shift}px)`)
-      setTooltipTransform(`translateX(calc(-50% + ${(tooltipOffsetX ?? 0) + shift}px))`)
-    } else if (rect.right > window.innerWidth - pad) {
-      const shift = rect.right - (window.innerWidth - pad)
-      setTooltipLeft(`calc(50% - ${shift}px)`)
-      setTooltipTransform(`translateX(calc(-50% + ${(tooltipOffsetX ?? 0) - shift}px))`)
-    } else {
-      setTooltipLeft('50%')
-      setTooltipTransform(`translateX(calc(-50% + ${tooltipOffsetX ?? 0}px))`)
+      el.style.left = `calc(50% + ${shift}px)`
+      el.style.transform = `translateX(calc(-50% + ${(tooltipOffsetX ?? 0) + shift}px))`
+    } else if (rect.right > vw - pad) {
+      const shift = rect.right - (vw - pad)
+      el.style.left = `calc(50% - ${shift}px)`
+      el.style.transform = `translateX(calc(-50% + ${(tooltipOffsetX ?? 0) - shift}px))`
     }
-  }, [hovered, tooltipOffsetX])
+  }, [tooltipOffsetX])
 
   return (
     <div
+      ref={stickerRef}
       className="absolute select-none"
       style={{ ...style, zIndex: hovered ? 100 : undefined }}
       {...(hoverArea ? {} : mouseHandlers)}
@@ -52,11 +73,11 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
       />
       {hovered && (
         <div
-          ref={tooltipRef}
+          ref={tooltipRefCb}
           className="absolute whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-medium pointer-events-none"
           style={{
-            left: tooltipLeft,
-            transform: tooltipTransform,
+            left: '50%',
+            transform: `translateX(calc(-50% + ${tooltipOffsetX ?? 0}px))`,
             ...(tooltipBottom != null ? { bottom: tooltipBottom } : { top: tooltipTop }),
             zIndex: 9999,
             background: 'rgba(15,15,15,0.85)',

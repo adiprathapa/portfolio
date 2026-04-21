@@ -15,6 +15,7 @@ const networkxBlueFilter = 'brightness(0) saturate(100%) invert(30%) sepia(80%) 
 function getIconSrc(icon: string, hovered: boolean) {
   if (!hovered) return icon
   if (icon.includes('/confluence/0671A4')) return icon.replace('/0671A4', '/4C9AFF')
+  if (icon.includes('/posthog/0671A4')) return icon.replace('/0671A4', '/F9BD2B')
   return icon.replace('/0671A4', '')
 }
 
@@ -51,6 +52,7 @@ const techAccentColorsBySlug: Record<string, string> = {
   leaflet: '#199900',
   ollama: '#000000',
   palantir: '#101820',
+  posthog: '#F9BD2B',
   clerk: '#6C47FF',
   pinia: '#FFD859',
   supabase: '#3ECF8E',
@@ -92,14 +94,14 @@ const majorTech: TechItem[] = [
   { name: 'Google ADK', icon: 'https://cdn.simpleicons.org/google/0671A4', url: 'https://google.github.io/adk-docs/', blurb: 'Orchestrated sequential multi agent workflows' },
   { name: 'Confluence', icon: 'https://cdn.simpleicons.org/confluence/0671A4', url: 'https://www.atlassian.com/software/confluence', blurb: 'Documented engineering workflows and team project plans for C2S2' },
   { name: 'Apache HTTP Server', icon: 'https://cdn.simpleicons.org/apache/0671A4', url: 'https://httpd.apache.org', blurb: "Maintained C2S2 site on Cornell's Apache HTTP Server" },
+  { name: 'PostHog', icon: 'https://cdn.simpleicons.org/posthog/0671A4', url: 'https://posthog.com', blurb: 'This site uses PostHog for product analytics' },
   { name: 'Docker', icon: 'https://cdn.simpleicons.org/docker/0671A4', url: 'https://www.docker.com', blurb: 'Containerized app services for deployable apps to clients' },
   { name: 'PostgreSQL', icon: 'https://cdn.simpleicons.org/postgresql/0671A4', url: 'https://www.postgresql.org', blurb: 'Designed relational schemas and queried analytics data for client applications' },
-  { name: 'Pinia', icon: 'https://cdn.simpleicons.org/pinia/0671A4', url: 'https://pinia.vuejs.org', blurb: 'Managed complex state and data flows in Vue.js applications' },
-  { name: 'Clerk', icon: 'https://cdn.simpleicons.org/clerk/0671A4', url: 'https://clerk.com', blurb: 'Implemented user authentication and access control with Clerk in client applications' },
   { name: 'Ollama', icon: 'https://cdn.simpleicons.org/ollama/0671A4', url: 'https://ollama.com', blurb: 'Ran local LLM inference pipelines for XAI' }
 ]
 
 const minorTech: TechItem[] = [
+  { name: 'Clerk', icon: 'https://cdn.simpleicons.org/clerk/0671A4', url: 'https://clerk.com' },
   { name: 'Vue.js', icon: 'https://cdn.simpleicons.org/vuedotjs/0671A4', url: 'https://vuejs.org' },
   { name: 'JavaScript', icon: 'https://cdn.simpleicons.org/javascript/0671A4', url: 'https://developer.mozilla.org/docs/Web/JavaScript' },
   { name: 'FastAPI', icon: 'https://cdn.simpleicons.org/fastapi/0671A4', url: 'https://fastapi.tiangolo.com' },

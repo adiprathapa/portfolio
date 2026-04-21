@@ -340,7 +340,7 @@
         border: 2px solid transparent;
         border-radius: 0.75rem;
         padding: 0.625rem 1.25rem;
-        font-size: 1rem;
+        font-size: clamp(0.75rem, 2.5vw, 1rem);
         font-weight: 500;
         text-decoration: none;
         cursor: pointer;
@@ -348,6 +348,7 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
+        white-space: nowrap;
         transition: background-color 0.3s, color 0.3s, border-color 0.3s;
       }
 

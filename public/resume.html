@@ -764,7 +764,14 @@
         window.pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDF_JS_VERSION}/pdf.worker.min.js`;
       }
 
+      // Render once at high resolution; CSS width:100% handles responsive scaling.
+      // No resize re-renders needed — the canvas is crisp and stable.
+      let pdfRendered = false;
+      let cachedBlobUrl = null;
+
       async function renderResumePdf() {
+        if (pdfRendered) return;
+
         if (!window.pdfjsLib) {
           status.textContent = "Unable to load inline viewer. Use Open in new tab.";
           return;
@@ -773,31 +780,31 @@
         status.textContent = "Loading resume...";
 
         try {
-          const loadingTask = window.pdfjsLib.getDocument({ url: RESUME_URL, withCredentials: false });
-          const pdf = await loadingTask.promise;
+          // Fetch once and cache as blob URL for instant re-use (download etc.)
+          const response = await fetch(RESUME_URL, { mode: "cors" });
+          if (!response.ok) throw new Error("Failed to fetch resume");
+          const blob = await response.blob();
+          cachedBlobUrl = URL.createObjectURL(blob);
 
-          const existingPages = stage.querySelectorAll(".pdf-page");
-          existingPages.forEach((node) => node.remove());
+          const arrayBuffer = await blob.arrayBuffer();
+          const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+          // Render at a fixed high-res scale (2x) so it stays crisp at any viewport
+          const RENDER_SCALE = 2;
 
           for (let pageNum = 1; pageNum <= pdf.numPages; pageNum += 1) {
             const page = await pdf.getPage(pageNum);
-            const baseViewport = page.getViewport({ scale: 1 });
-            const availableWidth = viewer.clientWidth;
-            const scale = availableWidth / baseViewport.width;
-            const viewport = page.getViewport({ scale });
+            const viewport = page.getViewport({ scale: RENDER_SCALE });
 
             const pageWrap = document.createElement("div");
             pageWrap.className = "pdf-page";
 
             const canvas = document.createElement("canvas");
             canvas.className = "pdf-canvas";
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
 
             const context = canvas.getContext("2d", { alpha: false });
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = Math.floor(viewport.width * dpr);
-            canvas.height = Math.floor(viewport.height * dpr);
-
-            context.setTransform(dpr, 0, 0, dpr, 0, 0);
             await page.render({ canvasContext: context, viewport }).promise;
 
             pageWrap.appendChild(canvas);
@@ -805,44 +812,46 @@
           }
 
           status.remove();
+          pdfRendered = true;
         } catch (error) {
           status.textContent = "Could not render inline preview. Use Open in new tab to view your resume.";
         }
       }
 
-      let resizeTimer;
-      window.addEventListener("resize", () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          renderResumePdf();
-        }, 180);
-      });
-
       renderResumePdf();
 
       downloadBtn.addEventListener("click", async () => {
-        const originalLabel = downloadBtn.textContent;
-        downloadBtn.textContent = "Preparing download...";
-        downloadBtn.disabled = true;
-
-        try {
-          const response = await fetch(RESUME_URL, { mode: "cors" });
-          if (!response.ok) throw new Error("Failed to fetch resume");
-
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
+        if (cachedBlobUrl) {
+          // Use the already-cached blob — instant download, no re-fetch
           const link = document.createElement("a");
-          link.href = blobUrl;
+          link.href = cachedBlobUrl;
           link.download = "Adi_Prathapa_Resume.pdf";
           document.body.appendChild(link);
           link.click();
           link.remove();
-          URL.revokeObjectURL(blobUrl);
-        } catch (error) {
-          window.open(RESUME_URL, "_blank", "noopener,noreferrer");
-        } finally {
-          downloadBtn.textContent = originalLabel;
-          downloadBtn.disabled = false;
+        } else {
+          // Fallback if PDF hasn't loaded yet
+          const originalLabel = downloadBtn.textContent;
+          downloadBtn.textContent = "Preparing download...";
+          downloadBtn.disabled = true;
+          try {
+            const response = await fetch(RESUME_URL, { mode: "cors" });
+            if (!response.ok) throw new Error("Failed to fetch resume");
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = "Adi_Prathapa_Resume.pdf";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(blobUrl);
+          } catch (error) {
+            window.open(RESUME_URL, "_blank", "noopener,noreferrer");
+          } finally {
+            downloadBtn.textContent = originalLabel;
+            downloadBtn.disabled = false;
+          }
         }
       });
     </script>

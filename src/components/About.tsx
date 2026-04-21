@@ -527,10 +527,8 @@ function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab }: 
       animate={controls}
       initial={{ rotate: rotation }}
       whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
-      className="absolute group cursor-grab rounded-2xl shadow-2xl overflow-hidden"
+      className="absolute inset-0 group cursor-grab rounded-2xl shadow-2xl overflow-hidden"
       style={{
-        width: 400,
-        height: 420,
         zIndex,
         rotate: rotation,
         border: '1.5px solid rgba(6, 113, 164, 0.3)',
@@ -618,9 +616,9 @@ export function About() {
   const rotations = [-8, -3, 2, 6, -5, 4]
 
   return (
-    <section ref={sectionRef} id="about" className="relative min-h-full md:h-full flex flex-col md:flex-row items-center px-6 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+    <section ref={sectionRef} id="about" className="relative min-h-full lg:h-full flex flex-col lg:flex-row items-center px-6 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
       <motion.div
-        className="mx-auto max-w-7xl w-full grid md:grid-cols-2 gap-8 md:gap-12 items-center mt-[214px] md:-mt-[111px]"
+        className="mx-auto max-w-7xl w-full grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mt-[214px] lg:-mt-[111px]"
         variants={heroStagger}
         initial="hidden"
         animate={marqueeActive ? 'visible' : 'hidden'}
@@ -629,21 +627,21 @@ export function About() {
         <motion.div variants={heroChild}>
           <motion.div className="-mt-[16px]" variants={staggerContainer}>
             <motion.div variants={heroChild}>
-              <GradientText as="h2" className="text-2xl md:text-3xl font-normal mb-1">
+              <GradientText as="h2" className="text-2xl lg:text-3xl font-normal mb-1">
                 About me
               </GradientText>
             </motion.div>
-            <motion.p variants={heroChild} className="text-black text-lg md:text-xl leading-relaxed mb-4">
+            <motion.p variants={heroChild} className="text-black text-lg lg:text-xl leading-relaxed mb-4">
               I'm a Computer Science student at Cornell minoring in AI, originally
               from Nebraska. I am really interested in building and working with full stack web
               apps and experimenting with ML models.
             </motion.p>
-            <motion.p variants={heroChild} className="text-black text-lg md:text-xl leading-relaxed mb-4">
+            <motion.p variants={heroChild} className="text-black text-lg lg:text-xl leading-relaxed mb-4">
               Lately I've been diving deep into web3, stablecoins, and IPFS, the idea of
               programmable money and decentralized finance is something I enjoy working with and learning about. I'm always looking for ways to connect what I'm learning in AI
               with applications outside of the classroom.
             </motion.p>
-            <motion.p variants={heroChild} className="text-black text-lg md:text-xl leading-relaxed">
+            <motion.p variants={heroChild} className="text-black text-lg lg:text-xl leading-relaxed">
               Outside of code, I'm an Eagle Scout who still loves getting outdoors,
               camping, hiking, that kind of thing. When I'm not on a trail, you'll
               probably find me gaming, tinkering with some new tech, or catching up
@@ -654,8 +652,8 @@ export function About() {
         </motion.div>
 
         {/* Throwable Cards */}
-        <motion.div variants={heroChild} className="flex flex-col items-center justify-center md:ml-[200px] mt-[50px] md:mt-0 md:-mt-[30px] -mb-[67px] md:mb-0">
-          <div className="relative scale-[0.84] md:scale-100 origin-top" style={{ width: 400, height: 420 }}>
+        <motion.div variants={heroChild} className="flex flex-col items-center justify-center lg:ml-[12vw] mt-[6vh] lg:mt-0 lg:-mt-[2vh] -mb-[4vh] lg:mb-0">
+          <div className="relative w-[min(80vw,400px)] lg:w-[400px] aspect-[20/21]">
             {CARDS.map((card, i) => (
               <ThrowableCard
                 key={card.id}
@@ -669,7 +667,7 @@ export function About() {
             ))}
           </div>
           <motion.p
-            className="-mt-[40px] md:mt-6 flex items-center gap-2 text-sm select-none"
+            className="-mt-[5vh] lg:mt-6 flex items-center gap-2 text-sm select-none"
             style={{ color: 'rgba(6, 113, 164, 0.45)' }}
             animate={hasGrabbed ? { opacity: 0 } : { x: [0, 6, -6, 0] }}
             transition={hasGrabbed ? { duration: 0.2 } : { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
@@ -686,7 +684,7 @@ export function About() {
       </motion.div>
 
       {/* Projects intro — absolute on desktop, in-flow on mobile */}
-      <div className="hidden md:block absolute left-0 w-full px-6" style={{ bottom: 38 }}>
+      <div className="hidden lg:block absolute left-0 w-full px-6" style={{ bottom: 38 }}>
         <div className="mx-auto max-w-7xl">
           <GradientText as="h2" className="text-3xl font-normal">
             Projects
@@ -696,7 +694,7 @@ export function About() {
           </p>
         </div>
       </div>
-      <div id="projects-intro" className="md:hidden w-full px-6 mt-[158px]">
+      <div id="projects-intro" className="lg:hidden w-full px-6 mt-[158px]">
         <GradientText as="h2" className="text-2xl font-normal">
           Projects
         </GradientText>
@@ -706,14 +704,14 @@ export function About() {
       </div>
 
       {/* Marquee conveyor — absolute on desktop, in-flow on mobile */}
-      <div className="hidden md:block absolute bottom-[-331px] left-0 w-full overflow-visible z-10">
+      <div className="hidden lg:block absolute left-0 w-full overflow-visible z-10" style={{ bottom: 'clamp(-20rem, -18vw, -19rem)' }}>
         <div className="relative">
           <ProjectMarquee active={marqueeActive} />
           <div className="pointer-events-none absolute inset-y-0 left-0 w-32" style={{ background: 'linear-gradient(to right, var(--color-surface, #EFF3F8), transparent)' }} />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-32" style={{ background: 'linear-gradient(to left, var(--color-surface, #EFF3F8), transparent)' }} />
         </div>
       </div>
-      <div className="md:hidden relative left-1/2 -translate-x-1/2 w-screen overflow-hidden z-10 mt-6 mb-8">
+      <div className="lg:hidden relative left-1/2 -translate-x-1/2 overflow-hidden z-10 mt-6 mb-8" style={{ width: '100dvw' }}>
         <div style={{ transform: 'scale(0.82)', transformOrigin: 'left center' }}>
           <ProjectMarquee active={marqueeActive} />
         </div>

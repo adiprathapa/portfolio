@@ -17,13 +17,13 @@ export function HorizontalScrollSection() {
     <div ref={outerRef} className="relative lg:z-20" style={{ height: '200vh' }}>
       <div className="sticky top-0 h-screen" style={{ overflowX: 'clip', overflowY: 'visible' }}>
         <motion.div
-          className="flex w-[200vw] h-screen"
-          style={{ x: translateX }}
+          className="flex h-screen"
+          style={{ x: translateX, width: '200%' }}
         >
-          <div className="w-screen h-screen shrink-0">
+          <div className="h-screen shrink-0" style={{ width: '50%' }}>
             <Hero />
           </div>
-          <div className="w-screen h-screen shrink-0">
+          <div className="h-screen shrink-0" style={{ width: '50%' }}>
             <About />
           </div>
         </motion.div>

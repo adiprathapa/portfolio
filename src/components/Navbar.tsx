@@ -91,7 +91,7 @@ export function Navbar() {
         }}
       >
         <header
-          className="w-full"
+          className="w-full pt-[env(safe-area-inset-top)]"
           style={{
             backgroundColor: scrolled || menuOpen ? 'rgba(255,255,255,0.8)' : 'transparent',
             backdropFilter: scrolled || menuOpen ? 'blur(16px)' : 'blur(0px)',

@@ -149,14 +149,14 @@ export function FlipSafari({
             }}
           />
           {/* Left column — text content */}
-          <div className="flex flex-col justify-center px-5 py-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0 }}>
+          <div className="flex flex-col justify-start lg:justify-center px-5 py-4 lg:px-10 lg:py-8 overflow-y-auto" style={{ flex: 1, minWidth: 0 }}>
             <h3
-              className="font-normal font-heading text-left text-2xl lg:text-3xl"
+              className="font-normal font-heading text-left text-xl lg:text-3xl"
               style={{ color: '#0671A4', lineHeight: 1.2 }}
             >
               {projectTagline || projectName}
             </h3>
-            <p className="mt-2 leading-relaxed text-left text-heading text-lg lg:text-xl">
+            <p className="mt-2 leading-relaxed text-left text-heading text-base lg:text-xl">
               {projectDescription}
             </p>
 

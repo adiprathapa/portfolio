@@ -18,7 +18,7 @@ export function HorizontalScrollSection() {
       <div className="sticky top-0 h-screen" style={{ overflowX: 'clip', overflowY: 'visible' }}>
         <motion.div
           className="flex h-screen"
-          style={{ x: translateX, width: '200%' }}
+          style={{ x: translateX, width: '200%', willChange: 'transform' }}
         >
           <div className="h-screen shrink-0" style={{ width: '50%' }}>
             <Hero />

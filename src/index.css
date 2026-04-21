@@ -115,6 +115,18 @@ h1, h2, h3, h4, h5, h6 {
   border: 1.5px solid rgba(255, 255, 255, 0.25);
 }
 
+/* Mobile navbar: always visible, always has background */
+@media (max-width: 1023px) {
+  [data-navbar] {
+    transform: translateY(0) !important;
+  }
+  [data-navbar] header {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+  }
+}
+
 /* Prevent browser autofill from overriding glassmorphism */
 .glassmorphism input:-webkit-autofill,
 .glassmorphism input:-webkit-autofill:hover,

@@ -5,10 +5,33 @@ import { usePostHog } from '@posthog/react'
 
 function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOffsetX, hoverArea, disabled }: { src: string; alt: string; label: string; style: CSSProperties; tooltipTop?: number; tooltipBottom?: number; tooltipOffsetX?: number; hoverArea?: CSSProperties; disabled?: boolean }) {
   const [hovered, setHovered] = useState(false)
+  const tooltipRef = useRef<HTMLDivElement>(null)
+  const [tooltipLeft, setTooltipLeft] = useState<string>('50%')
+  const [tooltipTransform, setTooltipTransform] = useState(`translateX(calc(-50% + ${tooltipOffsetX ?? 0}px))`)
   const mouseHandlers = disabled ? {} : {
     onMouseEnter: () => setHovered(true),
     onMouseLeave: () => setHovered(false),
   }
+
+  useEffect(() => {
+    if (!hovered || !tooltipRef.current) return
+    const el = tooltipRef.current
+    const rect = el.getBoundingClientRect()
+    const pad = 8
+    if (rect.left < pad) {
+      const shift = pad - rect.left
+      setTooltipLeft(`calc(50% + ${shift}px)`)
+      setTooltipTransform(`translateX(calc(-50% + ${(tooltipOffsetX ?? 0) + shift}px))`)
+    } else if (rect.right > window.innerWidth - pad) {
+      const shift = rect.right - (window.innerWidth - pad)
+      setTooltipLeft(`calc(50% - ${shift}px)`)
+      setTooltipTransform(`translateX(calc(-50% + ${(tooltipOffsetX ?? 0) - shift}px))`)
+    } else {
+      setTooltipLeft('50%')
+      setTooltipTransform(`translateX(calc(-50% + ${tooltipOffsetX ?? 0}px))`)
+    }
+  }, [hovered, tooltipOffsetX])
+
   return (
     <div
       className="absolute select-none"
@@ -29,10 +52,11 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
       />
       {hovered && (
         <div
+          ref={tooltipRef}
           className="absolute whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-medium pointer-events-none"
           style={{
-            left: '50%',
-            transform: `translateX(calc(-50% + ${tooltipOffsetX ?? 0}px))`,
+            left: tooltipLeft,
+            transform: tooltipTransform,
             ...(tooltipBottom != null ? { bottom: tooltipBottom } : { top: tooltipTop }),
             zIndex: 9999,
             background: 'rgba(15,15,15,0.85)',

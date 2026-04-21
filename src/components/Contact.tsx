@@ -7,30 +7,12 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
   const [hovered, setHovered] = useState(false)
   const stickerRef = useRef<HTMLDivElement>(null)
 
-  // Desktop: mouse enter/leave. Mobile: tap to toggle.
-  const mouseHandlers = disabled ? {} : {
+  const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window
+
+  const mouseHandlers = disabled || isTouchDevice ? {} : {
     onMouseEnter: () => setHovered(true),
     onMouseLeave: () => setHovered(false),
-    onClick: (e: React.MouseEvent) => {
-      // Only use click-to-toggle on touch devices
-      if ('ontouchstart' in window) {
-        e.stopPropagation()
-        setHovered((h) => !h)
-      }
-    },
   }
-
-  // Close tooltip on outside tap (mobile)
-  useEffect(() => {
-    if (!hovered || !('ontouchstart' in window)) return
-    const handleTouch = (e: TouchEvent) => {
-      if (stickerRef.current && !stickerRef.current.contains(e.target as Node)) {
-        setHovered(false)
-      }
-    }
-    document.addEventListener('touchstart', handleTouch, { passive: true })
-    return () => document.removeEventListener('touchstart', handleTouch)
-  }, [hovered])
 
   // Ref callback: measure tooltip on mount and clamp within viewport
   const tooltipRefCb = useCallback((el: HTMLDivElement | null) => {

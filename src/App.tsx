@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import { Navbar } from './components/Navbar'
 import { HorizontalScrollSection } from './components/HorizontalScrollSection'
@@ -65,6 +65,32 @@ function preloadAssets() {
 }
 
 function App() {
+  const [projectsMargin, setProjectsMargin] = useState('calc(1900px - 100dvh)')
+
+  const measureAbout = useCallback(() => {
+    const isDesktop = window.innerWidth >= 1024
+    if (isDesktop) {
+      setProjectsMargin('331px')
+    } else {
+      const el = document.getElementById('about')
+      if (el) setProjectsMargin(`calc(${el.scrollHeight}px - 100dvh)`)
+    }
+  }, [])
+
+  useEffect(() => {
+    // Measure after first render + fonts loaded
+    const raf = requestAnimationFrame(() => {
+      measureAbout()
+      // Re-measure once fonts finish loading
+      document.fonts?.ready?.then(measureAbout)
+    })
+    window.addEventListener('resize', measureAbout)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', measureAbout)
+    }
+  }, [measureAbout])
+
   useEffect(() => {
     // Start preloading after initial render
     preloadAssets()
@@ -103,7 +129,7 @@ function App() {
       <Navbar />
       <main style={{ background: 'var(--color-surface, #EFF3F8)' }}>
         <HorizontalScrollSection />
-        <div className="relative mt-[calc(1900px-100dvh)] lg:mt-[331px]" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+        <div className="relative" style={{ marginTop: projectsMargin, background: 'var(--color-surface, #EFF3F8)' }}>
           <Projects />
         </div>
         <div className="relative z-[1] pt-[400px] lg:static lg:pt-0" style={{ background: 'linear-gradient(135deg, #0671A4 0%, #38BDF8 100%)', overflow: 'hidden' }}>

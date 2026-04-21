@@ -403,7 +403,7 @@ function MobileCard({ item }: { item: ExperienceItem }) {
   return (
     <div
       className="relative overflow-hidden w-full"
-      style={{ borderRadius: 16, border: '1.5px solid rgba(6, 113, 164, 0.3)', height: 440 }}
+      style={{ borderRadius: 16, border: '1.5px solid rgba(6, 113, 164, 0.3)', height: 'clamp(320px, 55vh, 440px)' }}
     >
       <img src={item.bgImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
       <div
@@ -666,16 +666,23 @@ export function Experience() {
   const [showEducation, setShowEducation] = useState(false)
   const [eduActiveCard, setEduActiveCard] = useState<'cornell' | 'highschool'>('cornell')
   const [mobileCarouselIdx, setMobileCarouselIdx] = useState(0)
+  const [vw, setVw] = useState(typeof window !== 'undefined' ? window.innerWidth : 390)
   const [isVisible, setIsVisible] = useState(false)
   const [tabVisible, setTabVisible] = useState(!document.hidden)
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined)
   const sectionRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    const onResize = () => setVw(window.innerWidth)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
   const activeIdx = Math.max(0, allEntries.findIndex((e) => e.id === activeId))
   const active = allEntries[activeIdx]
 
   // Derive which tab is active
-  const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768
+  const isMobileView = vw < 768
   const tab: 'work' | 'involvement' | 'education' = isMobileView
     ? (mobileCarouselIdx >= allEntries.length
       ? 'education'
@@ -970,7 +977,7 @@ export function Experience() {
                       setMobileCarouselIdx(prev => Math.max(prev - 1, 0))
                     }
                   }}
-                  animate={{ x: mobileCarouselIdx === 0 ? 24 : 42 - mobileCarouselIdx * (window.innerWidth - 84 + 12) }}
+                  animate={{ x: mobileCarouselIdx === 0 ? 24 : 42 - mobileCarouselIdx * (vw - 84 + 12) }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >
                   {allEntriesWithEdu.map((item, i) => (
@@ -978,7 +985,7 @@ export function Experience() {
                       key={item.id}
                       className="shrink-0 cursor-pointer"
                       style={{
-                        width: window.innerWidth - 84,
+                        width: vw - 84,
                         opacity: i === mobileCarouselIdx ? 1 : 0.7,
                         transform: i === mobileCarouselIdx ? 'scale(1)' : 'scale(0.95)',
                         transition: 'opacity 0.3s, transform 0.3s',

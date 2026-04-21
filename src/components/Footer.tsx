@@ -50,24 +50,24 @@ export function Footer() {
   return (
     <footer className="text-muted pt-0" style={{ padding: '0 12px 12px 12px' }}>
       <div
-        className="mx-auto px-10 py-14 md:px-14 md:py-16"
+        className="mx-auto px-6 py-8 lg:px-14 lg:py-16"
         style={{
           background: '#1a1a1a',
           borderRadius: 24,
         }}
       >
-        <div className="grid grid-cols-3 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-8">
           {/* Brand */}
-          <div className="col-span-3 md:col-span-1">
-            <div className="mb-3">
-              <a href="/" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }} className="font-heading font-bold hover:opacity-80 transition-opacity cursor-pointer" style={{ color: 'var(--color-primary)', fontSize: '1.5rem', textDecoration: 'none' }}>&#x0906;&#x0926;&#x093F;</a>
+          <div className="col-span-3 lg:col-span-1">
+            <div className="mb-2 lg:mb-3">
+              <a href="/" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }} className="font-heading font-bold hover:opacity-80 transition-opacity cursor-pointer text-lg lg:text-2xl" style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>&#x0906;&#x0926;&#x093F;</a>
             </div>
           </div>
 
           {/* Links */}
           <div>
-            <h4 className="font-normal mb-4" style={{ color: 'var(--color-primary)', fontSize: '1.125rem' }}>Links</h4>
-            <ul className="space-y-2.5" style={{ fontSize: '1.125rem' }}>
+            <h4 className="font-normal mb-2 lg:mb-4 text-sm lg:text-lg" style={{ color: 'var(--color-primary)' }}>Links</h4>
+            <ul className="space-y-1.5 lg:space-y-2.5 text-sm lg:text-lg">
               {footerLinks.map((link) => (
                 <li key={link.href}>
                   <a
@@ -90,15 +90,15 @@ export function Footer() {
 
           {/* Connect */}
           <div>
-            <h4 className="font-normal mb-4" style={{ color: 'var(--color-primary)', fontSize: '1.125rem' }}>Connect</h4>
-            <ul className="space-y-2.5" style={{ fontSize: '1.125rem' }}>
+            <h4 className="font-normal mb-2 lg:mb-4 text-sm lg:text-lg" style={{ color: 'var(--color-primary)' }}>Connect</h4>
+            <ul className="space-y-1.5 lg:space-y-2.5 text-sm lg:text-lg">
               {socialLinks.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity"
+                    className="inline-flex items-center gap-1.5 lg:gap-2 hover:opacity-80 transition-opacity"
                     style={{ color: '#FFFFFF' }}
                     onClick={() => posthog?.capture('footer_social_link_clicked', { platform: link.label.toLowerCase(), location: 'footer' })}
                   >
@@ -112,8 +112,8 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="font-normal mb-4" style={{ color: 'var(--color-primary)', fontSize: '1.125rem' }}>Resources</h4>
-            <ul className="space-y-2.5" style={{ fontSize: '1.125rem' }}>
+            <h4 className="font-normal mb-2 lg:mb-4 text-sm lg:text-lg" style={{ color: 'var(--color-primary)' }}>Resources</h4>
+            <ul className="space-y-1.5 lg:space-y-2.5 text-sm lg:text-lg">
               {resourceLinks.map((link) => (
                 <li key={link.label}>
                   <a href={link.href} className="hover:opacity-80 transition-opacity" style={{ color: '#FFFFFF' }}>
@@ -127,8 +127,8 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div
-          className="mt-14 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', fontSize: '1.125rem' }}
+          className="mt-8 lg:mt-14 pt-4 lg:pt-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm lg:text-lg"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF' }}
         >
           <p>&copy; {new Date().getFullYear()} Adi Prathapa</p>
         </div>

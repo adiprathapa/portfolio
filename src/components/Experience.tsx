@@ -400,10 +400,23 @@ function CarouselCard({
 /* ── Mobile card ──────────────────────────────────────────── */
 
 function MobileCard({ item }: { item: ExperienceItem }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(0.53)
+
+  useEffect(() => {
+    const measure = () => {
+      if (cardRef.current) setScale(cardRef.current.offsetWidth / CARD_W)
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [])
+
   return (
     <div
-      className="relative overflow-hidden w-full"
-      style={{ borderRadius: 16, border: '1.5px solid rgba(6, 113, 164, 0.3)', height: 'clamp(320px, 55vh, 440px)' }}
+      ref={cardRef}
+      className="relative overflow-hidden w-full aspect-square"
+      style={{ borderRadius: 16, border: '1.5px solid rgba(6, 113, 164, 0.3)' }}
     >
       <img src={item.bgImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
       <div
@@ -412,21 +425,22 @@ function MobileCard({ item }: { item: ExperienceItem }) {
           background: `linear-gradient(180deg, ${item.gradientColor}70 0%, ${item.gradientColor}30 20%, ${item.gradientColor}60 55%, ${item.gradientColor}E8 80%, ${item.gradientColor}FA 100%)`,
         }}
       />
-      <div className="relative z-10 h-full flex flex-col justify-between p-6">
+      <div className="relative z-10 h-full flex flex-col justify-between" style={{ padding: 28 * scale }}>
         <img
           src={item.logo}
           alt={item.company}
+          className="self-start"
           style={{
-            height: item.logoHeight * 0.7,
+            height: item.logoHeight * 0.8 * scale,
             width: 'auto',
-            maxWidth: '50%',
+            maxWidth: '55%',
             objectFit: 'contain',
             filter: item.logoInvert
               ? 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.2))'
               : 'drop-shadow(0 2px 8px rgba(0,0,0,0.2))',
-            borderRadius: item.logoInvert ? 0 : 8,
-            marginLeft: item.mobileLogoOffsetX ?? 0,
-            marginTop: item.mobileLogoOffsetY ?? 0,
+            borderRadius: item.logoInvert ? 0 : Math.round(8 * scale),
+            marginTop: (item.logoOffsetY ?? 0) * scale,
+            marginLeft: (item.logoOffsetX ?? 0) * scale,
           }}
         />
         <div>
@@ -435,22 +449,22 @@ function MobileCard({ item }: { item: ExperienceItem }) {
               {item.duration}
             </p>
           )}
-          <h3 className="text-lg font-semibold mt-1" style={{ color: '#FFFFFF' }}>
+          <h3 className="text-base font-semibold mt-1" style={{ color: '#FFFFFF' }}>
             {item.role}
           </h3>
-          <p className="text-sm mt-2 leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
+          <p className="text-sm mt-1.5 leading-snug" style={{ color: 'rgba(255,255,255,0.85)' }}>
             {item.description}
           </p>
           {item.bullets && item.bullets.length > 0 && (
-            <p className="text-sm mt-1.5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            <p className="text-xs mt-1 leading-snug" style={{ color: 'rgba(255,255,255,0.7)' }}>
               {item.bullets[0]}
             </p>
           )}
-          <div className="flex items-center gap-3 mt-3 flex-wrap">
+          <div className="flex items-center gap-2.5 mt-2 flex-wrap">
             {item.tech.map((t) => (
-              <div key={t.name} className="flex items-center gap-1.5">
-                <img src={t.icon} alt={t.name} className="w-3.5 h-3.5 object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.7 }} />
-                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{t.name}</span>
+              <div key={t.name} className="flex items-center gap-1">
+                <img src={t.icon} alt={t.name} className="w-3 h-3 object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.7 }} />
+                <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.6)' }}>{t.name}</span>
               </div>
             ))}
           </div>
@@ -959,24 +973,11 @@ export function Experience() {
                 </div>
               </div>
 
-              {/* Mobile: peek carousel — centered card with equal peeks */}
+              {/* Mobile: peek carousel — centered card with equal peeks, arrow nav only */}
               <div className="md:hidden mt-10 overflow-hidden" style={{ margin: '40px -24px 0' }}>
                 <motion.div
                   className="flex"
-                  style={{ gap: 12, touchAction: 'pan-y' }}
-                  drag="x"
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={0.1}
-                  dragSnapToOrigin
-                  onDragEnd={(_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
-                    const swipe = info.offset.x
-                    const velocity = info.velocity.x
-                    if ((swipe < -40 || velocity < -300) && mobileCarouselIdx < allEntriesWithEdu.length - 1) {
-                      setMobileCarouselIdx(prev => Math.min(prev + 1, allEntriesWithEdu.length - 1))
-                    } else if ((swipe > 40 || velocity > 300) && mobileCarouselIdx > 0) {
-                      setMobileCarouselIdx(prev => Math.max(prev - 1, 0))
-                    }
-                  }}
+                  style={{ gap: 12 }}
                   animate={{ x: mobileCarouselIdx === 0 ? 24 : 42 - mobileCarouselIdx * (vw - 84 + 12) }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >

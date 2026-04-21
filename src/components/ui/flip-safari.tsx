@@ -147,20 +147,23 @@ export function FlipSafari({
             }}
           />
           {/* Left column — text content */}
-          <div className="flex flex-col justify-between lg:justify-center px-4 py-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+          <div className="flex flex-col justify-between lg:justify-center px-4 pt-8 pb-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+            <div>
             <h3
               className="font-normal font-heading text-left text-lg lg:text-3xl"
               style={{ color: '#0671A4', lineHeight: 1.2 }}
             >
               {projectTagline || projectName}
             </h3>
-            <p className="mt-1.5 lg:mt-2 leading-snug lg:leading-relaxed text-left text-heading text-sm lg:text-xl">
+            <p className="mt-1 lg:mt-2 leading-snug lg:leading-relaxed text-left text-heading text-sm lg:text-xl">
               {projectDescription}
             </p>
+            </div>
 
+            <div className="flex flex-col flex-1 justify-evenly lg:justify-start lg:flex-none lg:gap-0">
             {/* Tech stack pills */}
             {techStack && techStack.length > 0 && (
-              <div className="flex flex-wrap gap-1 lg:gap-2 mt-1.5 lg:mt-2">
+              <div className="flex flex-wrap gap-1 lg:gap-2 lg:mt-2">
                 {techStack.map((tech) => (
                   <span
                     key={tech}
@@ -177,7 +180,7 @@ export function FlipSafari({
               </div>
             )}
 
-            <div className="flex justify-center lg:justify-start gap-2.5 mt-3 lg:mt-[18px]">
+            <div className="flex justify-center lg:justify-start gap-2.5 lg:mt-[18px]">
               {safariProps.videoSrc && (
               <RippleButton
                 className="hidden lg:inline-flex px-5 py-2.5 text-base"
@@ -250,6 +253,7 @@ export function FlipSafari({
                   <span>Repository</span>
                 </span>
               </RippleButton>
+            </div>
             </div>
           </div>
 

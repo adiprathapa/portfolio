@@ -115,15 +115,18 @@ h1, h2, h3, h4, h5, h6 {
   border: 1.5px solid rgba(255, 255, 255, 0.25);
 }
 
-/* Mobile navbar: always visible, always has background */
+/* Mobile navbar: always visible, solid background matching surface */
 @media (max-width: 1023px) {
   [data-navbar] {
     transform: translateY(0) !important;
+    background-color: #EFF3F8;
   }
   [data-navbar] header {
-    background-color: rgba(255, 255, 255, 0.8) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
+    background-color: #EFF3F8 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid rgba(6, 113, 164, 0.1) !important;
   }
 }
 

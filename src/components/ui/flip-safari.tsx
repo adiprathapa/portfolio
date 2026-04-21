@@ -149,24 +149,24 @@ export function FlipSafari({
             }}
           />
           {/* Left column — text content */}
-          <div className="flex flex-col justify-start lg:justify-center px-5 py-4 lg:px-10 lg:py-8 overflow-y-auto" style={{ flex: 1, minWidth: 0 }}>
+          <div className="flex flex-col justify-start lg:justify-center px-4 py-3 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
             <h3
-              className="font-normal font-heading text-left text-xl lg:text-3xl"
+              className="font-normal font-heading text-left text-lg lg:text-3xl"
               style={{ color: '#0671A4', lineHeight: 1.2 }}
             >
               {projectTagline || projectName}
             </h3>
-            <p className="mt-2 leading-relaxed text-left text-heading text-base lg:text-xl">
+            <p className="mt-1.5 lg:mt-2 leading-snug lg:leading-relaxed text-left text-heading text-sm lg:text-xl">
               {projectDescription}
             </p>
 
             {/* Tech stack pills */}
             {techStack && techStack.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 lg:gap-2 mt-2">
+              <div className="flex flex-wrap gap-1 lg:gap-2 mt-1.5 lg:mt-2">
                 {techStack.map((tech) => (
                   <span
                     key={tech}
-                    className="px-2 py-0.5 lg:px-3 lg:py-1 rounded-xl text-xs lg:text-sm font-medium"
+                    className="px-1.5 py-0.5 lg:px-3 lg:py-1 rounded-xl text-[11px] lg:text-sm font-medium"
                     style={{
                       backgroundColor: 'rgba(6, 113, 164, 0.08)',
                       color: '#0671A4',
@@ -179,7 +179,7 @@ export function FlipSafari({
               </div>
             )}
 
-            <div className="flex justify-center lg:justify-start gap-2.5 mt-6 lg:mt-[18px]">
+            <div className="flex justify-center lg:justify-start gap-2.5 mt-3 lg:mt-[18px]">
               {safariProps.videoSrc && (
               <RippleButton
                 className="hidden lg:inline-flex px-5 py-2.5 text-base"
@@ -227,7 +227,7 @@ export function FlipSafari({
               </RippleButton>
               )}
               <RippleButton
-                className="px-5 py-2.5 text-base"
+                className="px-4 py-2 text-sm lg:px-5 lg:py-2.5 lg:text-base"
                 rippleColor="#38BDF8"
                 style={{
                   backgroundColor: 'transparent',

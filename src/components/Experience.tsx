@@ -816,7 +816,7 @@ export function Experience() {
   }, [advanceToNext, running])
 
   return (
-    <Section id="experience" className="bg-surface lg:min-h-screen flex items-center !pt-0">
+    <Section id="experience" className="bg-surface !pt-0">
       <div ref={sectionRef} style={{ transform: 'translateY(23px)' }}>
         {/* Header row: description text + toggle */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">

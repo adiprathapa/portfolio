@@ -114,6 +114,23 @@ h1, h2, h3, h4, h5, h6 {
   border: 1.5px solid rgba(255, 255, 255, 0.25);
 }
 
+.github-heatmap-fade {
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}
+
+.github-heatmap-fade,
+.github-heatmap-fade * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.github-heatmap-fade::-webkit-scrollbar,
+.github-heatmap-fade *::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 /* Mobile navbar: always visible, solid background matching surface */
 @media (max-width: 1023px) {
   [data-navbar] {

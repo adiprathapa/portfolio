@@ -132,7 +132,7 @@ function App() {
         <div className="relative" style={{ marginTop: projectsMargin, background: 'var(--color-surface, #EFF3F8)' }}>
           <Projects />
         </div>
-        <div className="relative z-[1] pt-[400px] lg:static lg:pt-0" style={{ background: 'linear-gradient(135deg, #0671A4 0%, #38BDF8 100%)', overflow: 'hidden' }}>
+        <div className="relative z-[1] lg:static" style={{ background: 'linear-gradient(135deg, #0671A4 0%, #38BDF8 100%)', overflow: 'hidden', paddingTop: 'var(--contact-mobile-pt, 400px)' }}>
           <Contact />
           <Footer />
         </div>

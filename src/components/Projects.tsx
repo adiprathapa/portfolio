@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { FlipSafari } from './ui/flip-safari'
 import { Experience } from './Experience'
+import { GithubHeatmap } from './GithubHeatmap'
 // GradientText used in About section's desktop projects intro
 
 // Globe data kept but not used
@@ -154,12 +155,51 @@ function ProjectCard({ projectKey, yValue, collapseValue, zIndex }: { projectKey
 
 export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [extraPadding, setExtraPadding] = useState(0)
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024)
     check()
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
+  }, [])
+
+  // Dynamically size the spacing around the heatmap+Experience group based
+  // on measured content height, so Experience is never cut off and always
+  // sits ~85px above the next section — on any viewport.
+  //   Desktop: add bottom padding to the motion.div to close the gap
+  //     between Experience's bottom and the Projects container's bottom.
+  //   Mobile: push Contact down via a CSS var so the overflow below the
+  //     Projects container is fully visible before the next section starts.
+  useLayoutEffect(() => {
+    const compute = () => {
+      if (!contentRef.current) return
+      const natural = contentRef.current.offsetHeight
+      const vh = window.innerHeight
+      if (window.innerWidth >= 1024) {
+        // Desktop: fill gap above Contact (derivation in prior comment)
+        const target = vh / 2 + 427
+        setExtraPadding(Math.max(0, target - natural))
+        document.documentElement.style.setProperty('--contact-mobile-pt', '0px')
+      } else {
+        // Mobile: motion.div bottom overshoots container by (natural - vh/2 - 23).
+        // Clear that overshoot + a viewport-proportional gap (~8% of screen
+        // height) so breathing room scales with the device.
+        setExtraPadding(0)
+        const overflow = Math.max(0, natural - vh / 2 - 23)
+        const pt = overflow + vh * 0.08
+        document.documentElement.style.setProperty('--contact-mobile-pt', `${pt}px`)
+      }
+    }
+    compute()
+    window.addEventListener('resize', compute)
+    const ro = new ResizeObserver(compute)
+    if (contentRef.current) ro.observe(contentRef.current)
+    return () => {
+      window.removeEventListener('resize', compute)
+      ro.disconnect()
+    }
   }, [])
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -212,7 +252,7 @@ export function Projects() {
 
   return (
     <div ref={containerRef} className="relative h-[260vh] lg:h-[280vh]">
-      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-6 bg-surface z-[3] lg:z-auto" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-380px' : '-500px'} 0px)` }}>
+      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-6 bg-surface z-[3] lg:z-auto" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-1800px' : '-500px'} 0px)` }}>
         <div className="relative w-full mx-auto lg:-translate-y-[147px]" style={{ maxWidth: 1170, height: isMobile ? 400 : 500, overflow: 'visible' }}>
           {projectOrder.map((key, i) => (
             <ProjectCard
@@ -224,12 +264,19 @@ export function Projects() {
             />
           ))}
         </div>
-        {/* Experience follows 85px below card 5 */}
+        {/* GitHub heatmap + Experience follow below card 5 */}
         <motion.div
           className="absolute left-0 w-full"
-          style={{ y: cardY6, top: isMobile ? 'calc(50% + 45px)' : 'calc(50% + 103px + 85px)' }}
+          style={{
+            y: cardY6,
+            top: isMobile ? 'calc(50% + 45px)' : 'calc(50% + 103px + 85px)',
+            paddingBottom: extraPadding,
+          }}
         >
-          <Experience />
+          <div ref={contentRef}>
+            <GithubHeatmap />
+            <Experience />
+          </div>
         </motion.div>
       </section>
     </div>

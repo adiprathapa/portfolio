@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { GitHubCalendar } from 'react-github-calendar'
 import { Section } from './ui/section'
 import { GradientText } from './ui/gradient-text'
@@ -10,15 +10,47 @@ const BLUE_THEME = {
 
 const CURRENT_YEAR = new Date().getFullYear()
 
+// GitHub calendars span 53 weeks max in a year. Keep in one place so block
+// sizing math below stays readable.
+const WEEK_COLUMNS = 53
+
 export function GithubHeatmap() {
   const [isMobile, setIsMobile] = useState(false)
   const [isLinkHovered, setIsLinkHovered] = useState(false)
+  const [blockSize, setBlockSize] = useState(18)
+  const [blockMargin, setBlockMargin] = useState(4)
+  const [fontSize, setFontSize] = useState(14)
+  const heatmapColRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
+    const compute = () => {
+      const mobile = window.innerWidth < 1024
+      setIsMobile(mobile)
+      if (mobile) {
+        // Size blocks so the full 53-week grid fits the heatmap column on
+        // mobile with no horizontal overflow and even spacing on both sides.
+        const colW = heatmapColRef.current?.clientWidth ?? window.innerWidth
+        // Reserve ~80% of the per-column slot for the block, ~20% for margin.
+        const slot = colW / WEEK_COLUMNS
+        const size = Math.max(4, Math.floor(slot * 0.8))
+        const margin = Math.max(1, Math.round(slot - size))
+        setBlockSize(size)
+        setBlockMargin(margin)
+        setFontSize(Math.max(9, Math.round(size * 1.8)))
+      } else {
+        setBlockSize(18)
+        setBlockMargin(4)
+        setFontSize(14)
+      }
+    }
+    compute()
+    window.addEventListener('resize', compute)
+    const ro = new ResizeObserver(compute)
+    if (heatmapColRef.current) ro.observe(heatmapColRef.current)
+    return () => {
+      window.removeEventListener('resize', compute)
+      ro.disconnect()
+    }
   }, [])
 
   return (
@@ -26,7 +58,8 @@ export function GithubHeatmap() {
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
         {/* Heatmap — left on desktop, below heading on mobile */}
         <div
-          className="order-2 lg:order-1 w-full lg:flex-1 min-w-0 overflow-hidden github-heatmap-fade"
+          ref={heatmapColRef}
+          className="order-2 lg:order-1 w-full lg:flex-1 min-w-0 overflow-hidden flex justify-center lg:block github-heatmap-fade"
           style={{ colorScheme: 'light' }}
         >
           <GitHubCalendar
@@ -34,9 +67,9 @@ export function GithubHeatmap() {
             year={CURRENT_YEAR}
             theme={BLUE_THEME}
             colorScheme="light"
-            blockSize={isMobile ? 12 : 18}
-            blockMargin={isMobile ? 3 : 4}
-            fontSize={isMobile ? 12 : 14}
+            blockSize={blockSize}
+            blockMargin={blockMargin}
+            fontSize={fontSize}
             showColorLegend={false}
             showMonthLabels={true}
             labels={{

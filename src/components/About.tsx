@@ -655,7 +655,7 @@ export function About() {
 
         {/* Throwable Cards */}
         <motion.div variants={heroChild} className="flex flex-col items-center justify-center lg:ml-[12vw] mt-[6vh] lg:mt-0 lg:-mt-[2vh] -mb-[4vh] lg:mb-0">
-          <div className="relative w-[min(80vw,400px)] lg:w-[400px] aspect-[20/21]">
+          <div className="relative w-[min(calc(100vw-var(--mobile-card-inset)),400px)] lg:w-[400px] aspect-[20/21]">
             {CARDS.map((card, i) => (
               <ThrowableCard
                 key={card.id}

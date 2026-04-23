@@ -401,7 +401,7 @@ function CarouselCard({
 
 function MobileCard({ item }: { item: ExperienceItem }) {
   const cardRef = useRef<HTMLDivElement>(null)
-  const [scale, setScale] = useState(0.53)
+  const [scale, setScale] = useState(0.55)
 
   useEffect(() => {
     const measure = () => {
@@ -415,59 +415,88 @@ function MobileCard({ item }: { item: ExperienceItem }) {
   return (
     <div
       ref={cardRef}
-      className="relative overflow-hidden w-full aspect-square"
-      style={{ borderRadius: 16, border: '1.5px solid rgba(6, 113, 164, 0.3)' }}
+      className="relative w-full"
+      style={{ aspectRatio: `${CARD_W} / ${CARD_H}` }}
     >
-      <img src={item.bgImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
       <div
-        className="absolute inset-0"
+        className="relative overflow-hidden"
         style={{
-          background: `linear-gradient(180deg, ${item.gradientColor}70 0%, ${item.gradientColor}30 20%, ${item.gradientColor}60 55%, ${item.gradientColor}E8 80%, ${item.gradientColor}FA 100%)`,
+          width: CARD_W,
+          height: CARD_H,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+          borderRadius: 20,
+          border: '1.5px solid rgba(6, 113, 164, 0.3)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.04)',
         }}
-      />
-      <div className="relative z-10 h-full flex flex-col justify-between" style={{ padding: 28 * scale }}>
-        <img
-          src={item.logo}
-          alt={item.company}
-          className="self-start"
+      >
+        <img src={item.bgImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div
+          className="absolute inset-0"
           style={{
-            height: item.logoHeight * 0.8 * scale,
-            width: 'auto',
-            maxWidth: '55%',
-            objectFit: 'contain',
-            filter: item.logoInvert
-              ? 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.2))'
-              : 'drop-shadow(0 2px 8px rgba(0,0,0,0.2))',
-            borderRadius: item.logoInvert ? 0 : Math.round(8 * scale),
-            marginTop: (item.logoOffsetY ?? 0) * scale,
-            marginLeft: (item.logoOffsetX ?? 0) * scale,
+            background: `linear-gradient(180deg, ${item.gradientColor}73 0%, ${item.gradientColor}D0 55%, ${item.gradientColor}F5 100%)`,
           }}
         />
-        <div>
-          {item.duration && (
-            <p className="text-xs font-medium tracking-wide uppercase" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              {item.duration}
-            </p>
-          )}
-          <h3 className="text-base font-semibold mt-1" style={{ color: '#FFFFFF' }}>
-            {item.role}
-          </h3>
-          {item.bullets && item.bullets.length > 0 ? (
-            <p className="text-sm mt-1.5 leading-snug" style={{ color: 'rgba(255,255,255,0.85)' }}>
-              {item.bullets[0]}
-            </p>
-          ) : (
-            <p className="text-sm mt-1.5 leading-snug" style={{ color: 'rgba(255,255,255,0.85)' }}>
+        <div className="relative z-10 h-full flex flex-col justify-between p-7">
+          <img
+            src={item.logo}
+            alt={item.company}
+            className="self-start"
+            style={{
+              height: item.logoHeight * 0.8,
+              width: 'auto',
+              maxWidth: '55%',
+              objectFit: 'contain',
+              filter: item.logoInvert
+                ? 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.3))'
+                : 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))',
+              borderRadius: item.logoInvert ? 0 : 8,
+              marginTop: item.logoOffsetY ?? 0,
+              marginLeft: item.logoOffsetX ?? 0,
+            }}
+          />
+          <div>
+            {item.duration && (
+              <p
+                className="text-sm font-medium tracking-wide uppercase"
+                style={{ color: 'rgba(255,255,255,0.8)', letterSpacing: '0.05em' }}
+              >
+                {item.duration}
+              </p>
+            )}
+            <h3
+              className="text-xl font-semibold mt-1.5 leading-snug"
+              style={{ color: '#FFFFFF', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
+            >
+              {item.role}
+            </h3>
+            <p
+              className="text-lg mt-2.5 leading-relaxed"
+              style={{
+                color: 'rgba(255,255,255,0.88)',
+                textShadow: '0 1px 3px rgba(0,0,0,0.3)',
+              }}
+            >
               {item.description}
             </p>
-          )}
-          <div className="flex items-center gap-2.5 mt-2 flex-wrap">
-            {item.tech.map((t) => (
-              <div key={t.name} className="flex items-center gap-1">
-                <img src={t.icon} alt={t.name} className="w-3 h-3 object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.7 }} />
-                <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.6)' }}>{t.name}</span>
-              </div>
-            ))}
+            <div className="flex items-center gap-3 mt-3 flex-wrap">
+              {item.tech.map((t) => (
+                <div key={t.name} className="flex items-center gap-1.5">
+                  <img
+                    src={t.icon}
+                    alt={t.name}
+                    className="w-4 h-4 object-contain"
+                    style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
+                  />
+                  <span className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    {t.name}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -682,6 +711,7 @@ export function Experience() {
   const [eduActiveCard, setEduActiveCard] = useState<'cornell' | 'highschool'>('cornell')
   const [mobileCarouselIdx, setMobileCarouselIdx] = useState(0)
   const [vw, setVw] = useState(typeof window !== 'undefined' ? window.innerWidth : 390)
+  const [insetPx, setInsetPx] = useState(96)
   const [isVisible, setIsVisible] = useState(false)
   const [tabVisible, setTabVisible] = useState(!document.hidden)
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined)
@@ -689,9 +719,21 @@ export function Experience() {
 
   useEffect(() => {
     const onResize = () => setVw(window.innerWidth)
+    const readInset = () => {
+      const raw = getComputedStyle(document.documentElement).getPropertyValue('--mobile-card-inset')
+      const v = parseInt(raw, 10)
+      if (!isNaN(v)) setInsetPx(v)
+    }
+    readInset()
     window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
+    window.addEventListener('resize', readInset)
+    return () => {
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('resize', readInset)
+    }
   }, [])
+
+  const mobileCardGap = insetPx / 4
 
   const activeIdx = Math.max(0, allEntries.findIndex((e) => e.id === activeId))
   const active = allEntries[activeIdx]
@@ -978,8 +1020,8 @@ export function Experience() {
               <div className="md:hidden mt-10 overflow-hidden" style={{ margin: '40px -24px 0' }}>
                 <motion.div
                   className="flex"
-                  style={{ gap: 12 }}
-                  animate={{ x: mobileCarouselIdx === 0 ? 24 : 42 - mobileCarouselIdx * (vw - 84 + 12) }}
+                  style={{ gap: `${mobileCardGap}px` }}
+                  animate={{ x: insetPx / 2 - mobileCarouselIdx * (vw - insetPx + mobileCardGap) }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >
                   {allEntriesWithEdu.map((item, i) => (
@@ -987,7 +1029,7 @@ export function Experience() {
                       key={item.id}
                       className="shrink-0 cursor-pointer"
                       style={{
-                        width: vw - 84,
+                        width: vw - insetPx,
                         opacity: i === mobileCarouselIdx ? 1 : 0.7,
                         transform: i === mobileCarouselIdx ? 'scale(1)' : 'scale(0.95)',
                         transition: 'opacity 0.3s, transform 0.3s',

@@ -156,6 +156,10 @@ function ProjectCard({ projectKey, yValue, collapseValue, zIndex }: { projectKey
 export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
+  // Hidden probe used to resolve the current px value of --project-card-h
+  // (which is a clamp() of vh) so the overflow math below can stay in sync
+  // with the CSS without duplicating the formula.
+  const cardHProbeRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [extraPadding, setExtraPadding] = useState(0)
   useEffect(() => {
@@ -187,11 +191,16 @@ export function Projects() {
         setExtraPadding(Math.max(0, target - natural))
         document.documentElement.style.setProperty('--contact-mobile-pt', '0px')
       } else {
-        // Mobile: motion.div bottom overshoots container by
-        //   natural - 0.42*vh - 68  (derived from the 8vh offset + -100 finalY).
-        // Clear that overshoot + add the same 8vh breathing room.
+        // Mobile: at progress=1, motion.div visual top from sticky top =
+        //   stickyPt + cardH + finalY(-100) + 8vh. Sticky bottom = 100vh - 64
+        //   (navbar). Overflow = natural + (stickyPt + cardH - 100 + 64) - 92vh.
+        // stickyPt and cardH are resolved from the CSS vars via the probe so
+        // this stays in sync with whatever --project-card-h clamp() produces.
         setExtraPadding(0)
-        const overflow = Math.max(0, natural - vh * 0.42 - 68)
+        const cardH = cardHProbeRef.current?.offsetHeight ?? 360
+        const stickyPtRaw = getComputedStyle(document.documentElement).getPropertyValue('--project-sticky-pt')
+        const stickyPt = parseFloat(stickyPtRaw) * (stickyPtRaw.trim().endsWith('rem') ? 16 : 1)
+        const overflow = Math.max(0, natural + stickyPt + cardH - 36 - vh * 0.92)
         const pt = overflow + gap
         document.documentElement.style.setProperty('--contact-mobile-pt', `${pt}px`)
       }
@@ -256,8 +265,8 @@ export function Projects() {
 
   return (
     <div ref={containerRef} className="relative h-[260vh] lg:h-[280vh]">
-      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-3 lg:pt-0 px-6 bg-surface z-[3] lg:z-auto" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-1800px' : '-500px'} 0px)` }}>
-        <div className="relative w-full mx-auto lg:-translate-y-[147px]" style={{ maxWidth: 1170, height: isMobile ? 400 : 500, overflow: 'visible' }}>
+      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-[var(--project-sticky-pt)] px-6 bg-surface z-[3] lg:z-auto" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-1800px' : '-500px'} 0px)` }}>
+        <div className="relative w-full mx-auto lg:-translate-y-[147px]" style={{ maxWidth: isMobile ? 'calc(100vw - var(--mobile-card-inset))' : 1170, height: isMobile ? 400 : 500, overflow: 'visible' }}>
           {projectOrder.map((key, i) => (
             <ProjectCard
               key={key}
@@ -268,12 +277,29 @@ export function Projects() {
             />
           ))}
         </div>
-        {/* GitHub heatmap + Experience follow below card 5 */}
+        {/* Hidden probe: resolves --project-card-h to pixels for the JS math. */}
+        <div
+          ref={cardHProbeRef}
+          aria-hidden
+          style={{
+            position: 'absolute',
+            visibility: 'hidden',
+            pointerEvents: 'none',
+            width: 1,
+            height: 'var(--project-card-h)',
+          }}
+        />
+        {/* GitHub heatmap + Experience follow below card 5.
+            Mobile top = sticky pt + card height + 8vh gap. The finalY shift on
+            y: cardY6 also applies to the cards, so it cancels out of the gap
+            at progress=1. */}
         <motion.div
           className="absolute left-0 w-full"
           style={{
             y: cardY6,
-            top: isMobile ? 'calc(50% + 8vh)' : 'calc(50% + 103px + 8vh)',
+            top: isMobile
+              ? 'calc(var(--project-sticky-pt) + var(--project-card-h) + 8vh)'
+              : 'calc(50% + 103px + 8vh)',
             paddingBottom: extraPadding,
           }}
         >

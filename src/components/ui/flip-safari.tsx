@@ -99,7 +99,7 @@ export function FlipSafari({
   return (
     <div
       style={{ perspective: '1200px', position: 'relative', ...safariStyle }}
-      className="h-[360px] lg:h-[500px]"
+      className="h-[var(--project-card-h)]"
       onMouseEnter={() => {
         if (!showVideo && innerRef.current) {
           setCardHovered(true)
@@ -150,12 +150,12 @@ export function FlipSafari({
           <div className="flex flex-col justify-between lg:justify-center px-4 pt-8 pb-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
             <div>
             <h3
-              className="font-normal font-heading text-left text-lg lg:text-3xl gradient-text"
+              className="font-normal font-heading text-left text-[clamp(14px,4.2vw,18px)] lg:text-3xl gradient-text"
               style={{ lineHeight: 1.2 }}
             >
               {projectTagline || projectName}
             </h3>
-            <p className="mt-1 lg:mt-2 leading-snug lg:leading-relaxed text-left text-heading text-sm lg:text-xl">
+            <p className="mt-1 lg:mt-2 leading-snug lg:leading-relaxed text-left text-heading text-[clamp(11px,3.2vw,14px)] lg:text-xl">
               {projectDescription}
             </p>
             </div>
@@ -167,7 +167,7 @@ export function FlipSafari({
                 {techStack.map((tech) => (
                   <span
                     key={tech}
-                    className="px-1.5 py-0.5 lg:px-3 lg:py-1 rounded-xl text-[11px] lg:text-sm font-medium"
+                    className="px-1.5 py-0.5 lg:px-3 lg:py-1 rounded-xl text-[clamp(9px,2.6vw,11px)] lg:text-sm font-medium"
                     style={{
                       backgroundColor: 'rgba(6, 113, 164, 0.08)',
                       color: '#0671A4',

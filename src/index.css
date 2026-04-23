@@ -31,6 +31,18 @@ html::-webkit-scrollbar {
   --animate-breathe: breathe 8s ease-in-out infinite;
 }
 
+:root {
+  --mobile-card-inset: 96px;
+  --project-card-h: clamp(320px, 45vh, 420px);
+  --project-sticky-pt: 0.75rem;
+}
+@media (min-width: 1024px) {
+  :root {
+    --project-card-h: 500px;
+    --project-sticky-pt: 0rem;
+  }
+}
+
 /* ============================================
    Keyframes
    ============================================ */
@@ -114,9 +126,14 @@ h1, h2, h3, h4, h5, h6 {
   border: 1.5px solid rgba(255, 255, 255, 0.25);
 }
 
-.github-heatmap-fade {
-  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
-  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+/* Fade the heatmap's right edge only when it overflows the column — at
+   desktop sizes where the 52-week grid is wider than the fixed right column.
+   On mobile we size the blocks to fit the full width, so no mask is needed. */
+@media (min-width: 1024px) {
+  .github-heatmap-fade {
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  }
 }
 
 .github-heatmap-fade,

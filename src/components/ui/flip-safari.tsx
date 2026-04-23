@@ -150,8 +150,8 @@ export function FlipSafari({
           <div className="flex flex-col justify-between lg:justify-center px-4 pt-8 pb-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
             <div>
             <h3
-              className="font-normal font-heading text-left text-lg lg:text-3xl"
-              style={{ color: '#0671A4', lineHeight: 1.2 }}
+              className="font-normal font-heading text-left text-lg lg:text-3xl gradient-text"
+              style={{ lineHeight: 1.2 }}
             >
               {projectTagline || projectName}
             </h3>

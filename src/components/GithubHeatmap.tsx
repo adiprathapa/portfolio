@@ -22,7 +22,7 @@ export function GithubHeatmap() {
   }, [])
 
   return (
-    <Section id="github" className="bg-surface !pt-0 !pb-[85px]">
+    <Section id="github" className="bg-surface !pt-0 !pb-[8vh]">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
         {/* Heatmap — left on desktop, below heading on mobile */}
         <div

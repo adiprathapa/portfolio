@@ -165,30 +165,34 @@ export function Projects() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  // Dynamically size the spacing around the heatmap+Experience group based
-  // on measured content height, so Experience is never cut off and always
-  // sits ~85px above the next section — on any viewport.
-  //   Desktop: add bottom padding to the motion.div to close the gap
-  //     between Experience's bottom and the Projects container's bottom.
-  //   Mobile: push Contact down via a CSS var so the overflow below the
-  //     Projects container is fully visible before the next section starts.
+  // Dynamically size spacing around the heatmap+Experience group using a
+  // unified viewport-proportional gap (8vh) so spacing stays consistent and
+  // scales with the screen on every viewport.
+  //   Desktop: add bottom padding to the motion.div to close the gap so
+  //     Experience ends 8vh above the Projects container's bottom.
+  //   Mobile: push Contact down via a CSS var so Experience's overflow is
+  //     fully visible with an 8vh gap before the next section starts.
   useLayoutEffect(() => {
     const compute = () => {
       if (!contentRef.current) return
       const natural = contentRef.current.offsetHeight
       const vh = window.innerHeight
+      const gap = vh * 0.08
       if (window.innerWidth >= 1024) {
-        // Desktop: fill gap above Contact (derivation in prior comment)
-        const target = vh / 2 + 427
+        // motion.div effective top in sticky at progress=1 is
+        //   (50% + 103 + 8vh) - 700. We want its bottom = sticky.height - gap,
+        //   so target height = sticky.height/2 - 103 - 8vh + 700 - gap
+        //                    = vh/2 + 597 - 2*gap (simplified).
+        const target = vh / 2 + 597 - 2 * gap
         setExtraPadding(Math.max(0, target - natural))
         document.documentElement.style.setProperty('--contact-mobile-pt', '0px')
       } else {
-        // Mobile: motion.div bottom overshoots container by (natural - vh/2 - 23).
-        // Clear that overshoot + a viewport-proportional gap (~8% of screen
-        // height) so breathing room scales with the device.
+        // Mobile: motion.div bottom overshoots container by
+        //   natural - 0.42*vh - 68  (derived from the 8vh offset + -100 finalY).
+        // Clear that overshoot + add the same 8vh breathing room.
         setExtraPadding(0)
-        const overflow = Math.max(0, natural - vh / 2 - 23)
-        const pt = overflow + vh * 0.08
+        const overflow = Math.max(0, natural - vh * 0.42 - 68)
+        const pt = overflow + gap
         document.documentElement.style.setProperty('--contact-mobile-pt', `${pt}px`)
       }
     }
@@ -269,7 +273,7 @@ export function Projects() {
           className="absolute left-0 w-full"
           style={{
             y: cardY6,
-            top: isMobile ? 'calc(50% + 45px)' : 'calc(50% + 103px + 85px)',
+            top: isMobile ? 'calc(50% + 8vh)' : 'calc(50% + 103px + 8vh)',
             paddingBottom: extraPadding,
           }}
         >

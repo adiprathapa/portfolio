@@ -321,8 +321,11 @@
       h1.page-title {
         font-size: clamp(1.4rem, 2.2vw, 1.85rem);
         font-weight: 400;
-        color: var(--primary);
         line-height: 1.2;
+        background: linear-gradient(135deg, var(--primary) 0%, #1a9fd4 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
       .actions {

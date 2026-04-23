@@ -1019,8 +1019,30 @@ export function Experience() {
               {/* Mobile: peek carousel — centered card with equal peeks, arrow nav only */}
               <div className="md:hidden mt-10 overflow-hidden" style={{ margin: '40px -24px 0' }}>
                 <motion.div
-                  className="flex"
+                  className="flex touch-pan-y"
                   style={{ gap: `${mobileCardGap}px` }}
+                  drag="x"
+                  dragElastic={0.2}
+                  dragMomentum={false}
+                  dragConstraints={{
+                    left: insetPx / 2 - (allEntriesWithEdu.length - 1) * (vw - insetPx + mobileCardGap),
+                    right: insetPx / 2,
+                  }}
+                  onDragStart={() => {
+                    if (timerRef.current) clearInterval(timerRef.current)
+                    setPaused(true)
+                  }}
+                  onDragEnd={(_, info) => {
+                    const step = vw - insetPx + mobileCardGap
+                    const posThreshold = step / 4
+                    const velThreshold = 400
+                    const last = allEntriesWithEdu.length - 1
+                    if ((info.offset.x < -posThreshold || info.velocity.x < -velThreshold) && mobileCarouselIdx < last) {
+                      setMobileCarouselIdx(mobileCarouselIdx + 1)
+                    } else if ((info.offset.x > posThreshold || info.velocity.x > velThreshold) && mobileCarouselIdx > 0) {
+                      setMobileCarouselIdx(mobileCarouselIdx - 1)
+                    }
+                  }}
                   animate={{ x: insetPx / 2 - mobileCarouselIdx * (vw - insetPx + mobileCardGap) }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >

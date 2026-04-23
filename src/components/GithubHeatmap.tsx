@@ -15,7 +15,6 @@ const CURRENT_YEAR = new Date().getFullYear()
 const WEEK_COLUMNS = 53
 
 export function GithubHeatmap() {
-  const [isMobile, setIsMobile] = useState(false)
   const [isLinkHovered, setIsLinkHovered] = useState(false)
   const [blockSize, setBlockSize] = useState(18)
   const [blockMargin, setBlockMargin] = useState(4)
@@ -25,7 +24,6 @@ export function GithubHeatmap() {
   useEffect(() => {
     const compute = () => {
       const mobile = window.innerWidth < 1024
-      setIsMobile(mobile)
       if (mobile) {
         // Size blocks so the full 53-week grid fits the heatmap column on
         // mobile with no horizontal overflow and even spacing on both sides.

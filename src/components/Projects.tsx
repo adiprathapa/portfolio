@@ -207,7 +207,7 @@ export function Projects() {
         const totalTravel = spacing * (projectOrder.length - 1) + collapseDistance
         const postStackBuffer = 0
         const animationRail = Math.ceil(totalTravel * 0.12)
-        const measuredSectionHeight = vh + animationRail
+        const measuredSectionHeight = vh + animationRail - Math.floor(vh / 3)
         setSectionHeight(`${Math.ceil(measuredSectionHeight)}px`)
         setPostProjectBuffer(`${Math.ceil(postStackBuffer)}px`)
         document.documentElement.style.setProperty('--projects-experience-lift', '0px')

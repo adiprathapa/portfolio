@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, type CSSProperties } from 'react'
 import { Safari } from './safari'
 import { RippleButton } from './ripple-button'
 import type { SafariProps } from './safari'
@@ -15,6 +15,7 @@ interface FlipSafariProps {
   techStack?: string[]
   gradientColor?: string
   bgImage?: string
+  cardHeight?: string
 }
 
 export function FlipSafari({
@@ -28,6 +29,7 @@ export function FlipSafari({
   techStack,
   gradientColor = '#F4F4F4',
   bgImage,
+  cardHeight = 'var(--project-card-h)',
 }: FlipSafariProps) {
   const posthog = usePostHog()
   const [showVideo, setShowVideo] = useState(false)
@@ -98,8 +100,8 @@ export function FlipSafari({
 
   return (
     <div
-      style={{ perspective: '1200px', position: 'relative', ...safariStyle }}
-      className="h-[var(--project-card-h)]"
+      className="h-[var(--flip-safari-card-h)]"
+      style={{ perspective: '1200px', position: 'relative', '--flip-safari-card-h': cardHeight, ...safariStyle } as CSSProperties}
       onMouseEnter={() => {
         if (!showVideo && innerRef.current) {
           setCardHovered(true)

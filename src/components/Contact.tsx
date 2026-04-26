@@ -161,9 +161,9 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="pt-12 pb-16 px-6 md:py-32 lg:py-40 lg:min-h-[80vh]"
+      className="pt-40 pb-[28rem] px-6 md:py-32 lg:py-40 lg:min-h-screen lg:flex lg:items-center"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto w-full translate-y-72 lg:translate-y-48">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-8 lg:gap-24 items-center">
           {/* Top text — heading + description */}
           <div className="order-1 lg:col-start-1 lg:row-start-1">
@@ -347,7 +347,7 @@ export function Contact() {
                 alt="MacBook Air Midnight"
                 className="w-full h-auto"
                 style={{
-                  filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))',
+                  filter: 'none',
                 }}
               />
 

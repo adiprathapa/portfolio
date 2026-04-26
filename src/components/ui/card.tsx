@@ -7,7 +7,7 @@ interface CardProps {
 }
 
 export function Card({ children, className = '', href }: CardProps) {
-  const classes = `rounded-md border border-border p-6 shadow-card hover:scale-[1.02] transition-transform duration-300 ease-out ${className}`
+  const classes = `rounded-md border border-border p-6 hover:scale-[1.02] transition-transform duration-300 ease-out ${className}`
 
   if (href) {
     return (

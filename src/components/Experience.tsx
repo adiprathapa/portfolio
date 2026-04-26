@@ -306,8 +306,8 @@ function CarouselCard({
             maxWidth: '55%',
             objectFit: 'contain',
             filter: item.logoInvert
-              ? 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.3))'
-              : 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))',
+              ? 'brightness(0) invert(1)'
+              : 'none',
             borderRadius: item.logoInvert ? 0 : 8,
             alignSelf: 'flex-start',
             marginTop: item.logoOffsetY ?? 0,
@@ -405,18 +405,23 @@ function MobileCard({ item }: { item: ExperienceItem }) {
 
   useEffect(() => {
     const measure = () => {
-      if (cardRef.current) setScale(cardRef.current.offsetWidth / CARD_W)
+      if (!cardRef.current) return
+      const scaleX = cardRef.current.offsetWidth / CARD_W
+      const scaleY = cardRef.current.offsetHeight / CARD_H
+      setScale(Math.min(scaleX, scaleY))
     }
     measure()
     window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
+    const ro = new ResizeObserver(measure)
+    if (cardRef.current) ro.observe(cardRef.current)
+    return () => { window.removeEventListener('resize', measure); ro.disconnect() }
   }, [])
 
   return (
     <div
       ref={cardRef}
       className="relative w-full"
-      style={{ aspectRatio: `${CARD_W} / ${CARD_H}` }}
+      style={{ height: 'var(--project-card-h)' }}
     >
       <div
         className="relative overflow-hidden"
@@ -425,9 +430,9 @@ function MobileCard({ item }: { item: ExperienceItem }) {
           height: CARD_H,
           position: 'absolute',
           top: 0,
-          left: 0,
-          transform: `scale(${scale})`,
-          transformOrigin: 'top left',
+          left: '50%',
+          transform: `translateX(-50%) scale(${scale})`,
+          transformOrigin: 'top center',
           borderRadius: 20,
           border: '1.5px solid rgba(6, 113, 164, 0.3)',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.04)',
@@ -451,8 +456,8 @@ function MobileCard({ item }: { item: ExperienceItem }) {
               maxWidth: '55%',
               objectFit: 'contain',
               filter: item.logoInvert
-                ? 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.3))'
-                : 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))',
+                ? 'brightness(0) invert(1)'
+                : 'none',
               borderRadius: item.logoInvert ? 0 : 8,
               marginTop: item.logoOffsetY ?? 0,
               marginLeft: item.logoOffsetX ?? 0,
@@ -563,7 +568,7 @@ function EducationBentoInline({ isActive, onClick, activeCard, setActiveCard }: 
             style={{
               height: 36,
               width: 'auto',
-              filter: 'brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.3))',
+              filter: 'brightness(0) invert(1)',
             }}
             className="self-start"
           />
@@ -648,7 +653,7 @@ function EducationBentoInline({ isActive, onClick, activeCard, setActiveCard }: 
             style={{
               height: 36,
               width: 'auto',
-              filter: 'brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.3))',
+              filter: 'brightness(0) invert(1)',
             }}
           />
           <div>
@@ -711,29 +716,36 @@ export function Experience() {
   const [eduActiveCard, setEduActiveCard] = useState<'cornell' | 'highschool'>('cornell')
   const [mobileCarouselIdx, setMobileCarouselIdx] = useState(0)
   const [vw, setVw] = useState(typeof window !== 'undefined' ? window.innerWidth : 390)
-  const [insetPx, setInsetPx] = useState(96)
+  const [insetPx, setInsetPx] = useState(48)
   const [isVisible, setIsVisible] = useState(false)
   const [tabVisible, setTabVisible] = useState(!document.hidden)
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined)
   const sectionRef = useRef<HTMLDivElement>(null)
+  // Hidden probe used to resolve --mobile-card-inset (a clamp() of vw) into
+  // a pixel value for the drag/animate math.
+  const insetProbeRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onResize = () => setVw(window.innerWidth)
     const readInset = () => {
-      const raw = getComputedStyle(document.documentElement).getPropertyValue('--mobile-card-inset')
-      const v = parseInt(raw, 10)
-      if (!isNaN(v)) setInsetPx(v)
+      const w = insetProbeRef.current?.offsetWidth
+      if (w && w > 0) setInsetPx(w)
     }
     readInset()
     window.addEventListener('resize', onResize)
     window.addEventListener('resize', readInset)
+    const ro = new ResizeObserver(readInset)
+    if (insetProbeRef.current) ro.observe(insetProbeRef.current)
     return () => {
       window.removeEventListener('resize', onResize)
       window.removeEventListener('resize', readInset)
+      ro.disconnect()
     }
   }, [])
 
-  const mobileCardGap = insetPx / 4
+  // inset = 2*peek + 2*gap, split so peek (inset/3) is visible and gap
+  // (inset/6) stays subtle — matches the layout documented in index.css.
+  const mobileCardGap = insetPx / 6
 
   const activeIdx = Math.max(0, allEntries.findIndex((e) => e.id === activeId))
   const active = allEntries[activeIdx]
@@ -858,8 +870,8 @@ export function Experience() {
   }, [advanceToNext, running])
 
   return (
-    <Section id="experience" className="bg-surface !pt-0">
-      <div ref={sectionRef} style={{ transform: 'translateY(23px)' }}>
+    <Section id="experience" className="experience-section" style={{ backgroundColor: '#f4f4f4' }}>
+      <div ref={sectionRef}>
         {/* Header row: description text + toggle */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
@@ -1018,6 +1030,18 @@ export function Experience() {
 
               {/* Mobile: peek carousel — centered card with equal peeks, arrow nav only */}
               <div className="md:hidden mt-10 overflow-hidden" style={{ margin: '40px -24px 0' }}>
+                {/* Probe resolves --mobile-card-inset (clamp of vw) to px. */}
+                <div
+                  ref={insetProbeRef}
+                  aria-hidden
+                  style={{
+                    position: 'absolute',
+                    visibility: 'hidden',
+                    pointerEvents: 'none',
+                    height: 1,
+                    width: 'var(--mobile-card-inset)',
+                  }}
+                />
                 <motion.div
                   className="flex touch-pan-y"
                   style={{ gap: `${mobileCardGap}px` }}

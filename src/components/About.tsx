@@ -177,6 +177,7 @@ function SmallCard({ tech }: { tech: TechItem }) {
         background: hovered ? '#FFFFFF' : '#F5F5F5',
         border: `1.5px solid ${borderColor}`,
         transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-2px)' : 'scale(1)',
+        zIndex: hovered ? 20 : 1,
         boxShadow: hovered
           ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
           : '0 4px 12px rgba(0, 0, 0, 0.04)',
@@ -279,6 +280,7 @@ function TallCard({ tech }: { tech: TechItem }) {
         background: hovered ? '#FFFFFF' : '#F5F5F5',
         border: `1.5px solid ${borderColor}`,
         transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-3px)' : 'scale(1)',
+        zIndex: hovered ? 20 : 1,
         boxShadow: hovered
           ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
           : '0 4px 12px rgba(0, 0, 0, 0.04)',
@@ -338,7 +340,7 @@ function TallCard({ tech }: { tech: TechItem }) {
   )
 }
 
-function ProjectMarquee({ active }: { active: boolean }) {
+export function ProjectMarquee({ active }: { active: boolean }) {
   const halfRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const offsetRef = useRef(0)
@@ -529,7 +531,7 @@ function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab }: 
       animate={controls}
       initial={{ rotate: rotation }}
       whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
-      className="absolute inset-0 group cursor-grab rounded-2xl shadow-2xl overflow-hidden"
+      className="absolute inset-0 group cursor-grab rounded-2xl overflow-hidden"
       style={{
         zIndex,
         rotate: rotation,
@@ -618,16 +620,16 @@ export function About() {
   const rotations = [-8, -3, 2, 6, -5, 4]
 
   return (
-    <section ref={sectionRef} id="about" className="relative min-h-full lg:h-full flex flex-col lg:flex-row items-center px-6 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+    <section ref={sectionRef} id="about" className="relative min-h-full lg:h-full flex flex-col lg:flex-row items-center px-6 pt-[calc(clamp(6rem,14dvh,8rem)+env(safe-area-inset-top))] pb-[clamp(6rem,14dvh,9rem)] lg:py-0 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
       <motion.div
-        className="mx-auto max-w-7xl w-full grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mt-[214px] lg:-mt-[111px]"
+        className="mx-auto max-w-7xl w-full grid lg:grid-cols-2 gap-8 lg:gap-12 items-center"
         variants={heroStagger}
         initial="hidden"
         animate={marqueeActive ? 'visible' : 'hidden'}
       >
         {/* Text */}
         <motion.div variants={heroChild}>
-          <motion.div className="-mt-[16px]" variants={staggerContainer}>
+          <motion.div className="lg:-mt-[16px]" variants={staggerContainer}>
             <motion.div variants={heroChild}>
               <GradientText as="h2" className="text-2xl lg:text-3xl font-normal mb-1">
                 About me
@@ -654,7 +656,7 @@ export function About() {
         </motion.div>
 
         {/* Throwable Cards */}
-        <motion.div variants={heroChild} className="flex flex-col items-center justify-center lg:ml-[12vw] mt-[6vh] lg:mt-0 lg:-mt-[2vh] -mb-[4vh] lg:mb-0">
+        <motion.div variants={heroChild} className="flex flex-col items-center justify-center lg:ml-[12vw] mt-[clamp(2.5rem,8dvh,5rem)] lg:mt-0 lg:-mt-[2vh] mb-[clamp(4rem,10dvh,6rem)] lg:mb-0">
           <div className="relative w-[min(calc(100vw-var(--mobile-card-inset)),400px)] lg:w-[400px] aspect-[20/21]">
             {CARDS.map((card, i) => (
               <ThrowableCard
@@ -669,7 +671,7 @@ export function About() {
             ))}
           </div>
           <motion.p
-            className="-mt-[5vh] lg:mt-6 flex items-center gap-2 text-sm select-none"
+            className="mt-4 lg:mt-6 flex items-center gap-2 text-sm select-none"
             style={{ color: 'rgba(6, 113, 164, 0.45)' }}
             animate={hasGrabbed ? { opacity: 0 } : { x: [0, 6, -6, 0] }}
             transition={hasGrabbed ? { duration: 0.2 } : { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
@@ -685,41 +687,6 @@ export function About() {
         </motion.div>
       </motion.div>
 
-      {/* Projects intro — absolute on desktop, in-flow on mobile */}
-      <div className="hidden lg:block absolute left-0 w-full px-6" style={{ bottom: 38 }}>
-        <div className="mx-auto max-w-7xl">
-          <GradientText as="h2" className="text-3xl font-normal">
-            Projects
-          </GradientText>
-          <p className="text-black text-xl leading-relaxed mt-1">
-            I am a fullstack developer who mainly works in Python, Java, and for frontend in JavaScript and TypeScript. I have experience working with a variety of machine learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas, and more. My projects range from from fintech applications to machine learning focused projects to apps that combine both.
-          </p>
-        </div>
-      </div>
-      <div id="projects-intro" className="lg:hidden w-full px-6 mt-[158px]">
-        <GradientText as="h2" className="text-2xl font-normal">
-          Projects
-        </GradientText>
-        <p className="text-black text-lg leading-relaxed mt-1">
-          I am a fullstack developer who mainly works in Python, Java, and for frontend in JavaScript and TypeScript. I have experience working with a variety of machine learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas, and more. My projects range from from fintech applications to machine learning focused projects to apps that combine both.
-        </p>
-      </div>
-
-      {/* Marquee conveyor — absolute on desktop, in-flow on mobile */}
-      <div className="hidden lg:block absolute left-0 w-full overflow-visible z-10" style={{ bottom: 'clamp(-20rem, -18vw, -19rem)' }}>
-        <div className="relative">
-          <ProjectMarquee active={marqueeActive} />
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-32" style={{ background: 'linear-gradient(to right, var(--color-surface, #EFF3F8), transparent)' }} />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-32" style={{ background: 'linear-gradient(to left, var(--color-surface, #EFF3F8), transparent)' }} />
-        </div>
-      </div>
-      <div className="lg:hidden relative left-1/2 -translate-x-1/2 overflow-hidden z-10 mt-6 mb-8" style={{ width: '100dvw' }}>
-        <div style={{ transform: 'scale(0.82)', transformOrigin: 'left center' }}>
-          <ProjectMarquee active={marqueeActive} />
-        </div>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-8 z-10" style={{ background: 'linear-gradient(to right, var(--color-surface, #EFF3F8), transparent)' }} />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-8 z-10" style={{ background: 'linear-gradient(to left, var(--color-surface, #EFF3F8), transparent)' }} />
-      </div>
     </section>
   )
 }

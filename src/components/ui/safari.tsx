@@ -20,6 +20,7 @@ export interface SafariProps extends HTMLAttributes<HTMLDivElement> {
   videoCropBottom?: number | string
   videoCropLeft?: number | string
   videoCropRight?: number | string
+  videoStartTime?: number
   playing?: boolean
 }
 
@@ -31,6 +32,7 @@ export function Safari({
   videoCropBottom,
   videoCropLeft,
   videoCropRight,
+  videoStartTime,
   playing,
   className,
   style,
@@ -83,14 +85,22 @@ export function Safari({
             playsInline
             preload="metadata"
             onCanPlay={() => setVideoLoaded(true)}
-            style={{
-              height: (videoCropTop || videoCropBottom) ? `calc(100% + ${(Number(videoCropTop) || 0) + (Number(videoCropBottom) || 0)}px)` : undefined,
-              top: (videoCropTop || videoCropBottom) ? `-${Number(videoCropTop) || 0}px` : undefined,
-              width: (videoCropLeft || videoCropRight) ? `calc(100% + ${(Number(videoCropLeft) || 0) + (Number(videoCropRight) || 0)}px)` : undefined,
-              left: (videoCropLeft || videoCropRight) ? `-${Number(videoCropLeft) || 0}px` : undefined,
-              position: (videoCropTop || videoCropBottom || videoCropLeft || videoCropRight) ? "relative" : undefined,
-              objectFit: (videoCropTop || videoCropBottom || videoCropLeft || videoCropRight) ? "fill" : undefined
+            onLoadedMetadata={() => {
+              if (videoStartTime && videoRef.current) videoRef.current.currentTime = videoStartTime
             }}
+            style={(() => {
+              const hasCrop = videoCropTop || videoCropBottom || videoCropLeft || videoCropRight
+              if (!hasCrop) return undefined
+              const toPx = (v: number | string | undefined) => typeof v === 'string' ? v : `${v || 0}px`
+              return {
+                height: (videoCropTop || videoCropBottom) ? `calc(100% + ${toPx(videoCropTop)} + ${toPx(videoCropBottom)})` : undefined,
+                top: (videoCropTop || videoCropBottom) ? `calc(-1 * ${toPx(videoCropTop)})` : undefined,
+                width: (videoCropLeft || videoCropRight) ? `calc(100% + ${toPx(videoCropLeft)} + ${toPx(videoCropRight)})` : undefined,
+                left: (videoCropLeft || videoCropRight) ? `calc(-1 * ${toPx(videoCropLeft)})` : undefined,
+                position: "relative" as const,
+                objectFit: "fill" as const,
+              }
+            })()}
           />
         </div>
       )}

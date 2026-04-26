@@ -2,7 +2,6 @@ import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { FlipSafari } from './ui/flip-safari'
 import { Experience } from './Experience'
-import { GithubHeatmap } from './GithubHeatmap'
 // GradientText used in About section's desktop projects intro
 
 // Globe data kept but not used
@@ -18,6 +17,7 @@ const projectDisplayNames: Record<string, string> = {
   zamsizing: "ZAM",
   macroplace: "Macro Placement",
   galatea: "Galatea",
+  spectre: "Spectre",
 }
 
 const projectDescriptions: Record<string, string> = {
@@ -27,6 +27,7 @@ const projectDescriptions: Record<string, string> = {
   zamsizing: "Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.",
   macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
   galatea: "Built for the Palantir Foundry FDSE technical challenge. Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry.",
+  spectre: "Built for the Cornell Claude Builders Club Hackathon. A 1v1 fighting game where players throw real punches at their phone cameras while silhouettes battle in a shared browser overlay. MediaPipe pose estimation streams keypoints to a 60Hz Python game server for hit detection and damage logic, with a live AI commentator powered by Claude API and ElevenLabs TTS.",
 }
 
 const projectLinks: Record<string, string> = {
@@ -36,6 +37,7 @@ const projectLinks: Record<string, string> = {
   zamsizing: "https://zamsizing.vercel.app/",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026",
   galatea: "https://galatea.usw-3.palantirfoundry.com/stargate/oidc/ee802905-77f2-44a2-a9d0-ed41e2caea0e",
+  spectre: "https://github.com/cx18121/claude-hackathon26",
 }
 
 const projectRepoLinks: Record<string, string> = {
@@ -45,17 +47,19 @@ const projectRepoLinks: Record<string, string> = {
   zamsizing: "https://github.com/adiprathapa/ZAM",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026",
   galatea: "https://github.com/adiprathapa/galatea",
+  spectre: "https://github.com/cx18121/claude-hackathon26",
 }
 
-const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea']
+const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea', 'spectre']
 
-const projectSafariProps: Record<string, { url: string; videoSrc?: string; videoCropTop?: number; videoCropBottom?: number; videoCropLeft?: number; videoCropRight?: number }> = {
+const projectSafariProps: Record<string, { url: string; videoSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
   kiwix: { url: projectLinks['kiwix'], videoSrc: "/kiwix.mov" },
   tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mov", videoCropTop: 25 },
   helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mov" },
-  zamsizing: { url: projectLinks['zamsizing'], videoSrc: "/zam-copy.mp4", videoCropTop: 80, videoCropBottom: 30, videoCropLeft: 228, videoCropRight: 230 },
+  zamsizing: { url: projectLinks['zamsizing'], videoSrc: "/zam-copy.mp4", videoCropTop: 110, videoCropBottom: 30, videoCropLeft: 270, videoCropRight: 272 },
   macroplace: { url: projectLinks['macroplace'] },
   galatea: { url: projectLinks['galatea'], videoSrc: "/recording-1.mov", videoCropTop: 23 },
+  spectre: { url: projectLinks['spectre'], videoSrc: "/spectre.mp4", videoCropTop: "10%", videoStartTime: 10 },
 }
 
 const projectLogos: Record<string, string> = {
@@ -65,6 +69,7 @@ const projectLogos: Record<string, string> = {
   zamsizing: "/logo-zamsizing.png",
   macroplace: "",
   galatea: "/logo-galatea.png",
+  spectre: "/claude.png",
 }
 
 const projectTaglines: Record<string, string> = {
@@ -74,6 +79,7 @@ const projectTaglines: Record<string, string> = {
   zamsizing: "One click AI market sizing with TAM/SAM/SOM visualization ",
   macroplace: "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge ",
   galatea: "Real time blockchain risk analytics with Palantir Foundry ",
+  spectre: "Real time 1v1 fighting powered by phone cameras and AI commentary ",
 }
 
 const projectBgImages: Record<string, string> = {
@@ -83,6 +89,7 @@ const projectBgImages: Record<string, string> = {
   zamsizing: '/zamsizingbg.jpg',
   macroplace: '/macroplace-bg.jpg',
   galatea: '/galateabg.jpg',
+  spectre: '/pexels-dichupdi-35168139.jpg',
 }
 
 const projectGradientColors: Record<string, string> = {
@@ -92,6 +99,7 @@ const projectGradientColors: Record<string, string> = {
   zamsizing: '#E8740C',
   macroplace: '#1a1a2e',
   galatea: '#2c2c2c',
+  spectre: '#DA7756',
 }
 
 const projectTechStacks: Record<string, string[]> = {
@@ -101,12 +109,25 @@ const projectTechStacks: Record<string, string[]> = {
   zamsizing: ["JavaScript", "React", "Node.js", "Express", "MongoDB", "Gemini API", "Vercel"],
   macroplace: ["PyTorch", "GNN", "NumPy", "FFT", "Python"],
   galatea: ["NetworkX", "Palantir Foundry", "JavaScript"],
+  spectre: ["MediaPipe", "FastAPI", "React", "PixiJS", "Claude API", "ElevenLabs", "WebSocket"],
 }
 
 // const allTechStack = [...new Set(Object.values(projectTechStacks).flat())]
 
-function ProjectCard({ projectKey, yValue, collapseValue, zIndex }: { projectKey: string; yValue: MotionValue<number>; collapseValue: MotionValue<number> | null; zIndex: number }) {
-  const combinedY = useTransform(() => yValue.get() + (collapseValue ? collapseValue.get() : 0))
+function ProjectCard({
+  projectKey,
+  yValue,
+  collapseValue,
+  stackOffset,
+  zIndex,
+}: {
+  projectKey: string
+  yValue: MotionValue<number>
+  collapseValue: MotionValue<number> | null
+  stackOffset: MotionValue<number>
+  zIndex: number
+}) {
+  const combinedY = useTransform(() => yValue.get() + (collapseValue ? collapseValue.get() : 0) + stackOffset.get())
   // Full size once the card's top reaches the bottom of the previous card (~500px),
   // smallest at 1120px away, linear ramp between
   const scale = useTransform(() => {
@@ -133,6 +154,7 @@ function ProjectCard({ projectKey, yValue, collapseValue, zIndex }: { projectKey
           ...projectSafariProps[projectKey],
           style: { width: '100%' },
         }}
+        cardHeight="var(--project-stack-card-h)"
         projectName={projectDisplayNames[projectKey]}
         projectDescription={projectDescriptions[projectKey]}
         projectTagline={projectTaglines[projectKey]}
@@ -155,13 +177,13 @@ function ProjectCard({ projectKey, yValue, collapseValue, zIndex }: { projectKey
 
 export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  // Hidden probe used to resolve the current px value of --project-card-h
+  // Hidden probe used to resolve the current px value of --project-stack-card-h
   // (which is a clamp() of vh) so the overflow math below can stay in sync
   // with the CSS without duplicating the formula.
   const cardHProbeRef = useRef<HTMLDivElement>(null)
-  const [isMobile, setIsMobile] = useState(false)
-  const [extraPadding, setExtraPadding] = useState(0)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024)
+  const [sectionHeight, setSectionHeight] = useState('calc(100dvh + clamp(8rem, 20dvh, 12rem))')
+  const [postProjectBuffer, setPostProjectBuffer] = useState('clamp(6rem, 12dvh, 10rem)')
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024)
     check()
@@ -169,46 +191,48 @@ export function Projects() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  // Dynamically size spacing around the heatmap+Experience group using a
-  // unified viewport-proportional gap (8vh) so spacing stays consistent and
-  // scales with the screen on every viewport.
-  //   Desktop: add bottom padding to the motion.div to close the gap so
-  //     Experience ends 8vh above the Projects container's bottom.
-  //   Mobile: push Contact down via a CSS var so Experience's overflow is
-  //     fully visible with an 8vh gap before the next section starts.
+  // Size the sticky rail from the same travel distance used by the card
+  // animation. Experience should not be pulled upward before the last card is
+  // done; it naturally follows the rail with a small amount of breathing room.
   useLayoutEffect(() => {
     const compute = () => {
-      if (!contentRef.current) return
-      const natural = contentRef.current.offsetHeight
       const vh = window.innerHeight
-      const gap = vh * 0.08
-      if (window.innerWidth >= 1024) {
-        // motion.div effective top in sticky at progress=1 is
-        //   (50% + 103 + 8vh) - 700. We want its bottom = sticky.height - gap,
-        //   so target height = sticky.height/2 - 103 - 8vh + 700 - gap
-        //                    = vh/2 + 597 - 2*gap (simplified).
-        const target = vh / 2 + 597 - 2 * gap
-        setExtraPadding(Math.max(0, target - natural))
+
+      if (window.innerWidth < 1024) {
+        const cardH = cardHProbeRef.current?.offsetHeight ?? Math.min(Math.max(vh * 0.45, 320), 420)
+        const mobileStagger = 36
+        const spacing = cardH + Math.round(cardH * 0.15)
+        const finalMobileY = 0
+        const collapseDistance = mobileStagger * (projectOrder.length - 1) - finalMobileY
+        const totalTravel = spacing * (projectOrder.length - 1) + collapseDistance
+        const postStackBuffer = 0
+        const animationRail = Math.ceil(totalTravel * 0.12)
+        const measuredSectionHeight = vh + animationRail
+        setSectionHeight(`${Math.ceil(measuredSectionHeight)}px`)
+        setPostProjectBuffer(`${Math.ceil(postStackBuffer)}px`)
+        document.documentElement.style.setProperty('--projects-experience-lift', '0px')
         document.documentElement.style.setProperty('--contact-mobile-pt', '0px')
-      } else {
-        // Mobile: at progress=1, motion.div visual top from sticky top =
-        //   stickyPt + cardH + finalY(-100) + 8vh. Sticky bottom = 100vh - 64
-        //   (navbar). Overflow = natural + (stickyPt + cardH - 100 + 64) - 92vh.
-        // stickyPt and cardH are resolved from the CSS vars via the probe so
-        // this stays in sync with whatever --project-card-h clamp() produces.
-        setExtraPadding(0)
-        const cardH = cardHProbeRef.current?.offsetHeight ?? 360
-        const stickyPtRaw = getComputedStyle(document.documentElement).getPropertyValue('--project-sticky-pt')
-        const stickyPt = parseFloat(stickyPtRaw) * (stickyPtRaw.trim().endsWith('rem') ? 16 : 1)
-        const overflow = Math.max(0, natural + stickyPt + cardH - 36 - vh * 0.92)
-        const pt = overflow + gap
-        document.documentElement.style.setProperty('--contact-mobile-pt', `${pt}px`)
+        return
       }
+
+      const desktopCardH = cardHProbeRef.current?.offsetHeight ?? 500
+      const desktopFinalY = 0
+      const desktopStagger = 28
+      const spacing = desktopCardH + 150
+      const collapseDistance = desktopStagger * (projectOrder.length - 1) - desktopFinalY
+      const totalTravel = spacing * (projectOrder.length - 1) + collapseDistance
+      const postStackBuffer = 0
+      const animationRail = Math.ceil(totalTravel * 0.12)
+      const measuredSectionHeight = vh + animationRail
+      setSectionHeight(`${Math.ceil(measuredSectionHeight)}px`)
+      setPostProjectBuffer(`${Math.ceil(postStackBuffer)}px`)
+      document.documentElement.style.setProperty('--projects-experience-lift', '0px')
+      document.documentElement.style.setProperty('--contact-mobile-pt', '0px')
     }
     compute()
     window.addEventListener('resize', compute)
     const ro = new ResizeObserver(compute)
-    if (contentRef.current) ro.observe(contentRef.current)
+    if (cardHProbeRef.current) ro.observe(cardHProbeRef.current)
     return () => {
       window.removeEventListener('resize', compute)
       ro.disconnect()
@@ -220,15 +244,16 @@ export function Projects() {
   })
 
   const stagger = isMobile ? 36 : 28
-  const spacing = isMobile ? 400 : 545
+  const cardH = cardHProbeRef.current?.offsetHeight ?? (isMobile ? 360 : 500)
+  const spacing = isMobile ? cardH + Math.round(cardH * 0.15) : cardH + 150
 
   // Cards maintain spacing, stacking during scroll.
   // After stacking, the last card keeps scrolling up and "eats" the others —
   // each card joins the last card's motion once it reaches its position.
   // seg is computed so stacking and collapse phases move at the same px/scroll rate.
-  const finalY = isMobile ? -100 : -700
-  const collapseDistance = stagger * 5 - finalY
-  const seg = spacing / (5 * spacing + collapseDistance)
+  const finalY = 0
+  const collapseDistance = stagger * 6 - finalY
+  const seg = spacing / (6 * spacing + collapseDistance)
 
   const cardY1 = useTransform(scrollYProgress, [0, 1], [0, 0])
 
@@ -250,34 +275,42 @@ export function Projects() {
 
   const cardY6 = useTransform(scrollYProgress,
     [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, 1],
-    [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, finalY])
+    [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, stagger * 5])
+
+  const cardY7 = useTransform(scrollYProgress,
+    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6, 1],
+    [spacing * 6, spacing * 5 + stagger, spacing * 4 + stagger * 2, spacing * 3 + stagger * 3, spacing * 2 + stagger * 4, spacing + stagger * 5, stagger * 6, finalY])
 
 
   // Once the last card passes a card's position, that card moves with it
-  const collapse1 = useTransform(() => Math.min(0, cardY6.get() - 0))
-  const collapse2 = useTransform(() => Math.min(0, cardY6.get() - stagger))
-  const collapse3 = useTransform(() => Math.min(0, cardY6.get() - stagger * 2))
-  const collapse4 = useTransform(() => Math.min(0, cardY6.get() - stagger * 3))
-  const collapse5 = useTransform(() => Math.min(0, cardY6.get() - stagger * 4))
+  const collapse1 = useTransform(() => Math.min(0, cardY7.get() - 0))
+  const collapse2 = useTransform(() => Math.min(0, cardY7.get() - stagger))
+  const collapse3 = useTransform(() => Math.min(0, cardY7.get() - stagger * 2))
+  const collapse4 = useTransform(() => Math.min(0, cardY7.get() - stagger * 3))
+  const collapse5 = useTransform(() => Math.min(0, cardY7.get() - stagger * 4))
+  const collapse6 = useTransform(() => Math.min(0, cardY7.get() - stagger * 5))
 
-  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5, cardY6]
-  const collapseValues: (MotionValue<number> | null)[] = [collapse1, collapse2, collapse3, collapse4, collapse5, null]
+  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5, cardY6, cardY7]
+  const collapseValues: (MotionValue<number> | null)[] = [collapse1, collapse2, collapse3, collapse4, collapse5, collapse6, null]
+  const stackOffset = useTransform(scrollYProgress, [0, 1], [0, 0])
 
   return (
-    <div ref={containerRef} className="relative h-[260vh] lg:h-[280vh]">
-      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-[var(--project-sticky-pt)] px-6 bg-surface z-[3] lg:z-auto" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-1800px' : '-500px'} 0px)` }}>
-        <div className="relative w-full mx-auto lg:-translate-y-[147px]" style={{ maxWidth: isMobile ? 'calc(100vw - var(--mobile-card-inset))' : 1170, height: isMobile ? 400 : 500, overflow: 'visible' }}>
+    <>
+    <div ref={containerRef} className="relative" style={{ height: sectionHeight, zIndex: 5, backgroundColor: '#E4EFF5' }}>
+      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-[var(--project-sticky-pt)] px-6 z-[3] lg:z-auto" style={{ backgroundColor: '#E4EFF5', clipPath: `inset(-200px 0px ${isMobile ? '-1600px' : '-500px'} 0px)` }}>
+        <div className="relative z-[3] w-full mx-auto lg:max-w-7xl" style={{ maxWidth: isMobile ? 'calc(100vw - var(--mobile-card-inset))' : undefined, height: isMobile ? 'var(--project-stack-card-h)' : 500, overflow: 'visible', transform: isMobile ? undefined : 'translateY(calc(var(--projects-stack-shift) * -1))' }}>
           {projectOrder.map((key, i) => (
             <ProjectCard
               key={key}
               projectKey={key}
               yValue={cardYValues[i]}
               collapseValue={collapseValues[i]}
+              stackOffset={stackOffset}
               zIndex={i + 1}
             />
           ))}
         </div>
-        {/* Hidden probe: resolves --project-card-h to pixels for the JS math. */}
+        {/* Hidden probe: resolves --project-stack-card-h to pixels for the JS math. */}
         <div
           ref={cardHProbeRef}
           aria-hidden
@@ -286,29 +319,24 @@ export function Projects() {
             visibility: 'hidden',
             pointerEvents: 'none',
             width: 1,
-            height: 'var(--project-card-h)',
+            height: 'var(--project-stack-card-h)',
           }}
         />
-        {/* GitHub heatmap + Experience follow below card 5.
-            Mobile top = sticky pt + card height + 8vh gap. The finalY shift on
-            y: cardY6 also applies to the cards, so it cancels out of the gap
-            at progress=1. */}
         <motion.div
           className="absolute left-0 w-full"
           style={{
-            y: cardY6,
+            y: cardY7,
             top: isMobile
-              ? 'calc(var(--project-sticky-pt) + var(--project-card-h) + 8vh)'
-              : 'calc(50% + 103px + 8vh)',
-            paddingBottom: extraPadding,
+              ? 'calc(var(--project-sticky-pt) + var(--project-stack-card-h) + clamp(1.5rem, 4dvh, 2.5rem))'
+              : 'calc((100vh - var(--project-card-h)) / 2 - var(--projects-stack-shift) + var(--project-card-h) + clamp(2rem, 4vh, 3rem))',
+            zIndex: 1,
           }}
         >
-          <div ref={contentRef}>
-            <GithubHeatmap />
-            <Experience />
-          </div>
+          <Experience />
         </motion.div>
       </section>
     </div>
+    <div aria-hidden style={{ height: postProjectBuffer, backgroundColor: '#E4EFF5' }} />
+    </>
   )
 }

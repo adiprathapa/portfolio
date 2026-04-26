@@ -4,6 +4,7 @@ import { useActiveSection } from '../hooks/useActiveSection'
 import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
 import { usePostHog } from '@posthog/react'
+import { scrollToSection } from '../lib/scrollToSection'
 
 const RESUME_PAGE_URL = '/resume.html'
 const CALENDAR_PAGE_URL = '/calendar.html'
@@ -65,21 +66,9 @@ export function Navbar() {
     posthog?.capture('nav_link_clicked', { section: href.replace('#', '') })
     pinNavbarTemporarily()
 
-    if (href === '#about') {
+    if (href.startsWith('#')) {
       e.preventDefault()
-      window.scrollTo({ top: window.innerHeight * 0.9, behavior: 'smooth' })
-    }
-
-    if (href === '#experience') {
-      e.preventDefault()
-      // Experience is inside the sticky projects scroll container.
-      // Scroll to the end of the projects container so the
-      // sticky section shows the experience content.
-      const container = document.getElementById('projects')?.parentElement
-      if (container) {
-        const absTop = container.getBoundingClientRect().top + window.scrollY
-        window.scrollTo({ top: absTop + container.offsetHeight - window.innerHeight, behavior: 'smooth' })
-      }
+      scrollToSection(href)
     }
   }
 

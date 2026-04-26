@@ -2,9 +2,11 @@ import { useEffect, useState, useCallback } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import { Navbar } from './components/Navbar'
 import { HorizontalScrollSection } from './components/HorizontalScrollSection'
+import { ProjectsIntro } from './components/ProjectsIntro'
 import { Projects } from './components/Projects'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
+import { scrollToSection } from './lib/scrollToSection'
 
 // Preload below-fold assets during idle time while user is on hero
 const PRELOAD_IMAGES = [
@@ -68,13 +70,25 @@ function App() {
   const [projectsMargin, setProjectsMargin] = useState('calc(1900px - 100dvh)')
 
   const measureAbout = useCallback(() => {
-    const isDesktop = window.innerWidth >= 1024
-    if (isDesktop) {
-      setProjectsMargin('331px')
-    } else {
-      const el = document.getElementById('about')
-      if (el) setProjectsMargin(`calc(${el.scrollHeight}px - 100dvh)`)
+    if (window.innerWidth >= 1024) {
+      setProjectsMargin('0px')
+      return
     }
+    const about = document.getElementById('about')
+    if (!about) {
+      setProjectsMargin('0px')
+      return
+    }
+    const aboutRect = about.getBoundingClientRect()
+    const measuredBottom = Array.from(about.querySelectorAll<HTMLElement>('*')).reduce((bottom, el) => {
+      const style = window.getComputedStyle(el)
+      if (style.display === 'none' || style.visibility === 'hidden') return bottom
+      return Math.max(bottom, el.getBoundingClientRect().bottom - aboutRect.top)
+    }, 0)
+    const visualBottom = measuredBottom || about.scrollHeight
+    const afterAboutGap = Math.min(Math.max(window.innerHeight * 0.1, 64), 96)
+    const margin = Math.max(0, visualBottom + afterAboutGap - window.innerHeight)
+    setProjectsMargin(`${Math.round(margin)}px`)
   }, [])
 
   useEffect(() => {
@@ -99,42 +113,39 @@ function App() {
     if (!hash) return
     // Delay to let React render the target elements
     setTimeout(() => {
-      if (hash === '#about') {
-        window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
-      } else if (hash === '#experience') {
-        const container = document.getElementById('projects')?.parentElement
-        if (container) {
-          const absTop = container.getBoundingClientRect().top + window.scrollY
-          window.scrollTo({ top: absTop + container.offsetHeight - window.innerHeight, behavior: 'smooth' })
-        }
-      } else if (hash === '#projects') {
-        const container = document.getElementById('projects')?.parentElement
-        if (container) {
-          const absTop = container.getBoundingClientRect().top + window.scrollY
-          window.scrollTo({ top: absTop, behavior: 'smooth' })
-        }
-      } else {
-        const el = document.querySelector(hash)
-        if (el) {
-          const absTop = el.getBoundingClientRect().top + window.scrollY - 64
-          window.scrollTo({ top: absTop, behavior: 'smooth' })
-        }
-      }
+      scrollToSection(hash)
     }, 500)
+  }, [])
+
+  useEffect(() => {
+    const lockHorizontalScroll = () => {
+      if (window.scrollX !== 0) {
+        window.scrollTo(0, window.scrollY)
+      }
+    }
+
+    window.addEventListener('scroll', lockHorizontalScroll, { passive: true })
+    return () => window.removeEventListener('scroll', lockHorizontalScroll)
   }, [])
 
   return (
     <>
       <Analytics />
       <Navbar />
-      <main style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+      <main style={{ background: '#f4f4f4' }}>
         <HorizontalScrollSection />
-        <div className="relative" style={{ marginTop: projectsMargin, background: 'var(--color-surface, #EFF3F8)' }}>
-          <Projects />
+        <div className="relative" style={{ marginTop: projectsMargin, background: '#E4EFF5' }}>
+          <ProjectsIntro />
+          <div className="mt-6 lg:mt-0">
+            <Projects />
+          </div>
         </div>
-        <div className="relative z-[1] lg:static" style={{ background: 'linear-gradient(135deg, #0671A4 0%, #38BDF8 100%)', overflow: 'hidden', paddingTop: 'var(--contact-mobile-pt, 400px)' }}>
-          <Contact />
-          <Footer />
+        <div className="contact-footer-handoff relative z-[1]" style={{ background: '#f4f4f4' }}>
+          <div aria-hidden style={{ height: 'var(--contact-mobile-pt, 0px)', background: '#f4f4f4' }} />
+          <div className="contact-footer-surface">
+            <Contact />
+            <Footer />
+          </div>
         </div>
       </main>
     </>

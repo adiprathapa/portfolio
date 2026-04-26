@@ -1,23 +1,97 @@
-export function scrollToSection(href: string) {
+type ScrollBehaviorOption = ScrollBehavior | undefined
+
+function documentTop(el: Element) {
+  return el.getBoundingClientRect().top + window.scrollY
+}
+
+function navOffset() {
+  return window.innerWidth < 1024 ? 84 : 76
+}
+
+function scrollToTop(top: number, behavior: ScrollBehaviorOption = 'smooth') {
+  window.scrollTo({
+    top: Math.max(0, Math.round(top)),
+    behavior,
+  })
+}
+
+function projectsContainer() {
+  return document.getElementById('projects')?.parentElement ?? null
+}
+
+function rem(value: number) {
+  const rootFontSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
+  return value * rootFontSize
+}
+
+function clamp(min: number, preferred: number, max: number) {
+  return Math.min(Math.max(preferred, min), max)
+}
+
+function projectCardHeight() {
+  const stack = document.querySelector<HTMLElement>('#projects > div')
+  return stack?.offsetHeight || (window.innerWidth < 1024 ? clamp(320, window.innerHeight * 0.45, 420) : 500)
+}
+
+function experienceTopInsideViewport() {
+  const cardH = projectCardHeight()
+
+  if (window.innerWidth < 1024) {
+    const stickyTop = rem(4)
+    const stickyPaddingTop = rem(0.75)
+    const gap = clamp(rem(1.5), window.innerHeight * 0.04, rem(2.5))
+    return stickyTop + stickyPaddingTop + cardH + gap
+  }
+
+  const stackShift = Math.max(0, (window.innerHeight - cardH) / 2 - 96)
+  const gap = clamp(rem(2), window.innerHeight * 0.04, rem(3))
+  return (window.innerHeight - cardH) / 2 - stackShift + cardH + gap
+}
+
+export function sectionScrollTop(href: string) {
+  const offset = navOffset()
+
   if (href === '#about') {
-    window.scrollTo({ top: window.innerHeight + 80, behavior: 'smooth' })
-  } else if (href === '#projects') {
+    return window.innerHeight
+  }
+
+  if (href === '#projects') {
     const intro = document.getElementById('projects-intro')
-    if (intro) {
-      const absTop = intro.getBoundingClientRect().top + window.scrollY - 100
-      window.scrollTo({ top: absTop, behavior: 'smooth' })
-    }
-  } else if (href === '#experience') {
-    const container = document.getElementById('projects')?.parentElement
+    const container = projectsContainer()
+    return documentTop(intro ?? container ?? document.body) - offset
+  }
+
+  if (href === '#experience') {
+    const container = projectsContainer()
     if (container) {
-      const absTop = container.getBoundingClientRect().top + window.scrollY
-      window.scrollTo({ top: absTop + container.offsetHeight - window.innerHeight * 0.65, behavior: 'smooth' })
+      return documentTop(container) + container.offsetHeight - window.innerHeight + experienceTopInsideViewport() - offset
     }
-  } else if (href.startsWith('#')) {
+  }
+
+  if (href === '#contact') {
+    const contact = document.getElementById('contact')
+    const content = contact?.firstElementChild
+    if (content) {
+      return documentTop(content) - offset
+    }
+    if (contact) {
+      return documentTop(contact) - offset
+    }
+  }
+
+  if (href.startsWith('#')) {
     const el = document.querySelector(href)
     if (el) {
-      const absTop = el.getBoundingClientRect().top + window.scrollY - 64
-      window.scrollTo({ top: absTop, behavior: 'smooth' })
+      return documentTop(el) - offset
     }
+  }
+
+  return null
+}
+
+export function scrollToSection(href: string, behavior: ScrollBehaviorOption = 'smooth') {
+  const top = sectionScrollTop(href)
+  if (top !== null) {
+    scrollToTop(top, behavior)
   }
 }

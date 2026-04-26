@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { GitHubCalendar } from 'react-github-calendar'
 import { Section } from './ui/section'
-import { GradientText } from './ui/gradient-text'
 
 const BLUE_THEME = {
   light: ['#EFF3F8', '#BAE0F5', '#7CCAF0', '#38BDF8', '#0671A4'],
@@ -10,35 +9,38 @@ const BLUE_THEME = {
 
 const CURRENT_YEAR = new Date().getFullYear()
 
-// GitHub calendars span 53 weeks max in a year. Keep in one place so block
-// sizing math below stays readable.
-const WEEK_COLUMNS = 53
-
 export function GithubHeatmap() {
   const [isLinkHovered, setIsLinkHovered] = useState(false)
   const [blockSize, setBlockSize] = useState(18)
   const [blockMargin, setBlockMargin] = useState(4)
   const [fontSize, setFontSize] = useState(14)
+  const [clipWidth, setClipWidth] = useState<number | undefined>(undefined)
   const heatmapColRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const compute = () => {
       const mobile = window.innerWidth < 1024
+      let size: number, margin: number
       if (mobile) {
-        // Size blocks so the full 53-week grid fits the heatmap column on
-        // mobile with no horizontal overflow and even spacing on both sides.
-        const colW = heatmapColRef.current?.clientWidth ?? window.innerWidth
-        // Reserve ~80% of the per-column slot for the block, ~20% for margin.
-        const slot = colW / WEEK_COLUMNS
-        const size = Math.max(4, Math.floor(slot * 0.8))
-        const margin = Math.max(1, Math.round(slot - size))
+        size = 14
+        margin = 3
         setBlockSize(size)
         setBlockMargin(margin)
-        setFontSize(Math.max(9, Math.round(size * 1.8)))
+        setFontSize(12)
       } else {
-        setBlockSize(18)
-        setBlockMargin(4)
+        size = 18
+        margin = 4
+        setBlockSize(size)
+        setBlockMargin(margin)
         setFontSize(14)
+      }
+      if (mobile && heatmapColRef.current) {
+        const available = heatmapColRef.current.clientWidth
+        const stride = size + margin
+        const cols = Math.max(1, Math.floor((available + margin) / stride))
+        setClipWidth(cols * stride - margin)
+      } else {
+        setClipWidth(undefined)
       }
     }
     compute()
@@ -52,35 +54,40 @@ export function GithubHeatmap() {
   }, [])
 
   return (
-    <Section id="github" className="bg-surface !pt-0 !pb-[8vh]">
+    <Section id="github" className="!pt-[8vh] !pb-[5vh]">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
         {/* Heatmap — left on desktop, below heading on mobile */}
         <div
           ref={heatmapColRef}
-          className="order-2 lg:order-1 w-full lg:flex-1 min-w-0 overflow-hidden flex justify-center lg:block github-heatmap-fade"
+          className="order-2 lg:order-1 w-full lg:flex-1 min-w-0 flex justify-center lg:block"
           style={{ colorScheme: 'light' }}
         >
-          <GitHubCalendar
-            username="adiprathapa"
-            year={CURRENT_YEAR}
-            theme={BLUE_THEME}
-            colorScheme="light"
-            blockSize={blockSize}
-            blockMargin={blockMargin}
-            fontSize={fontSize}
-            showColorLegend={false}
-            showMonthLabels={true}
-            labels={{
-              totalCount: `{{count}} contributions in ${CURRENT_YEAR}`,
-            }}
-          />
+          <div
+            className="overflow-hidden github-heatmap-fade"
+            style={{ width: clipWidth }}
+          >
+            <GitHubCalendar
+              username="adiprathapa"
+              year={CURRENT_YEAR}
+              theme={BLUE_THEME}
+              colorScheme="light"
+              blockSize={blockSize}
+              blockMargin={blockMargin}
+              fontSize={fontSize}
+              showColorLegend={false}
+              showMonthLabels={true}
+              labels={{
+                totalCount: `{{count}} contributions in ${CURRENT_YEAR}`,
+              }}
+            />
+          </div>
         </div>
 
         {/* Heading — right on desktop, on top on mobile */}
         <div className="order-1 lg:order-2 w-full lg:w-auto lg:max-w-md lg:text-right lg:shrink-0">
-          <GradientText as="h2" className="text-2xl md:text-3xl font-normal">
+          <h2 className="text-2xl md:text-3xl font-normal gradient-text">
             View my projects on GitHub
-          </GradientText>
+          </h2>
           <p
             className="mt-3 text-base md:text-lg leading-relaxed"
             style={{ color: '#4B5563' }}

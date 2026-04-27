@@ -205,8 +205,9 @@ export function Projects() {
         const finalMobileY = 0
         const collapseDistance = mobileStagger * (projectOrder.length - 1) - finalMobileY
         const totalTravel = spacing * (projectOrder.length - 1) + collapseDistance
-        const postStackBuffer = 0
-        const animationRail = Math.ceil(totalTravel * 0.75)
+        const experienceDelay = Math.min(Math.max(vh * 0.26, 192), 224)
+        const postStackBuffer = experienceDelay
+        const animationRail = Math.ceil(totalTravel * 0.75 + experienceDelay)
         const measuredSectionHeight = vh + animationRail
         setSectionHeight(`${Math.ceil(measuredSectionHeight)}px`)
         setPostProjectBuffer(`${Math.ceil(postStackBuffer)}px`)
@@ -327,7 +328,7 @@ export function Projects() {
           style={{
             y: cardY7,
             top: isMobile
-              ? 'calc(var(--project-sticky-pt) + var(--project-stack-card-h) + clamp(1.5rem, 4dvh, 2.5rem))'
+              ? 'calc(var(--project-sticky-pt) + var(--project-stack-card-h) + clamp(1.5rem, 4dvh, 2.5rem) + clamp(12rem, 26dvh, 14rem))'
               : 'calc((100vh - var(--project-card-h)) / 2 - var(--projects-stack-shift) + var(--project-card-h) + clamp(2rem, 4vh, 3rem))',
             zIndex: 1,
           }}

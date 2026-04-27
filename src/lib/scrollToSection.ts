@@ -40,7 +40,8 @@ function experienceTopInsideViewport() {
     const stickyTop = rem(4)
     const stickyPaddingTop = rem(0.75)
     const gap = clamp(rem(1.5), window.innerHeight * 0.04, rem(2.5))
-    return stickyTop + stickyPaddingTop + cardH + gap
+    const experienceDelay = clamp(rem(12), window.innerHeight * 0.26, rem(14))
+    return stickyTop + stickyPaddingTop + cardH + gap + experienceDelay
   }
 
   const stackShift = Math.max(0, (window.innerHeight - cardH) / 2 - 96)

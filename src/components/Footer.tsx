@@ -1,5 +1,5 @@
 import { scrollToSection } from '../lib/scrollToSection'
-import { useRef, type MouseEvent } from 'react'
+import { useRef, useEffect, type MouseEvent } from 'react'
 
 const RESUME_PAGE_URL = '/resume.html'
 
@@ -17,6 +17,33 @@ const resourceLinks = [
 
 export function Footer() {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const wordRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const generateMask = async () => {
+      await document.fonts.ready
+      const canvas = document.createElement('canvas')
+      const w = 1200
+      const h = 740
+      const scale = 2
+      canvas.width = w * scale
+      canvas.height = h * scale
+      const ctx = canvas.getContext('2d')!
+      ctx.scale(scale, scale)
+      ctx.font = '600 620px "Poppins"'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'alphabetic'
+      ctx.fillStyle = 'white'
+      ctx.fillText('आदि', w / 2, 690)
+      const dataUrl = canvas.toDataURL('image/png')
+      if (wordRef.current) {
+        wordRef.current.style.webkitMaskImage = `url(${dataUrl})`
+        wordRef.current.style.maskImage = `url(${dataUrl})`
+      }
+    }
+    generateMask()
+  }, [])
+
   const handleFooterLinkClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     if (href.startsWith('#')) {
       e.preventDefault()
@@ -27,7 +54,7 @@ export function Footer() {
   return (
     <footer className="video-footer">
       <div className="video-footer__inner">
-        <div className="video-footer__word" aria-label="आदि">
+        <div ref={wordRef} className="video-footer__word" aria-label="आदि">
           <video
             ref={videoRef}
             className="video-footer__media"

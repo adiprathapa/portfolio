@@ -206,8 +206,8 @@ export function Projects() {
         const collapseDistance = mobileStagger * (projectOrder.length - 1) - finalMobileY
         const totalTravel = spacing * (projectOrder.length - 1) + collapseDistance
         const postStackBuffer = 0
-        const animationRail = Math.ceil(totalTravel * 0.12)
-        const measuredSectionHeight = vh + animationRail - Math.floor(vh / 3)
+        const animationRail = Math.ceil(totalTravel * 0.75)
+        const measuredSectionHeight = vh + animationRail
         setSectionHeight(`${Math.ceil(measuredSectionHeight)}px`)
         setPostProjectBuffer(`${Math.ceil(postStackBuffer)}px`)
         document.documentElement.style.setProperty('--projects-experience-lift', '0px')
@@ -222,7 +222,7 @@ export function Projects() {
       const collapseDistance = desktopStagger * (projectOrder.length - 1) - desktopFinalY
       const totalTravel = spacing * (projectOrder.length - 1) + collapseDistance
       const postStackBuffer = 0
-      const animationRail = Math.ceil(totalTravel * 0.12)
+      const animationRail = Math.ceil(totalTravel * 0.75)
       const measuredSectionHeight = vh + animationRail
       setSectionHeight(`${Math.ceil(measuredSectionHeight)}px`)
       setPostProjectBuffer(`${Math.ceil(postStackBuffer)}px`)

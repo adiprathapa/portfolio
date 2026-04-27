@@ -400,39 +400,14 @@ function CarouselCard({
 /* ── Mobile card ──────────────────────────────────────────── */
 
 function MobileCard({ item }: { item: ExperienceItem }) {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const [scale, setScale] = useState(0.55)
-
-  useEffect(() => {
-    const measure = () => {
-      if (!cardRef.current) return
-      const scaleX = cardRef.current.offsetWidth / CARD_W
-      const scaleY = cardRef.current.offsetHeight / CARD_H
-      setScale(Math.min(scaleX, scaleY))
-    }
-    measure()
-    window.addEventListener('resize', measure)
-    const ro = new ResizeObserver(measure)
-    if (cardRef.current) ro.observe(cardRef.current)
-    return () => { window.removeEventListener('resize', measure); ro.disconnect() }
-  }, [])
-
   return (
     <div
-      ref={cardRef}
       className="relative w-full"
       style={{ height: 'var(--project-card-h)' }}
     >
       <div
-        className="relative overflow-hidden"
+        className="absolute inset-0 overflow-hidden"
         style={{
-          width: CARD_W,
-          height: CARD_H,
-          position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: `translateX(-50%) scale(${scale})`,
-          transformOrigin: 'top center',
           borderRadius: 20,
           border: '1.5px solid rgba(6, 113, 164, 0.3)',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.04)',

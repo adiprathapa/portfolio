@@ -35,9 +35,9 @@ html::-webkit-scrollbar {
   /* Horizontal viewport space reserved outside the card. On the Experience
      carousel, this space is laid out as peek | gap | card | gap | peek where
      peek = inset/3 and gap = inset/6 (see Experience.tsx). vw-based so the
-     card stays ~78% of viewport width and the peeks scale with it. */
-  --mobile-card-inset: clamp(64px, 22vw, 160px);
-  --project-card-h: clamp(320px, 45vh, 420px);
+     card stays broad while the neighboring peek remains subtle. */
+  --mobile-card-inset: clamp(44px, 14vw, 96px);
+  --project-card-h: clamp(360px, 52vh, 470px);
   --project-stack-card-h: var(--project-card-h);
   --project-sticky-pt: 0.75rem;
   --projects-stack-shift: 0px;

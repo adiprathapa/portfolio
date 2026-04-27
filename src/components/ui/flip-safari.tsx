@@ -152,12 +152,12 @@ export function FlipSafari({
           <div className="flex flex-col justify-between lg:justify-center px-4 pt-8 pb-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
             <div>
             <h3
-              className="font-normal font-heading text-left text-[clamp(14px,4.2vw,18px)] lg:text-3xl gradient-text"
-              style={{ lineHeight: 1.2 }}
+              className="font-normal font-heading text-left text-[16px] lg:text-3xl gradient-text"
+              style={{ lineHeight: 1.16 }}
             >
               {projectTagline || projectName}
             </h3>
-            <p className={`mt-1 lg:mt-2 leading-snug lg:leading-relaxed text-left text-heading lg:text-xl ${projectDescription.length > 300 ? 'text-[clamp(9px,2.5vw,11px)]' : projectDescription.length > 200 ? 'text-[clamp(10px,2.8vw,12px)]' : 'text-[clamp(11px,3.2vw,14px)]'}`}>
+            <p className="mt-2 text-[13px] leading-[1.3] lg:mt-2 lg:text-xl lg:leading-relaxed text-left text-heading">
               {projectDescription}
             </p>
             </div>
@@ -169,7 +169,7 @@ export function FlipSafari({
                 {techStack.map((tech) => (
                   <span
                     key={tech}
-                    className="px-1.5 py-0.5 lg:px-3 lg:py-1 rounded-xl text-[clamp(9px,2.6vw,11px)] lg:text-sm font-medium"
+                    className="px-1.5 py-0.5 lg:px-3 lg:py-1 rounded-xl text-[10px] leading-[1.2] lg:text-sm lg:leading-normal font-medium"
                     style={{
                       backgroundColor: 'rgba(6, 113, 164, 0.08)',
                       color: '#0671A4',
@@ -230,7 +230,7 @@ export function FlipSafari({
               </RippleButton>
               )}
               <RippleButton
-                className="px-4 py-2 text-sm lg:px-5 lg:py-2.5 lg:text-base"
+                className="px-3 py-1.5 text-[13px] lg:px-5 lg:py-2.5 lg:text-base"
                 rippleColor="#38BDF8"
                 style={{
                   backgroundColor: 'transparent',

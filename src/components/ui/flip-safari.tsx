@@ -157,7 +157,7 @@ export function FlipSafari({
             >
               {projectTagline || projectName}
             </h3>
-            <p className="mt-1 lg:mt-2 leading-snug lg:leading-relaxed text-left text-heading text-[clamp(11px,3.2vw,14px)] lg:text-xl">
+            <p className={`mt-1 lg:mt-2 leading-snug lg:leading-relaxed text-left text-heading lg:text-xl ${projectDescription.length > 300 ? 'text-[clamp(9px,2.5vw,11px)]' : projectDescription.length > 200 ? 'text-[clamp(10px,2.8vw,12px)]' : 'text-[clamp(11px,3.2vw,14px)]'}`}>
               {projectDescription}
             </p>
             </div>

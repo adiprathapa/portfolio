@@ -28,44 +28,20 @@ export function Footer() {
     <footer className="video-footer">
       <div className="video-footer__inner">
         <div className="video-footer__word" aria-label="आदि">
-          <svg className="video-footer__svg" viewBox="0 40 1200 700" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
-            <defs>
-              <mask id="footer-adi-mask" maskUnits="userSpaceOnUse">
-                <rect width="1200" height="820" fill="black" />
-                <text
-                  x="50%"
-                  y="690"
-                  textAnchor="middle"
-                  fill="white"
-                  fontFamily="Poppins, sans-serif"
-                  fontSize="620"
-                  fontWeight="900"
-                  textLength="1140"
-                  lengthAdjust="spacingAndGlyphs"
-                >
-                  &#x0906;&#x0926;&#x093F;
-                </text>
-              </mask>
-            </defs>
-            <foreignObject width="1200" height="820" mask="url(#footer-adi-mask)">
-              <div className="video-footer__media-frame">
-                <video
-                  ref={videoRef}
-                  className="video-footer__media"
-                  src="/footer-letters.mp4"
-                  poster="/footer-letters-poster.jpg"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  onLoadedMetadata={() => {
-                    if (videoRef.current) videoRef.current.currentTime = 1.2
-                  }}
-                />
-              </div>
-            </foreignObject>
-          </svg>
+          <video
+            ref={videoRef}
+            className="video-footer__media"
+            src="/footer-letters.mp4"
+            poster="/footer-letters-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            onLoadedMetadata={() => {
+              if (videoRef.current) videoRef.current.currentTime = 1.2
+            }}
+          />
         </div>
 
         <div className="video-footer__content">

@@ -11,8 +11,17 @@
 }
 
 .video-footer__word {
+  aspect-ratio: 1200 / 700;
   width: min(100%, 1560px);
   margin-inline: auto;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 40 1200 700'%3E%3Ctext x='50%25' y='690' text-anchor='middle' fill='white' font-family='Poppins, Arial, sans-serif' font-size='620' font-weight='900' textLength='1140' lengthAdjust='spacingAndGlyphs'%3E%E0%A4%86%E0%A4%A6%E0%A4%BF%3C/text%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 40 1200 700'%3E%3Ctext x='50%25' y='690' text-anchor='middle' fill='white' font-family='Poppins, Arial, sans-serif' font-size='620' font-weight='900' textLength='1140' lengthAdjust='spacingAndGlyphs'%3E%E0%A4%86%E0%A4%A6%E0%A4%BF%3C/text%3E%3C/svg%3E");
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 .video-footer__svg {

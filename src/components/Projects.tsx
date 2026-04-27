@@ -296,7 +296,7 @@ export function Projects() {
 
   return (
     <>
-    <div ref={containerRef} className="relative" style={{ height: sectionHeight, zIndex: 5, backgroundColor: '#E4EFF5' }}>
+    <div ref={containerRef} className="relative" style={{ height: sectionHeight, ...(isMobile ? {} : { zIndex: 5, backgroundColor: '#E4EFF5' }) }}>
       <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-[var(--project-sticky-pt)] px-6 z-[3] lg:z-auto" style={{ backgroundColor: '#E4EFF5', clipPath: `inset(-200px 0px ${isMobile ? '-1600px' : '-500px'} 0px)` }}>
         <div className="relative z-[3] w-full mx-auto lg:max-w-7xl" style={{ maxWidth: isMobile ? 'calc(100vw - var(--mobile-card-inset))' : undefined, height: isMobile ? 'var(--project-stack-card-h)' : 500, overflow: 'visible', transform: isMobile ? undefined : 'translateY(calc(var(--projects-stack-shift) * -1))' }}>
           {projectOrder.map((key, i) => (

@@ -441,20 +441,20 @@ function MobileCard({ item }: { item: ExperienceItem }) {
           <div>
             {item.duration && (
               <p
-                className="text-sm font-medium tracking-wide uppercase"
+                className="text-[10px] font-medium tracking-wide uppercase"
                 style={{ color: 'rgba(255,255,255,0.8)', letterSpacing: '0.05em' }}
               >
                 {item.duration}
               </p>
             )}
             <h3
-              className="text-xl font-semibold mt-1.5 leading-snug"
+              className="text-[16px] font-semibold mt-1 leading-snug"
               style={{ color: '#FFFFFF', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
             >
               {item.role}
             </h3>
             <p
-              className="text-lg mt-2.5 leading-relaxed"
+              className="text-[13px] leading-[1.3] mt-2"
               style={{
                 color: 'rgba(255,255,255,0.88)',
                 textShadow: '0 1px 3px rgba(0,0,0,0.3)',
@@ -462,16 +462,16 @@ function MobileCard({ item }: { item: ExperienceItem }) {
             >
               {item.description}
             </p>
-            <div className="flex items-center gap-3 mt-3 flex-wrap">
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
               {item.tech.map((t) => (
-                <div key={t.name} className="flex items-center gap-1.5">
+                <div key={t.name} className="flex items-center gap-1">
                   <img
                     src={t.icon}
                     alt={t.name}
-                    className="w-4 h-4 object-contain"
+                    className="w-3.5 h-3.5 object-contain"
                     style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
                   />
-                  <span className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.7)' }}>
                     {t.name}
                   </span>
                 </div>

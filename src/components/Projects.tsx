@@ -199,7 +199,7 @@ export function Projects() {
       const vh = window.innerHeight
 
       if (window.innerWidth < 1024) {
-        const cardH = cardHProbeRef.current?.offsetHeight ?? Math.min(Math.max(vh * 0.45, 320), 420)
+        const cardH = cardHProbeRef.current?.offsetHeight ?? Math.min(Math.max(vh * 0.52, 360), 470)
         const mobileStagger = 36
         const spacing = cardH + Math.round(cardH * 0.15)
         const finalMobileY = 0
@@ -246,7 +246,8 @@ export function Projects() {
   })
 
   const stagger = isMobile ? 36 : 28
-  const cardH = cardHProbeRef.current?.offsetHeight ?? (isMobile ? 360 : 500)
+  const vh = window.innerHeight
+  const cardH = cardHProbeRef.current?.offsetHeight ?? (isMobile ? Math.min(Math.max(vh * 0.52, 360), 470) : 500)
   const spacing = isMobile ? cardH + Math.round(cardH * 0.15) : cardH + 150
 
   // Cards maintain spacing, stacking during scroll.

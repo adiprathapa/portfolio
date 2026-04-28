@@ -208,7 +208,7 @@ export function Projects() {
         const experienceDelay = Math.min(Math.max(vh * 0.26, 192), 224)
         const experienceHold = Math.min(Math.max(vh * 0.12, 80), 112)
         const postStackBuffer = experienceDelay + experienceHold
-        const animationRail = Math.ceil(totalTravel * 0.75 + experienceDelay + experienceHold)
+        const animationRail = Math.ceil(totalTravel + experienceDelay + experienceHold)
         const measuredSectionHeight = vh + animationRail
         setSectionHeight(`${Math.ceil(measuredSectionHeight)}px`)
         setPostProjectBuffer(`${Math.ceil(postStackBuffer)}px`)

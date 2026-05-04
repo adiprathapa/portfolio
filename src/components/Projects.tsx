@@ -304,7 +304,7 @@ export function Projects() {
 
   return (
     <>
-    <div ref={containerRef} className="relative" style={{ height: sectionHeight, ...(isMobile ? {} : { zIndex: 5, backgroundColor: '#E4EFF5' }) }}>
+    <div ref={containerRef} className="relative" style={{ height: sectionHeight, zIndex: 5, ...(isMobile ? {} : { backgroundColor: '#E4EFF5' }) }}>
       <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen pt-[var(--project-sticky-pt)] px-6" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-420px' : '-600px'} 0px)` }}>
         {/* Phase 2 wrapper: scrolls cards + Experience up together after
             the card animation ends, keeping the 48px gap constant. */}

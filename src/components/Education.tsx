@@ -52,8 +52,8 @@ function VisualCard({ item }: { item: EduItem }) {
         borderRadius: 20,
         border: '1.5px solid rgba(6, 113, 164, 0.3)',
         width: 580,
-        height: 560,
         maxWidth: '100%',
+        aspectRatio: '1 / 1',
       }}
     >
       <img

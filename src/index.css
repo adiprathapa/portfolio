@@ -37,7 +37,7 @@ html::-webkit-scrollbar {
      peek = inset/3 and gap = inset/6 (see Experience.tsx). vw-based so the
      card stays broad while the neighboring peek remains subtle. */
   --mobile-card-inset: clamp(44px, 14vw, 96px);
-  --project-card-h: clamp(360px, 52vh, 470px);
+  --project-card-h: min(calc(100vw - var(--mobile-card-inset)), 470px);
   --project-stack-card-h: var(--project-card-h);
   --project-sticky-pt: 0.75rem;
   --footer-blue: #2f9fd1;

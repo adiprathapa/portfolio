@@ -1,0 +1,387 @@
+- generic [ref=e2]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "आदि" [ref=e6] [cursor=pointer]:
+        - /url: /#top
+      - button "Open menu" [ref=e1958]
+  - main [ref=e21]:
+    - generic [ref=e24]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - heading "你好，我|" [level=1] [ref=e2102]:
+            - generic [ref=e34]: 你好，我|
+          - paragraph [ref=e35]: Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI.
+        - generic [ref=e37]:
+          - img "Adi Prathapa" [ref=e39] [cursor=pointer]
+          - img "GitHub avatar" [ref=e44] [cursor=pointer]
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - heading "About me" [level=2] [ref=e54]
+          - paragraph [ref=e55]: I'm a Computer Science student at Cornell minoring in AI, originally from Nebraska. I am really interested in building and working with full stack web apps and experimenting with ML models.
+          - paragraph [ref=e56]: Lately I've been diving deep into web3, stablecoins, and IPFS, the idea of programmable money and decentralized finance is something I enjoy working with and learning about. I'm always looking for ways to connect what I'm learning in AI with applications outside of the classroom.
+          - paragraph [ref=e57]: Outside of code, I'm an Eagle Scout who still loves getting outdoors, camping, hiking, that kind of thing. When I'm not on a trail, you'll probably find me gaming, tinkering with some new tech, or catching up on anime and other shows.
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - generic [ref=e61]: Cornell Data Strategy Meeting
+            - generic [ref=e63]: Stablecoin Presentation at Cornell Hackathon
+            - generic [ref=e65]: Formal Organizing Group
+            - generic [ref=e67]: Hiking in Robert H. Treman State Park
+            - generic [ref=e69]: Eagle Scout Project
+            - generic [ref=e71]: After Eagle Scout Board of Review
+          - paragraph [ref=e72]:
+            - img [ref=e73]
+            - text: Drag to throw
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - heading "Projects" [level=2] [ref=e81]
+          - paragraph [ref=e82]: I am a fullstack developer who mainly works in Python, Java, and for frontend in JavaScript and TypeScript. I have experience working with a variety of machine learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas, and more. My projects range from fintech applications to machine learning focused projects to apps that combine both.
+        - generic [ref=e782]:
+          - article [ref=e785]:
+            - img [ref=e787]:
+              - generic [ref=e788]:
+                - generic [ref=e789]: Jan
+                - generic [ref=e790]: Feb
+                - generic [ref=e791]: Mar
+                - generic [ref=e792]: Apr
+                - generic [ref=e793]: May
+                - generic [ref=e794]: Jun
+                - generic [ref=e795]: Jul
+                - generic [ref=e796]: Aug
+                - generic [ref=e797]: Sep
+                - generic [ref=e798]: Oct
+                - generic [ref=e799]: Nov
+                - generic [ref=e800]: Dec
+            - generic [ref=e1220]: 596 contributions in 2026
+          - generic [ref=e1221]:
+            - heading "View my projects on GitHub" [level=2] [ref=e1222]
+            - paragraph [ref=e1223]: Every square is another commit toward open source work, research prototypes, and side projects. Browse the full set on GitHub.
+            - link "github.com/adiprathapa" [ref=e1224] [cursor=pointer]:
+              - /url: https://github.com/adiprathapa
+              - generic [ref=e1225]: github.com/adiprathapa
+              - img [ref=e1226]
+      - generic [ref=e1228]:
+        - generic [ref=e1231]:
+          - generic [ref=e1232]:
+            - generic [ref=e1237]:
+              - generic [ref=e1238]:
+                - heading "Offline education for everyone, everywhere" [level=3] [ref=e1239]
+                - paragraph [ref=e1240]: Open source contributor on FreeCodeCamp which is part of the openZIM and Kiwix projects. I engineered a YAML based CI suite for locale key validation, implemented system wide dark mode with CSS variables and CodeMirror, and refactored core Vue components for optimized markdown parsing.
+              - generic [ref=e1241]:
+                - generic [ref=e1242]:
+                  - generic [ref=e1243]: Vue.js
+                  - generic [ref=e1244]: Pinia
+                  - generic [ref=e1245]: GitHub Actions
+                  - generic [ref=e1246]: YAML
+                  - generic [ref=e1247]: Python
+                  - generic [ref=e1248]: CodeMirror
+                - button "Repository" [ref=e1256] [cursor=pointer]:
+                  - generic [ref=e1258]:
+                    - img [ref=e1259]
+                    - generic [ref=e1261]: Repository
+            - generic [ref=e1270]:
+              - generic [ref=e1271]:
+                - heading "Predicting livestock disease 48 hours before symptoms appear" [level=3] [ref=e1272]
+                - paragraph [ref=e1273]: Trained a GRU and GraphSAGE model over a 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.
+              - generic [ref=e1274]:
+                - generic [ref=e1275]:
+                  - generic [ref=e1276]: FastAPI
+                  - generic [ref=e1277]: Claude API
+                  - generic [ref=e1278]: Gemini API
+                  - generic [ref=e1279]: IPFS
+                  - generic [ref=e1280]: Leaflet
+                  - generic [ref=e1281]: React
+                  - generic [ref=e1282]: pandas
+                  - generic [ref=e1283]: NumPy
+                - button "Repository" [ref=e1291] [cursor=pointer]:
+                  - generic [ref=e1293]:
+                    - img [ref=e1294]
+                    - generic [ref=e1296]: Repository
+            - generic [ref=e1305]:
+              - generic [ref=e1306]:
+                - heading "AI powered liquidity stress scoring with verifiable audit trails" [level=3] [ref=e1307]
+                - paragraph [ref=e1308]: Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up multimodel LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.
+              - generic [ref=e1309]:
+                - generic [ref=e1310]:
+                  - generic [ref=e1311]: PyTorch
+                  - generic [ref=e1312]: FastAPI
+                  - generic [ref=e1313]: React
+                  - generic [ref=e1314]: Ollama
+                  - generic [ref=e1315]: D3.js
+                  - generic [ref=e1316]: Mistral AI
+                  - generic [ref=e1317]: NetworkX
+                  - generic [ref=e1318]: scikit-learn
+                - button "Repository" [ref=e1326] [cursor=pointer]:
+                  - generic [ref=e1328]:
+                    - img [ref=e1329]
+                    - generic [ref=e1331]: Repository
+            - generic [ref=e1340]:
+              - generic [ref=e1341]:
+                - heading "One click AI market sizing with TAM/SAM/SOM visualization" [level=3] [ref=e1342]
+                - paragraph [ref=e1343]: Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.
+              - generic [ref=e1344]:
+                - generic [ref=e1345]:
+                  - generic [ref=e1346]: JavaScript
+                  - generic [ref=e1347]: React
+                  - generic [ref=e1348]: Node.js
+                  - generic [ref=e1349]: Express
+                  - generic [ref=e1350]: MongoDB
+                  - generic [ref=e1351]: Gemini API
+                  - generic [ref=e1352]: Vercel
+                - button "Repository" [ref=e1360] [cursor=pointer]:
+                  - generic [ref=e1362]:
+                    - img [ref=e1363]
+                    - generic [ref=e1365]: Repository
+            - generic [ref=e1374]:
+              - generic [ref=e1375]:
+                - heading "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge" [level=3] [ref=e1376]
+                - paragraph [ref=e1377]: Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.
+              - generic [ref=e1378]:
+                - generic [ref=e1379]:
+                  - generic [ref=e1380]: PyTorch
+                  - generic [ref=e1381]: GNN
+                  - generic [ref=e1382]: NumPy
+                  - generic [ref=e1383]: FFT
+                  - generic [ref=e1384]: Python
+                - button "Repository" [ref=e1386] [cursor=pointer]:
+                  - generic [ref=e1388]:
+                    - img [ref=e1389]
+                    - generic [ref=e1391]: Repository
+            - generic [ref=e1404]:
+              - generic [ref=e1405]:
+                - heading "Real time blockchain risk analytics with Palantir Foundry" [level=3] [ref=e1406]
+                - paragraph [ref=e1407]: Built for the Palantir Foundry FDSE technical challenge. Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry.
+              - generic [ref=e1408]:
+                - generic [ref=e1409]:
+                  - generic [ref=e1410]: NetworkX
+                  - generic [ref=e1411]: Palantir Foundry
+                  - generic [ref=e1412]: JavaScript
+                - button "Repository" [ref=e1420] [cursor=pointer]:
+                  - generic [ref=e1422]:
+                    - img [ref=e1423]
+                    - generic [ref=e1425]: Repository
+            - generic [ref=e1434]:
+              - generic [ref=e1435]:
+                - heading "Real time 1v1 fighting powered by phone cameras and AI commentary" [level=3] [ref=e1436]
+                - paragraph [ref=e1437]: Built for the Cornell Claude Builders Club Hackathon. A 1v1 fighting game where players throw real punches at their phone cameras while silhouettes battle in a shared browser overlay. MediaPipe pose estimation streams keypoints to a 60Hz Python game server for hit detection and damage logic, with a live AI commentator powered by Claude API and ElevenLabs TTS.
+              - generic [ref=e1438]:
+                - generic [ref=e1439]:
+                  - generic [ref=e1440]: MediaPipe
+                  - generic [ref=e1441]: FastAPI
+                  - generic [ref=e1442]: React
+                  - generic [ref=e1443]: PixiJS
+                  - generic [ref=e1444]: Claude API
+                  - generic [ref=e1445]: ElevenLabs
+                  - generic [ref=e1446]: WebSocket
+                - button "Repository" [ref=e1454] [cursor=pointer]:
+                  - generic [ref=e1456]:
+                    - img [ref=e1457]
+                    - generic [ref=e1459]: Repository
+          - generic [ref=e1468]:
+            - generic [ref=e1469]:
+              - generic [ref=e1470]:
+                - heading "Experience" [level=2] [ref=e1471]
+                - paragraph [ref=e1472]: I have experience in software engineering, research, and full stack development. Looking for Software and AI/ML engineering internship roles.
+              - generic [ref=e1473]:
+                - button "Work" [ref=e1474] [cursor=pointer]
+                - button "Involvement" [ref=e1475] [cursor=pointer]
+            - generic [ref=e1963]:
+              - generic [ref=e1964]:
+                - generic [ref=e1969] [cursor=pointer]:
+                  - img "MITRE" [ref=e1970]
+                  - generic [ref=e1971]:
+                    - paragraph [ref=e1972]: Incoming Summer 2026
+                    - heading "Data Science Intern" [level=3] [ref=e1973]
+                    - paragraph [ref=e1974]: Working on graph neural networks and graph attention networks
+                    - generic [ref=e1975]:
+                      - generic [ref=e1976]:
+                        - img "PyTorch Geometric" [ref=e1977]
+                        - generic [ref=e1978]: PyTorch Geometric
+                      - generic [ref=e1979]:
+                        - img "Dash" [ref=e1980]
+                        - generic [ref=e1981]: Dash
+                - generic [ref=e1986] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1987]
+                  - generic [ref=e1988]:
+                    - paragraph [ref=e1989]: January 2026
+                    - heading "CSMore Intern" [level=3] [ref=e1990]
+                    - paragraph [ref=e1991]: Implementing modular class designs, data structures, and algorithms
+                    - generic [ref=e1992]:
+                      - generic [ref=e1993]:
+                        - img "Java" [ref=e1994]
+                        - generic [ref=e1995]: Java
+                      - generic [ref=e1996]:
+                        - img "JUnit" [ref=e1997]
+                        - generic [ref=e1998]: JUnit
+                - generic [ref=e2003] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e2004]
+                  - generic [ref=e2005]:
+                    - paragraph [ref=e2006]: June — July 2024
+                    - heading "Software Engineering Intern" [level=3] [ref=e2007]
+                    - paragraph [ref=e2008]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                    - generic [ref=e2009]:
+                      - generic [ref=e2010]:
+                        - img "ChatGPT API" [ref=e2011]
+                        - generic [ref=e2012]: ChatGPT API
+                      - generic [ref=e2013]:
+                        - img "JavaScript" [ref=e2014]
+                        - generic [ref=e2015]: JavaScript
+                - generic [ref=e2020] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e2021]
+                  - generic [ref=e2022]:
+                    - paragraph [ref=e2023]: June — August 2023
+                    - heading "Physics Research Assistant" [level=3] [ref=e2024]
+                    - paragraph [ref=e2025]: Data visualization through 3D printing for Bohmian trajectories
+                    - generic [ref=e2026]:
+                      - generic [ref=e2027]:
+                        - img "scikit-learn" [ref=e2028]
+                        - generic [ref=e2029]: scikit-learn
+                      - generic [ref=e2030]:
+                        - img "Python" [ref=e2031]
+                        - generic [ref=e2032]: Python
+                - generic [ref=e2037] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e2038]
+                  - generic [ref=e2039]:
+                    - paragraph [ref=e2040]: Fall 2025 — Present
+                    - heading "Tech Implementation Associate" [level=3] [ref=e2041]
+                    - paragraph [ref=e2042]: Delivering data prediction and visualization tools to clients
+                    - generic [ref=e2043]:
+                      - generic [ref=e2044]:
+                        - img "Redis" [ref=e2045]
+                        - generic [ref=e2046]: Redis
+                      - generic [ref=e2047]:
+                        - img "PostgreSQL" [ref=e2048]
+                        - generic [ref=e2049]: PostgreSQL
+                - generic [ref=e2054] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e2055]
+                  - generic [ref=e2056]:
+                    - paragraph [ref=e2057]: Fall 2025 — Present
+                    - heading "Project Manager" [level=3] [ref=e2058]
+                    - paragraph [ref=e2059]: Designing and taping out custom silicon chips as part of a student led project team
+                    - generic [ref=e2060]:
+                      - generic [ref=e2061]:
+                        - img "Confluence" [ref=e2062]
+                        - generic [ref=e2063]: Confluence
+                      - generic [ref=e2064]:
+                        - img "Apache HTTP Server" [ref=e2065]
+                        - generic [ref=e2066]: Apache HTTP Server
+                - generic [ref=e2071] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e2072]
+                  - generic [ref=e2073]:
+                    - paragraph [ref=e2074]: Fall 2025 — Present
+                    - heading "Ambassador" [level=3] [ref=e2075]
+                    - paragraph [ref=e2076]: Representing the College of Arts & Sciences to prospective students and families
+              - generic [ref=e2077]:
+                - button [disabled] [ref=e2078] [cursor=pointer]:
+                  - img [ref=e2079]
+                - button [ref=e2081] [cursor=pointer]:
+                  - img [ref=e2082]
+        - generic [ref=e1840]:
+          - generic [ref=e1842]:
+            - heading "Education" [level=2] [ref=e1843]
+            - paragraph [ref=e1844]: Academic foundation from Omaha, Nebraska to Ithaca, New York.
+          - generic [ref=e1850]:
+            - button "Cornell University Ithaca, NY B.A. Computer Science College of Arts and Sciences and Ann S. Bowers College of Computing and Information Science, minor in Artificial Intelligence. Data Structures, Object-Oriented Programming, Theory of Computation, Discrete Math, Python Design and Development, Calculus 1, Calculus 2, Linear Algebra for Engineers" [expanded] [ref=e1852] [cursor=pointer]:
+              - generic [ref=e1853]:
+                - generic [ref=e1854]:
+                  - generic [ref=e1855]: Cornell University
+                  - generic [ref=e1856]: Ithaca, NY
+                - generic [ref=e1858]:
+                  - generic [ref=e1859]: B.A. Computer Science
+                  - generic [ref=e1860]: College of Arts and Sciences and Ann S. Bowers College of Computing and Information Science, minor in Artificial Intelligence.
+                  - generic [ref=e1862]: Data Structures, Object-Oriented Programming, Theory of Computation, Discrete Math, Python Design and Development, Calculus 1, Calculus 2, Linear Algebra for Engineers
+            - button "Millard North High School" [ref=e2087] [cursor=pointer]:
+              - generic [ref=e1867]: Millard North High School
+    - generic [ref=e1870]:
+      - generic [ref=e1873]:
+        - generic [ref=e1874]:
+          - heading "Let's work together" [level=2] [ref=e1875]:
+            - text: Let's work
+            - text: together
+          - paragraph [ref=e1876]: Have a project or opportunity in mind or just want to connect? Drop your email and I'll reach out.
+        - generic [ref=e1877]:
+          - generic [ref=e1879]:
+            - textbox "your@email.com" [ref=e1880]
+            - button "Get in touch" [ref=e1881]:
+              - generic [ref=e1882]:
+                - generic [ref=e1883]: Get in touch
+                - img [ref=e1884]
+          - generic [ref=e1886]:
+            - link [ref=e1887] [cursor=pointer]:
+              - /url: https://github.com/adiprathapa
+              - img [ref=e1888]
+            - link [ref=e1890] [cursor=pointer]:
+              - /url: https://linkedin.com/in/adiprathapa
+              - img [ref=e1891]
+            - link [ref=e1893] [cursor=pointer]:
+              - /url: mailto:aprathapa01@gmail.com
+              - img [ref=e1894]
+        - generic [ref=e1898]:
+          - img "MacBook Air Midnight" [ref=e1899]
+          - generic [ref=e1900]:
+            - img "ACSU"
+          - generic [ref=e1902]:
+            - img "Riley's Way"
+          - generic [ref=e1904]:
+            - img "Tata-Cornell Institute"
+          - generic [ref=e1906]:
+            - img "Cornell Data Strategy"
+          - generic [ref=e1908]:
+            - img "TrexQuant"
+          - generic [ref=e1910]:
+            - img "C2S2"
+          - generic [ref=e1912]:
+            - img "Ampersand"
+          - generic [ref=e1914]:
+            - img "Coneflower"
+          - generic [ref=e1916]:
+            - img "Hackathons Cornell"
+          - generic [ref=e1918]:
+            - img "Cornell University"
+          - generic [ref=e1920]:
+            - img "Claude"
+          - generic [ref=e1922]:
+            - img "Google for Education"
+          - generic [ref=e1924]:
+            - img "tabs+"
+          - generic [ref=e1926]:
+            - img "CU mascot"
+          - generic [ref=e1928]:
+            - img "Claude"
+          - generic [ref=e1930]:
+            - img "YC"
+      - generic [ref=e1933]:
+        - generic "आदि" [ref=e1934]
+        - generic [ref=e1937]:
+          - navigation "Footer navigation" [ref=e1938]:
+            - heading "Explore" [level=4] [ref=e1939]
+            - link "About" [ref=e1940] [cursor=pointer]:
+              - /url: "#about"
+            - link "Projects" [ref=e1941] [cursor=pointer]:
+              - /url: "#projects"
+            - link "Experience" [ref=e1942] [cursor=pointer]:
+              - /url: "#experience"
+            - link "Education" [ref=e1943] [cursor=pointer]:
+              - /url: "#education"
+            - link "Contact" [ref=e1944] [cursor=pointer]:
+              - /url: "#contact"
+          - navigation "Resources" [ref=e1945]:
+            - heading "Resources" [level=4] [ref=e1946]
+            - link "Resume" [ref=e1947] [cursor=pointer]:
+              - /url: /resume.html
+            - link "Cal" [ref=e1948] [cursor=pointer]:
+              - /url: /calendar.html
+          - generic [ref=e1949]:
+            - heading "Contact" [level=4] [ref=e1950]
+            - link "Email" [ref=e1951] [cursor=pointer]:
+              - /url: mailto:aprathapa01@gmail.com
+            - link "LinkedIn" [ref=e1952] [cursor=pointer]:
+              - /url: https://linkedin.com/in/adiprathapa
+            - link "GitHub" [ref=e1953] [cursor=pointer]:
+              - /url: https://github.com/adiprathapa
+        - generic [ref=e1954]:
+          - link "Back to hero" [ref=e1955] [cursor=pointer]:
+            - /url: /#top
+            - text: आदि
+          - generic [ref=e1956]: © 2026 Adi Prathapa. All rights reserved.
+          - button "Back to top" [ref=e1957] [cursor=pointer]

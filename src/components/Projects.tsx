@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { FlipSafari } from './ui/flip-safari'
 import { Experience } from './Experience'
+import { Education } from './Education'
 // GradientText used in About section's desktop projects intro
 
 // Globe data kept but not used
@@ -117,17 +118,21 @@ const projectTechStacks: Record<string, string[]> = {
 function ProjectCard({
   projectKey,
   yValue,
-  collapseValue,
   stackOffset,
   zIndex,
+  opacity,
 }: {
   projectKey: string
   yValue: MotionValue<number>
-  collapseValue: MotionValue<number> | null
   stackOffset: MotionValue<number>
   zIndex: number
+  opacity?: MotionValue<number>
 }) {
-  const combinedY = useTransform(() => yValue.get() + (collapseValue ? collapseValue.get() : 0) + stackOffset.get())
+  const combinedY = useTransform([yValue, stackOffset], ([y, offset]) => {
+    const currentY = Number(y)
+    const currentOffset = Number(offset)
+    return currentY + currentOffset
+  })
   // Full size once the card's top reaches the bottom of the previous card (~500px),
   // smallest at 1120px away, linear ramp between
   const scale = useTransform(() => {
@@ -146,6 +151,7 @@ function ProjectCard({
         y: combinedY,
         scale,
         zIndex,
+        ...(opacity ? { opacity } : {}),
         willChange: 'transform',
       }}
     >
@@ -175,15 +181,23 @@ function ProjectCard({
   )
 }
 
+function readStickyPtPx() {
+  const raw = getComputedStyle(document.documentElement)
+    .getPropertyValue('--project-sticky-pt').trim()
+  if (raw.endsWith('vh')) return window.innerHeight * (parseFloat(raw) / 100)
+  if (raw.endsWith('rem')) {
+    const rootFs = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
+    return parseFloat(raw) * rootFs
+  }
+  return parseFloat(raw) || 0
+}
+
 export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null)
-  // Hidden probe used to resolve the current px value of --project-stack-card-h
-  // (which is a clamp() of vh) so the overflow math below can stay in sync
-  // with the CSS without duplicating the formula.
   const cardHProbeRef = useRef<HTMLDivElement>(null)
+  const experienceRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024)
   const [sectionHeight, setSectionHeight] = useState('calc(100dvh + clamp(8rem, 20dvh, 12rem))')
-  const [postProjectBuffer, setPostProjectBuffer] = useState('clamp(6rem, 12dvh, 10rem)')
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024)
     check()
@@ -197,44 +211,21 @@ export function Projects() {
   useLayoutEffect(() => {
     const compute = () => {
       const vh = window.innerHeight
-
-      if (window.innerWidth < 1024) {
-        const cardH = cardHProbeRef.current?.offsetHeight ?? Math.min(Math.max(vh * 0.52, 360), 470)
-        const mobileStagger = 36
-        const spacing = cardH + Math.round(cardH * 0.15)
-        const finalMobileY = 0
-        const collapseDistance = mobileStagger * (projectOrder.length - 1) - finalMobileY
-        const totalTravel = spacing * (projectOrder.length - 1) + collapseDistance
-        const experienceDelay = Math.min(Math.max(vh * 0.26, 192), 224)
-        const experienceHold = Math.min(Math.max(vh * 0.12, 80), 112)
-        const postStackBuffer = experienceDelay + experienceHold
-        const animationRail = Math.ceil(totalTravel + experienceDelay + experienceHold)
-        const measuredSectionHeight = vh + animationRail
-        setSectionHeight(`${Math.ceil(measuredSectionHeight)}px`)
-        setPostProjectBuffer(`${Math.ceil(postStackBuffer)}px`)
-        document.documentElement.style.setProperty('--projects-experience-lift', '0px')
-        document.documentElement.style.setProperty('--contact-mobile-pt', '0px')
-        return
-      }
-
-      const desktopCardH = cardHProbeRef.current?.offsetHeight ?? 500
-      const desktopFinalY = 0
-      const desktopStagger = 28
-      const spacing = desktopCardH + 150
-      const collapseDistance = desktopStagger * (projectOrder.length - 1) - desktopFinalY
-      const totalTravel = spacing * (projectOrder.length - 1) + collapseDistance
-      const postStackBuffer = 0
-      const animationRail = Math.ceil(totalTravel * 0.75)
-      const measuredSectionHeight = vh + animationRail
-      setSectionHeight(`${Math.ceil(measuredSectionHeight)}px`)
-      setPostProjectBuffer(`${Math.ceil(postStackBuffer)}px`)
-      document.documentElement.style.setProperty('--projects-experience-lift', '0px')
-      document.documentElement.style.setProperty('--contact-mobile-pt', '0px')
+      const mobile = window.innerWidth < 1024
+      const fallbackCardH = mobile ? Math.min(Math.max(vh * 0.52, 360), 470) : 500
+      const cardH = cardHProbeRef.current?.offsetHeight ?? fallbackCardH
+      const spacing = mobile ? cardH + Math.round(cardH * 0.15) : cardH + 150
+      const totalTravel = spacing * (projectOrder.length - 1)
+      const stickyPt = readStickyPtPx()
+      const expH = experienceRef.current?.offsetHeight ?? 550
+      const expOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
+      setSectionHeight(`${Math.ceil(vh + totalTravel + expOverflow)}px`)
     }
     compute()
     window.addEventListener('resize', compute)
     const ro = new ResizeObserver(compute)
     if (cardHProbeRef.current) ro.observe(cardHProbeRef.current)
+    if (experienceRef.current) ro.observe(experienceRef.current)
     return () => {
       window.removeEventListener('resize', compute)
       ro.disconnect()
@@ -245,75 +236,108 @@ export function Projects() {
     offset: ["start start", "end end"]
   })
 
-  const stagger = isMobile ? 36 : 28
   const vh = window.innerHeight
   const cardH = cardHProbeRef.current?.offsetHeight ?? (isMobile ? Math.min(Math.max(vh * 0.52, 360), 470) : 500)
   const spacing = isMobile ? cardH + Math.round(cardH * 0.15) : cardH + 150
 
-  // Cards maintain spacing, stacking during scroll.
-  // After stacking, the last card keeps scrolling up and "eats" the others —
-  // each card joins the last card's motion once it reaches its position.
-  // seg is computed so stacking and collapse phases move at the same px/scroll rate.
-  const finalY = 0
-  const collapseDistance = stagger * 6 - finalY
-  const seg = spacing / (6 * spacing + collapseDistance)
+  // Two-phase scroll: Phase 1 = card stacking, Phase 2 = scroll Experience
+  // into viewport. Both share the same sticky section so they stay in sync.
+  const stagger = 28
+  const expH = experienceRef.current?.offsetHeight ?? 550
+  const stickyPt = readStickyPtPx()
+  const experienceOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
+  const cardAnimationRail = 6 * spacing
+  const totalRail = cardAnimationRail + experienceOverflow
+  const cardAnimationEnd = totalRail > 0 ? cardAnimationRail / totalRail : 1
 
-  const cardY1 = useTransform(scrollYProgress, [0, 1], [0, 0])
+  // Phase 1: remap scrollYProgress [0, cardAnimationEnd] → [0, 1] for cards
+  const cardProgress = useTransform(scrollYProgress,
+    [0, Math.min(cardAnimationEnd, 0.9999)],
+    [0, 1])
+  const seg = 1 / 6
 
-  const cardY2 = useTransform(scrollYProgress,
+  const cardY1 = useTransform(cardProgress, [0, 1], [0, 0])
+
+  const cardY2 = useTransform(cardProgress,
     [0, seg, 1],
     [spacing, stagger, stagger])
 
-  const cardY3 = useTransform(scrollYProgress,
+  const cardY3 = useTransform(cardProgress,
     [0, seg, seg * 2, 1],
     [spacing * 2, spacing + stagger, stagger * 2, stagger * 2])
 
-  const cardY4 = useTransform(scrollYProgress,
+  const cardY4 = useTransform(cardProgress,
     [0, seg, seg * 2, seg * 3, 1],
     [spacing * 3, spacing * 2 + stagger, spacing + stagger * 2, stagger * 3, stagger * 3])
 
-  const cardY5 = useTransform(scrollYProgress,
+  const cardY5 = useTransform(cardProgress,
     [0, seg, seg * 2, seg * 3, seg * 4, 1],
     [spacing * 4, spacing * 3 + stagger, spacing * 2 + stagger * 2, spacing + stagger * 3, stagger * 4, stagger * 4])
 
-  const cardY6 = useTransform(scrollYProgress,
+  const cardY6 = useTransform(cardProgress,
     [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, 1],
     [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, stagger * 5])
 
-  const cardY7 = useTransform(scrollYProgress,
-    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6, 1],
-    [spacing * 6, spacing * 5 + stagger, spacing * 4 + stagger * 2, spacing * 3 + stagger * 3, spacing * 2 + stagger * 4, spacing + stagger * 5, stagger * 6, finalY])
-
-
-  // Once the last card passes a card's position, that card moves with it
-  const collapse1 = useTransform(() => Math.min(0, cardY7.get() - 0))
-  const collapse2 = useTransform(() => Math.min(0, cardY7.get() - stagger))
-  const collapse3 = useTransform(() => Math.min(0, cardY7.get() - stagger * 2))
-  const collapse4 = useTransform(() => Math.min(0, cardY7.get() - stagger * 3))
-  const collapse5 = useTransform(() => Math.min(0, cardY7.get() - stagger * 4))
-  const collapse6 = useTransform(() => Math.min(0, cardY7.get() - stagger * 5))
+  const cardY7 = useTransform(cardProgress,
+    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6],
+    [spacing * 6, spacing * 5 + stagger, spacing * 4 + stagger * 2, spacing * 3 + stagger * 3, spacing * 2 + stagger * 4, spacing + stagger * 5, 0])
 
   const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5, cardY6, cardY7]
-  const collapseValues: (MotionValue<number> | null)[] = [collapse1, collapse2, collapse3, collapse4, collapse5, collapse6, null]
+
+  const hideOp0 = useTransform(cardY7, (y: number) => y <= 0 ? 0 : 1)
+  const hideOp1 = useTransform(cardY7, (y: number) => y <= stagger ? 0 : 1)
+  const hideOp2 = useTransform(cardY7, (y: number) => y <= stagger * 2 ? 0 : 1)
+  const hideOp3 = useTransform(cardY7, (y: number) => y <= stagger * 3 ? 0 : 1)
+  const hideOp4 = useTransform(cardY7, (y: number) => y <= stagger * 4 ? 0 : 1)
+  const hideOp5 = useTransform(cardY7, (y: number) => y <= stagger * 5 ? 0 : 1)
+  const cardOpacities: (MotionValue<number> | undefined)[] = [hideOp0, hideOp1, hideOp2, hideOp3, hideOp4, hideOp5, undefined]
+
+  // Phase 2: after cards finish, scroll everything up so Experience fills viewport
+  const phase2Offset = useTransform(scrollYProgress,
+    [Math.min(cardAnimationEnd, 0.9999), 1],
+    [0, -experienceOverflow])
+
+  // Experience Y relative to the phase2 wrapper (no stickyPt — the wrapper
+  // is inside the section's padded area, so stickyPt is already accounted for)
+  const experienceInsideY = useTransform(cardY7, (y: number) => y + cardH + 96)
   const stackOffset = useTransform(scrollYProgress, [0, 1], [0, 0])
 
   return (
     <>
     <div ref={containerRef} className="relative" style={{ height: sectionHeight, ...(isMobile ? {} : { zIndex: 5, backgroundColor: '#E4EFF5' }) }}>
-      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen flex items-start lg:items-center justify-center pt-[var(--project-sticky-pt)] px-6 z-[3] lg:z-auto" style={{ backgroundColor: '#E4EFF5', clipPath: `inset(-200px 0px ${isMobile ? '-1600px' : '-500px'} 0px)` }}>
-        <div className="relative z-[3] w-full mx-auto lg:max-w-7xl" style={{ maxWidth: isMobile ? 'calc(100vw - var(--mobile-card-inset))' : undefined, height: isMobile ? 'var(--project-stack-card-h)' : 500, overflow: 'visible', transform: isMobile ? undefined : 'translateY(calc(var(--projects-stack-shift) * -1))' }}>
-          {projectOrder.map((key, i) => (
-            <ProjectCard
-              key={key}
-              projectKey={key}
-              yValue={cardYValues[i]}
-              collapseValue={collapseValues[i]}
-              stackOffset={stackOffset}
-              zIndex={i + 1}
-            />
-          ))}
-        </div>
-        {/* Hidden probe: resolves --project-stack-card-h to pixels for the JS math. */}
+      <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen pt-[var(--project-sticky-pt)] px-6" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-420px' : '-600px'} 0px)` }}>
+        {/* Phase 2 wrapper: scrolls cards + Experience up together after
+            the card animation ends, keeping the 48px gap constant. */}
+        <motion.div style={{ y: phase2Offset, position: 'relative' }}>
+          <div className="relative z-[3]" style={{ maxWidth: isMobile ? 'calc(100vw - var(--mobile-card-inset))' : 1280, marginLeft: 'auto', marginRight: 'auto', height: isMobile ? 'var(--project-stack-card-h)' : 500, overflow: 'visible' }}>
+            {projectOrder.map((key, i) => (
+              <ProjectCard
+                key={key}
+                projectKey={key}
+                yValue={cardYValues[i]}
+                stackOffset={stackOffset}
+                zIndex={i + 1}
+                opacity={cardOpacities[i]}
+              />
+            ))}
+          </div>
+          {/* Experience follows card 7 — same wrapper = constant gap */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: '-1.5rem',
+              right: '-1.5rem',
+              y: experienceInsideY,
+              zIndex: projectOrder.length + 1,
+            }}
+          >
+            <div ref={experienceRef}>
+              <Experience />
+            </div>
+          </motion.div>
+        </motion.div>
+        {/* Hidden probe */}
         <div
           ref={cardHProbeRef}
           aria-hidden
@@ -325,21 +349,11 @@ export function Projects() {
             height: 'var(--project-stack-card-h)',
           }}
         />
-        <motion.div
-          className="absolute left-0 w-full"
-          style={{
-            y: isMobile ? 0 : cardY7,
-            top: isMobile
-              ? 'calc(var(--project-sticky-pt) + var(--project-stack-card-h) + clamp(1.5rem, 4dvh, 2.5rem) + clamp(12rem, 26dvh, 14rem) + clamp(5rem, 12dvh, 7rem))'
-              : 'calc((100vh - var(--project-card-h)) / 2 - var(--projects-stack-shift) + var(--project-card-h) + clamp(2rem, 4vh, 3rem))',
-            zIndex: 1,
-          }}
-        >
-          <Experience />
-        </motion.div>
       </section>
     </div>
-    <div aria-hidden style={{ height: postProjectBuffer, backgroundColor: '#E4EFF5' }} />
+    <div className="relative" style={{ backgroundColor: '#E4EFF5' }}>
+      <Education />
+    </div>
     </>
   )
 }

@@ -7,7 +7,11 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
   const [hovered, setHovered] = useState(false)
   const stickerRef = useRef<HTMLDivElement>(null)
 
-  const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window
+  const isTouchDevice = typeof window !== 'undefined' && (
+    'ontouchstart' in window ||
+    window.matchMedia('(pointer: coarse)').matches ||
+    window.innerWidth < 1024
+  )
 
   const mouseHandlers = disabled || isTouchDevice ? {} : {
     onMouseEnter: () => setHovered(true),
@@ -161,10 +165,10 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="pt-40 pb-[34rem] px-6 md:py-32 lg:py-40 lg:min-h-screen lg:flex lg:items-center"
+      className="px-6 pb-28 pt-24 md:py-28 lg:flex lg:items-start lg:pb-16 lg:pt-28"
     >
-      <div className="max-w-7xl mx-auto w-full translate-y-96 md:translate-y-72 lg:translate-y-48">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-8 lg:gap-24 items-center">
+      <div className="max-w-7xl mx-auto w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-8 lg:gap-x-24 lg:gap-y-6 items-center">
           {/* Top text — heading + description */}
           <div className="order-1 lg:col-start-1 lg:row-start-1">
             <h2
@@ -194,20 +198,20 @@ export function Contact() {
                 <p className="text-white text-lg md:text-xl leading-relaxed">Thanks! I'll be in touch soon.</p>
               ) : (
                 <>
-                  <div className="glassmorphism rounded-xl flex items-center p-1.5 max-w-md mx-auto lg:mx-0">
+                  <div className="glassmorphism mx-auto flex max-w-md flex-col items-stretch gap-2 rounded-xl p-2 sm:flex-row sm:items-center lg:mx-0">
                     <input
                       type="text"
                       placeholder="your@email.com"
                       value={email}
                       onChange={(e) => { setEmail(e.target.value); if (error) setError('') }}
                       disabled={submitting}
-                      className="flex-1 bg-transparent text-white placeholder:text-white/60 px-5 py-3 outline-none text-sm md:text-base min-w-0"
+                      className="min-w-0 flex-1 bg-transparent px-5 py-3 text-sm text-white outline-none placeholder:text-white/60 md:text-base"
                     />
                     <Button
                       type="submit"
                       variant="primary"
                       disabled={submitting}
-                      className="!bg-black !text-white hover:!bg-black/85 !text-lg"
+                      className="w-full !bg-black !text-lg !text-white hover:!bg-black/85 sm:w-auto"
                       onMouseEnter={() => setCtaHovered(true)}
                       onMouseLeave={() => setCtaHovered(false)}
                     >

@@ -54,7 +54,7 @@ export function GithubHeatmap() {
   }, [])
 
   return (
-    <Section id="github" className="!pt-[8vh] !pb-[5vh]">
+    <Section id="github" className="!pt-[8vh] !pb-[2vh]">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
         {/* Heatmap — left on desktop, below heading on mobile */}
         <div

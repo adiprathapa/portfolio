@@ -13,6 +13,7 @@ const navLinks = [
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
+  { label: 'Education', href: '#education' },
   { label: 'Resume', href: RESUME_PAGE_URL },
   { label: 'Contact', href: '#contact' },
 ]
@@ -26,6 +27,7 @@ export function Navbar() {
     activeSection === 'about' ||
     activeSection === 'projects' ||
     activeSection === 'experience' ||
+    activeSection === 'education' ||
     activeSection === 'contact'
   const [menuOpen, setMenuOpen] = useState(false)
   const [pinned, setPinned] = useState(false)
@@ -95,7 +97,14 @@ export function Navbar() {
             style={{ gap: '2rem' }}
           >
             {/* Logo */}
-            <a href="/" className="font-heading font-semibold text-lg text-primary">
+            <a
+              href="/#top"
+              className="font-heading font-semibold text-lg text-primary"
+              onClick={() => {
+                pinNavbarTemporarily()
+                window.location.href = '/#top'
+              }}
+            >
               &#x0906;&#x0926;&#x093F;
             </a>
 

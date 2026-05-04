@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const SECTIONS = ['about', 'projects', 'experience', 'contact'] as const
+const SECTIONS = ['about', 'projects', 'experience', 'education', 'contact'] as const
 
 export function useActiveSection() {
   const [active, setActive] = useState<string | null>(null)
@@ -10,7 +10,7 @@ export function useActiveSection() {
     // navbar overlaps by comparing section bounding rects to a probe point
     // slightly below the top of the viewport (to account for the navbar
     // height + some margin).
-    const PROBE_OFFSET = 80 // px from top of viewport
+    const PROBE_OFFSET = 96 // px from top of viewport
 
     // "about" lives inside the horizontal-scroll sticky container, so its
     // getBoundingClientRect doesn't move until the sticky context ends.

@@ -656,7 +656,7 @@ export function About() {
         </motion.div>
 
         {/* Throwable Cards */}
-        <motion.div variants={heroChild} className="flex flex-col items-center justify-center lg:ml-[12vw] mt-[clamp(2.5rem,8dvh,5rem)] lg:mt-0 lg:-mt-[2vh] mb-[clamp(4rem,10dvh,6rem)] lg:mb-0">
+        <motion.div variants={heroChild} className="flex flex-col items-center justify-center lg:ml-[6vw] mt-[clamp(2.5rem,8dvh,5rem)] lg:mt-0 lg:-mt-[2vh] mb-[clamp(4rem,10dvh,6rem)] lg:mb-0">
           <div className="relative w-[min(calc(100vw-var(--mobile-card-inset)),400px)] lg:w-[400px] aspect-[20/21]">
             {CARDS.map((card, i) => (
               <ThrowableCard

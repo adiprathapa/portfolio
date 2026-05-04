@@ -33,21 +33,27 @@ function projectCardHeight() {
   return stack?.offsetHeight || (window.innerWidth < 1024 ? clamp(320, window.innerHeight * 0.45, 420) : 500)
 }
 
+function experienceHeight() {
+  return document.getElementById('experience')?.offsetHeight ?? 550
+}
+
 function experienceTopInsideViewport() {
   const cardH = projectCardHeight()
 
   if (window.innerWidth < 1024) {
     const stickyTop = rem(4)
     const stickyPaddingTop = rem(0.75)
-    const gap = clamp(rem(1.5), window.innerHeight * 0.04, rem(2.5))
-    const experienceDelay = clamp(rem(12), window.innerHeight * 0.26, rem(14))
-    const experienceHold = clamp(rem(5), window.innerHeight * 0.12, rem(7))
-    return stickyTop + stickyPaddingTop + cardH + gap + experienceDelay + experienceHold
+    const gap = 96
+    const expOverflow = Math.max(
+      0,
+      stickyPaddingTop + cardH + gap + experienceHeight() - window.innerHeight
+    )
+    return stickyTop + stickyPaddingTop + cardH + gap - expOverflow + 20
   }
 
   const stackShift = Math.max(0, (window.innerHeight - cardH) / 2 - 96)
   const gap = clamp(rem(2), window.innerHeight * 0.04, rem(3))
-  return (window.innerHeight - cardH) / 2 - stackShift + cardH + gap
+  return (window.innerHeight - cardH) / 2 - stackShift + cardH + gap - 335
 }
 
 export function sectionScrollTop(href: string) {
@@ -60,13 +66,22 @@ export function sectionScrollTop(href: string) {
   if (href === '#projects') {
     const intro = document.getElementById('projects-intro')
     const container = projectsContainer()
-    return documentTop(intro ?? container ?? document.body) - offset
+    const nudge = window.innerWidth < 1024 ? 20 : 14
+    return documentTop(intro ?? container ?? document.body) - offset + nudge
   }
 
   if (href === '#experience') {
     const container = projectsContainer()
     if (container) {
       return documentTop(container) + container.offsetHeight - window.innerHeight + experienceTopInsideViewport() - offset
+    }
+  }
+
+  if (href === '#education') {
+    const education = document.getElementById('education')
+    if (education) {
+      const mobileNudge = window.innerWidth < 1024 ? 130 : 0
+      return documentTop(education) + mobileNudge
     }
   }
 

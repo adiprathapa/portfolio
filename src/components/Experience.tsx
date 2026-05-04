@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Section } from './ui/section'
 import { GradientText } from './ui/gradient-text'
@@ -33,7 +33,7 @@ const work: ExperienceItem[] = [
   {
     id: 'mitre',
     company: 'MITRE',
-    role: 'Software Engineering Intern',
+    role: 'Data Science Intern',
     duration: 'Incoming Summer 2026',
     description:
       'Working on graph neural networks and graph attention networks',
@@ -189,44 +189,11 @@ const involvement: ExperienceItem[] = [
   },
 ]
 
-const education: ExperienceItem[] = [
-  {
-    id: 'cornell-edu',
-    company: 'Cornell University',
-    role: 'B.A. Computer Science',
-    duration: '',
-    description:
-      'College of Arts & Sciences \u00b7 Minor in Artificial Intelligence',
-    bullets: ['Relevant Coursework: Object-Oriented Programming \u00b7 Data Structures \u00b7 Python Design and Development'],
-    tech: [],
-    logo: '/cornell.svg',
-    logoHeight: 44,
-    logoInvert: true,
-    bgImage: '/nell.webp',
-    gradientColor: '#B31B1B',
-  },
-  {
-    id: 'mnhs-edu',
-    company: 'Millard North High School',
-    role: 'International Baccalaureate Diploma',
-    duration: '',
-    description:
-      'Activities: National Honors Society \u00b7 Spanish Honors Society \u00b7 Varsity Marching Band \u00b7 Speech \u00b7 Mustang Mentoring',
-    bullets: [],
-    tech: [],
-    logo: '/mnhs-removebg-preview.png',
-    logoHeight: 44,
-    logoInvert: true,
-    mobileLogoOffsetX: -45,
-    bgImage: '/mnhs.webp',
-    gradientColor: '#004d2c',
-  },
-]
-
 /* ── Card dimensions ──────────────────────────────────────── */
 const CARD_W = 580
 const CARD_H = 560
 const GAP = 24
+const CARD_STEP = CARD_W + GAP
 
 /* ── Carousel card ────────────────────────────────────────── */
 
@@ -484,211 +451,17 @@ function MobileCard({ item }: { item: ExperienceItem }) {
   )
 }
 
-/* ── Education bento (inline in carousel) ────────────────── */
-
-const BENTO_W = 1428
-const BENTO_GAP = 16
-
-function EducationBentoInline({ isActive, onClick, activeCard, setActiveCard }: { isActive: boolean; onClick: () => void; activeCard: 'cornell' | 'highschool'; setActiveCard: (v: 'cornell' | 'highschool') => void }) {
-  const [cornellHovered, setCornellHovered] = useState(false)
-  const [hsHovered, setHsHovered] = useState(false)
-  const cornellColor = '#B31B1B'
-  const hsColor = '#004d2c'
-
-  const cornellActive = isActive && activeCard === 'cornell'
-  const hsActive = isActive && activeCard === 'highschool'
-
-  return (
-    <div
-      className="flex"
-      style={{
-        width: isActive ? BENTO_W : CARD_W * 2 + BENTO_GAP,
-        height: CARD_H,
-        flexShrink: 0,
-        gap: BENTO_GAP,
-        opacity: isActive ? 1 : 0.92,
-        transition: 'width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.4s ease',
-      }}
-    >
-      {/* Cornell card */}
-      <div
-        className="relative overflow-hidden cursor-pointer"
-        style={{ borderRadius: 20, border: '1.5px solid rgba(6, 113, 164, 0.3)', minWidth: 0, flex: isActive ? (activeCard === 'cornell' ? 3 : 2) : 1, transition: 'flex 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)' }}
-        onClick={() => { setActiveCard('cornell'); onClick() }}
-        onMouseEnter={() => setCornellHovered(true)}
-        onMouseLeave={() => setCornellHovered(false)}
-      >
-        <img
-          src="/nell.webp"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            transform: cornellActive || cornellHovered ? 'scale(1.05)' : 'scale(1)',
-            transition: 'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: cornellActive
-              ? `linear-gradient(180deg, ${cornellColor}73 0%, ${cornellColor}D0 55%, ${cornellColor}F5 100%)`
-              : `linear-gradient(180deg, ${cornellColor}50 0%, ${cornellColor}A0 55%, ${cornellColor}DD 100%)`,
-            transition: 'background 0.5s ease',
-          }}
-        />
-        <div className="relative z-10 h-full flex flex-col justify-between p-7">
-          <img
-            src="/cornell.svg"
-            alt="Cornell University"
-            style={{
-              height: 36,
-              width: 'auto',
-              filter: 'brightness(0) invert(1)',
-            }}
-            className="self-start"
-          />
-          <div>
-            {cornellActive ? (
-              <motion.div
-                key="cornell-active"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.12, ease: 'easeOut' }}
-              >
-                <h3
-                  className="text-xl font-semibold mt-1.5 leading-snug"
-                  style={{ color: '#FFFFFF', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
-                >
-                  B.A. Computer Science
-                </h3>
-                <p
-                  className="text-sm mt-1"
-                  style={{ color: 'rgba(255,255,255,0.75)' }}
-                >
-                  College of Arts & Sciences &nbsp;&middot;&nbsp; Minor in Artificial Intelligence
-                </p>
-                <div className="mt-3">
-                  <p
-                    className="text-xs font-medium uppercase tracking-wider"
-                    style={{ color: 'rgba(255,255,255,0.5)' }}
-                  >
-                    Relevant Coursework
-                  </p>
-                  <p
-                    className="text-sm mt-1 leading-relaxed"
-                    style={{ color: 'rgba(255,255,255,0.7)' }}
-                  >
-                    Object-Oriented Programming &nbsp;&middot;&nbsp; Data Structures &nbsp;&middot;&nbsp; Python Design and Development
-                  </p>
-                </div>
-              </motion.div>
-            ) : (
-              <p
-                className="text-lg leading-relaxed"
-                style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
-              >
-                Bachelor of Arts, Computer Science
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Millard North High School card */}
-      <div
-        className="relative overflow-hidden cursor-pointer"
-        style={{ borderRadius: 20, border: '1.5px solid rgba(6, 113, 164, 0.3)', minWidth: 0, flex: isActive ? (activeCard === 'highschool' ? 3 : 2) : 1, transition: 'flex 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)' }}
-        onClick={(e) => { e.stopPropagation(); setActiveCard('highschool'); onClick() }}
-        onMouseEnter={() => setHsHovered(true)}
-        onMouseLeave={() => setHsHovered(false)}
-      >
-        <img
-          src="/mnhs.webp"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            transform: hsActive || hsHovered ? 'scale(1.05)' : 'scale(1)',
-            transition: 'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: hsActive
-              ? `linear-gradient(180deg, ${hsColor}73 0%, ${hsColor}D0 55%, ${hsColor}F5 100%)`
-              : `linear-gradient(180deg, ${hsColor}40 0%, ${hsColor}80 55%, ${hsColor}CC 100%)`,
-            transition: 'background 0.5s ease',
-          }}
-        />
-        <div className="relative z-10 h-full flex flex-col justify-between p-7">
-          <img
-            src="/mnhs-removebg-preview.png"
-            alt="Millard North High School"
-            className="self-start"
-            style={{
-              height: 36,
-              width: 'auto',
-              filter: 'brightness(0) invert(1)',
-            }}
-          />
-          <div>
-            {hsActive ? (
-              <motion.div
-                key="hs-active"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.12, ease: 'easeOut' }}
-              >
-                <h3
-                  className="text-xl font-semibold mt-1.5 leading-snug"
-                  style={{ color: '#FFFFFF', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
-                >
-                  Millard North High School
-                </h3>
-                <div className="mt-3">
-                  <p
-                    className="text-xs font-medium uppercase tracking-wider"
-                    style={{ color: 'rgba(255,255,255,0.5)' }}
-                  >
-                    Activities and Societies
-                  </p>
-                  <p
-                    className="text-sm mt-1 leading-relaxed"
-                    style={{ color: 'rgba(255,255,255,0.7)' }}
-                  >
-                    National Honors Society &nbsp;&middot;&nbsp; Spanish Honors Society &nbsp;&middot;&nbsp; Varsity Marching Band &nbsp;&middot;&nbsp; Speech &nbsp;&middot;&nbsp; Mustang Mentoring
-                  </p>
-                </div>
-              </motion.div>
-            ) : (
-              <p
-                className="text-lg leading-relaxed"
-                style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
-              >
-                International Baccalaureate Diploma Program
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 /* ── Main component ────────────────────────────────────────── */
 
 const ROTATION_INTERVAL = 7000
 
 export function Experience() {
-  // Carousel: work → involvement → education
+  // Carousel: work → involvement
   const allEntries = [...work, ...involvement]
-  const allEntriesWithEdu = [...work, ...involvement, ...education]
 
   const [activeId, setActiveId] = useState('mitre')
   const [, setDirection] = useState(1)
   const [paused, setPaused] = useState(false)
-  const [showEducation, setShowEducation] = useState(false)
-  const [eduActiveCard, setEduActiveCard] = useState<'cornell' | 'highschool'>('cornell')
   const [mobileCarouselIdx, setMobileCarouselIdx] = useState(0)
   const [vw, setVw] = useState(typeof window !== 'undefined' ? window.innerWidth : 390)
   const [insetPx, setInsetPx] = useState(48)
@@ -696,9 +469,52 @@ export function Experience() {
   const [tabVisible, setTabVisible] = useState(!document.hidden)
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined)
   const sectionRef = useRef<HTMLDivElement>(null)
+  const desktopTrackRef = useRef<HTMLDivElement>(null)
+  const total = allEntries.length
+  const REPEAT = 7
+  const baseOffset = total * Math.floor(REPEAT / 2)
+  const [visualIdx, setVisualIdx] = useState(() => baseOffset)
+  const [skipTransition, setSkipTransition] = useState(false)
   // Hidden probe used to resolve --mobile-card-inset (a clamp() of vw) into
   // a pixel value for the drag/animate math.
   const insetProbeRef = useRef<HTMLDivElement>(null)
+
+  const displayEntries = useMemo(
+    () => Array.from({ length: REPEAT }, () => allEntries).flat(),
+    [REPEAT, allEntries],
+  )
+
+  const getNearestVisualIdx = useCallback((realIdx: number) => {
+    if (total === 0) return baseOffset
+    let best = baseOffset + realIdx
+    let bestDist = Math.abs(best - visualIdx)
+    for (let lane = 0; lane < REPEAT; lane += 1) {
+      const candidate = realIdx + total * lane
+      const dist = Math.abs(candidate - visualIdx)
+      if (dist < bestDist) {
+        best = candidate
+        bestDist = dist
+      }
+    }
+    return best
+  }, [REPEAT, baseOffset, total, visualIdx])
+
+  useEffect(() => {
+    if (total === 0) return
+    const min = total
+    const max = total * (REPEAT - 1)
+    if (visualIdx <= min) {
+      setSkipTransition(true)
+      setVisualIdx((prev) => prev + total * 2)
+      requestAnimationFrame(() => requestAnimationFrame(() => setSkipTransition(false)))
+      return
+    }
+    if (visualIdx >= max) {
+      setSkipTransition(true)
+      setVisualIdx((prev) => prev - total * 2)
+      requestAnimationFrame(() => requestAnimationFrame(() => setSkipTransition(false)))
+    }
+  }, [REPEAT, total, visualIdx])
 
   useEffect(() => {
     const onResize = () => setVw(window.innerWidth)
@@ -727,22 +543,12 @@ export function Experience() {
 
   // Derive which tab is active
   const isMobileView = vw < 768
-  const tab: 'work' | 'involvement' | 'education' = isMobileView
-    ? (mobileCarouselIdx >= allEntries.length
-      ? 'education'
-      : mobileCarouselIdx < work.length
-        ? 'work'
-        : 'involvement')
-    : (showEducation
-      ? 'education'
-      : activeIdx < work.length
-        ? 'work'
-        : 'involvement')
+  const tab: 'work' | 'involvement' = isMobileView
+    ? (mobileCarouselIdx < work.length ? 'work' : 'involvement')
+    : (activeIdx < work.length ? 'work' : 'involvement')
 
-  // Offset: education bento sits right after the last card
-  const activeOffset = showEducation
-    ? allEntries.length * (CARD_W + GAP)
-    : activeIdx * (CARD_W + GAP)
+
+  const activeOffset = visualIdx * (CARD_W + GAP)
 
   const navigateTo = useCallback(
     (id: string) => {
@@ -750,70 +556,49 @@ export function Experience() {
       const nextIdx = allEntries.findIndex((e) => e.id === id)
       setDirection(nextIdx >= currentIdx ? 1 : -1)
       setActiveId(id)
-      setShowEducation(false)
     },
     [allEntries, activeId],
   )
 
   const handleTabClick = useCallback(
-    (t: 'work' | 'involvement' | 'education') => {
-      if (t === 'education') {
-        setShowEducation(true)
-        setMobileCarouselIdx(allEntries.length) // first education card
-        if (timerRef.current) clearInterval(timerRef.current)
-        setPaused(true)
-        return
-      }
-      setShowEducation(false)
+    (t: 'work' | 'involvement') => {
       const target = t === 'work' ? work[0] : involvement[0]
       if (target) {
+        const idx = allEntries.findIndex(e => e.id === target.id)
+        // Direct jump (not a wrap), so set visualIdx explicitly
+        setSkipTransition(true)
+        if (idx >= 0) setVisualIdx(baseOffset + idx)
+        requestAnimationFrame(() => requestAnimationFrame(() => setSkipTransition(false)))
         navigateTo(target.id)
-        const idx = allEntriesWithEdu.findIndex(e => e.id === target.id)
         if (idx >= 0) setMobileCarouselIdx(idx)
         if (timerRef.current) clearInterval(timerRef.current)
         setPaused(true)
       }
     },
-    [navigateTo, allEntries.length, allEntriesWithEdu],
+    [navigateTo, allEntries],
   )
 
   const advanceToNext = useCallback(() => {
     if (allEntries.length === 0) return
-    if (showEducation) {
-      // Wrap from education back to first card
-      setShowEducation(false)
-      setDirection(1)
-      setActiveId(allEntries[0].id)
-      return
-    }
-    if (activeIdx === allEntries.length - 1 && education.length > 0) {
-      // Last involvement card → education bento
-      setShowEducation(true)
-      setDirection(1)
-      return
-    }
     const nextIdx = (activeIdx + 1) % allEntries.length
     setDirection(1)
     setActiveId(allEntries[nextIdx].id)
-  }, [allEntries, activeIdx, showEducation])
+    setVisualIdx((prev) => {
+      const next = prev + 1
+      return next
+    })
+  }, [activeIdx, allEntries])
 
   const navigateToPrev = useCallback(() => {
     if (allEntries.length === 0) return
-    if (showEducation) {
-      setShowEducation(false)
-      setDirection(-1)
-      setActiveId(allEntries[allEntries.length - 1].id)
-      return
-    }
-    if (activeIdx === 0 && education.length > 0) {
-      setShowEducation(true)
-      setDirection(-1)
-      return
-    }
     const prevIdx = (activeIdx - 1 + allEntries.length) % allEntries.length
     setDirection(-1)
     setActiveId(allEntries[prevIdx].id)
-  }, [allEntries, activeIdx, showEducation])
+    setVisualIdx((prev) => {
+      const next = prev - 1
+      return next
+    })
+  }, [activeIdx, allEntries])
 
   // Only run timer when section is visible on screen
   useEffect(() => {
@@ -834,6 +619,8 @@ export function Experience() {
     return () => document.removeEventListener('visibilitychange', onChange)
   }, [])
 
+  // Desktop scroll navigation removed.
+
   const running = !paused && isVisible && tabVisible
 
   useEffect(() => {
@@ -845,7 +632,15 @@ export function Experience() {
   }, [advanceToNext, running])
 
   return (
-    <Section id="experience" className="experience-section" style={{ backgroundColor: '#f4f4f4' }}>
+    <Section
+      id="experience"
+      className="experience-section"
+      style={{
+        backgroundColor: '#f4f4f4',
+        paddingBottom: 0,
+        marginBottom: -48,
+      }}
+    >
       <div ref={sectionRef}>
         {/* Header row: description text + toggle */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
@@ -871,7 +666,7 @@ export function Experience() {
               boxShadow: 'inset 0 1px 2px rgba(6, 113, 164, 0.06)',
             }}
           >
-            {(['work', 'involvement', 'education'] as const).map((t) => (
+            {(['work', 'involvement'] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => handleTabClick(t)}
@@ -902,6 +697,7 @@ export function Experience() {
             >
               {/* Desktop: full-bleed carousel */}
               <div
+                ref={desktopTrackRef}
                 className="hidden md:block mt-10 relative"
                 style={{
                   width: '100vw',
@@ -909,97 +705,78 @@ export function Experience() {
                   overflow: 'hidden',
                 }}
               >
-                {/* Arrow buttons */}
-                {!(activeIdx === 0 && !showEducation) && (
-                  <button
-                    onClick={() => {
-                      if (showEducation && eduActiveCard === 'highschool') {
-                        setEduActiveCard('cornell')
-                      } else {
-                        navigateToPrev()
-                      }
-                      if (timerRef.current) clearInterval(timerRef.current)
-                      setPaused(true)
-                    }}
-                    className="absolute left-[16px] top-1/2 -translate-y-1/2 z-30 flex items-center justify-center cursor-pointer"
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: '50%',
-                      background: 'rgba(6,113,164,0.25)',
-                      backdropFilter: 'blur(8px)',
-                      border: '1px solid rgba(6,113,164,0.35)',
-                      color: '#fff',
-                      transition: 'background 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(6,113,164,0.45)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(6,113,164,0.25)')}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
-                  </button>
-                )}
-                {!(showEducation && eduActiveCard === 'highschool') && (
-                  <button
-                    onClick={() => {
-                      if (showEducation && eduActiveCard === 'cornell') {
-                        setEduActiveCard('highschool')
-                      } else {
-                        advanceToNext()
-                      }
-                      if (timerRef.current) clearInterval(timerRef.current)
-                      setPaused(true)
-                    }}
-                    className="absolute right-[16px] top-1/2 -translate-y-1/2 z-30 flex items-center justify-center cursor-pointer"
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: '50%',
-                      background: 'rgba(6,113,164,0.25)',
-                      backdropFilter: 'blur(8px)',
-                      border: '1px solid rgba(6,113,164,0.35)',
-                      color: '#fff',
-                      transition: 'background 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(6,113,164,0.45)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(6,113,164,0.25)')}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
-                  </button>
-                )}
+                {/* Arrow buttons — always visible (infinite loop) */}
+                <button
+                  onClick={() => {
+                    navigateToPrev()
+                    if (timerRef.current) clearInterval(timerRef.current)
+                    setPaused(true)
+                  }}
+                  className="absolute left-[16px] top-1/2 -translate-y-1/2 z-30 flex items-center justify-center cursor-pointer"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    background: 'rgba(6,113,164,0.25)',
+                    backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(6,113,164,0.35)',
+                    color: '#fff',
+                    transition: 'background 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(6,113,164,0.45)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(6,113,164,0.25)')}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+                </button>
+                <button
+                  onClick={() => {
+                    advanceToNext()
+                    if (timerRef.current) clearInterval(timerRef.current)
+                    setPaused(true)
+                  }}
+                  className="absolute right-[16px] top-1/2 -translate-y-1/2 z-30 flex items-center justify-center cursor-pointer"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    background: 'rgba(6,113,164,0.25)',
+                    backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(6,113,164,0.35)',
+                    color: '#fff',
+                    transition: 'background 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(6,113,164,0.45)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(6,113,164,0.25)')}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+                </button>
                 <div
                   className="flex"
                   style={{
                     gap: GAP,
                     transform: `translateX(calc(max(1.5rem, (100vw - 80rem) / 2) - ${activeOffset}px))`,
-                    transition: 'transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)',
+                    transition: skipTransition
+                      ? 'none'
+                      : 'transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)',
                   }}
                 >
-                  {allEntries.map((item) => (
-                    <CarouselCard
-                      key={item.id}
-                      item={item}
-                      isActive={!showEducation && active.id === item.id}
-                      onClick={() => {
-                        navigateTo(item.id)
-                        if (timerRef.current) clearInterval(timerRef.current)
-                        setPaused(true)
-                      }}
-                      paused={!running}
-                    />
-                  ))}
-                  {/* Education bento slides in at the end */}
-                  {education.length > 0 && (
-                    <EducationBentoInline
-                      isActive={showEducation}
-                      activeCard={eduActiveCard}
-                      setActiveCard={setEduActiveCard}
-                      onClick={() => {
-                        setShowEducation(true)
-                        if (timerRef.current) clearInterval(timerRef.current)
-                        setPaused(true)
-                      }}
-                    />
-                  )}
+                  {displayEntries.map((item, i) => {
+                    const realIdx = i % allEntries.length
+                    return (
+                      <CarouselCard
+                        key={`card-${i}`}
+                        item={item}
+                        isActive={i === visualIdx}
+                        onClick={() => {
+                          setVisualIdx(getNearestVisualIdx(realIdx))
+                          navigateTo(allEntries[realIdx].id)
+                          if (timerRef.current) clearInterval(timerRef.current)
+                          setPaused(true)
+                        }}
+                        paused={!running}
+                      />
+                    )
+                  })}
                 </div>
               </div>
 
@@ -1024,7 +801,7 @@ export function Experience() {
                   dragElastic={0.2}
                   dragMomentum={false}
                   dragConstraints={{
-                    left: insetPx / 2 - (allEntriesWithEdu.length - 1) * (vw - insetPx + mobileCardGap),
+                    left: insetPx / 2 - (allEntries.length - 1) * (vw - insetPx + mobileCardGap),
                     right: insetPx / 2,
                   }}
                   onDragStart={() => {
@@ -1035,7 +812,7 @@ export function Experience() {
                     const step = vw - insetPx + mobileCardGap
                     const posThreshold = step / 4
                     const velThreshold = 400
-                    const last = allEntriesWithEdu.length - 1
+                    const last = allEntries.length - 1
                     if ((info.offset.x < -posThreshold || info.velocity.x < -velThreshold) && mobileCarouselIdx < last) {
                       setMobileCarouselIdx(mobileCarouselIdx + 1)
                     } else if ((info.offset.x > posThreshold || info.velocity.x > velThreshold) && mobileCarouselIdx > 0) {
@@ -1045,7 +822,7 @@ export function Experience() {
                   animate={{ x: insetPx / 2 - mobileCarouselIdx * (vw - insetPx + mobileCardGap) }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >
-                  {allEntriesWithEdu.map((item, i) => (
+                  {allEntries.map((item, i) => (
                     <div
                       key={item.id}
                       className="shrink-0 cursor-pointer"
@@ -1079,11 +856,11 @@ export function Experience() {
                     className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
                     style={{
                       backgroundColor: 'rgba(6, 113, 164, 0.1)',
-                      opacity: mobileCarouselIdx === allEntriesWithEdu.length - 1 ? 0.4 : 1,
+                      opacity: mobileCarouselIdx === allEntries.length - 1 ? 0.4 : 1,
                       transition: 'opacity 0.2s',
                     }}
-                    disabled={mobileCarouselIdx === allEntriesWithEdu.length - 1}
-                    onClick={() => { if (mobileCarouselIdx < allEntriesWithEdu.length - 1) setMobileCarouselIdx(mobileCarouselIdx + 1) }}
+                    disabled={mobileCarouselIdx === allEntries.length - 1}
+                    onClick={() => { if (mobileCarouselIdx < allEntries.length - 1) setMobileCarouselIdx(mobileCarouselIdx + 1) }}
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0671A4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>
                   </button>

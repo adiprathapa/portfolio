@@ -7,6 +7,7 @@ const footerLinks = [
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
+  { label: 'Education', href: '#education' },
   { label: 'Contact', href: '#contact' },
 ]
 
@@ -16,7 +17,6 @@ const resourceLinks = [
 ]
 
 export function Footer() {
-  const videoRef = useRef<HTMLVideoElement>(null)
   const wordRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function Footer() {
       await document.fonts.ready
       const canvas = document.createElement('canvas')
       const w = 1200
-      const h = 740
+      const h = 780
       const scale = 2
       canvas.width = w * scale
       canvas.height = h * scale
@@ -34,7 +34,7 @@ export function Footer() {
       ctx.textAlign = 'center'
       ctx.textBaseline = 'alphabetic'
       ctx.fillStyle = 'white'
-      ctx.fillText('आदि', w / 2, 690)
+      ctx.fillText('आदि', w / 2, 740)
       const dataUrl = canvas.toDataURL('image/png')
       if (wordRef.current) {
         wordRef.current.style.webkitMaskImage = `url(${dataUrl})`
@@ -56,7 +56,6 @@ export function Footer() {
       <div className="video-footer__inner">
         <div ref={wordRef} className="video-footer__word" aria-label="आदि">
           <video
-            ref={videoRef}
             className="video-footer__media"
             src="/footer-letters.mp4"
             poster="/footer-letters-poster.jpg"
@@ -65,9 +64,6 @@ export function Footer() {
             loop
             playsInline
             preload="metadata"
-            onLoadedMetadata={() => {
-              if (videoRef.current) videoRef.current.currentTime = 1.2
-            }}
           />
         </div>
 
@@ -101,7 +97,13 @@ export function Footer() {
         </div>
 
         <div className="video-footer__bottom">
-          <strong>&#x0906;&#x0926;&#x093F;</strong>
+          <a
+            href="/#top"
+            className="video-footer__bottom-logo"
+            aria-label="Back to hero"
+          >
+            &#x0906;&#x0926;&#x093F;
+          </a>
           <span>&copy; {new Date().getFullYear()} Adi Prathapa. All rights reserved.</span>
           <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             Back to top

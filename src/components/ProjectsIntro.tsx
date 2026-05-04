@@ -34,7 +34,7 @@ export function ProjectsIntro() {
       </div>
 
       {/* Marquee conveyor */}
-      <div className="relative mt-6 lg:mt-10 -my-4 hidden overflow-hidden py-4 lg:block">
+      <div className="relative mt-6 lg:mt-10 -my-4 overflow-hidden py-4">
         <div>
           <ProjectMarquee active={active} />
         </div>

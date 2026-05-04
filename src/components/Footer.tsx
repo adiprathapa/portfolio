@@ -23,10 +23,7 @@ export function Footer() {
     const el = wordRef.current
     if (!el) return
 
-    const mql = window.matchMedia('(max-width: 1023px)')
-
     const applyCanvasMask = async () => {
-      if (!mql.matches) return
       await document.fonts.ready
       const canvas = document.createElement('canvas')
       const w = 1200
@@ -47,18 +44,7 @@ export function Footer() {
       el.style.maskImage = url
     }
 
-    const handleChange = () => {
-      if (mql.matches) {
-        applyCanvasMask()
-      } else {
-        el.style.webkitMaskImage = ''
-        el.style.maskImage = ''
-      }
-    }
-
     applyCanvasMask()
-    mql.addEventListener('change', handleChange)
-    return () => mql.removeEventListener('change', handleChange)
   }, [])
 
   const handleFooterLinkClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {

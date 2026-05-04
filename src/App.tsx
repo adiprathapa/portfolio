@@ -98,10 +98,18 @@ function App() {
       // Re-measure once fonts finish loading
       document.fonts?.ready?.then(measureAbout)
     })
-    window.addEventListener('resize', measureAbout)
+    // iOS Safari fires resize when the URL bar collapses during scroll, which
+    // would re-run this and cause layout jerks. Only react to width changes.
+    let lastWidth = window.innerWidth
+    const onResize = () => {
+      if (window.innerWidth === lastWidth) return
+      lastWidth = window.innerWidth
+      measureAbout()
+    }
+    window.addEventListener('resize', onResize)
     return () => {
       cancelAnimationFrame(raf)
-      window.removeEventListener('resize', measureAbout)
+      window.removeEventListener('resize', onResize)
     }
   }, [measureAbout])
 

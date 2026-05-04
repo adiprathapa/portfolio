@@ -222,12 +222,20 @@ export function Projects() {
       setSectionHeight(`${Math.ceil(vh + totalTravel + expOverflow)}px`)
     }
     compute()
-    window.addEventListener('resize', compute)
+    // iOS Safari fires resize on URL bar collapse; recomputing on every
+    // scroll-driven resize causes layout jerks. Only react to width changes.
+    let lastWidth = window.innerWidth
+    const onResize = () => {
+      if (window.innerWidth === lastWidth) return
+      lastWidth = window.innerWidth
+      compute()
+    }
+    window.addEventListener('resize', onResize)
     const ro = new ResizeObserver(compute)
     if (cardHProbeRef.current) ro.observe(cardHProbeRef.current)
     if (experienceRef.current) ro.observe(experienceRef.current)
     return () => {
-      window.removeEventListener('resize', compute)
+      window.removeEventListener('resize', onResize)
       ro.disconnect()
     }
   }, [])

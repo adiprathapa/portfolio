@@ -19,130 +19,26 @@ function getIconSrc(icon: string, hovered: boolean) {
   return icon.replace('/0671A4', '')
 }
 
-const techAccentColorsBySlug: Record<string, string> = {
-  react: '#61DAFB',
-  python: '#3776AB',
-  typescript: '#3178C6',
-  pytorch: '#EE4C2C',
-  nodedotjs: '#5FA04E',
-  openjdk: '#111111',
-  google: '#4285F4',
-  vuedotjs: '#42B883',
-  javascript: '#F7DF1E',
-  fastapi: '#009688',
-  confluence: '#4C9AFF',
-  git: '#F05032',
-  github: '#181717',
-  pandas: '#150458',
-  numpy: '#013243',
-  mongodb: '#47A248',
-  postgresql: '#4169E1',
-  d3: '#F9A03C',
-  codemirror: '#D30707',
-  yaml: '#CB171E',
-  scikitlearn: '#F7931E',
-  express: '#000000',
-  vercel: '#000000',
-  tensorflow: '#FF6F00',
-  githubactions: '#2088FF',
-  ipfs: '#65C2CB',
-  anthropic: '#111111',
-  googlegemini: '#8E75B8',
-  mistralai: '#FF7000',
-  leaflet: '#199900',
-  ollama: '#000000',
-  palantir: '#101820',
-  posthog: '#F9BD2B',
-  clerk: '#6C47FF',
-  pinia: '#FFD859',
-  supabase: '#3ECF8E',
-  redis: '#DC382D',
-  docker: '#2496ED',
-  html5: '#E34F26',
-  css: '#6E43B8',
-  css3: '#6E43B8',
-  flask: '#000000',
-  plotly: '#7A76FF',
-  apache: '#D22128',
-}
-
-function getTechAccentColor(tech: TechItem) {
-  if (tech.name === 'NetworkX') return '#2B7BBB'
-  if (tech.name === 'Claude API') return '#D97757'
-  const slugMatch = tech.icon.match(/simpleicons\.org\/([^/]+)/)
-  const slug = slugMatch?.[1]
-  return (slug && techAccentColorsBySlug[slug]) ?? '#0671A4'
-}
-
-function hexToRgba(hex: string, alpha: number) {
-  const normalized = hex.replace('#', '')
-  if (normalized.length !== 6) return `rgba(6, 113, 164, ${alpha})`
-  const r = parseInt(normalized.slice(0, 2), 16)
-  const g = parseInt(normalized.slice(2, 4), 16)
-  const b = parseInt(normalized.slice(4, 6), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
-const majorTech: TechItem[] = [
-  { name: 'React', icon: 'https://cdn.simpleicons.org/react/0671A4', url: 'https://react.dev', blurb: 'Built interactive UIs for data visualization web applications' },
-  { name: 'Python', icon: 'https://cdn.simpleicons.org/python/0671A4', url: 'https://python.org', blurb: 'Trained ML models and shipped backend APIs for data insights' },
-  { name: 'TypeScript', icon: 'https://cdn.simpleicons.org/typescript/0671A4', url: 'https://typescriptlang.org', blurb: 'Architected type safe frontends for clients' },
-  { name: 'PyTorch', icon: 'https://cdn.simpleicons.org/pytorch/0671A4', url: 'https://pytorch.org', blurb: 'Trained GRU and GraphSAGE models for complex data analysis' },
-  { name: 'Node.js', icon: 'https://cdn.simpleicons.org/nodedotjs/0671A4', url: 'https://nodejs.org', blurb: 'Deployed fullstack apps and REST APIs to founders' },
-  { name: 'Java', icon: 'https://cdn.simpleicons.org/openjdk/0671A4', url: 'https://dev.java', blurb: 'Engineered backend systems and data structures' },
-  { name: 'NetworkX', icon: '/networkx.png', url: 'https://networkx.org', blurb: 'Constructed knowledge graphs and contact networks to detect anomalies' },
-  { name: 'Google ADK', icon: 'https://cdn.simpleicons.org/google/0671A4', url: 'https://google.github.io/adk-docs/', blurb: 'Orchestrated sequential multi agent workflows' },
-  { name: 'Confluence', icon: 'https://cdn.simpleicons.org/confluence/0671A4', url: 'https://www.atlassian.com/software/confluence', blurb: 'Documented engineering workflows and team project plans for C2S2' },
-  { name: 'Apache HTTP Server', icon: 'https://cdn.simpleicons.org/apache/0671A4', url: 'https://httpd.apache.org', blurb: "Maintained C2S2 site on Cornell's Apache HTTP Server" },
-  { name: 'PostHog', icon: 'https://cdn.simpleicons.org/posthog/0671A4', url: 'https://posthog.com', blurb: 'This site uses PostHog for product analytics' },
-  { name: 'Docker', icon: 'https://cdn.simpleicons.org/docker/0671A4', url: 'https://www.docker.com', blurb: 'Containerized app services for deployable apps to clients' },
-  { name: 'PostgreSQL', icon: 'https://cdn.simpleicons.org/postgresql/0671A4', url: 'https://www.postgresql.org', blurb: 'Designed relational schemas and queried analytics data for client applications' },
-  { name: 'Ollama', icon: 'https://cdn.simpleicons.org/ollama/0671A4', url: 'https://ollama.com', blurb: 'Ran local LLM inference pipelines for XAI' }
-]
-
-const minorTech: TechItem[] = [
-  { name: 'Clerk', icon: 'https://cdn.simpleicons.org/clerk/0671A4', url: 'https://clerk.com' },
-  { name: 'Vue.js', icon: 'https://cdn.simpleicons.org/vuedotjs/0671A4', url: 'https://vuejs.org' },
-  { name: 'JavaScript', icon: 'https://cdn.simpleicons.org/javascript/0671A4', url: 'https://developer.mozilla.org/docs/Web/JavaScript' },
-  { name: 'FastAPI', icon: 'https://cdn.simpleicons.org/fastapi/0671A4', url: 'https://fastapi.tiangolo.com' },
-
-  { name: 'HTML5', icon: 'https://cdn.simpleicons.org/html5/0671A4', url: 'https://developer.mozilla.org/docs/Web/HTML', blurb: 'Built accessible page structure for production web interfaces' },
-  { name: 'CSS3', icon: 'https://cdn.simpleicons.org/css/0671A4', url: 'https://developer.mozilla.org/docs/Web/CSS', blurb: 'Implemented responsive layouts, theming systems, and polished UI interactions' },
-  { name: 'Flask', icon: 'https://cdn.simpleicons.org/flask/000000', url: 'https://flask.palletsprojects.com', blurb: 'Built lightweight API endpoints and backend utilities for rapid feature delivery' },
-  { name: 'Git', icon: 'https://cdn.simpleicons.org/git/0671A4', url: 'https://git-scm.com', blurb: 'Managed branching, review workflows, and release ready version control' },
-  { name: 'GitHub', icon: 'https://cdn.simpleicons.org/github/0671A4', url: 'https://github.com', blurb: 'Shipped collaborative code with PRs, issue tracking, and CI integrated repos' },
-  { name: 'Supabase', icon: 'https://cdn.simpleicons.org/supabase/0671A4', url: 'https://supabase.com' },
-  { name: 'Redis', icon: 'https://cdn.simpleicons.org/redis/0671A4', url: 'https://redis.io' },
-  
-  { name: 'pandas', icon: 'https://cdn.simpleicons.org/pandas/0671A4', url: 'https://pandas.pydata.org' },
-  { name: 'NumPy', icon: 'https://cdn.simpleicons.org/numpy/0671A4', url: 'https://numpy.org' },
-  { name: 'MongoDB', icon: 'https://cdn.simpleicons.org/mongodb/0671A4', url: 'https://mongodb.com' },
-  { name: 'D3.js', icon: 'https://cdn.simpleicons.org/d3/0671A4', url: 'https://d3js.org' },
-  { name: 'Plotly', icon: 'https://cdn.simpleicons.org/plotly/0671A4', url: 'https://plotly.com', blurb: 'Created and presented KPI metrics using Plotly visualizations' },
-  { name: 'CodeMirror', icon: 'https://cdn.simpleicons.org/codemirror/0671A4', url: 'https://codemirror.net'},
-  { name: 'YAML', icon: 'https://cdn.simpleicons.org/yaml/0671A4', url: 'https://yaml.org', blurb: 'Built CI validation and configuration workflows for large open source codebases' },
-  { name: 'scikit-learn', icon: 'https://cdn.simpleicons.org/scikitlearn/0671A4', url: 'https://scikit-learn.org' },
-  { name: 'Express', icon: 'https://cdn.simpleicons.org/express/0671A4', url: 'https://expressjs.com' },
-  { name: 'Vercel', icon: 'https://cdn.simpleicons.org/vercel/0671A4', url: 'https://vercel.com' },
-  { name: 'TensorFlow', icon: 'https://cdn.simpleicons.org/tensorflow/0671A4', url: 'https://tensorflow.org' },
-  { name: 'GitHub Actions', icon: 'https://cdn.simpleicons.org/githubactions/0671A4', url: 'https://github.com/features/actions' },
-  { name: 'IPFS', icon: 'https://cdn.simpleicons.org/ipfs/0671A4', url: 'https://ipfs.tech' },
-  { name: 'Claude API', icon: '/claude.svg', url: 'https://docs.anthropic.com' },
-  { name: 'Gemini API', icon: 'https://cdn.simpleicons.org/googlegemini/0671A4', url: 'https://ai.google.dev', blurb: 'Built multimodel AI workflows and fallback orchestration for production apps' },
-  { name: 'Mistral AI', icon: 'https://cdn.simpleicons.org/mistralai/0671A4', url: 'https://mistral.ai' },
-  { name: 'Leaflet', icon: 'https://cdn.simpleicons.org/leaflet/0671A4', url: 'https://leafletjs.com' },
-  { name: 'Palantir Foundry', icon: 'https://cdn.simpleicons.org/palantir/0671A4', url: 'https://www.palantir.com/platforms/foundry/' },
-]
-
 function SmallCard({ tech }: { tech: TechItem }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
   const [iconLoaded, setIconLoaded] = useState(false)
   const [iconFailed, setIconFailed] = useState(false)
+  const canHoverRef = useRef(false)
   const iconSize = tech.name === 'Apache HTTP Server' ? 40 : tech.name === 'YAML' ? 24 : 32
   const accentColor = getTechAccentColor(tech)
   const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
   const textColor = hovered ? accentColor : '#0671A4'
+
+  useEffect(() => {
+    const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const update = () => {
+      canHoverRef.current = mql.matches
+    }
+    update()
+    mql.addEventListener('change', update)
+    return () => mql.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -160,7 +56,6 @@ function SmallCard({ tech }: { tech: TechItem }) {
       if (!cancelled) setIconLoaded(true)
     }
 
-    // Preload hover variant to avoid flicker during first hover swap.
     if (hoverSrc !== baseSrc) {
       const hoverImg = new Image()
       hoverImg.referrerPolicy = 'no-referrer'
@@ -175,7 +70,7 @@ function SmallCard({ tech }: { tech: TechItem }) {
 
   return (
     <div
-      className="rounded-xl flex items-center gap-3 px-5 cursor-pointer select-none relative"
+      className="rounded-xl flex items-center px-5 cursor-pointer select-none relative"
       style={{
         width: 220,
         height: 146,
@@ -187,102 +82,201 @@ function SmallCard({ tech }: { tech: TechItem }) {
           ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
           : '0 4px 12px rgba(0, 0, 0, 0.04)',
         transition: 'all 0.2s ease',
+        gap: iconFailed ? 0 : 12,
+        justifyContent: iconFailed ? 'center' : 'flex-start',
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => { setHovered(false); setPressed(false) }}
-      onMouseDown={() => setPressed(true)}
-      onMouseUp={() => setPressed(false)}
+      onMouseEnter={() => { if (canHoverRef.current) setHovered(true) }}
+      onMouseLeave={() => { if (canHoverRef.current) { setHovered(false); setPressed(false) } }}
+      onMouseDown={() => { if (canHoverRef.current) setPressed(true) }}
+      onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
       onClick={() => window.open(tech.url, '_blank')}
     >
-      <div className="relative shrink-0" style={{ width: iconSize, height: iconSize }}>
-        {!iconLoaded && (
-          <div
-            className="absolute inset-0 rounded-md animate-pulse"
-            style={{ background: 'rgba(6, 113, 164, 0.14)' }}
+      {!iconFailed ? (
+        <div className="relative shrink-0" style={{ width: iconSize, height: iconSize }}>
+          {!iconLoaded && (
+            <div
+              className="absolute inset-0 rounded-md animate-pulse"
+              style={{ background: 'rgba(6, 113, 164, 0.14)' }}
+            />
+          )}
+          <img
+            src={getIconSrc(tech.icon, hovered)}
+            alt={tech.name}
+            className="w-full h-full shrink-0"
+            loading="eager"
+            decoding="async"
+            referrerPolicy="no-referrer"
+            crossOrigin="anonymous"
+            style={{
+              opacity: iconLoaded ? 1 : 0,
+              filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
+              transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
+              transition: 'transform 0.2s ease, opacity 0.22s ease',
+            }}
+            onLoad={() => setIconLoaded(true)}
+            onError={() => {
+              setIconLoaded(true)
+              setIconFailed(true)
+            }}
           />
-        )}
-        <img
-          src={getIconSrc(tech.icon, hovered)}
-          alt={tech.name}
-              className="rounded-xl flex items-center px-5 cursor-pointer select-none relative"
-          loading="eager"
-          decoding="async"
-          referrerPolicy="no-referrer"
-          crossOrigin="anonymous"
-          style={{
-            opacity: iconLoaded ? 1 : 0,
-            filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
-            transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease, opacity 0.22s ease',
-          }}
-          onLoad={() => setIconLoaded(true)}
-                gap: iconFailed ? 0 : 12,
-                justifyContent: iconFailed ? 'center' : 'flex-start',
-          onError={() => setIconLoaded(true)}
-        />
-      </div>
-      <span className="text-base font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
-      <svg
+        </div>
+      ) : null}
+      <span
+        className="text-base font-medium"
+        style={{ color: textColor, transition: 'color 0.2s ease', textAlign: iconFailed ? 'center' : 'left' }}
+      >
+        {tech.name}
+      </span>
+
         width="14"
         height="14"
-              {!iconFailed ? (
-                <div className="relative shrink-0" style={{ width: iconSize, height: iconSize }}>
-                  {!iconLoaded && (
-                    <div
-                      className="absolute inset-0 rounded-md animate-pulse"
-                      style={{ background: 'rgba(6, 113, 164, 0.14)' }}
-                    />
-                  )}
-                  <img
-                    src={getIconSrc(tech.icon, hovered)}
-                    alt={tech.name}
-                    className="w-full h-full shrink-0"
-                    loading="eager"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                    crossOrigin="anonymous"
-                    style={{
-                      opacity: iconLoaded ? 1 : 0,
-                      filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
-                      transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
-                      transition: 'transform 0.2s ease, opacity 0.22s ease',
-                    }}
-                    onLoad={() => setIconLoaded(true)}
-                    onError={() => {
-                      setIconLoaded(true)
-                      setIconFailed(true)
-                    }}
-                  />
-                </div>
-              ) : null}
-              <span className="text-base font-medium" style={{ color: textColor, transition: 'color 0.2s ease', textAlign: iconFailed ? 'center' : 'left' }}>
-                {tech.name}
-              </span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke={textColor}
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="absolute top-3 right-3"
-                style={{
-                  opacity: hovered ? 0.7 : 0,
-                  transform: hovered ? 'translate(0, 0)' : 'translate(-4px, 4px)',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                <path d="M7 17L17 7" />
-                <path d="M7 7h10v10" />
-              </svg>
-            </div>
-          )
-        }
 
-        function TallCard({ tech }: { tech: TechItem }) {
-          const [hovered, setHovered] = useState(false)
+    const baseSrc = getIconSrc(tech.icon, false)
+    const hoverSrc = getIconSrc(tech.icon, true)
+    const base = new Image()
+    base.referrerPolicy = 'no-referrer'
+    base.crossOrigin = 'anonymous'
+        className="absolute top-3 right-3"
+    base.onload = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
+    base.onerror = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
+
+    // Preload hover variant to avoid flicker during first hover swap.
+    if (hoverSrc !== baseSrc) {
+      const hoverImg = new Image()
+      hoverImg.referrerPolicy = 'no-referrer'
+      hoverImg.crossOrigin = 'anonymous'
+function TallCard({ tech }: { tech: TechItem }) {
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
+  const [iconLoaded, setIconLoaded] = useState(false)
+  const [iconFailed, setIconFailed] = useState(false)
+  const canHoverRef = useRef(false)
+  const iconSize = tech.name === 'Apache HTTP Server' ? 52 : tech.name === 'YAML' ? 30 : 40
+  const tallBlurb = (tech.blurb ?? `Applied ${tech.name} in shipped projects and internal workflows`).replace(/[.\s]+$/, '')
+  const accentColor = getTechAccentColor(tech)
+  const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
+  const textColor = hovered ? accentColor : '#0671A4'
+  const blurbColor = hovered ? hexToRgba(accentColor, 0.75) : 'rgba(6, 113, 164, 0.7)'
+
+  useEffect(() => {
+    const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const update = () => {
+      canHoverRef.current = mql.matches
+    }
+    update()
+    mql.addEventListener('change', update)
+    return () => mql.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+
+    const baseSrc = getIconSrc(tech.icon, false)
+    const hoverSrc = getIconSrc(tech.icon, true)
+    const base = new Image()
+    base.referrerPolicy = 'no-referrer'
+    base.crossOrigin = 'anonymous'
+    base.src = baseSrc
+    base.onload = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
+    base.onerror = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
+
+    if (hoverSrc !== baseSrc) {
+      const hoverImg = new Image()
+      hoverImg.referrerPolicy = 'no-referrer'
+      hoverImg.crossOrigin = 'anonymous'
+      hoverImg.src = hoverSrc
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [tech.icon])
+
+  return (
+    <div
+      className="rounded-xl flex flex-col justify-center items-start px-6 gap-3 cursor-pointer select-none relative"
+      style={{
+        width: 300,
+        height: 300,
+        background: hovered ? '#FFFFFF' : '#F5F5F5',
+        border: `1.5px solid ${borderColor}`,
+        transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-3px)' : 'scale(1)',
+        zIndex: hovered ? 20 : 1,
+        boxShadow: hovered
+          ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
+          : '0 4px 12px rgba(0, 0, 0, 0.04)',
+        transition: 'all 0.2s ease',
+        alignItems: iconFailed ? 'center' : 'flex-start',
+        textAlign: iconFailed ? 'center' : 'left',
+      }}
+      onMouseEnter={() => { if (canHoverRef.current) setHovered(true) }}
+      onMouseLeave={() => { if (canHoverRef.current) { setHovered(false); setPressed(false) } }}
+      onMouseDown={() => { if (canHoverRef.current) setPressed(true) }}
+      onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
+      onClick={() => window.open(tech.url, '_blank')}
+    >
+      {!iconFailed ? (
+        <div className="relative" style={{ width: iconSize, height: iconSize }}>
+          {!iconLoaded && (
+            <div
+              className="absolute inset-0 rounded-md animate-pulse"
+              style={{ background: 'rgba(6, 113, 164, 0.14)' }}
+            />
+          )}
+          <img
+            src={getIconSrc(tech.icon, hovered)}
+            alt={tech.name}
+            className="w-full h-full"
+            loading="eager"
+            decoding="async"
+            referrerPolicy="no-referrer"
+            crossOrigin="anonymous"
+            style={{
+              opacity: iconLoaded ? 1 : 0,
+              filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
+              transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
+              transition: 'transform 0.2s ease, opacity 0.22s ease',
+            }}
+            onLoad={() => setIconLoaded(true)}
+            onError={() => {
+              setIconLoaded(true)
+              setIconFailed(true)
+            }}
+          />
+        </div>
+      ) : null}
+      <span className="text-lg font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
+      <span className="text-sm leading-relaxed" style={{ color: blurbColor }}>{tallBlurb}</span>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke={textColor}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="absolute top-4 right-4"
+        style={{
+          opacity: hovered ? 0.7 : 0,
+          transform: hovered ? 'translate(0, 0)' : 'translate(-4px, 4px)',
+          transition: 'all 0.2s ease',
+        }}
+      >
+        <path d="M7 17L17 7" />
+        <path d="M7 7h10v10" />
+      </svg>
+    </div>
+  )
+}
           const [pressed, setPressed] = useState(false)
           const [iconLoaded, setIconLoaded] = useState(false)
           const [iconFailed, setIconFailed] = useState(false)

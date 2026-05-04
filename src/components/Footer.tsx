@@ -1,5 +1,5 @@
 import { scrollToSection } from '../lib/scrollToSection'
-import { useEffect, useRef, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 
 const RESUME_PAGE_URL = '/resume.html'
 
@@ -18,6 +18,8 @@ const resourceLinks = [
 
 export function Footer() {
   const wordRef = useRef<HTMLDivElement>(null)
+  const [maskReady, setMaskReady] = useState(false)
+  const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
     const el = wordRef.current
@@ -42,11 +44,27 @@ export function Footer() {
       const url = `url(${canvas.toDataURL('image/png')})`
       el.style.webkitMaskImage = url
       el.style.maskImage = url
-      el.style.opacity = '1'
+      setMaskReady(true)
     }
 
     applyCanvasMask()
   }, [])
+
+  useEffect(() => {
+    if (!maskReady) return
+    const video = document.createElement('video')
+    video.muted = true
+    video.preload = 'auto'
+    const onReady = () => setVideoReady(true)
+    video.addEventListener('canplaythrough', onReady, { once: true })
+    video.addEventListener('loadeddata', onReady, { once: true })
+    video.src = '/footer-letters.mp4'
+    return () => {
+      video.removeEventListener('canplaythrough', onReady)
+      video.removeEventListener('loadeddata', onReady)
+      video.src = ''
+    }
+  }, [maskReady])
 
   const handleFooterLinkClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     if (href.startsWith('#')) {
@@ -62,18 +80,25 @@ export function Footer() {
           ref={wordRef}
           className="video-footer__word"
           aria-label="आदि"
-          style={{ opacity: 0, transition: 'opacity 0.4s ease' }}
+          style={{ visibility: maskReady ? 'visible' : 'hidden' }}
         >
-          <video
-            className="video-footer__media"
-            src="/footer-letters.mp4"
-            poster="/footer-letters-poster.jpg"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
+          {videoReady ? (
+            <video
+              className="video-footer__media"
+              src="/footer-letters.mp4"
+              poster="/footer-letters-poster.jpg"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img
+              className="video-footer__media"
+              src="/footer-letters-poster.jpg"
+              alt=""
+            />
+          )}
         </div>
 
         <div className="video-footer__content">

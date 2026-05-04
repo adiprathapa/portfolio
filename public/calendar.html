@@ -595,8 +595,8 @@
     <!-- Footer -->
     <footer class="video-footer">
       <div class="video-footer__inner">
-        <div class="video-footer__word" aria-label="आदि" style="opacity:0;transition:opacity 0.4s ease">
-          <video class="video-footer__media" src="/footer-letters.mp4" poster="/footer-letters-poster.jpg" muted loop playsinline preload="metadata"></video>
+        <div class="video-footer__word" aria-label="आदि" style="visibility:hidden">
+          <img class="video-footer__media" src="/footer-letters-poster.jpg" alt="" />
         </div>
 
         <div class="video-footer__content">
@@ -757,11 +757,30 @@
         var url = 'url(' + canvas.toDataURL('image/png') + ')';
         el.style.webkitMaskImage = url;
         el.style.maskImage = url;
-        el.style.opacity = '1';
-        var video = el.querySelector('video');
-        if (video) {
-          video.play().catch(function () { /* no-op */ });
-        }
+        el.style.visibility = 'visible';
+
+        var preloader = document.createElement('video');
+        preloader.muted = true;
+        preloader.preload = 'auto';
+        var swap = function () {
+          var current = el.querySelector('img, video');
+          if (current && current.tagName === 'VIDEO') return;
+          var v = document.createElement('video');
+          v.className = 'video-footer__media';
+          v.src = '/footer-letters.mp4';
+          v.poster = '/footer-letters-poster.jpg';
+          v.autoplay = true;
+          v.muted = true;
+          v.loop = true;
+          v.playsInline = true;
+          v.setAttribute('playsinline', '');
+          if (current) el.replaceChild(v, current);
+          else el.appendChild(v);
+          v.play().catch(function () { /* no-op */ });
+        };
+        preloader.addEventListener('canplaythrough', swap, { once: true });
+        preloader.addEventListener('loadeddata', swap, { once: true });
+        preloader.src = '/footer-letters.mp4';
       });
     </script>
   </body>

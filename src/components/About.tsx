@@ -149,6 +149,8 @@ function SmallCard({ tech }: { tech: TechItem }) {
     const baseSrc = getIconSrc(tech.icon, false)
     const hoverSrc = getIconSrc(tech.icon, true)
     const base = new Image()
+    base.referrerPolicy = 'no-referrer'
+    base.crossOrigin = 'anonymous'
     base.src = baseSrc
     base.onload = () => {
       if (!cancelled) setIconLoaded(true)
@@ -160,6 +162,8 @@ function SmallCard({ tech }: { tech: TechItem }) {
     // Preload hover variant to avoid flicker during first hover swap.
     if (hoverSrc !== baseSrc) {
       const hoverImg = new Image()
+      hoverImg.referrerPolicy = 'no-referrer'
+      hoverImg.crossOrigin = 'anonymous'
       hoverImg.src = hoverSrc
     }
 
@@ -202,6 +206,8 @@ function SmallCard({ tech }: { tech: TechItem }) {
           className="w-full h-full shrink-0"
           loading="eager"
           decoding="async"
+          referrerPolicy="no-referrer"
+          crossOrigin="anonymous"
           style={{
             opacity: iconLoaded ? 1 : 0,
             filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
@@ -253,6 +259,8 @@ function TallCard({ tech }: { tech: TechItem }) {
     const baseSrc = getIconSrc(tech.icon, false)
     const hoverSrc = getIconSrc(tech.icon, true)
     const base = new Image()
+    base.referrerPolicy = 'no-referrer'
+    base.crossOrigin = 'anonymous'
     base.src = baseSrc
     base.onload = () => {
       if (!cancelled) setIconLoaded(true)
@@ -263,6 +271,8 @@ function TallCard({ tech }: { tech: TechItem }) {
 
     if (hoverSrc !== baseSrc) {
       const hoverImg = new Image()
+      hoverImg.referrerPolicy = 'no-referrer'
+      hoverImg.crossOrigin = 'anonymous'
       hoverImg.src = hoverSrc
     }
 
@@ -305,6 +315,8 @@ function TallCard({ tech }: { tech: TechItem }) {
           className="w-full h-full"
           loading="eager"
           decoding="async"
+          referrerPolicy="no-referrer"
+          crossOrigin="anonymous"
           style={{
             opacity: iconLoaded ? 1 : 0,
             filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
@@ -347,11 +359,23 @@ export function ProjectMarquee({ active }: { active: boolean }) {
   const rafRef = useRef<number>(0)
   const pausedRef = useRef(false)
   const speedMultiplierRef = useRef(1)
+  const canHoverRef = useRef(false)
 
-  const handleMouseEnter = useCallback(() => { pausedRef.current = true }, [])
-  const handleMouseLeave = useCallback(() => { pausedRef.current = false }, [])
+  const handleMouseEnter = useCallback(() => {
+    if (canHoverRef.current) pausedRef.current = true
+  }, [])
+  const handleMouseLeave = useCallback(() => {
+    if (canHoverRef.current) pausedRef.current = false
+  }, [])
 
   useEffect(() => {
+    const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const update = () => {
+      canHoverRef.current = mql.matches
+    }
+    update()
+    mql.addEventListener('change', update)
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') {
         speedMultiplierRef.current = 2
@@ -373,6 +397,7 @@ export function ProjectMarquee({ active }: { active: boolean }) {
     window.addEventListener('blur', onWindowBlur)
 
     return () => {
+      mql.removeEventListener('change', update)
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
       window.removeEventListener('blur', onWindowBlur)

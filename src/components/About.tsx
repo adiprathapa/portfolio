@@ -117,281 +117,265 @@ function SmallCard({ tech }: { tech: TechItem }) {
             onError={() => {
               setIconLoaded(true)
               setIconFailed(true)
-            }}
-          />
-        </div>
-      ) : null}
-      <span
-        className="text-base font-medium"
-        style={{ color: textColor, transition: 'color 0.2s ease', textAlign: iconFailed ? 'center' : 'left' }}
-      >
-        {tech.name}
-      </span>
+            function SmallCard({ tech }: { tech: TechItem }) {
+              const [hovered, setHovered] = useState(false)
+              const [pressed, setPressed] = useState(false)
+              const [iconLoaded, setIconLoaded] = useState(false)
+              const [iconFailed, setIconFailed] = useState(false)
+              const canHoverRef = useRef(false)
+              const iconSize = tech.name === 'Apache HTTP Server' ? 40 : tech.name === 'YAML' ? 24 : 32
+              const accentColor = getTechAccentColor(tech)
+              const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
+              const textColor = hovered ? accentColor : '#0671A4'
 
-        width="14"
-        height="14"
+              useEffect(() => {
+                const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
+                const update = () => {
+                  canHoverRef.current = mql.matches
+                }
+                update()
+                mql.addEventListener('change', update)
+                return () => mql.removeEventListener('change', update)
+              }, [])
 
-    const baseSrc = getIconSrc(tech.icon, false)
-    const hoverSrc = getIconSrc(tech.icon, true)
-    const base = new Image()
-    base.referrerPolicy = 'no-referrer'
-    base.crossOrigin = 'anonymous'
-        className="absolute top-3 right-3"
-    base.onload = () => {
-      if (!cancelled) setIconLoaded(true)
-    }
-    base.onerror = () => {
-      if (!cancelled) setIconLoaded(true)
-    }
+              useEffect(() => {
+                let cancelled = false
 
-    // Preload hover variant to avoid flicker during first hover swap.
-    if (hoverSrc !== baseSrc) {
-      const hoverImg = new Image()
-      hoverImg.referrerPolicy = 'no-referrer'
-      hoverImg.crossOrigin = 'anonymous'
-function TallCard({ tech }: { tech: TechItem }) {
-  const [hovered, setHovered] = useState(false)
-  const [pressed, setPressed] = useState(false)
-  const [iconLoaded, setIconLoaded] = useState(false)
-  const [iconFailed, setIconFailed] = useState(false)
-  const canHoverRef = useRef(false)
-  const iconSize = tech.name === 'Apache HTTP Server' ? 52 : tech.name === 'YAML' ? 30 : 40
-  const tallBlurb = (tech.blurb ?? `Applied ${tech.name} in shipped projects and internal workflows`).replace(/[.\s]+$/, '')
-  const accentColor = getTechAccentColor(tech)
-  const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
-  const textColor = hovered ? accentColor : '#0671A4'
-  const blurbColor = hovered ? hexToRgba(accentColor, 0.75) : 'rgba(6, 113, 164, 0.7)'
+                const baseSrc = getIconSrc(tech.icon, false)
+                const hoverSrc = getIconSrc(tech.icon, true)
+                const base = new Image()
+                base.referrerPolicy = 'no-referrer'
+                base.crossOrigin = 'anonymous'
+                base.src = baseSrc
+                base.onload = () => {
+                  if (!cancelled) setIconLoaded(true)
+                }
+                base.onerror = () => {
+                  if (!cancelled) setIconLoaded(true)
+                }
 
-  useEffect(() => {
-    const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const update = () => {
-      canHoverRef.current = mql.matches
-    }
-    update()
-    mql.addEventListener('change', update)
-    return () => mql.removeEventListener('change', update)
-  }, [])
+                if (hoverSrc !== baseSrc) {
+                  const hoverImg = new Image()
+                  hoverImg.referrerPolicy = 'no-referrer'
+                  hoverImg.crossOrigin = 'anonymous'
+                  hoverImg.src = hoverSrc
+                }
 
-  useEffect(() => {
-    let cancelled = false
+                return () => {
+                  cancelled = true
+                }
+              }, [tech.icon])
 
-    const baseSrc = getIconSrc(tech.icon, false)
-    const hoverSrc = getIconSrc(tech.icon, true)
-    const base = new Image()
-    base.referrerPolicy = 'no-referrer'
-    base.crossOrigin = 'anonymous'
-    base.src = baseSrc
-    base.onload = () => {
-      if (!cancelled) setIconLoaded(true)
-    }
-    base.onerror = () => {
-      if (!cancelled) setIconLoaded(true)
-    }
-
-    if (hoverSrc !== baseSrc) {
-      const hoverImg = new Image()
-      hoverImg.referrerPolicy = 'no-referrer'
-      hoverImg.crossOrigin = 'anonymous'
-      hoverImg.src = hoverSrc
-    }
-
-    return () => {
-      cancelled = true
-    }
-  }, [tech.icon])
-
-  return (
-    <div
-      className="rounded-xl flex flex-col justify-center items-start px-6 gap-3 cursor-pointer select-none relative"
-      style={{
-        width: 300,
-        height: 300,
-        background: hovered ? '#FFFFFF' : '#F5F5F5',
-        border: `1.5px solid ${borderColor}`,
-        transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-3px)' : 'scale(1)',
-        zIndex: hovered ? 20 : 1,
-        boxShadow: hovered
-          ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
-          : '0 4px 12px rgba(0, 0, 0, 0.04)',
-        transition: 'all 0.2s ease',
-        alignItems: iconFailed ? 'center' : 'flex-start',
-        textAlign: iconFailed ? 'center' : 'left',
-      }}
-      onMouseEnter={() => { if (canHoverRef.current) setHovered(true) }}
-      onMouseLeave={() => { if (canHoverRef.current) { setHovered(false); setPressed(false) } }}
-      onMouseDown={() => { if (canHoverRef.current) setPressed(true) }}
-      onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
-      onClick={() => window.open(tech.url, '_blank')}
-    >
-      {!iconFailed ? (
-        <div className="relative" style={{ width: iconSize, height: iconSize }}>
-          {!iconLoaded && (
-            <div
-              className="absolute inset-0 rounded-md animate-pulse"
-              style={{ background: 'rgba(6, 113, 164, 0.14)' }}
-            />
-          )}
-          <img
-            src={getIconSrc(tech.icon, hovered)}
-            alt={tech.name}
-            className="w-full h-full"
-            loading="eager"
-            decoding="async"
-            referrerPolicy="no-referrer"
-            crossOrigin="anonymous"
-            style={{
-              opacity: iconLoaded ? 1 : 0,
-              filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
-              transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
-              transition: 'transform 0.2s ease, opacity 0.22s ease',
-            }}
-            onLoad={() => setIconLoaded(true)}
-            onError={() => {
-              setIconLoaded(true)
-              setIconFailed(true)
-            }}
-          />
-        </div>
-      ) : null}
-      <span className="text-lg font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
-      <span className="text-sm leading-relaxed" style={{ color: blurbColor }}>{tallBlurb}</span>
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke={textColor}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="absolute top-4 right-4"
-        style={{
-          opacity: hovered ? 0.7 : 0,
-          transform: hovered ? 'translate(0, 0)' : 'translate(-4px, 4px)',
-          transition: 'all 0.2s ease',
-        }}
-      >
-        <path d="M7 17L17 7" />
-        <path d="M7 7h10v10" />
-      </svg>
-    </div>
-  )
-}
-          const [pressed, setPressed] = useState(false)
-          const [iconLoaded, setIconLoaded] = useState(false)
-          const [iconFailed, setIconFailed] = useState(false)
-          const iconSize = tech.name === 'Apache HTTP Server' ? 52 : tech.name === 'YAML' ? 30 : 40
-          const tallBlurb = (tech.blurb ?? `Applied ${tech.name} in shipped projects and internal workflows`).replace(/[.\s]+$/, '')
-          const accentColor = getTechAccentColor(tech)
-          const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
-          const textColor = hovered ? accentColor : '#0671A4'
-          const blurbColor = hovered ? hexToRgba(accentColor, 0.75) : 'rgba(6, 113, 164, 0.7)'
-
-          useEffect(() => {
-            let cancelled = false
-
-            const baseSrc = getIconSrc(tech.icon, false)
-            const hoverSrc = getIconSrc(tech.icon, true)
-            const base = new Image()
-            base.referrerPolicy = 'no-referrer'
-            base.crossOrigin = 'anonymous'
-            base.src = baseSrc
-            base.onload = () => {
-              if (!cancelled) setIconLoaded(true)
-            }
-            base.onerror = () => {
-              if (!cancelled) setIconLoaded(true)
-            }
-
-            if (hoverSrc !== baseSrc) {
-              const hoverImg = new Image()
-              hoverImg.referrerPolicy = 'no-referrer'
-              hoverImg.crossOrigin = 'anonymous'
-              hoverImg.src = hoverSrc
-            }
-
-            return () => {
-              cancelled = true
-            }
-          }, [tech.icon])
-
-          return (
-            <div
-              className="rounded-xl flex flex-col justify-center items-start px-6 gap-3 cursor-pointer select-none relative"
-              style={{
-                width: 300,
-                height: 300,
-                background: hovered ? '#FFFFFF' : '#F5F5F5',
-                border: `1.5px solid ${borderColor}`,
-                transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-3px)' : 'scale(1)',
-                zIndex: hovered ? 20 : 1,
-                boxShadow: hovered
-                  ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
-                  : '0 4px 12px rgba(0, 0, 0, 0.04)',
-                transition: 'all 0.2s ease',
-                alignItems: iconFailed ? 'center' : 'flex-start',
-                textAlign: iconFailed ? 'center' : 'left',
-              }}
-              onMouseEnter={() => setHovered(true)}
-              onMouseLeave={() => { setHovered(false); setPressed(false) }}
-              onMouseDown={() => setPressed(true)}
-              onMouseUp={() => setPressed(false)}
-              onClick={() => window.open(tech.url, '_blank')}
-            >
-              {!iconFailed ? (
-                <div className="relative" style={{ width: iconSize, height: iconSize }}>
-                  {!iconLoaded && (
-                    <div
-                      className="absolute inset-0 rounded-md animate-pulse"
-                      style={{ background: 'rgba(6, 113, 164, 0.14)' }}
-                    />
-                  )}
-                  <img
-                    src={getIconSrc(tech.icon, hovered)}
-                    alt={tech.name}
-                    className="w-full h-full"
-                    loading="eager"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                    crossOrigin="anonymous"
+              return (
+                <div
+                  className="rounded-xl flex items-center px-5 cursor-pointer select-none relative"
+                  style={{
+                    width: 220,
+                    height: 146,
+                    background: hovered ? '#FFFFFF' : '#F5F5F5',
+                    border: `1.5px solid ${borderColor}`,
+                    transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-2px)' : 'scale(1)',
+                    zIndex: hovered ? 20 : 1,
+                    boxShadow: hovered
+                      ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
+                      : '0 4px 12px rgba(0, 0, 0, 0.04)',
+                    transition: 'all 0.2s ease',
+                    gap: iconFailed ? 0 : 12,
+                    justifyContent: iconFailed ? 'center' : 'flex-start',
+                  }}
+                  onMouseEnter={() => { if (canHoverRef.current) setHovered(true) }}
+                  onMouseLeave={() => { if (canHoverRef.current) { setHovered(false); setPressed(false) } }}
+                  onMouseDown={() => { if (canHoverRef.current) setPressed(true) }}
+                  onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
+                  onClick={() => window.open(tech.url, '_blank')}
+                >
+                  {!iconFailed ? (
+                    <div className="relative shrink-0" style={{ width: iconSize, height: iconSize }}>
+                      {!iconLoaded && (
+                        <div
+                          className="absolute inset-0 rounded-md animate-pulse"
+                          style={{ background: 'rgba(6, 113, 164, 0.14)' }}
+                        />
+                      )}
+                      <img
+                        src={getIconSrc(tech.icon, hovered)}
+                        alt={tech.name}
+                        className="w-full h-full shrink-0"
+                        loading="eager"
+                        decoding="async"
+                        referrerPolicy="no-referrer"
+                        crossOrigin="anonymous"
+                        style={{
+                          opacity: iconLoaded ? 1 : 0,
+                          filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
+                          transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
+                          transition: 'transform 0.2s ease, opacity 0.22s ease',
+                        }}
+                        onLoad={() => setIconLoaded(true)}
+                        onError={() => {
+                          setIconLoaded(true)
+                          setIconFailed(true)
+                        }}
+                      />
+                    </div>
+                  ) : null}
+                  <span
+                    className="text-base font-medium"
+                    style={{ color: textColor, transition: 'color 0.2s ease', textAlign: iconFailed ? 'center' : 'left' }}
+                  >
+                    {tech.name}
+                  </span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke={textColor}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="absolute top-3 right-3"
                     style={{
-                      opacity: iconLoaded ? 1 : 0,
-                      filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
-                      transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
-                      transition: 'transform 0.2s ease, opacity 0.22s ease',
+                      opacity: hovered ? 0.7 : 0,
+                      transform: hovered ? 'translate(0, 0)' : 'translate(-4px, 4px)',
+                      transition: 'all 0.2s ease',
                     }}
-                    onLoad={() => setIconLoaded(true)}
-                    onError={() => {
-                      setIconLoaded(true)
-                      setIconFailed(true)
-                    }}
-                  />
+                  >
+                    <path d="M7 17L17 7" />
+                    <path d="M7 7h10v10" />
+                  </svg>
                 </div>
-              ) : null}
-              <span className="text-lg font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
-              <span className="text-sm leading-relaxed" style={{ color: blurbColor }}>{tallBlurb}</span>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke={textColor}
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="absolute top-4 right-4"
-                style={{
-                  opacity: hovered ? 0.7 : 0,
-                  transform: hovered ? 'translate(0, 0)' : 'translate(-4px, 4px)',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                <path d="M7 17L17 7" />
-                <path d="M7 7h10v10" />
-              </svg>
-            </div>
-          )
-        }
+              )
+            }
+
+            function TallCard({ tech }: { tech: TechItem }) {
+              const [hovered, setHovered] = useState(false)
+              const [pressed, setPressed] = useState(false)
+              const [iconLoaded, setIconLoaded] = useState(false)
+              const [iconFailed, setIconFailed] = useState(false)
+              const canHoverRef = useRef(false)
+              const iconSize = tech.name === 'Apache HTTP Server' ? 52 : tech.name === 'YAML' ? 30 : 40
+              const tallBlurb = (tech.blurb ?? `Applied ${tech.name} in shipped projects and internal workflows`).replace(/[.\s]+$/, '')
+              const accentColor = getTechAccentColor(tech)
+              const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
+              const textColor = hovered ? accentColor : '#0671A4'
+              const blurbColor = hovered ? hexToRgba(accentColor, 0.75) : 'rgba(6, 113, 164, 0.7)'
+
+              useEffect(() => {
+                const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
+                const update = () => {
+                  canHoverRef.current = mql.matches
+                }
+                update()
+                mql.addEventListener('change', update)
+                return () => mql.removeEventListener('change', update)
+              }, [])
+
+              useEffect(() => {
+                let cancelled = false
+
+                const baseSrc = getIconSrc(tech.icon, false)
+                const hoverSrc = getIconSrc(tech.icon, true)
+                const base = new Image()
+                base.referrerPolicy = 'no-referrer'
+                base.crossOrigin = 'anonymous'
+                base.src = baseSrc
+                base.onload = () => {
+                  if (!cancelled) setIconLoaded(true)
+                }
+                base.onerror = () => {
+                  if (!cancelled) setIconLoaded(true)
+                }
+
+                if (hoverSrc !== baseSrc) {
+                  const hoverImg = new Image()
+                  hoverImg.referrerPolicy = 'no-referrer'
+                  hoverImg.crossOrigin = 'anonymous'
+                  hoverImg.src = hoverSrc
+                }
+
+                return () => {
+                  cancelled = true
+                }
+              }, [tech.icon])
+
+              return (
+                <div
+                  className="rounded-xl flex flex-col justify-center items-start px-6 gap-3 cursor-pointer select-none relative"
+                  style={{
+                    width: 300,
+                    height: 300,
+                    background: hovered ? '#FFFFFF' : '#F5F5F5',
+                    border: `1.5px solid ${borderColor}`,
+                    transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-3px)' : 'scale(1)',
+                    zIndex: hovered ? 20 : 1,
+                    boxShadow: hovered
+                      ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
+                      : '0 4px 12px rgba(0, 0, 0, 0.04)',
+                    transition: 'all 0.2s ease',
+                    alignItems: iconFailed ? 'center' : 'flex-start',
+                    textAlign: iconFailed ? 'center' : 'left',
+                  }}
+                  onMouseEnter={() => { if (canHoverRef.current) setHovered(true) }}
+                  onMouseLeave={() => { if (canHoverRef.current) { setHovered(false); setPressed(false) } }}
+                  onMouseDown={() => { if (canHoverRef.current) setPressed(true) }}
+                  onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
+                  onClick={() => window.open(tech.url, '_blank')}
+                >
+                  {!iconFailed ? (
+                    <div className="relative" style={{ width: iconSize, height: iconSize }}>
+                      {!iconLoaded && (
+                        <div
+                          className="absolute inset-0 rounded-md animate-pulse"
+                          style={{ background: 'rgba(6, 113, 164, 0.14)' }}
+                        />
+                      )}
+                      <img
+                        src={getIconSrc(tech.icon, hovered)}
+                        alt={tech.name}
+                        className="w-full h-full"
+                        loading="eager"
+                        decoding="async"
+                        referrerPolicy="no-referrer"
+                        crossOrigin="anonymous"
+                        style={{
+                          opacity: iconLoaded ? 1 : 0,
+                          filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
+                          transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
+                          transition: 'transform 0.2s ease, opacity 0.22s ease',
+                        }}
+                        onLoad={() => setIconLoaded(true)}
+                        onError={() => {
+                          setIconLoaded(true)
+                          setIconFailed(true)
+                        }}
+                      />
+                    </div>
+                  ) : null}
+                  <span className="text-lg font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
+                  <span className="text-sm leading-relaxed" style={{ color: blurbColor }}>{tallBlurb}</span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke={textColor}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="absolute top-4 right-4"
+                    style={{
+                      opacity: hovered ? 0.7 : 0,
+                      transform: hovered ? 'translate(0, 0)' : 'translate(-4px, 4px)',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <path d="M7 17L17 7" />
+                    <path d="M7 7h10v10" />
+                  </svg>
+                </div>
+              )
+            }
         stroke={textColor}
         strokeWidth="2"
         strokeLinecap="round"

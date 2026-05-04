@@ -33,6 +33,7 @@ export function Navbar() {
   const [pinned, setPinned] = useState(false)
   const [ctaHovered, setCtaHovered] = useState(false)
   const [forceHidden, setForceHidden] = useState(false)
+  const [pastAboutMobile, setPastAboutMobile] = useState(false)
   const scrolledRef = useRef(scrolled)
 
   useEffect(() => {
@@ -59,6 +60,35 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // On mobile, the navbar should drop sticky behavior past the About section.
+  // We track whether we've scrolled past About (= top of projects-intro).
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth >= 1024) {
+        setPastAboutMobile(false)
+        return
+      }
+      const intro = document.getElementById('projects-intro')
+      const aboutEnd = intro
+        ? intro.getBoundingClientRect().top + window.scrollY
+        : window.innerHeight * 1.9
+      setPastAboutMobile(window.scrollY >= aboutEnd - 64)
+    }
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    let lastWidth = window.innerWidth
+    const onResize = () => {
+      if (window.innerWidth === lastWidth) return
+      lastWidth = window.innerWidth
+      update()
+    }
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [])
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href === RESUME_PAGE_URL) {
       posthog?.capture('resume_viewed')
@@ -78,7 +108,7 @@ export function Navbar() {
     <>
       <div data-navbar className="fixed top-0 left-0 right-0 z-[1001] transition-all duration-500"
         style={{
-          transform: (hidden && !pinned) || forceHidden ? 'translateY(-100%)' : 'translateY(0)',
+          transform: (hidden && !pinned) || forceHidden || (pastAboutMobile && !menuOpen) ? 'translateY(-100%)' : 'translateY(0)',
         }}
       >
         <header

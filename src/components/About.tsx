@@ -19,6 +19,119 @@ function getIconSrc(icon: string, hovered: boolean) {
   return icon.replace('/0671A4', '')
 }
 
+const techAccentColorsBySlug: Record<string, string> = {
+  react: '#61DAFB',
+  python: '#3776AB',
+  typescript: '#3178C6',
+  pytorch: '#EE4C2C',
+  nodedotjs: '#5FA04E',
+  openjdk: '#111111',
+  google: '#4285F4',
+  vuedotjs: '#42B883',
+  javascript: '#F7DF1E',
+  fastapi: '#009688',
+  confluence: '#4C9AFF',
+  git: '#F05032',
+  github: '#181717',
+  pandas: '#150458',
+  numpy: '#013243',
+  mongodb: '#47A248',
+  postgresql: '#4169E1',
+  d3: '#F9A03C',
+  codemirror: '#D30707',
+  yaml: '#CB171E',
+  scikitlearn: '#F7931E',
+  express: '#000000',
+  vercel: '#000000',
+  tensorflow: '#FF6F00',
+  githubactions: '#2088FF',
+  ipfs: '#65C2CB',
+  anthropic: '#111111',
+  googlegemini: '#8E75B8',
+  mistralai: '#FF7000',
+  leaflet: '#199900',
+  ollama: '#000000',
+  palantir: '#101820',
+  posthog: '#F9BD2B',
+  clerk: '#6C47FF',
+  pinia: '#FFD859',
+  supabase: '#3ECF8E',
+  redis: '#DC382D',
+  docker: '#2496ED',
+  html5: '#E34F26',
+  css: '#6E43B8',
+  css3: '#6E43B8',
+  flask: '#000000',
+  plotly: '#7A76FF',
+  apache: '#D22128',
+}
+
+function getTechAccentColor(tech: TechItem) {
+  if (tech.name === 'NetworkX') return '#2B7BBB'
+  if (tech.name === 'Claude API') return '#D97757'
+  const slugMatch = tech.icon.match(/simpleicons\.org\/([^/]+)/)
+  const slug = slugMatch?.[1]
+  return (slug && techAccentColorsBySlug[slug]) ?? '#0671A4'
+}
+
+function hexToRgba(hex: string, alpha: number) {
+  const normalized = hex.replace('#', '')
+  if (normalized.length !== 6) return `rgba(6, 113, 164, ${alpha})`
+  const r = parseInt(normalized.slice(0, 2), 16)
+  const g = parseInt(normalized.slice(2, 4), 16)
+  const b = parseInt(normalized.slice(4, 6), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+const majorTech: TechItem[] = [
+  { name: 'React', icon: 'https://cdn.simpleicons.org/react/0671A4', url: 'https://react.dev', blurb: 'Built interactive UIs for data visualization web applications' },
+  { name: 'Python', icon: 'https://cdn.simpleicons.org/python/0671A4', url: 'https://python.org', blurb: 'Trained ML models and shipped backend APIs for data insights' },
+  { name: 'TypeScript', icon: 'https://cdn.simpleicons.org/typescript/0671A4', url: 'https://typescriptlang.org', blurb: 'Architected type safe frontends for clients' },
+  { name: 'PyTorch', icon: 'https://cdn.simpleicons.org/pytorch/0671A4', url: 'https://pytorch.org', blurb: 'Trained GRU and GraphSAGE models for complex data analysis' },
+  { name: 'Node.js', icon: 'https://cdn.simpleicons.org/nodedotjs/0671A4', url: 'https://nodejs.org', blurb: 'Deployed fullstack apps and REST APIs to founders' },
+  { name: 'Java', icon: 'https://cdn.simpleicons.org/openjdk/0671A4', url: 'https://dev.java', blurb: 'Engineered backend systems and data structures' },
+  { name: 'NetworkX', icon: '/networkx.png', url: 'https://networkx.org', blurb: 'Constructed knowledge graphs and contact networks to detect anomalies' },
+  { name: 'Google ADK', icon: 'https://cdn.simpleicons.org/google/0671A4', url: 'https://google.github.io/adk-docs/', blurb: 'Orchestrated sequential multi agent workflows' },
+  { name: 'Confluence', icon: 'https://cdn.simpleicons.org/confluence/0671A4', url: 'https://www.atlassian.com/software/confluence', blurb: 'Documented engineering workflows and team project plans for C2S2' },
+  { name: 'Apache HTTP Server', icon: 'https://cdn.simpleicons.org/apache/0671A4', url: 'https://httpd.apache.org', blurb: "Maintained C2S2 site on Cornell's Apache HTTP Server" },
+  { name: 'PostHog', icon: 'https://cdn.simpleicons.org/posthog/0671A4', url: 'https://posthog.com', blurb: 'This site uses PostHog for product analytics' },
+  { name: 'Docker', icon: 'https://cdn.simpleicons.org/docker/0671A4', url: 'https://www.docker.com', blurb: 'Containerized app services for deployable apps to clients' },
+  { name: 'PostgreSQL', icon: 'https://cdn.simpleicons.org/postgresql/0671A4', url: 'https://www.postgresql.org', blurb: 'Designed relational schemas and queried analytics data for client applications' },
+  { name: 'Ollama', icon: 'https://cdn.simpleicons.org/ollama/0671A4', url: 'https://ollama.com', blurb: 'Ran local LLM inference pipelines for XAI' },
+]
+
+const minorTech: TechItem[] = [
+  { name: 'Clerk', icon: 'https://cdn.simpleicons.org/clerk/0671A4', url: 'https://clerk.com' },
+  { name: 'Vue.js', icon: 'https://cdn.simpleicons.org/vuedotjs/0671A4', url: 'https://vuejs.org' },
+  { name: 'JavaScript', icon: 'https://cdn.simpleicons.org/javascript/0671A4', url: 'https://developer.mozilla.org/docs/Web/JavaScript' },
+  { name: 'FastAPI', icon: 'https://cdn.simpleicons.org/fastapi/0671A4', url: 'https://fastapi.tiangolo.com' },
+  { name: 'HTML5', icon: 'https://cdn.simpleicons.org/html5/0671A4', url: 'https://developer.mozilla.org/docs/Web/HTML', blurb: 'Built accessible page structure for production web interfaces' },
+  { name: 'CSS3', icon: 'https://cdn.simpleicons.org/css/0671A4', url: 'https://developer.mozilla.org/docs/Web/CSS', blurb: 'Implemented responsive layouts, theming systems, and polished UI interactions' },
+  { name: 'Flask', icon: 'https://cdn.simpleicons.org/flask/000000', url: 'https://flask.palletsprojects.com', blurb: 'Built lightweight API endpoints and backend utilities for rapid feature delivery' },
+  { name: 'Git', icon: 'https://cdn.simpleicons.org/git/0671A4', url: 'https://git-scm.com', blurb: 'Managed branching, review workflows, and release ready version control' },
+  { name: 'GitHub', icon: 'https://cdn.simpleicons.org/github/0671A4', url: 'https://github.com', blurb: 'Shipped collaborative code with PRs, issue tracking, and CI integrated repos' },
+  { name: 'Supabase', icon: 'https://cdn.simpleicons.org/supabase/0671A4', url: 'https://supabase.com' },
+  { name: 'Redis', icon: 'https://cdn.simpleicons.org/redis/0671A4', url: 'https://redis.io' },
+  { name: 'pandas', icon: 'https://cdn.simpleicons.org/pandas/0671A4', url: 'https://pandas.pydata.org' },
+  { name: 'NumPy', icon: 'https://cdn.simpleicons.org/numpy/0671A4', url: 'https://numpy.org' },
+  { name: 'MongoDB', icon: 'https://cdn.simpleicons.org/mongodb/0671A4', url: 'https://mongodb.com' },
+  { name: 'D3.js', icon: 'https://cdn.simpleicons.org/d3/0671A4', url: 'https://d3js.org' },
+  { name: 'Plotly', icon: 'https://cdn.simpleicons.org/plotly/0671A4', url: 'https://plotly.com', blurb: 'Created and presented KPI metrics using Plotly visualizations' },
+  { name: 'CodeMirror', icon: 'https://cdn.simpleicons.org/codemirror/0671A4', url: 'https://codemirror.net' },
+  { name: 'YAML', icon: 'https://cdn.simpleicons.org/yaml/0671A4', url: 'https://yaml.org', blurb: 'Built CI validation and configuration workflows for large open source codebases' },
+  { name: 'scikit-learn', icon: 'https://cdn.simpleicons.org/scikitlearn/0671A4', url: 'https://scikit-learn.org' },
+  { name: 'Express', icon: 'https://cdn.simpleicons.org/express/0671A4', url: 'https://expressjs.com' },
+  { name: 'Vercel', icon: 'https://cdn.simpleicons.org/vercel/0671A4', url: 'https://vercel.com' },
+  { name: 'TensorFlow', icon: 'https://cdn.simpleicons.org/tensorflow/0671A4', url: 'https://tensorflow.org' },
+  { name: 'GitHub Actions', icon: 'https://cdn.simpleicons.org/githubactions/0671A4', url: 'https://github.com/features/actions' },
+  { name: 'IPFS', icon: 'https://cdn.simpleicons.org/ipfs/0671A4', url: 'https://ipfs.tech' },
+  { name: 'Claude API', icon: '/claude.svg', url: 'https://docs.anthropic.com' },
+  { name: 'Gemini API', icon: 'https://cdn.simpleicons.org/googlegemini/0671A4', url: 'https://ai.google.dev', blurb: 'Built multimodel AI workflows and fallback orchestration for production apps' },
+  { name: 'Mistral AI', icon: 'https://cdn.simpleicons.org/mistralai/0671A4', url: 'https://mistral.ai' },
+  { name: 'Leaflet', icon: 'https://cdn.simpleicons.org/leaflet/0671A4', url: 'https://leafletjs.com' },
+  { name: 'Palantir Foundry', icon: 'https://cdn.simpleicons.org/palantir/0671A4', url: 'https://www.palantir.com/platforms/foundry/' },
+]
+
 function SmallCard({ tech }: { tech: TechItem }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)

@@ -73,15 +73,15 @@ export function sectionScrollTop(href: string) {
   if (href === '#experience') {
     const container = projectsContainer()
     if (container) {
-      return documentTop(container) + container.offsetHeight - window.innerHeight + experienceTopInsideViewport() - offset
+      return documentTop(container) + container.offsetHeight - window.innerHeight + experienceTopInsideViewport() - offset - 50
     }
   }
 
   if (href === '#education') {
     const education = document.getElementById('education')
     if (education) {
-      const mobileNudge = window.innerWidth < 1024 ? 130 : 0
-      return documentTop(education) + mobileNudge
+      const nudge = window.innerWidth < 1024 ? 130 : 120
+      return documentTop(education) + nudge
     }
   }
 
@@ -89,10 +89,10 @@ export function sectionScrollTop(href: string) {
     const contact = document.getElementById('contact')
     const content = contact?.firstElementChild
     if (content) {
-      return documentTop(content) - offset
+      return documentTop(content) - offset - 40
     }
     if (contact) {
-      return documentTop(contact) - offset
+      return documentTop(contact) - offset - 40
     }
   }
 

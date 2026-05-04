@@ -17,8 +17,11 @@ export function useActiveSection() {
     // Detect it via scroll position instead: the horizontal slide occupies
     // the first 40% of the 350vh container (= 1.4×vh of scroll).
     const aboutStart = () => window.innerHeight * 1.1
-    const aboutEnd = () => {
-      // About section ends where "projects" begins (fall back to 4×vh)
+    const projectsRegionStart = () => {
+      // Projects region begins at projects-intro (which sits above the
+      // sticky projects section in document flow).
+      const intro = document.getElementById('projects-intro')
+      if (intro) return intro.getBoundingClientRect().top + window.scrollY
       const projects = document.getElementById('projects')
       return projects
         ? projects.getBoundingClientRect().top + window.scrollY
@@ -27,9 +30,10 @@ export function useActiveSection() {
 
     const handleScroll = () => {
       const y = window.scrollY
+      const projectsStart = projectsRegionStart()
 
       // Check "about" via scroll position (horizontal scroll section)
-      if (y >= aboutStart() && y < aboutEnd()) {
+      if (y >= aboutStart() && y < projectsStart - PROBE_OFFSET) {
         setActive('about')
         return
       }
@@ -43,6 +47,19 @@ export function useActiveSection() {
         const rect = el.getBoundingClientRect()
         if (rect.top <= PROBE_OFFSET && rect.bottom > PROBE_OFFSET) {
           found = id
+        }
+      }
+
+      // Treat projects-intro as part of "projects" so the navbar reflects
+      // the section once the user scrolls to the intro (before the sticky
+      // projects section enters the viewport).
+      if (!found) {
+        const intro = document.getElementById('projects-intro')
+        if (intro) {
+          const rect = intro.getBoundingClientRect()
+          if (rect.top <= PROBE_OFFSET && rect.bottom > PROBE_OFFSET) {
+            found = 'projects'
+          }
         }
       }
 

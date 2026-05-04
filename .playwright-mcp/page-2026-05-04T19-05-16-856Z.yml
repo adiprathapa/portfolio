@@ -1,0 +1,937 @@
+- generic [ref=e2]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "आदि" [ref=e6] [cursor=pointer]:
+        - /url: /#top
+      - navigation [ref=e7]:
+        - link "About" [ref=e8] [cursor=pointer]:
+          - /url: "#about"
+        - link "Projects" [ref=e9] [cursor=pointer]:
+          - /url: "#projects"
+        - link "Experience" [ref=e10] [cursor=pointer]:
+          - /url: "#experience"
+        - link "Education" [ref=e11] [cursor=pointer]:
+          - /url: "#education"
+        - link "Resume" [ref=e12] [cursor=pointer]:
+          - /url: /resume.html
+        - link "Contact" [ref=e13] [cursor=pointer]:
+          - /url: "#contact"
+      - generic [ref=e14]:
+        - button "Let's talk" [ref=e15] [cursor=pointer]:
+          - generic [ref=e17]:
+            - generic [ref=e18]: Let's talk
+            - img [ref=e19]
+        - link "LinkedIn profile":
+          - /url: https://www.linkedin.com/in/adi-prathapa/
+          - img "Adi Prathapa"
+  - main [ref=e21]:
+    - generic [ref=e24]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - heading "He|" [level=1] [ref=e33]:
+            - generic [ref=e34]: He|
+          - paragraph [ref=e35]: Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI.
+        - generic [ref=e37]:
+          - generic [ref=e38] [cursor=pointer]:
+            - img "Adi Prathapa" [ref=e39]
+            - img [ref=e41]
+          - generic [ref=e43] [cursor=pointer]:
+            - img "GitHub avatar" [ref=e44]
+            - img [ref=e46]
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - heading "About me" [level=2] [ref=e54]
+          - paragraph [ref=e55]: I'm a Computer Science student at Cornell minoring in AI, originally from Nebraska. I am really interested in building and working with full stack web apps and experimenting with ML models.
+          - paragraph [ref=e56]: Lately I've been diving deep into web3, stablecoins, and IPFS, the idea of programmable money and decentralized finance is something I enjoy working with and learning about. I'm always looking for ways to connect what I'm learning in AI with applications outside of the classroom.
+          - paragraph [ref=e57]: Outside of code, I'm an Eagle Scout who still loves getting outdoors, camping, hiking, that kind of thing. When I'm not on a trail, you'll probably find me gaming, tinkering with some new tech, or catching up on anime and other shows.
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - generic [ref=e61]: Cornell Data Strategy Meeting
+            - generic [ref=e63]: Stablecoin Presentation at Cornell Hackathon
+            - generic [ref=e65]: Formal Organizing Group
+            - generic [ref=e67]: Hiking in Robert H. Treman State Park
+            - generic [ref=e69]: Eagle Scout Project
+            - generic [ref=e71]: After Eagle Scout Board of Review
+          - paragraph [ref=e72]:
+            - img [ref=e73]
+            - text: Drag to throw
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - heading "Projects" [level=2] [ref=e81]
+          - paragraph [ref=e82]: I am a fullstack developer who mainly works in Python, Java, and for frontend in JavaScript and TypeScript. I have experience working with a variety of machine learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas, and more. My projects range from fintech applications to machine learning focused projects to apps that combine both.
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - generic [ref=e89] [cursor=pointer]:
+              - img "React" [ref=e91]
+              - generic [ref=e92]: React
+              - generic [ref=e93]: Built interactive UIs for data visualization web applications
+              - img [ref=e94]
+            - generic [ref=e97]:
+              - generic [ref=e98] [cursor=pointer]:
+                - img "Clerk" [ref=e100]
+                - generic [ref=e101]: Clerk
+                - img [ref=e102]
+              - generic [ref=e105] [cursor=pointer]:
+                - img "Vue.js" [ref=e107]
+                - generic [ref=e108]: Vue.js
+                - img [ref=e109]
+            - generic [ref=e113] [cursor=pointer]:
+              - img "Python" [ref=e115]
+              - generic [ref=e116]: Python
+              - generic [ref=e117]: Trained ML models and shipped backend APIs for data insights
+              - img [ref=e118]
+            - generic [ref=e121]:
+              - generic [ref=e122] [cursor=pointer]:
+                - img "JavaScript" [ref=e124]
+                - generic [ref=e125]: JavaScript
+                - img [ref=e126]
+              - generic [ref=e129] [cursor=pointer]:
+                - img "FastAPI" [ref=e131]
+                - generic [ref=e132]: FastAPI
+                - img [ref=e133]
+            - generic [ref=e137] [cursor=pointer]:
+              - img "TypeScript" [ref=e139]
+              - generic [ref=e140]: TypeScript
+              - generic [ref=e141]: Architected type safe frontends for clients
+              - img [ref=e142]
+            - generic [ref=e145]:
+              - generic [ref=e146] [cursor=pointer]:
+                - img "HTML5" [ref=e148]
+                - generic [ref=e149]: HTML5
+                - img [ref=e150]
+              - generic [ref=e153] [cursor=pointer]:
+                - img "CSS3" [ref=e155]
+                - generic [ref=e156]: CSS3
+                - img [ref=e157]
+            - generic [ref=e161] [cursor=pointer]:
+              - img "PyTorch" [ref=e163]
+              - generic [ref=e164]: PyTorch
+              - generic [ref=e165]: Trained GRU and GraphSAGE models for complex data analysis
+              - img [ref=e166]
+            - generic [ref=e169]:
+              - generic [ref=e170] [cursor=pointer]:
+                - img "Flask" [ref=e172]
+                - generic [ref=e173]: Flask
+                - img [ref=e174]
+              - generic [ref=e177] [cursor=pointer]:
+                - img "Git" [ref=e179]
+                - generic [ref=e180]: Git
+                - img [ref=e181]
+            - generic [ref=e185] [cursor=pointer]:
+              - img "Node.js" [ref=e187]
+              - generic [ref=e188]: Node.js
+              - generic [ref=e189]: Deployed fullstack apps and REST APIs to founders
+              - img [ref=e190]
+            - generic [ref=e193]:
+              - generic [ref=e194] [cursor=pointer]:
+                - img "GitHub" [ref=e196]
+                - generic [ref=e197]: GitHub
+                - img [ref=e198]
+              - generic [ref=e201] [cursor=pointer]:
+                - img "Supabase" [ref=e203]
+                - generic [ref=e204]: Supabase
+                - img [ref=e205]
+            - generic [ref=e209] [cursor=pointer]:
+              - img "Java" [ref=e211]
+              - generic [ref=e212]: Java
+              - generic [ref=e213]: Engineered backend systems and data structures
+              - img [ref=e214]
+            - generic [ref=e217]:
+              - generic [ref=e218] [cursor=pointer]:
+                - img "Redis" [ref=e220]
+                - generic [ref=e221]: Redis
+                - img [ref=e222]
+              - generic [ref=e225] [cursor=pointer]:
+                - img "pandas" [ref=e227]
+                - generic [ref=e228]: pandas
+                - img [ref=e229]
+            - generic [ref=e233] [cursor=pointer]:
+              - img "NetworkX" [ref=e235]
+              - generic [ref=e236]: NetworkX
+              - generic [ref=e237]: Constructed knowledge graphs and contact networks to detect anomalies
+              - img [ref=e238]
+            - generic [ref=e241]:
+              - generic [ref=e242] [cursor=pointer]:
+                - img "NumPy" [ref=e244]
+                - generic [ref=e245]: NumPy
+                - img [ref=e246]
+              - generic [ref=e249] [cursor=pointer]:
+                - img "MongoDB" [ref=e251]
+                - generic [ref=e252]: MongoDB
+                - img [ref=e253]
+            - generic [ref=e257] [cursor=pointer]:
+              - img "Google ADK" [ref=e259]
+              - generic [ref=e260]: Google ADK
+              - generic [ref=e261]: Orchestrated sequential multi agent workflows
+              - img [ref=e262]
+            - generic [ref=e265]:
+              - generic [ref=e266] [cursor=pointer]:
+                - img "D3.js" [ref=e268]
+                - generic [ref=e269]: D3.js
+                - img [ref=e270]
+              - generic [ref=e273] [cursor=pointer]:
+                - img "Plotly" [ref=e275]
+                - generic [ref=e276]: Plotly
+                - img [ref=e277]
+            - generic [ref=e281] [cursor=pointer]:
+              - img "Confluence" [ref=e283]
+              - generic [ref=e284]: Confluence
+              - generic [ref=e285]: Documented engineering workflows and team project plans for C2S2
+              - img [ref=e286]
+            - generic [ref=e289]:
+              - generic [ref=e290] [cursor=pointer]:
+                - img "CodeMirror" [ref=e292]
+                - generic [ref=e293]: CodeMirror
+                - img [ref=e294]
+              - generic [ref=e297] [cursor=pointer]:
+                - img "YAML" [ref=e299]
+                - generic [ref=e300]: YAML
+                - img [ref=e301]
+            - generic [ref=e305] [cursor=pointer]:
+              - img "Apache HTTP Server" [ref=e307]
+              - generic [ref=e308]: Apache HTTP Server
+              - generic [ref=e309]: Maintained C2S2 site on Cornell's Apache HTTP Server
+              - img [ref=e310]
+            - generic [ref=e313]:
+              - generic [ref=e314] [cursor=pointer]:
+                - img "scikit-learn" [ref=e316]
+                - generic [ref=e317]: scikit-learn
+                - img [ref=e318]
+              - generic [ref=e321] [cursor=pointer]:
+                - img "Express" [ref=e323]
+                - generic [ref=e324]: Express
+                - img [ref=e325]
+            - generic [ref=e329] [cursor=pointer]:
+              - img "PostHog" [ref=e331]
+              - generic [ref=e332]: PostHog
+              - generic [ref=e333]: This site uses PostHog for product analytics
+              - img [ref=e334]
+            - generic [ref=e337]:
+              - generic [ref=e338] [cursor=pointer]:
+                - img "Vercel" [ref=e340]
+                - generic [ref=e341]: Vercel
+                - img [ref=e342]
+              - generic [ref=e345] [cursor=pointer]:
+                - img "TensorFlow" [ref=e347]
+                - generic [ref=e348]: TensorFlow
+                - img [ref=e349]
+            - generic [ref=e353] [cursor=pointer]:
+              - img "Docker" [ref=e355]
+              - generic [ref=e356]: Docker
+              - generic [ref=e357]: Containerized app services for deployable apps to clients
+              - img [ref=e358]
+            - generic [ref=e361]:
+              - generic [ref=e362] [cursor=pointer]:
+                - img "GitHub Actions" [ref=e364]
+                - generic [ref=e365]: GitHub Actions
+                - img [ref=e366]
+              - generic [ref=e369] [cursor=pointer]:
+                - img "IPFS" [ref=e371]
+                - generic [ref=e372]: IPFS
+                - img [ref=e373]
+            - generic [ref=e377] [cursor=pointer]:
+              - img "PostgreSQL" [ref=e379]
+              - generic [ref=e380]: PostgreSQL
+              - generic [ref=e381]: Designed relational schemas and queried analytics data for client applications
+              - img [ref=e382]
+            - generic [ref=e385]:
+              - generic [ref=e386] [cursor=pointer]:
+                - img "Claude API" [ref=e388]
+                - generic [ref=e389]: Claude API
+                - img [ref=e390]
+              - generic [ref=e393] [cursor=pointer]:
+                - img "Gemini API" [ref=e395]
+                - generic [ref=e396]: Gemini API
+                - img [ref=e397]
+            - generic [ref=e401] [cursor=pointer]:
+              - img "Ollama" [ref=e403]
+              - generic [ref=e404]: Ollama
+              - generic [ref=e405]: Ran local LLM inference pipelines for XAI
+              - img [ref=e406]
+            - generic [ref=e409]:
+              - generic [ref=e410] [cursor=pointer]:
+                - img "Mistral AI" [ref=e412]
+                - generic [ref=e413]: Mistral AI
+                - img [ref=e414]
+              - generic [ref=e417] [cursor=pointer]:
+                - img "Leaflet" [ref=e419]
+                - generic [ref=e420]: Leaflet
+                - img [ref=e421]
+            - generic [ref=e425] [cursor=pointer]:
+              - img "Palantir Foundry" [ref=e427]
+              - generic [ref=e428]: Palantir Foundry
+              - generic [ref=e429]: Applied Palantir Foundry in shipped projects and internal workflows
+              - img [ref=e430]
+          - generic [ref=e433]:
+            - generic [ref=e435] [cursor=pointer]:
+              - img "React" [ref=e437]
+              - generic [ref=e438]: React
+              - generic [ref=e439]: Built interactive UIs for data visualization web applications
+              - img [ref=e440]
+            - generic [ref=e443]:
+              - generic [ref=e444] [cursor=pointer]:
+                - img "Clerk" [ref=e446]
+                - generic [ref=e447]: Clerk
+                - img [ref=e448]
+              - generic [ref=e451] [cursor=pointer]:
+                - img "Vue.js" [ref=e453]
+                - generic [ref=e454]: Vue.js
+                - img [ref=e455]
+            - generic [ref=e459] [cursor=pointer]:
+              - img "Python" [ref=e461]
+              - generic [ref=e462]: Python
+              - generic [ref=e463]: Trained ML models and shipped backend APIs for data insights
+              - img [ref=e464]
+            - generic [ref=e467]:
+              - generic [ref=e468] [cursor=pointer]:
+                - img "JavaScript" [ref=e470]
+                - generic [ref=e471]: JavaScript
+                - img [ref=e472]
+              - generic [ref=e475] [cursor=pointer]:
+                - img "FastAPI" [ref=e477]
+                - generic [ref=e478]: FastAPI
+                - img [ref=e479]
+            - generic [ref=e483] [cursor=pointer]:
+              - img "TypeScript" [ref=e485]
+              - generic [ref=e486]: TypeScript
+              - generic [ref=e487]: Architected type safe frontends for clients
+              - img [ref=e488]
+            - generic [ref=e491]:
+              - generic [ref=e492] [cursor=pointer]:
+                - img "HTML5" [ref=e494]
+                - generic [ref=e495]: HTML5
+                - img [ref=e496]
+              - generic [ref=e499] [cursor=pointer]:
+                - img "CSS3" [ref=e501]
+                - generic [ref=e502]: CSS3
+                - img [ref=e503]
+            - generic [ref=e507] [cursor=pointer]:
+              - img "PyTorch" [ref=e509]
+              - generic [ref=e510]: PyTorch
+              - generic [ref=e511]: Trained GRU and GraphSAGE models for complex data analysis
+              - img [ref=e512]
+            - generic [ref=e515]:
+              - generic [ref=e516] [cursor=pointer]:
+                - img "Flask" [ref=e518]
+                - generic [ref=e519]: Flask
+                - img [ref=e520]
+              - generic [ref=e523] [cursor=pointer]:
+                - img "Git" [ref=e525]
+                - generic [ref=e526]: Git
+                - img [ref=e527]
+            - generic [ref=e531] [cursor=pointer]:
+              - img "Node.js" [ref=e533]
+              - generic [ref=e534]: Node.js
+              - generic [ref=e535]: Deployed fullstack apps and REST APIs to founders
+              - img [ref=e536]
+            - generic [ref=e539]:
+              - generic [ref=e540] [cursor=pointer]:
+                - img "GitHub" [ref=e542]
+                - generic [ref=e543]: GitHub
+                - img [ref=e544]
+              - generic [ref=e547] [cursor=pointer]:
+                - img "Supabase" [ref=e549]
+                - generic [ref=e550]: Supabase
+                - img [ref=e551]
+            - generic [ref=e555] [cursor=pointer]:
+              - img "Java" [ref=e557]
+              - generic [ref=e558]: Java
+              - generic [ref=e559]: Engineered backend systems and data structures
+              - img [ref=e560]
+            - generic [ref=e563]:
+              - generic [ref=e564] [cursor=pointer]:
+                - img "Redis" [ref=e566]
+                - generic [ref=e567]: Redis
+                - img [ref=e568]
+              - generic [ref=e571] [cursor=pointer]:
+                - img "pandas" [ref=e573]
+                - generic [ref=e574]: pandas
+                - img [ref=e575]
+            - generic [ref=e579] [cursor=pointer]:
+              - img "NetworkX" [ref=e581]
+              - generic [ref=e582]: NetworkX
+              - generic [ref=e583]: Constructed knowledge graphs and contact networks to detect anomalies
+              - img [ref=e584]
+            - generic [ref=e587]:
+              - generic [ref=e588] [cursor=pointer]:
+                - img "NumPy" [ref=e590]
+                - generic [ref=e591]: NumPy
+                - img [ref=e592]
+              - generic [ref=e595] [cursor=pointer]:
+                - img "MongoDB" [ref=e597]
+                - generic [ref=e598]: MongoDB
+                - img [ref=e599]
+            - generic [ref=e603] [cursor=pointer]:
+              - img "Google ADK" [ref=e605]
+              - generic [ref=e606]: Google ADK
+              - generic [ref=e607]: Orchestrated sequential multi agent workflows
+              - img [ref=e608]
+            - generic [ref=e611]:
+              - generic [ref=e612] [cursor=pointer]:
+                - img "D3.js" [ref=e614]
+                - generic [ref=e615]: D3.js
+                - img [ref=e616]
+              - generic [ref=e619] [cursor=pointer]:
+                - img "Plotly" [ref=e621]
+                - generic [ref=e622]: Plotly
+                - img [ref=e623]
+            - generic [ref=e627] [cursor=pointer]:
+              - img "Confluence" [ref=e629]
+              - generic [ref=e630]: Confluence
+              - generic [ref=e631]: Documented engineering workflows and team project plans for C2S2
+              - img [ref=e632]
+            - generic [ref=e635]:
+              - generic [ref=e636] [cursor=pointer]:
+                - img "CodeMirror" [ref=e638]
+                - generic [ref=e639]: CodeMirror
+                - img [ref=e640]
+              - generic [ref=e643] [cursor=pointer]:
+                - img "YAML" [ref=e645]
+                - generic [ref=e646]: YAML
+                - img [ref=e647]
+            - generic [ref=e651] [cursor=pointer]:
+              - img "Apache HTTP Server" [ref=e653]
+              - generic [ref=e654]: Apache HTTP Server
+              - generic [ref=e655]: Maintained C2S2 site on Cornell's Apache HTTP Server
+              - img [ref=e656]
+            - generic [ref=e659]:
+              - generic [ref=e660] [cursor=pointer]:
+                - img "scikit-learn" [ref=e662]
+                - generic [ref=e663]: scikit-learn
+                - img [ref=e664]
+              - generic [ref=e667] [cursor=pointer]:
+                - img "Express" [ref=e669]
+                - generic [ref=e670]: Express
+                - img [ref=e671]
+            - generic [ref=e675] [cursor=pointer]:
+              - img "PostHog" [ref=e677]
+              - generic [ref=e678]: PostHog
+              - generic [ref=e679]: This site uses PostHog for product analytics
+              - img [ref=e680]
+            - generic [ref=e683]:
+              - generic [ref=e684] [cursor=pointer]:
+                - img "Vercel" [ref=e686]
+                - generic [ref=e687]: Vercel
+                - img [ref=e688]
+              - generic [ref=e691] [cursor=pointer]:
+                - img "TensorFlow" [ref=e693]
+                - generic [ref=e694]: TensorFlow
+                - img [ref=e695]
+            - generic [ref=e699] [cursor=pointer]:
+              - img "Docker" [ref=e701]
+              - generic [ref=e702]: Docker
+              - generic [ref=e703]: Containerized app services for deployable apps to clients
+              - img [ref=e704]
+            - generic [ref=e707]:
+              - generic [ref=e708] [cursor=pointer]:
+                - img "GitHub Actions" [ref=e710]
+                - generic [ref=e711]: GitHub Actions
+                - img [ref=e712]
+              - generic [ref=e715] [cursor=pointer]:
+                - img "IPFS" [ref=e717]
+                - generic [ref=e718]: IPFS
+                - img [ref=e719]
+            - generic [ref=e723] [cursor=pointer]:
+              - img "PostgreSQL" [ref=e725]
+              - generic [ref=e726]: PostgreSQL
+              - generic [ref=e727]: Designed relational schemas and queried analytics data for client applications
+              - img [ref=e728]
+            - generic [ref=e731]:
+              - generic [ref=e732] [cursor=pointer]:
+                - img "Claude API" [ref=e734]
+                - generic [ref=e735]: Claude API
+                - img [ref=e736]
+              - generic [ref=e739] [cursor=pointer]:
+                - img "Gemini API" [ref=e741]
+                - generic [ref=e742]: Gemini API
+                - img [ref=e743]
+            - generic [ref=e747] [cursor=pointer]:
+              - img "Ollama" [ref=e749]
+              - generic [ref=e750]: Ollama
+              - generic [ref=e751]: Ran local LLM inference pipelines for XAI
+              - img [ref=e752]
+            - generic [ref=e755]:
+              - generic [ref=e756] [cursor=pointer]:
+                - img "Mistral AI" [ref=e758]
+                - generic [ref=e759]: Mistral AI
+                - img [ref=e760]
+              - generic [ref=e763] [cursor=pointer]:
+                - img "Leaflet" [ref=e765]
+                - generic [ref=e766]: Leaflet
+                - img [ref=e767]
+            - generic [ref=e771] [cursor=pointer]:
+              - img "Palantir Foundry" [ref=e773]
+              - generic [ref=e774]: Palantir Foundry
+              - generic [ref=e775]: Applied Palantir Foundry in shipped projects and internal workflows
+              - img [ref=e776]
+        - generic [ref=e782]:
+          - article [ref=e785]:
+            - img [ref=e787]:
+              - generic [ref=e788]:
+                - generic [ref=e789]: Jan
+                - generic [ref=e790]: Feb
+                - generic [ref=e791]: Mar
+                - generic [ref=e792]: Apr
+                - generic [ref=e793]: May
+                - generic [ref=e794]: Jun
+                - generic [ref=e795]: Jul
+                - generic [ref=e796]: Aug
+                - generic [ref=e797]: Sep
+                - generic [ref=e798]: Oct
+                - generic [ref=e799]: Nov
+                - generic [ref=e800]: Dec
+            - generic [ref=e1220]: 597 contributions in 2026
+          - generic [ref=e1221]:
+            - heading "View my projects on GitHub" [level=2] [ref=e1222]
+            - paragraph [ref=e1223]: Every square is another commit toward open source work, research prototypes, and side projects. Browse the full set on GitHub.
+            - link "github.com/adiprathapa" [ref=e1224] [cursor=pointer]:
+              - /url: https://github.com/adiprathapa
+              - generic [ref=e1225]: github.com/adiprathapa
+              - img [ref=e1226]
+      - generic [ref=e1228]:
+        - generic [ref=e1231]:
+          - generic [ref=e1232]:
+            - generic [ref=e1236]:
+              - generic [ref=e1237]:
+                - generic [ref=e1238]:
+                  - heading "Offline education for everyone, everywhere" [level=3] [ref=e1239]
+                  - paragraph [ref=e1240]: Open source contributor on FreeCodeCamp which is part of the openZIM and Kiwix projects. I engineered a YAML based CI suite for locale key validation, implemented system wide dark mode with CSS variables and CodeMirror, and refactored core Vue components for optimized markdown parsing.
+                - generic [ref=e1241]:
+                  - generic [ref=e1242]:
+                    - generic [ref=e1243]: Vue.js
+                    - generic [ref=e1244]: Pinia
+                    - generic [ref=e1245]: GitHub Actions
+                    - generic [ref=e1246]: YAML
+                    - generic [ref=e1247]: Python
+                    - generic [ref=e1248]: CodeMirror
+                  - generic [ref=e1249]:
+                    - button "View Video" [ref=e1250] [cursor=pointer]:
+                      - generic [ref=e1252]:
+                        - generic [ref=e1253]: View Video
+                        - img [ref=e1254]
+                    - button "Repository" [ref=e1256] [cursor=pointer]:
+                      - generic [ref=e1258]:
+                        - img [ref=e1259]
+                        - generic [ref=e1261]: Repository
+              - img "Kiwix" [ref=e1264]
+            - generic [ref=e1269]:
+              - generic [ref=e1270]:
+                - generic [ref=e1271]:
+                  - heading "Predicting livestock disease 48 hours before symptoms appear" [level=3] [ref=e1272]
+                  - paragraph [ref=e1273]: Trained a GRU and GraphSAGE model over a 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.
+                - generic [ref=e1274]:
+                  - generic [ref=e1275]:
+                    - generic [ref=e1276]: FastAPI
+                    - generic [ref=e1277]: Claude API
+                    - generic [ref=e1278]: Gemini API
+                    - generic [ref=e1279]: IPFS
+                    - generic [ref=e1280]: Leaflet
+                    - generic [ref=e1281]: React
+                    - generic [ref=e1282]: pandas
+                    - generic [ref=e1283]: NumPy
+                  - generic [ref=e1284]:
+                    - button "View Video" [ref=e1285] [cursor=pointer]:
+                      - generic [ref=e1287]:
+                        - generic [ref=e1288]: View Video
+                        - img [ref=e1289]
+                    - button "Repository" [ref=e1291] [cursor=pointer]:
+                      - generic [ref=e1293]:
+                        - img [ref=e1294]
+                        - generic [ref=e1296]: Repository
+              - img "Tauron" [ref=e1299]
+            - generic [ref=e1304]:
+              - generic [ref=e1305]:
+                - generic [ref=e1306]:
+                  - heading "AI powered liquidity stress scoring with verifiable audit trails" [level=3] [ref=e1307]
+                  - paragraph [ref=e1308]: Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up multimodel LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.
+                - generic [ref=e1309]:
+                  - generic [ref=e1310]:
+                    - generic [ref=e1311]: PyTorch
+                    - generic [ref=e1312]: FastAPI
+                    - generic [ref=e1313]: React
+                    - generic [ref=e1314]: Ollama
+                    - generic [ref=e1315]: D3.js
+                    - generic [ref=e1316]: Mistral AI
+                    - generic [ref=e1317]: NetworkX
+                    - generic [ref=e1318]: scikit-learn
+                  - generic [ref=e1319]:
+                    - button "View Video" [ref=e1320] [cursor=pointer]:
+                      - generic [ref=e1322]:
+                        - generic [ref=e1323]: View Video
+                        - img [ref=e1324]
+                    - button "Repository" [ref=e1326] [cursor=pointer]:
+                      - generic [ref=e1328]:
+                        - img [ref=e1329]
+                        - generic [ref=e1331]: Repository
+              - img "Helicity" [ref=e1334]
+            - generic [ref=e1339]:
+              - generic [ref=e1340]:
+                - generic [ref=e1341]:
+                  - heading "One click AI market sizing with TAM/SAM/SOM visualization" [level=3] [ref=e1342]
+                  - paragraph [ref=e1343]: Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.
+                - generic [ref=e1344]:
+                  - generic [ref=e1345]:
+                    - generic [ref=e1346]: JavaScript
+                    - generic [ref=e1347]: React
+                    - generic [ref=e1348]: Node.js
+                    - generic [ref=e1349]: Express
+                    - generic [ref=e1350]: MongoDB
+                    - generic [ref=e1351]: Gemini API
+                    - generic [ref=e1352]: Vercel
+                  - generic [ref=e1353]:
+                    - button "View Video" [ref=e1354] [cursor=pointer]:
+                      - generic [ref=e1356]:
+                        - generic [ref=e1357]: View Video
+                        - img [ref=e1358]
+                    - button "Repository" [ref=e1360] [cursor=pointer]:
+                      - generic [ref=e1362]:
+                        - img [ref=e1363]
+                        - generic [ref=e1365]: Repository
+              - img "ZAM" [ref=e1368]
+            - generic [ref=e1373]:
+              - generic [ref=e1374]:
+                - generic [ref=e1375]:
+                  - heading "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge" [level=3] [ref=e1376]
+                  - paragraph [ref=e1377]: Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.
+                - generic [ref=e1378]:
+                  - generic [ref=e1379]:
+                    - generic [ref=e1380]: PyTorch
+                    - generic [ref=e1381]: GNN
+                    - generic [ref=e1382]: NumPy
+                    - generic [ref=e1383]: FFT
+                    - generic [ref=e1384]: Python
+                  - button "Repository" [ref=e1386] [cursor=pointer]:
+                    - generic [ref=e1388]:
+                      - img [ref=e1389]
+                      - generic [ref=e1391]: Repository
+              - generic [ref=e1395]:
+                - img "HRT" [ref=e1396]
+                - generic [ref=e1397]: ×
+                - img "Partcl" [ref=e1398]
+            - generic [ref=e1403]:
+              - generic [ref=e1404]:
+                - generic [ref=e1405]:
+                  - heading "Real time blockchain risk analytics with Palantir Foundry" [level=3] [ref=e1406]
+                  - paragraph [ref=e1407]: Built for the Palantir Foundry FDSE technical challenge. Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry.
+                - generic [ref=e1408]:
+                  - generic [ref=e1409]:
+                    - generic [ref=e1410]: NetworkX
+                    - generic [ref=e1411]: Palantir Foundry
+                    - generic [ref=e1412]: JavaScript
+                  - generic [ref=e1413]:
+                    - button "View Video" [ref=e1414] [cursor=pointer]:
+                      - generic [ref=e1416]:
+                        - generic [ref=e1417]: View Video
+                        - img [ref=e1418]
+                    - button "Repository" [ref=e1420] [cursor=pointer]:
+                      - generic [ref=e1422]:
+                        - img [ref=e1423]
+                        - generic [ref=e1425]: Repository
+              - img "Galatea" [ref=e1428]
+            - generic [ref=e1433]:
+              - generic [ref=e1434]:
+                - generic [ref=e1435]:
+                  - heading "Real time 1v1 fighting powered by phone cameras and AI commentary" [level=3] [ref=e1436]
+                  - paragraph [ref=e1437]: Built for the Cornell Claude Builders Club Hackathon. A 1v1 fighting game where players throw real punches at their phone cameras while silhouettes battle in a shared browser overlay. MediaPipe pose estimation streams keypoints to a 60Hz Python game server for hit detection and damage logic, with a live AI commentator powered by Claude API and ElevenLabs TTS.
+                - generic [ref=e1438]:
+                  - generic [ref=e1439]:
+                    - generic [ref=e1440]: MediaPipe
+                    - generic [ref=e1441]: FastAPI
+                    - generic [ref=e1442]: React
+                    - generic [ref=e1443]: PixiJS
+                    - generic [ref=e1444]: Claude API
+                    - generic [ref=e1445]: ElevenLabs
+                    - generic [ref=e1446]: WebSocket
+                  - generic [ref=e1447]:
+                    - button "View Video" [ref=e1448] [cursor=pointer]:
+                      - generic [ref=e1450]:
+                        - generic [ref=e1451]: View Video
+                        - img [ref=e1452]
+                    - button "Repository" [ref=e1454] [cursor=pointer]:
+                      - generic [ref=e1456]:
+                        - img [ref=e1457]
+                        - generic [ref=e1459]: Repository
+              - img "Spectre" [ref=e1462]
+          - generic [ref=e1468]:
+            - generic [ref=e1469]:
+              - generic [ref=e1470]:
+                - heading "Experience" [level=2] [ref=e1471]
+                - paragraph [ref=e1472]: I have experience in software engineering, research, and full stack development. Looking for Software and AI/ML engineering internship roles.
+              - generic [ref=e1473]:
+                - button "Work" [ref=e1474] [cursor=pointer]
+                - button "Involvement" [ref=e1475] [cursor=pointer]
+            - generic [ref=e1477]:
+              - button [ref=e1478] [cursor=pointer]:
+                - img [ref=e1479]
+              - button [ref=e1481] [cursor=pointer]:
+                - img [ref=e1482]
+              - generic [ref=e1484]:
+                - generic [ref=e1487] [cursor=pointer]:
+                  - img "MITRE" [ref=e1488]
+                  - paragraph [ref=e1491]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1494] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1495]
+                  - paragraph [ref=e1498]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1501] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1502]
+                  - paragraph [ref=e1505]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1508] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1509]
+                  - paragraph [ref=e1512]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1515] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1516]
+                  - paragraph [ref=e1519]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1522] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1523]
+                  - paragraph [ref=e1526]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1529] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1530]
+                  - paragraph [ref=e1533]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1536] [cursor=pointer]:
+                  - img "MITRE" [ref=e1537]
+                  - paragraph [ref=e1540]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1543] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1544]
+                  - paragraph [ref=e1547]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1550] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1551]
+                  - paragraph [ref=e1554]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1557] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1558]
+                  - paragraph [ref=e1561]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1564] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1565]
+                  - paragraph [ref=e1568]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1571] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1572]
+                  - paragraph [ref=e1575]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1578] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1579]
+                  - paragraph [ref=e1582]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1585] [cursor=pointer]:
+                  - img "MITRE" [ref=e1586]
+                  - paragraph [ref=e1589]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1592] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1593]
+                  - paragraph [ref=e1596]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1599] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1600]
+                  - paragraph [ref=e1603]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1606] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1607]
+                  - paragraph [ref=e1610]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1613] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1614]
+                  - paragraph [ref=e1617]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1620] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1621]
+                  - paragraph [ref=e1624]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1627] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1628]
+                  - paragraph [ref=e1631]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1634] [cursor=pointer]:
+                  - img "MITRE" [ref=e1635]
+                  - generic [ref=e1637]:
+                    - paragraph [ref=e1638]: Incoming Summer 2026
+                    - heading "Data Science Intern" [level=3] [ref=e1639]
+                    - paragraph [ref=e1640]: Working on graph neural networks and graph attention networks
+                    - generic [ref=e1641]:
+                      - generic [ref=e1642]:
+                        - img "PyTorch Geometric" [ref=e1643]
+                        - generic [ref=e1644]: PyTorch Geometric
+                      - generic [ref=e1645]:
+                        - img "Dash" [ref=e1646]
+                        - generic [ref=e1647]: Dash
+                - generic [ref=e1650] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1651]
+                  - paragraph [ref=e1654]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1657] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1658]
+                  - paragraph [ref=e1661]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1664] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1665]
+                  - paragraph [ref=e1668]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1671] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1672]
+                  - paragraph [ref=e1675]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1678] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1679]
+                  - paragraph [ref=e1682]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1685] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1686]
+                  - paragraph [ref=e1689]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1692] [cursor=pointer]:
+                  - img "MITRE" [ref=e1693]
+                  - paragraph [ref=e1696]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1699] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1700]
+                  - paragraph [ref=e1703]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1706] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1707]
+                  - paragraph [ref=e1710]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1713] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1714]
+                  - paragraph [ref=e1717]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1720] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1721]
+                  - paragraph [ref=e1724]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1727] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1728]
+                  - paragraph [ref=e1731]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1734] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1735]
+                  - paragraph [ref=e1738]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1741] [cursor=pointer]:
+                  - img "MITRE" [ref=e1742]
+                  - paragraph [ref=e1745]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1748] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1749]
+                  - paragraph [ref=e1752]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1755] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1756]
+                  - paragraph [ref=e1759]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1762] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1763]
+                  - paragraph [ref=e1766]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1769] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1770]
+                  - paragraph [ref=e1773]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1776] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1777]
+                  - paragraph [ref=e1780]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1783] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1784]
+                  - paragraph [ref=e1787]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1790] [cursor=pointer]:
+                  - img "MITRE" [ref=e1791]
+                  - paragraph [ref=e1794]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1797] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1798]
+                  - paragraph [ref=e1801]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1804] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1805]
+                  - paragraph [ref=e1808]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1811] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1812]
+                  - paragraph [ref=e1815]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1818] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1819]
+                  - paragraph [ref=e1822]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1825] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1826]
+                  - paragraph [ref=e1829]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1832] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1833]
+                  - paragraph [ref=e1836]: Representing the College of Arts & Sciences to prospective students and families
+        - generic [ref=e1840]:
+          - generic [ref=e1842]:
+            - heading "Education" [level=2] [ref=e1843]
+            - paragraph [ref=e1844]: Academic foundation from Omaha, Nebraska to Ithaca, New York.
+          - generic [ref=e1850]:
+            - button "Cornell University Ithaca, NY B.A. Computer Science College of Arts and Sciences and Ann S. Bowers College of Computing and Information Science, minor in Artificial Intelligence. Data Structures, Object-Oriented Programming, Theory of Computation, Discrete Math, Python Design and Development, Calculus 1, Calculus 2, Linear Algebra for Engineers" [expanded] [ref=e1852] [cursor=pointer]:
+              - generic [ref=e1853]:
+                - generic [ref=e1854]:
+                  - generic [ref=e1855]: Cornell University
+                  - generic [ref=e1856]: Ithaca, NY
+                - generic [ref=e1858]:
+                  - generic [ref=e1859]: B.A. Computer Science
+                  - generic [ref=e1860]: College of Arts and Sciences and Ann S. Bowers College of Computing and Information Science, minor in Artificial Intelligence.
+                  - generic [ref=e1862]: Data Structures, Object-Oriented Programming, Theory of Computation, Discrete Math, Python Design and Development, Calculus 1, Calculus 2, Linear Algebra for Engineers
+            - button "Millard North High School Omaha, NE" [ref=e1864] [cursor=pointer]:
+              - generic [ref=e1866]:
+                - generic [ref=e1867]: Millard North High School
+                - generic [ref=e1868]: Omaha, NE
+    - generic [ref=e1870]:
+      - generic [ref=e1873]:
+        - generic [ref=e1874]:
+          - heading "Let's work together" [level=2] [ref=e1875]:
+            - text: Let's work
+            - text: together
+          - paragraph [ref=e1876]: Have a project or opportunity in mind or just want to connect? Drop your email and I'll reach out.
+        - generic [ref=e1877]:
+          - generic [ref=e1879]:
+            - textbox "your@email.com" [ref=e1880]
+            - button "Get in touch" [ref=e1881]:
+              - generic [ref=e1882]:
+                - generic [ref=e1883]: Get in touch
+                - img [ref=e1884]
+          - generic [ref=e1886]:
+            - link [ref=e1887] [cursor=pointer]:
+              - /url: https://github.com/adiprathapa
+              - img [ref=e1888]
+            - link [ref=e1890] [cursor=pointer]:
+              - /url: https://linkedin.com/in/adiprathapa
+              - img [ref=e1891]
+            - link [ref=e1893] [cursor=pointer]:
+              - /url: mailto:aprathapa01@gmail.com
+              - img [ref=e1894]
+        - generic [ref=e1898]:
+          - img "MacBook Air Midnight" [ref=e1899]
+          - generic [ref=e1900]:
+            - img "ACSU"
+          - generic [ref=e1902]:
+            - img "Riley's Way"
+          - generic [ref=e1904]:
+            - img "Tata-Cornell Institute"
+          - generic [ref=e1906]:
+            - img "Cornell Data Strategy"
+          - generic [ref=e1908]:
+            - img "TrexQuant"
+          - generic [ref=e1910]:
+            - img "C2S2"
+          - generic [ref=e1912]:
+            - img "Ampersand"
+          - generic [ref=e1914]:
+            - img "Coneflower"
+          - generic [ref=e1916]:
+            - img "Hackathons Cornell"
+          - generic [ref=e1918]:
+            - img "Cornell University"
+          - generic [ref=e1920]:
+            - img "Claude"
+          - generic [ref=e1922]:
+            - img "Google for Education"
+          - generic [ref=e1924]:
+            - img "tabs+"
+          - generic [ref=e1926]:
+            - img "CU mascot"
+          - generic [ref=e1928]:
+            - img "Claude"
+          - generic [ref=e1930]:
+            - img "YC"
+      - generic [ref=e1933]:
+        - generic "आदि" [ref=e1934]
+        - generic [ref=e1937]:
+          - navigation "Footer navigation" [ref=e1938]:
+            - heading "Explore" [level=4] [ref=e1939]
+            - link "About" [ref=e1940] [cursor=pointer]:
+              - /url: "#about"
+            - link "Projects" [ref=e1941] [cursor=pointer]:
+              - /url: "#projects"
+            - link "Experience" [ref=e1942] [cursor=pointer]:
+              - /url: "#experience"
+            - link "Education" [ref=e1943] [cursor=pointer]:
+              - /url: "#education"
+            - link "Contact" [ref=e1944] [cursor=pointer]:
+              - /url: "#contact"
+          - navigation "Resources" [ref=e1945]:
+            - heading "Resources" [level=4] [ref=e1946]
+            - link "Resume" [ref=e1947] [cursor=pointer]:
+              - /url: /resume.html
+            - link "Cal" [ref=e1948] [cursor=pointer]:
+              - /url: /calendar.html
+          - generic [ref=e1949]:
+            - heading "Contact" [level=4] [ref=e1950]
+            - link "Email" [ref=e1951] [cursor=pointer]:
+              - /url: mailto:aprathapa01@gmail.com
+            - link "LinkedIn" [ref=e1952] [cursor=pointer]:
+              - /url: https://linkedin.com/in/adiprathapa
+            - link "GitHub" [ref=e1953] [cursor=pointer]:
+              - /url: https://github.com/adiprathapa
+        - generic [ref=e1954]:
+          - link "Back to hero" [ref=e1955] [cursor=pointer]:
+            - /url: /#top
+            - text: आदि
+          - generic [ref=e1956]: © 2026 Adi Prathapa. All rights reserved.
+          - button "Back to top" [ref=e1957] [cursor=pointer]

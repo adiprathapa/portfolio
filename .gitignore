@@ -19,6 +19,9 @@ dist
 .agents
 .junie
 
+# Playwright MCP
+.playwright-mcp
+
 # Editor directories and files
 .vscode
 .idea

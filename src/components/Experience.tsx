@@ -193,7 +193,6 @@ const involvement: ExperienceItem[] = [
 const CARD_W = 580
 const CARD_H = 560
 const GAP = 24
-const CARD_STEP = CARD_W + GAP
 
 /* ── Carousel card ────────────────────────────────────────── */
 

@@ -74,26 +74,6 @@ function VisualCard({ item }: { item: EduItem }) {
   )
 }
 
-function CheckIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#0671A4"
-      strokeWidth="2.25"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="mt-1 shrink-0"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M9 12l2 2 4-4" />
-    </svg>
-  )
-}
-
 function ListRow({
   item,
   isActive,

@@ -284,12 +284,12 @@ export function Projects() {
 
   const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5, cardY6, cardY7]
 
-  const hideOp0 = useTransform(cardY7, (y: number) => y <= 0 ? 0 : 1)
-  const hideOp1 = useTransform(cardY7, (y: number) => y <= stagger ? 0 : 1)
-  const hideOp2 = useTransform(cardY7, (y: number) => y <= stagger * 2 ? 0 : 1)
-  const hideOp3 = useTransform(cardY7, (y: number) => y <= stagger * 3 ? 0 : 1)
-  const hideOp4 = useTransform(cardY7, (y: number) => y <= stagger * 4 ? 0 : 1)
-  const hideOp5 = useTransform(cardY7, (y: number) => y <= stagger * 5 ? 0 : 1)
+  const hideOp0 = useTransform(cardY7, (y: number) => Number(y > 0))
+  const hideOp1 = useTransform(cardY7, (y: number) => Number(y > stagger))
+  const hideOp2 = useTransform(cardY7, (y: number) => Number(y > stagger * 2))
+  const hideOp3 = useTransform(cardY7, (y: number) => Number(y > stagger * 3))
+  const hideOp4 = useTransform(cardY7, (y: number) => Number(y > stagger * 4))
+  const hideOp5 = useTransform(cardY7, (y: number) => Number(y > stagger * 5))
   const cardOpacities: (MotionValue<number> | undefined)[] = [hideOp0, hideOp1, hideOp2, hideOp3, hideOp4, hideOp5, undefined]
 
   // Phase 2: after cards finish, scroll everything up so Experience fills viewport

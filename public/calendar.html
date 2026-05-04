@@ -739,25 +739,5 @@
         layout: "month_view",
       });
     </script>
-    <script>
-      document.fonts.ready.then(function () {
-        var el = document.querySelector('.video-footer__word');
-        if (!el) return;
-        var canvas = document.createElement('canvas');
-        var w = 1200, h = 740, s = 2;
-        canvas.width = w * s;
-        canvas.height = h * s;
-        var ctx = canvas.getContext('2d');
-        ctx.scale(s, s);
-        ctx.font = '600 620px "Poppins"';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'alphabetic';
-        ctx.fillStyle = 'white';
-        ctx.fillText('\u0906\u0926\u093F', w / 2, 690);
-        var url = 'url(' + canvas.toDataURL('image/png') + ')';
-        el.style.webkitMaskImage = url;
-        el.style.maskImage = url;
-      });
-    </script>
   </body>
 </html>

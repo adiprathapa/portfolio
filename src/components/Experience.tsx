@@ -194,6 +194,27 @@ const CARD_W = 580
 const CARD_H = 560
 const GAP = 24
 
+function TechIcon({ src, name, size }: { src: string; name: string; size: number }) {
+  const [errored, setErrored] = useState(false)
+  if (!src || errored) return null
+
+  return (
+    <img
+      src={src}
+      alt={name}
+      width={size}
+      height={size}
+      className="object-contain"
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+      crossOrigin="anonymous"
+      style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
+      onError={() => setErrored(true)}
+    />
+  )
+}
+
 /* ── Carousel card ────────────────────────────────────────── */
 
 function CarouselCard({
@@ -315,12 +336,7 @@ function CarouselCard({
               <div className="flex items-center gap-3 mt-3 flex-wrap">
                 {item.tech.map((t) => (
                   <div key={t.name} className="flex items-center gap-1.5">
-                    <img
-                      src={t.icon}
-                      alt={t.name}
-                      className="w-4 h-4 object-contain"
-                      style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
-                    />
+                    <TechIcon src={t.icon} name={t.name} size={16} />
                     <span className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
                       {t.name}
                     </span>
@@ -431,12 +447,7 @@ function MobileCard({ item }: { item: ExperienceItem }) {
             <div className="flex items-center gap-2 mt-2 flex-wrap">
               {item.tech.map((t) => (
                 <div key={t.name} className="flex items-center gap-1">
-                  <img
-                    src={t.icon}
-                    alt={t.name}
-                    className="w-3.5 h-3.5 object-contain"
-                    style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
-                  />
+                  <TechIcon src={t.icon} name={t.name} size={14} />
                   <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.7)' }}>
                     {t.name}
                   </span>

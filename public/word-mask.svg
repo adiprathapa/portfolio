@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 60 1200 780" width="1200" height="780">
-  <rect width="100%" height="100%" fill="black" />
   <text
     x="50%"
     y="800"

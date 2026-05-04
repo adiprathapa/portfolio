@@ -210,6 +210,8 @@ h1, h2, h3, h4, h5, h6 {
   mask-position: center;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -431,6 +433,12 @@ h1, h2, h3, h4, h5, h6 {
     width: min(100%, 35rem);
     margin-top: -4.5rem;
     margin-inline: auto;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 60 1200 780'%3E%3Ctext x='50%25' y='800' text-anchor='middle' fill='white' font-family='Poppins, Arial, sans-serif' font-size='620' font-weight='600' textLength='1140' lengthAdjust='spacingAndGlyphs'%3E%E0%A4%86%E0%A4%A6%E0%A4%BF%3C/text%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 60 1200 780'%3E%3Ctext x='50%25' y='800' text-anchor='middle' fill='white' font-family='Poppins, Arial, sans-serif' font-size='620' font-weight='600' textLength='1140' lengthAdjust='spacingAndGlyphs'%3E%E0%A4%86%E0%A4%A6%E0%A4%BF%3C/text%3E%3C/svg%3E");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-mode: match-source;
+    mask-mode: match-source;
   }
 
   .video-footer__content {

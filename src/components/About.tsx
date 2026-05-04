@@ -30,136 +30,125 @@ function SmallCard({ tech }: { tech: TechItem }) {
   const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
   const textColor = hovered ? accentColor : '#0671A4'
 
-  function SmallCard({ tech }: { tech: TechItem }) {
-    const [hovered, setHovered] = useState(false)
-    const [pressed, setPressed] = useState(false)
-    const [iconLoaded, setIconLoaded] = useState(false)
-    const [iconFailed, setIconFailed] = useState(false)
-    const canHoverRef = useRef(false)
-    const iconSize = tech.name === 'Apache HTTP Server' ? 40 : tech.name === 'YAML' ? 24 : 32
-    const accentColor = getTechAccentColor(tech)
-    const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
-    const textColor = hovered ? accentColor : '#0671A4'
+  useEffect(() => {
+    const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const update = () => {
+      canHoverRef.current = mql.matches
+    }
+    update()
+    mql.addEventListener('change', update)
+    return () => mql.removeEventListener('change', update)
+  }, [])
 
-    useEffect(() => {
-      const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
-      const update = () => {
-        canHoverRef.current = mql.matches
-      }
-      update()
-      mql.addEventListener('change', update)
-      return () => mql.removeEventListener('change', update)
-    }, [])
+  useEffect(() => {
+    let cancelled = false
 
-    useEffect(() => {
-      let cancelled = false
+    const baseSrc = getIconSrc(tech.icon, false)
+    const hoverSrc = getIconSrc(tech.icon, true)
+    const base = new Image()
+    base.referrerPolicy = 'no-referrer'
+    base.crossOrigin = 'anonymous'
+    base.src = baseSrc
+    base.onload = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
+    base.onerror = () => {
+      if (!cancelled) setIconLoaded(true)
+    }
 
-      const baseSrc = getIconSrc(tech.icon, false)
-      const hoverSrc = getIconSrc(tech.icon, true)
-      const base = new Image()
-      base.referrerPolicy = 'no-referrer'
-      base.crossOrigin = 'anonymous'
-      base.src = baseSrc
-      base.onload = () => {
-        if (!cancelled) setIconLoaded(true)
-      }
-      base.onerror = () => {
-        if (!cancelled) setIconLoaded(true)
-      }
+    if (hoverSrc !== baseSrc) {
+      const hoverImg = new Image()
+      hoverImg.referrerPolicy = 'no-referrer'
+      hoverImg.crossOrigin = 'anonymous'
+      hoverImg.src = hoverSrc
+    }
 
-      if (hoverSrc !== baseSrc) {
-        const hoverImg = new Image()
-        hoverImg.referrerPolicy = 'no-referrer'
-        hoverImg.crossOrigin = 'anonymous'
-        hoverImg.src = hoverSrc
-      }
+    return () => {
+      cancelled = true
+    }
+  }, [tech.icon])
 
-      return () => {
-        cancelled = true
-      }
-    }, [tech.icon])
-
-    return (
-      <div
-        className="rounded-xl flex items-center px-5 cursor-pointer select-none relative"
-        style={{
-          width: 220,
-          height: 146,
-          background: hovered ? '#FFFFFF' : '#F5F5F5',
-          border: `1.5px solid ${borderColor}`,
-          transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-2px)' : 'scale(1)',
-          zIndex: hovered ? 20 : 1,
-          boxShadow: hovered
-            ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
-            : '0 4px 12px rgba(0, 0, 0, 0.04)',
-          transition: 'all 0.2s ease',
-          gap: iconFailed ? 0 : 12,
-          justifyContent: iconFailed ? 'center' : 'flex-start',
-        }}
-        onMouseEnter={() => { if (canHoverRef.current) setHovered(true) }}
-        onMouseLeave={() => { if (canHoverRef.current) { setHovered(false); setPressed(false) } }}
-        onMouseDown={() => { if (canHoverRef.current) setPressed(true) }}
-        onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
-        onClick={() => window.open(tech.url, '_blank')}
-      >
-        {!iconFailed ? (
-          <div className="relative shrink-0" style={{ width: iconSize, height: iconSize }}>
-            {!iconLoaded && (
-              <div
-                className="absolute inset-0 rounded-md animate-pulse"
-                style={{ background: 'rgba(6, 113, 164, 0.14)' }}
-              />
-            )}
-            <img
-              src={getIconSrc(tech.icon, hovered)}
-              alt={tech.name}
-              className="w-full h-full shrink-0"
-              loading="eager"
-              decoding="async"
-              referrerPolicy="no-referrer"
-              crossOrigin="anonymous"
-              style={{
-                opacity: iconLoaded ? 1 : 0,
-                filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
-                transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
-                transition: 'transform 0.2s ease, opacity 0.22s ease',
-              }}
-              onLoad={() => setIconLoaded(true)}
-              onError={() => {
-                setIconLoaded(true)
-                setIconFailed(true)
-              }}
+  return (
+    <div
+      className="rounded-xl flex items-center px-5 cursor-pointer select-none relative"
+      style={{
+        width: 220,
+        height: 146,
+        background: hovered ? '#FFFFFF' : '#F5F5F5',
+        border: `1.5px solid ${borderColor}`,
+        transform: pressed ? 'scale(0.97)' : hovered ? 'scale(1.03) translateY(-2px)' : 'scale(1)',
+        zIndex: hovered ? 20 : 1,
+        boxShadow: hovered
+          ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
+          : '0 4px 12px rgba(0, 0, 0, 0.04)',
+        transition: 'all 0.2s ease',
+        gap: iconFailed ? 0 : 12,
+        justifyContent: iconFailed ? 'center' : 'flex-start',
+      }}
+      onMouseEnter={() => { if (canHoverRef.current) setHovered(true) }}
+      onMouseLeave={() => { if (canHoverRef.current) { setHovered(false); setPressed(false) } }}
+      onMouseDown={() => { if (canHoverRef.current) setPressed(true) }}
+      onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
+      onClick={() => window.open(tech.url, '_blank')}
+    >
+      {!iconFailed ? (
+        <div className="relative shrink-0" style={{ width: iconSize, height: iconSize }}>
+          {!iconLoaded && (
+            <div
+              className="absolute inset-0 rounded-md animate-pulse"
+              style={{ background: 'rgba(6, 113, 164, 0.14)' }}
             />
-          </div>
-        ) : null}
-        <span
-          className="text-base font-medium"
-          style={{ color: textColor, transition: 'color 0.2s ease', textAlign: iconFailed ? 'center' : 'left' }}
-        >
-          {tech.name}
-        </span>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={textColor}
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="absolute top-3 right-3"
-          style={{
-            opacity: hovered ? 0.7 : 0,
-            transform: hovered ? 'translate(0, 0)' : 'translate(-4px, 4px)',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <path d="M7 17L17 7" />
-          <path d="M7 7h10v10" />
-        </svg>
-      </div>
-    )
-  }
+          )}
+          <img
+            src={getIconSrc(tech.icon, hovered)}
+            alt={tech.name}
+            className="w-full h-full shrink-0"
+            loading="eager"
+            decoding="async"
+            referrerPolicy="no-referrer"
+            crossOrigin="anonymous"
+            style={{
+              opacity: iconLoaded ? 1 : 0,
+              filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
+              transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
+              transition: 'transform 0.2s ease, opacity 0.22s ease',
+            }}
+            onLoad={() => setIconLoaded(true)}
+            onError={() => {
+              setIconLoaded(true)
+              setIconFailed(true)
+            }}
+          />
+        </div>
+      ) : null}
+      <span
+        className="text-base font-medium"
+        style={{ color: textColor, transition: 'color 0.2s ease', textAlign: iconFailed ? 'center' : 'left' }}
+      >
+        {tech.name}
+      </span>
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke={textColor}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="absolute top-3 right-3"
+        style={{
+          opacity: hovered ? 0.7 : 0,
+          transform: hovered ? 'translate(0, 0)' : 'translate(-4px, 4px)',
+          transition: 'all 0.2s ease',
+        }}
+      >
+        <path d="M7 17L17 7" />
+        <path d="M7 7h10v10" />
+      </svg>
+    </div>
+  )
+}
 
 function TallCard({ tech }: { tech: TechItem }) {
     const [hovered, setHovered] = useState(false)

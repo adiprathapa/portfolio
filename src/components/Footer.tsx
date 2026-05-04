@@ -1,5 +1,5 @@
 import { scrollToSection } from '../lib/scrollToSection'
-import { type MouseEvent } from 'react'
+import { useEffect, useRef, type MouseEvent } from 'react'
 
 const RESUME_PAGE_URL = '/resume.html'
 
@@ -17,6 +17,50 @@ const resourceLinks = [
 ]
 
 export function Footer() {
+  const wordRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = wordRef.current
+    if (!el) return
+
+    const mql = window.matchMedia('(max-width: 1023px)')
+
+    const applyCanvasMask = async () => {
+      if (!mql.matches) return
+      await document.fonts.ready
+      const canvas = document.createElement('canvas')
+      const w = 1200
+      const h = 740
+      const scale = 2
+      canvas.width = w * scale
+      canvas.height = h * scale
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      ctx.scale(scale, scale)
+      ctx.font = '600 620px "Poppins"'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'alphabetic'
+      ctx.fillStyle = 'white'
+      ctx.fillText('\u0906\u0926\u093F', w / 2, 690)
+      const url = `url(${canvas.toDataURL('image/png')})`
+      el.style.webkitMaskImage = url
+      el.style.maskImage = url
+    }
+
+    const handleChange = () => {
+      if (mql.matches) {
+        applyCanvasMask()
+      } else {
+        el.style.webkitMaskImage = ''
+        el.style.maskImage = ''
+      }
+    }
+
+    applyCanvasMask()
+    mql.addEventListener('change', handleChange)
+    return () => mql.removeEventListener('change', handleChange)
+  }, [])
+
   const handleFooterLinkClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     if (href.startsWith('#')) {
       e.preventDefault()
@@ -27,7 +71,7 @@ export function Footer() {
   return (
     <footer className="video-footer">
       <div className="video-footer__inner">
-        <div className="video-footer__word" aria-label="आदि">
+        <div ref={wordRef} className="video-footer__word" aria-label="आदि">
           <video
             className="video-footer__media"
             src="/footer-letters.mp4"

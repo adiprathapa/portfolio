@@ -42,6 +42,7 @@ export function Footer() {
       const url = `url(${canvas.toDataURL('image/png')})`
       el.style.webkitMaskImage = url
       el.style.maskImage = url
+      el.style.opacity = '1'
     }
 
     applyCanvasMask()
@@ -57,7 +58,12 @@ export function Footer() {
   return (
     <footer className="video-footer">
       <div className="video-footer__inner">
-        <div ref={wordRef} className="video-footer__word" aria-label="आदि">
+        <div
+          ref={wordRef}
+          className="video-footer__word"
+          aria-label="आदि"
+          style={{ opacity: 0, transition: 'opacity 0.4s ease' }}
+        >
           <video
             className="video-footer__media"
             src="/footer-letters.mp4"

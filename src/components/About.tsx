@@ -142,6 +142,7 @@ function SmallCard({ tech }: { tech: TechItem }) {
   const accentColor = getTechAccentColor(tech)
   const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
   const textColor = hovered ? accentColor : '#0671A4'
+  const showIcon = iconLoaded && !iconFailed
 
   useEffect(() => {
     const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
@@ -166,7 +167,10 @@ function SmallCard({ tech }: { tech: TechItem }) {
       if (!cancelled) setIconLoaded(true)
     }
     base.onerror = () => {
-      if (!cancelled) setIconLoaded(true)
+      if (!cancelled) {
+        setIconLoaded(true)
+        setIconFailed(true)
+      }
     }
 
     if (hoverSrc !== baseSrc) {
@@ -195,8 +199,8 @@ function SmallCard({ tech }: { tech: TechItem }) {
           ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
           : '0 4px 12px rgba(0, 0, 0, 0.04)',
         transition: 'all 0.2s ease',
-        gap: iconFailed ? 0 : 12,
-        justifyContent: iconFailed ? 'center' : 'flex-start',
+        gap: showIcon ? 12 : 0,
+        justifyContent: showIcon ? 'flex-start' : 'center',
       }}
       onMouseEnter={() => { if (canHoverRef.current) setHovered(true) }}
       onMouseLeave={() => { if (canHoverRef.current) { setHovered(false); setPressed(false) } }}
@@ -204,14 +208,14 @@ function SmallCard({ tech }: { tech: TechItem }) {
       onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
       onClick={() => window.open(tech.url, '_blank')}
     >
-      {!iconFailed ? (
-        <div className="relative shrink-0" style={{ width: iconSize, height: iconSize }}>
-          {!iconLoaded && (
-            <div
-              className="absolute inset-0 rounded-md animate-pulse"
-              style={{ background: 'rgba(6, 113, 164, 0.14)' }}
-            />
-          )}
+      {showIcon && (
+        <motion.div
+          className="relative shrink-0"
+          style={{ width: iconSize, height: iconSize }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+        >
           <img
             src={getIconSrc(tech.icon, hovered)}
             alt={tech.name}
@@ -221,25 +225,24 @@ function SmallCard({ tech }: { tech: TechItem }) {
             referrerPolicy="no-referrer"
             crossOrigin="anonymous"
             style={{
-              opacity: iconLoaded ? 1 : 0,
               filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
               transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
-              transition: 'transform 0.2s ease, opacity 0.22s ease',
+              transition: 'transform 0.2s ease',
             }}
-            onLoad={() => setIconLoaded(true)}
             onError={() => {
-              setIconLoaded(true)
               setIconFailed(true)
             }}
           />
-        </div>
-      ) : null}
-      <span
+        </motion.div>
+      )}
+      <motion.span
+        layout
+        transition={{ duration: 0.3, ease: 'easeOut' }}
         className="text-base font-medium"
-        style={{ color: textColor, transition: 'color 0.2s ease', textAlign: iconFailed ? 'center' : 'left' }}
+        style={{ color: textColor, transition: 'color 0.2s ease', textAlign: showIcon ? 'left' : 'center' }}
       >
         {tech.name}
-      </span>
+      </motion.span>
       <svg
         width="14"
         height="14"
@@ -275,6 +278,7 @@ function TallCard({ tech }: { tech: TechItem }) {
     const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
     const textColor = hovered ? accentColor : '#0671A4'
     const blurbColor = hovered ? hexToRgba(accentColor, 0.75) : 'rgba(6, 113, 164, 0.7)'
+    const showIcon = iconLoaded && !iconFailed
 
     useEffect(() => {
       const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
@@ -328,8 +332,8 @@ function TallCard({ tech }: { tech: TechItem }) {
             ? '0 16px 48px rgba(6, 113, 164, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)'
             : '0 4px 12px rgba(0, 0, 0, 0.04)',
           transition: 'all 0.2s ease',
-          alignItems: iconFailed ? 'center' : 'flex-start',
-          textAlign: iconFailed ? 'center' : 'left',
+          alignItems: showIcon ? 'flex-start' : 'center',
+          textAlign: showIcon ? 'left' : 'center',
         }}
         onMouseEnter={() => { if (canHoverRef.current) setHovered(true) }}
         onMouseLeave={() => { if (canHoverRef.current) { setHovered(false); setPressed(false) } }}
@@ -337,14 +341,14 @@ function TallCard({ tech }: { tech: TechItem }) {
         onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
         onClick={() => window.open(tech.url, '_blank')}
       >
-        {!iconFailed ? (
-          <div className="relative" style={{ width: iconSize, height: iconSize }}>
-            {!iconLoaded && (
-              <div
-                className="absolute inset-0 rounded-md animate-pulse"
-                style={{ background: 'rgba(6, 113, 164, 0.14)' }}
-              />
-            )}
+        {showIcon && (
+          <motion.div
+            className="relative"
+            style={{ width: iconSize, height: iconSize }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
             <img
               src={getIconSrc(tech.icon, hovered)}
               alt={tech.name}
@@ -354,21 +358,18 @@ function TallCard({ tech }: { tech: TechItem }) {
               referrerPolicy="no-referrer"
               crossOrigin="anonymous"
               style={{
-                opacity: iconLoaded ? 1 : 0,
                 filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
                 transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
-                transition: 'transform 0.2s ease, opacity 0.22s ease',
+                transition: 'transform 0.2s ease',
               }}
-              onLoad={() => setIconLoaded(true)}
               onError={() => {
-                setIconLoaded(true)
                 setIconFailed(true)
               }}
             />
-          </div>
-        ) : null}
-        <span className="text-lg font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</span>
-        <span className="text-sm leading-relaxed" style={{ color: blurbColor }}>{tallBlurb}</span>
+          </motion.div>
+        )}
+        <motion.span layout transition={{ duration: 0.3, ease: 'easeOut' }} className="text-lg font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</motion.span>
+        <motion.span layout transition={{ duration: 0.3, ease: 'easeOut' }} className="text-sm leading-relaxed" style={{ color: blurbColor }}>{tallBlurb}</motion.span>
         <svg
           width="16"
           height="16"

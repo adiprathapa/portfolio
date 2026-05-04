@@ -595,7 +595,7 @@
     <!-- Footer -->
     <footer class="video-footer">
       <div class="video-footer__inner">
-        <div class="video-footer__word" aria-label="आदि">
+        <div class="video-footer__word" aria-label="आदि" style="opacity:0;transition:opacity 0.4s ease">
           <video class="video-footer__media" src="/footer-letters.mp4" poster="/footer-letters-poster.jpg" muted loop playsinline preload="metadata"></video>
         </div>
 
@@ -757,6 +757,7 @@
         var url = 'url(' + canvas.toDataURL('image/png') + ')';
         el.style.webkitMaskImage = url;
         el.style.maskImage = url;
+        el.style.opacity = '1';
         var video = el.querySelector('video');
         if (video) {
           video.play().catch(function () { /* no-op */ });

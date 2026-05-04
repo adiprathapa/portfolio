@@ -194,24 +194,32 @@ const CARD_W = 580
 const CARD_H = 560
 const GAP = 24
 
-function TechIcon({ src, name, size }: { src: string; name: string; size: number }) {
+function TechLabel({ src, name, size }: { src: string; name: string; size: number }) {
   const [errored, setErrored] = useState(false)
-  if (!src || errored) return null
+  const showIcon = Boolean(src) && !errored
 
   return (
-    <img
-      src={src}
-      alt={name}
-      width={size}
-      height={size}
-      className="object-contain"
-      loading="lazy"
-      decoding="async"
-      referrerPolicy="no-referrer"
-      crossOrigin="anonymous"
-      style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
-      onError={() => setErrored(true)}
-    />
+    <div className="flex items-center" style={{ gap: showIcon ? 6 : 0 }}>
+      {showIcon ? (
+        <img
+          src={src}
+          alt={name}
+          width={size}
+          height={size}
+          className="object-contain"
+          loading="lazy"
+          decoding="async"
+          referrerPolicy="no-referrer"
+          crossOrigin="anonymous"
+          style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
+          onError={(event) => {
+            setErrored(true)
+            event.currentTarget.style.display = 'none'
+          }}
+        />
+      ) : null}
+      <span style={{ color: 'rgba(255,255,255,0.7)' }}>{name}</span>
+    </div>
   )
 }
 
@@ -335,11 +343,8 @@ function CarouselCard({
               {/* Tech stack */}
               <div className="flex items-center gap-3 mt-3 flex-wrap">
                 {item.tech.map((t) => (
-                  <div key={t.name} className="flex items-center gap-1.5">
-                    <TechIcon src={t.icon} name={t.name} size={16} />
-                    <span className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                      {t.name}
-                    </span>
+                  <div key={t.name} className="text-xs">
+                    <TechLabel src={t.icon} name={t.name} size={16} />
                   </div>
                 ))}
               </div>
@@ -446,11 +451,8 @@ function MobileCard({ item }: { item: ExperienceItem }) {
             </p>
             <div className="flex items-center gap-2 mt-2 flex-wrap">
               {item.tech.map((t) => (
-                <div key={t.name} className="flex items-center gap-1">
-                  <TechIcon src={t.icon} name={t.name} size={14} />
-                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                    {t.name}
-                  </span>
+                <div key={t.name} className="text-[10px]">
+                  <TechLabel src={t.icon} name={t.name} size={14} />
                 </div>
               ))}
             </div>

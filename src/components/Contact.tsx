@@ -7,6 +7,13 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
   const [hovered, setHovered] = useState(false)
   const stickerRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    if (!hovered) return
+    const dismiss = () => setHovered(false)
+    window.addEventListener('scroll', dismiss, { passive: true })
+    return () => window.removeEventListener('scroll', dismiss)
+  }, [hovered])
+
   const isTouchDevice = typeof window !== 'undefined' && (
     'ontouchstart' in window ||
     window.matchMedia('(pointer: coarse)').matches ||

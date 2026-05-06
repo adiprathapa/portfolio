@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Section } from './ui/section'
 import { GradientText } from './ui/gradient-text'
@@ -78,10 +78,12 @@ function ListRow({
   item,
   isActive,
   onClick,
+  style,
 }: {
   item: EduItem
   isActive: boolean
   onClick: () => void
+  style?: CSSProperties
 }) {
   return (
     <button
@@ -92,6 +94,7 @@ function ListRow({
         borderRadius: isActive ? 20 : 0,
         background: isActive ? 'rgba(244, 244, 244, 0.72)' : 'transparent',
         transition: 'background 0.25s ease, border-radius 0.25s ease',
+        ...style,
       }}
       aria-expanded={isActive}
     >
@@ -161,7 +164,21 @@ function ListRow({
 export function Education() {
   const [activeId, setActiveId] = useState<EduId>('cornell')
   const mobileVisualRef = useRef<HTMLDivElement>(null)
+  const desktopVisualRef = useRef<HTMLDivElement>(null)
+  const [visualHeight, setVisualHeight] = useState(0)
   const active = items.find((item) => item.id === activeId) ?? items[0]
+
+  useEffect(() => {
+    const el = desktopVisualRef.current
+    if (!el) return
+    const update = () => {
+      setVisualHeight(el.getBoundingClientRect().height)
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   const handleSelect = (id: EduId) => {
     setActiveId(id)
@@ -200,19 +217,23 @@ export function Education() {
       <div className="mt-8 grid grid-cols-1 items-start gap-8 lg:mt-11 lg:grid-cols-12 lg:gap-14">
         <div className="hidden lg:col-span-6 lg:block">
           <div className="lg:sticky lg:top-24">
-            <VisualCard item={active} />
+            <div ref={desktopVisualRef}>
+              <VisualCard item={active} />
+            </div>
           </div>
         </div>
 
         <div
           className="flex flex-col gap-4 lg:col-span-6"
+          style={visualHeight > 0 ? { minHeight: visualHeight } : undefined}
         >
           {items.map((item) => (
-            <div key={item.id}>
+            <div key={item.id} style={item.id === activeId ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined}>
               <ListRow
                 item={item}
                 isActive={item.id === activeId}
                 onClick={() => handleSelect(item.id)}
+                style={item.id === activeId ? { flex: 1 } : undefined}
               />
             </div>
           ))}

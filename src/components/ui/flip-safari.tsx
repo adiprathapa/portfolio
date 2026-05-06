@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, type CSSProperties } from 'react'
+import { useState, useRef, useEffect, useLayoutEffect, type CSSProperties } from 'react'
 import { Safari } from './safari'
 import { RippleButton } from './ripple-button'
 import type { SafariProps } from './safari'
@@ -39,7 +39,34 @@ export function FlipSafari({
   const rectRef = useRef<DOMRect | null>(null)
   const pointerRef = useRef<{ x: number; y: number } | null>(null)
   const tiltRafRef = useRef<number | null>(null)
+  const leftColRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [contentScale, setContentScale] = useState(1)
   const { style: safariStyle, ...restSafariProps } = safariProps
+
+  useLayoutEffect(() => {
+    const lc = leftColRef.current
+    const ct = contentRef.current
+    if (!lc || !ct) return
+    const update = () => {
+      if (window.innerWidth < 1024) { setContentScale(1); return }
+      const cs = getComputedStyle(lc)
+      const padTop = parseFloat(cs.paddingTop) || 0
+      const padBottom = parseFloat(cs.paddingBottom) || 0
+      const availH = lc.clientHeight - padTop - padBottom
+      const naturalH = ct.scrollHeight
+      if (availH <= 0 || naturalH <= 0) { setContentScale(1); return }
+      setContentScale(Math.min(1, availH / naturalH))
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(lc)
+    window.addEventListener('resize', update)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', update)
+    }
+  }, [projectDescription, projectTagline, techStack])
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (showVideo || !innerRef.current) return
@@ -149,7 +176,15 @@ export function FlipSafari({
             }}
           />
           {/* Left column — text content */}
-          <div className="flex flex-col justify-between lg:justify-center px-4 pt-8 pb-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+          <div ref={leftColRef} className="flex flex-col justify-between lg:justify-center px-4 pt-8 pb-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+            <div
+              ref={contentRef}
+              className="contents lg:flex lg:flex-col"
+              style={contentScale < 1 ? {
+                transform: `scale(${contentScale})`,
+                transformOrigin: 'center',
+              } : undefined}
+            >
             <div>
             <h3
               className="font-normal font-heading text-left text-[16px] lg:text-3xl gradient-text"
@@ -257,13 +292,15 @@ export function FlipSafari({
               </RippleButton>
             </div>
             </div>
+            </div>
           </div>
 
           {/* Right column — branded color block with logo (hidden on mobile) */}
           <div
             className="relative hidden lg:flex items-center justify-center overflow-hidden"
             style={{
-              width: 530,
+              width: '42%',
+              maxWidth: 530,
               flexShrink: 0,
               borderRadius: '0 12px 12px 0',
               backgroundColor: gradientColor,

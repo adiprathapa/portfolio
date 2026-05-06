@@ -97,22 +97,40 @@ export function Contact() {
   }, [])
 
   const MOBILE_REF_WIDTH = 700
+  const DESKTOP_REF_WIDTH = 651
+  const DESKTOP_LEFT_OFFSET = 110
   const laptopContainerRef = useRef<HTMLDivElement>(null)
-  const [mobileScale, setMobileScale] = useState(1)
+  const [laptopScale, setLaptopScale] = useState(1)
   const [, setMobileContainerWidth] = useState(375)
   useEffect(() => {
-    if (isLg) { setMobileScale(1); return }
     const el = laptopContainerRef.current
     if (!el) return
     const update = () => {
       const w = el.clientWidth
+      const vh = window.innerHeight
       setMobileContainerWidth(w)
-      setMobileScale((w * 0.85) / MOBILE_REF_WIDTH)
+      const refWidth = isLg ? DESKTOP_REF_WIDTH : MOBILE_REF_WIDTH
+      // SVG aspect ratio is 1000/1500 ≈ 0.667; stickers overflow ~25% beyond SVG bounds
+      const estimatedHeight = refWidth * 0.83
+      const heightScale = (vh * 0.78) / estimatedHeight
+
+      let widthScale: number
+      if (isLg) {
+        const available = Math.max(w - DESKTOP_LEFT_OFFSET, 100)
+        widthScale = Math.min(available, DESKTOP_REF_WIDTH) / DESKTOP_REF_WIDTH
+      } else {
+        widthScale = (w * 0.85) / MOBILE_REF_WIDTH
+      }
+      setLaptopScale(Math.min(widthScale, heightScale))
     }
     update()
     const ro = new ResizeObserver(update)
     ro.observe(el)
-    return () => ro.disconnect()
+    window.addEventListener('resize', update)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', update)
+    }
   }, [isLg])
 
   const laptopRef = useRef<HTMLDivElement>(null)
@@ -328,11 +346,9 @@ export function Contact() {
             className="relative flex items-center justify-center lg:ml-[110px]"
             style={{
               perspective: 1200,
-              ...(isLg ? {} : {
-                width: MOBILE_REF_WIDTH,
-                zoom: mobileScale,
-                margin: '0 auto',
-              }),
+              width: isLg ? DESKTOP_REF_WIDTH : MOBILE_REF_WIDTH,
+              zoom: laptopScale,
+              ...(isLg ? {} : { margin: '0 auto' }),
             }}
           >
             <motion.div

@@ -19,7 +19,6 @@ const resourceLinks = [
 export function Footer() {
   const wordRef = useRef<HTMLDivElement>(null)
   const [maskReady, setMaskReady] = useState(false)
-  const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
     const el = wordRef.current
@@ -50,22 +49,6 @@ export function Footer() {
     applyCanvasMask()
   }, [])
 
-  useEffect(() => {
-    if (!maskReady) return
-    const video = document.createElement('video')
-    video.muted = true
-    video.preload = 'auto'
-    const onReady = () => setVideoReady(true)
-    video.addEventListener('canplaythrough', onReady, { once: true })
-    video.addEventListener('loadeddata', onReady, { once: true })
-    video.src = '/footer-letters.mp4'
-    return () => {
-      video.removeEventListener('canplaythrough', onReady)
-      video.removeEventListener('loadeddata', onReady)
-      video.src = ''
-    }
-  }, [maskReady])
-
   const handleFooterLinkClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     if (href.startsWith('#')) {
       e.preventDefault()
@@ -82,23 +65,16 @@ export function Footer() {
           aria-label="आदि"
           style={{ visibility: maskReady ? 'visible' : 'hidden' }}
         >
-          {videoReady ? (
-            <video
-              className="video-footer__media"
-              src="/footer-letters.mp4"
-              poster="/footer-letters-poster.jpg"
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
-          ) : (
-            <img
-              className="video-footer__media"
-              src="/footer-letters-poster.jpg"
-              alt=""
-            />
-          )}
+          <video
+            className="video-footer__media"
+            src="/footer-letters.mp4"
+            poster="/footer-letters-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+          />
         </div>
 
         <div className="video-footer__content">

@@ -686,7 +686,7 @@ export function About() {
   const rotations = [-8, -3, 2, 6, -5, 4]
 
   return (
-    <section ref={sectionRef} id="about" className="relative min-h-full lg:h-full flex flex-col lg:flex-row items-center px-6 pt-[calc(clamp(6rem,14dvh,8rem)+env(safe-area-inset-top))] pb-[clamp(6rem,14dvh,9rem)] lg:py-0 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
+    <section ref={sectionRef} id="about" className="relative min-h-full lg:h-full flex flex-col lg:flex-row items-center px-6 pt-[clamp(1.5rem,4dvh,2.5rem)] pb-[clamp(6rem,14dvh,9rem)] lg:py-0 overflow-visible" style={{ background: 'var(--color-surface, #EFF3F8)' }}>
       <motion.div
         className="mx-auto max-w-7xl w-full grid lg:grid-cols-2 gap-8 lg:gap-12 items-center"
         variants={heroStagger}

@@ -546,12 +546,19 @@ export function Hero() {
         )
       })()}
 
-      {/* Right-edge fade into About */}
+      {/* Edge fade into About — right on desktop, bottom on mobile */}
       <div
-        className="absolute top-0 right-0 bottom-0 pointer-events-none z-[5]"
+        className="absolute top-0 right-0 bottom-0 pointer-events-none z-[5] hidden lg:block"
         style={{
           width: '35%',
           background: 'linear-gradient(to right, transparent, var(--color-surface, #EFF3F8))',
+        }}
+      />
+      <div
+        className="absolute left-0 right-0 bottom-0 pointer-events-none z-[5] lg:hidden"
+        style={{
+          height: '25%',
+          background: 'linear-gradient(to bottom, transparent, var(--color-surface, #EFF3F8))',
         }}
       />
     </section>

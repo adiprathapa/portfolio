@@ -1,10 +1,20 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Hero } from './Hero'
 import { About } from './About'
 
 export function HorizontalScrollSection() {
   const outerRef = useRef<HTMLDivElement>(null)
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window === 'undefined' ? true : window.innerWidth >= 1024
+  )
+
+  useEffect(() => {
+    const update = () => setIsDesktop(window.innerWidth >= 1024)
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
 
   const { scrollYProgress } = useScroll({
     target: outerRef,
@@ -12,6 +22,15 @@ export function HorizontalScrollSection() {
   })
 
   const translateX = useTransform(scrollYProgress, [0, 1], ['0%', '-50%'])
+
+  if (!isDesktop) {
+    return (
+      <>
+        <Hero />
+        <About />
+      </>
+    )
+  }
 
   return (
     <div ref={outerRef} className="relative lg:z-20" style={{ height: '200vh' }}>

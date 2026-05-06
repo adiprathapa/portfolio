@@ -60,6 +60,10 @@ export function sectionScrollTop(href: string) {
   const offset = navOffset()
 
   if (href === '#about') {
+    if (window.innerWidth < 1024) {
+      const about = document.getElementById('about')
+      if (about) return documentTop(about) - offset
+    }
     return window.innerHeight
   }
 

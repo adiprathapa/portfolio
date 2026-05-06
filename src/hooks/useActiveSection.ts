@@ -12,10 +12,11 @@ export function useActiveSection() {
     // height + some margin).
     const PROBE_OFFSET = 96 // px from top of viewport
 
-    // "about" lives inside the horizontal-scroll sticky container, so its
-    // getBoundingClientRect doesn't move until the sticky context ends.
-    // Detect it via scroll position instead: the horizontal slide occupies
-    // the first 40% of the 350vh container (= 1.4×vh of scroll).
+    // On desktop "about" lives inside the horizontal-scroll sticky container,
+    // so its getBoundingClientRect doesn't move until the sticky context ends.
+    // Detect it via scroll position instead. On mobile it flows normally and
+    // is found by the regular probe loop below.
+    const isDesktop = () => window.innerWidth >= 1024
     const aboutStart = () => window.innerHeight * 1.1
     const projectsRegionStart = () => {
       // Projects region begins at projects-intro (which sits above the
@@ -32,8 +33,8 @@ export function useActiveSection() {
       const y = window.scrollY
       const projectsStart = projectsRegionStart()
 
-      // Check "about" via scroll position (horizontal scroll section)
-      if (y >= aboutStart() && y < projectsStart - PROBE_OFFSET) {
+      // Check "about" via scroll position (horizontal scroll section, desktop only)
+      if (isDesktop() && y >= aboutStart() && y < projectsStart - PROBE_OFFSET) {
         setActive('about')
         return
       }
@@ -41,7 +42,7 @@ export function useActiveSection() {
       // For normal sections, find which one contains the probe point
       let found: string | null = null
       for (const id of SECTIONS) {
-        if (id === 'about') continue
+        if (id === 'about' && isDesktop()) continue
         const el = document.getElementById(id)
         if (!el) continue
         const rect = el.getBoundingClientRect()

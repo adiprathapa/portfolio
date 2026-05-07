@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/shared-footer.css" />
     <style>
       :root {
         --bg: #E4EFF5;
@@ -17,20 +18,20 @@
         --cta-hover: #055a84;
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body { height: 100%; }
       body {
         font-family: 'Poppins', sans-serif;
         background: var(--bg);
         color: var(--ink);
         min-height: 100vh;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
+        flex-direction: column;
       }
-      .wrap {
+      main.wrap {
+        min-height: 100vh;
         width: 100%;
         max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
         display: grid;
         grid-template-columns: 1fr 1fr;
         align-items: center;
@@ -91,10 +92,16 @@
         image-rendering: auto;
       }
       @media (max-width: 760px) {
-        .wrap { grid-template-columns: 1fr; gap: 2rem; }
+        main.wrap {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: 1.5rem;
+          padding: 1.5rem;
+        }
         .art { order: -1; }
         .art img { max-width: 320px; }
-        body { padding: 1.5rem; }
         .copy { align-items: center; text-align: center; }
         .home { align-self: center; }
       }
@@ -120,5 +127,69 @@
         <img src="/bugcat-capoo.gif" alt="bugcat capoo" />
       </div>
     </main>
+
+    <footer class="video-footer">
+      <div class="video-footer__inner">
+        <div class="video-footer__word" aria-label="आदि" style="visibility:hidden">
+          <video class="video-footer__media" src="/footer-letters.mp4" poster="/footer-letters-poster.jpg" autoplay muted loop playsinline preload="auto"></video>
+        </div>
+
+        <div class="video-footer__content">
+          <div class="video-footer__columns">
+            <nav aria-label="Footer navigation">
+              <h4>Explore</h4>
+              <a href="/#about">About</a>
+              <a href="/#projects">Projects</a>
+              <a href="/#experience">Experience</a>
+              <a href="/#contact">Contact</a>
+            </nav>
+
+            <nav aria-label="Resources">
+              <h4>Resources</h4>
+              <a href="/resume.html">Resume</a>
+              <a href="/calendar.html">Cal</a>
+            </nav>
+
+            <div>
+              <h4>Contact</h4>
+              <a href="mailto:aprathapa01@gmail.com">Email</a>
+              <a href="https://linkedin.com/in/adiprathapa" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://github.com/adiprathapa" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="video-footer__bottom">
+          <a href="/#top" class="video-footer__bottom-logo" aria-label="Back to hero">&#x0906;&#x0926;&#x093F;</a>
+          <span>&copy; <script>document.write(new Date().getFullYear())</script> Adi Prathapa. All rights reserved.</span>
+          <button type="button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">Back to top</button>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.fonts.ready.then(function () {
+        var el = document.querySelector('.video-footer__word');
+        if (!el) return;
+        var canvas = document.createElement('canvas');
+        var w = 1200, h = 740, s = 2;
+        canvas.width = w * s;
+        canvas.height = h * s;
+        var ctx = canvas.getContext('2d');
+        ctx.scale(s, s);
+        ctx.font = '600 620px "Poppins"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillStyle = 'white';
+        ctx.fillText('आदि', w / 2, 690);
+        var url = 'url(' + canvas.toDataURL('image/png') + ')';
+        el.style.webkitMaskImage = url;
+        el.style.maskImage = url;
+        el.style.visibility = 'visible';
+
+        var v = el.querySelector('video');
+        if (v) v.play().catch(function () { /* no-op */ });
+      });
+    </script>
   </body>
 </html>

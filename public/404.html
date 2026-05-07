@@ -18,6 +18,8 @@
         --cta-hover: #055a84;
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { overscroll-behavior: none; }
+      body { overscroll-behavior: none; }
       body {
         font-family: 'Poppins', sans-serif;
         background: var(--bg);
@@ -124,7 +126,7 @@
         </a>
       </div>
       <div class="art">
-        <img src="/bugcat-capoo.gif" alt="bugcat capoo" />
+        <img id="bubu-gif" src="/bugcat-capoo.gif" alt="bugcat capoo" />
       </div>
     </main>
 
@@ -167,6 +169,12 @@
       </div>
     </footer>
 
+    <script>
+      window.addEventListener('pageshow', function () {
+        var img = document.getElementById('bubu-gif');
+        if (img) img.src = '/bugcat-capoo.gif?t=' + Date.now();
+      });
+    </script>
     <script>
       document.fonts.ready.then(function () {
         var el = document.querySelector('.video-footer__word');

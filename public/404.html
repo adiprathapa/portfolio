@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adi Prathapa | 404</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #E4EFF5;
+        --ink: #111827;
+        --muted: #4b5563;
+        --cta: #0671A4;
+        --cta-hover: #055a84;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; }
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      .wrap {
+        width: 100%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 3rem;
+      }
+      .copy { display: flex; flex-direction: column; gap: 1.5rem; }
+      .tagline {
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: var(--muted);
+        letter-spacing: 0.01em;
+      }
+      .heading {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 400;
+        font-size: clamp(3rem, 6vw, 4.5rem);
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+        background: linear-gradient(135deg, #0671A4 0%, #1a9fd4 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      .home {
+        align-self: flex-start;
+        margin-top: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: var(--cta);
+        color: #fff;
+        text-decoration: none;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        font-size: 1rem;
+        padding: 0.5rem 1.1rem;
+        border: 2px solid transparent;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 8px rgba(6, 113, 164, 0.12);
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+      }
+      .home:hover { background: var(--cta-hover); }
+      .home svg { display: block; }
+      .home .icon-arrow { display: none; }
+      .home:hover .icon-chevron { display: none; }
+      .home:hover .icon-arrow { display: block; }
+      .art {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .art img {
+        width: 100%;
+        max-width: 520px;
+        height: auto;
+        display: block;
+        image-rendering: auto;
+      }
+      @media (max-width: 760px) {
+        .wrap { grid-template-columns: 1fr; gap: 2rem; }
+        .art { order: -1; }
+        .art img { max-width: 320px; }
+        body { padding: 1.5rem; }
+        .copy { align-items: center; text-align: center; }
+        .home { align-self: center; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <div class="copy">
+        <p class="tagline">Sorry, we couldn't find that page.</p>
+        <h1 class="heading">Error 404</h1>
+        <a class="home" href="/">
+          <span>Go Home</span>
+          <svg class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 5l7 7-7 7" />
+          </svg>
+          <svg class="icon-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      <div class="art">
+        <img src="/bugcat-capoo.gif" alt="bugcat capoo" />
+      </div>
+    </main>
+  </body>
+</html>

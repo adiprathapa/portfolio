@@ -121,9 +121,9 @@ function TintedIcon({ tech, hovered, hoverScale, onError }: {
 function getIconSrc(icon: string, hovered: boolean) {
   if (!hovered) return icon
   if (icon === '/matplotlib-mark.svg') return '/matplotlib-rainbow.svg'
-  if (icon.includes('/confluence/0671A4')) return icon.replace('/0671A4', '/4C9AFF')
-  if (icon.includes('/posthog/0671A4')) return icon.replace('/0671A4', '/F9BD2B')
-  return icon.replace('/0671A4', '')
+  if (icon === '/icons/confluence-0671A4.svg') return '/icons/confluence-4C9AFF.svg'
+  if (icon === '/icons/posthog-0671A4.svg') return '/icons/posthog-F9BD2B.svg'
+  return icon.replace('-0671A4.svg', '.svg')
 }
 
 const techAccentColorsBySlug: Record<string, string> = {
@@ -181,7 +181,7 @@ function getTechAccentColor(tech: TechItem) {
   if (tech.name === 'NetworkX') return '#2B7BBB'
   if (tech.name === 'Claude API') return '#D97757'
   if (tech.name === 'Matplotlib') return '#11557C'
-  const slugMatch = tech.icon.match(/simpleicons\.org\/([^/]+)/)
+  const slugMatch = tech.icon.match(/\/icons\/([^/.-]+)/)
   const slug = slugMatch?.[1]
   return (slug && techAccentColorsBySlug[slug]) ?? '#0671A4'
 }
@@ -196,56 +196,56 @@ function hexToRgba(hex: string, alpha: number) {
 }
 
 const majorTech: TechItem[] = [
-  { name: 'React', icon: 'https://cdn.simpleicons.org/react/0671A4', url: 'https://react.dev', blurb: 'Built interactive UIs for data visualization web applications' },
-  { name: 'Python', icon: 'https://cdn.simpleicons.org/python/0671A4', url: 'https://python.org', blurb: 'Trained ML models and shipped backend APIs for data insights' },
-  { name: 'TypeScript', icon: 'https://cdn.simpleicons.org/typescript/0671A4', url: 'https://typescriptlang.org', blurb: 'Architected type safe frontends for clients' },
-  { name: 'PyTorch', icon: 'https://cdn.simpleicons.org/pytorch/0671A4', url: 'https://pytorch.org', blurb: 'Trained GRU and GraphSAGE models for complex data analysis' },
-  { name: 'Node.js', icon: 'https://cdn.simpleicons.org/nodedotjs/0671A4', url: 'https://nodejs.org', blurb: 'Deployed fullstack apps and REST APIs to founders' },
-  { name: 'Java', icon: 'https://cdn.simpleicons.org/openjdk/0671A4', url: 'https://dev.java', blurb: 'Engineered backend systems and data structures' },
+  { name: 'React', icon: '/icons/react-0671A4.svg', url: 'https://react.dev', blurb: 'Built interactive UIs for data visualization web applications' },
+  { name: 'Python', icon: '/icons/python-0671A4.svg', url: 'https://python.org', blurb: 'Trained ML models and shipped backend APIs for data insights' },
+  { name: 'TypeScript', icon: '/icons/typescript-0671A4.svg', url: 'https://typescriptlang.org', blurb: 'Architected type safe frontends for clients' },
+  { name: 'PyTorch', icon: '/icons/pytorch-0671A4.svg', url: 'https://pytorch.org', blurb: 'Trained GRU and GraphSAGE models for complex data analysis' },
+  { name: 'Node.js', icon: '/icons/nodedotjs-0671A4.svg', url: 'https://nodejs.org', blurb: 'Deployed fullstack apps and REST APIs to founders' },
+  { name: 'Java', icon: '/icons/openjdk-0671A4.svg', url: 'https://dev.java', blurb: 'Engineered backend systems and data structures' },
   { name: 'NetworkX', icon: '/networkx.png', url: 'https://networkx.org', blurb: 'Constructed knowledge graphs and contact networks to detect anomalies' },
-  { name: 'Google ADK', icon: 'https://cdn.simpleicons.org/google/0671A4', url: 'https://google.github.io/adk-docs/', blurb: 'Orchestrated sequential multi agent workflows' },
-  { name: 'Confluence', icon: 'https://cdn.simpleicons.org/confluence/0671A4', url: 'https://www.atlassian.com/software/confluence', blurb: 'Documented engineering workflows and team project plans for C2S2' },
-  { name: 'Apache HTTP Server', icon: 'https://cdn.simpleicons.org/apache/0671A4', url: 'https://httpd.apache.org', blurb: "Maintained C2S2 site on Cornell's Apache HTTP Server" },
-  { name: 'PostHog', icon: 'https://cdn.simpleicons.org/posthog/0671A4', url: 'https://posthog.com', blurb: 'This site uses PostHog for product analytics' },
-  { name: 'Docker', icon: 'https://cdn.simpleicons.org/docker/0671A4', url: 'https://www.docker.com', blurb: 'Containerized app services for deployable apps to clients' },
-  { name: 'PostgreSQL', icon: 'https://cdn.simpleicons.org/postgresql/0671A4', url: 'https://www.postgresql.org', blurb: 'Designed relational schemas and queried analytics data for client applications' },
-  { name: 'Ollama', icon: 'https://cdn.simpleicons.org/ollama/0671A4', url: 'https://ollama.com', blurb: 'Ran local LLM inference pipelines for XAI' },
-  { name: 'Hugging Face', icon: 'https://cdn.simpleicons.org/huggingface/0671A4', url: 'https://huggingface.co', blurb: 'Pulled FineWeb shards and pretrained checkpoints from the Hub for ML training pipelines' },
-  { name: 'CUDA', icon: 'https://cdn.simpleicons.org/nvidia/0671A4', url: 'https://developer.nvidia.com/cuda-toolkit', blurb: 'Trained transformer models on H100 GPUs with FlashAttention 3 and CUDA 13' },
+  { name: 'Google ADK', icon: '/icons/google-0671A4.svg', url: 'https://google.github.io/adk-docs/', blurb: 'Orchestrated sequential multi agent workflows' },
+  { name: 'Confluence', icon: '/icons/confluence-0671A4.svg', url: 'https://www.atlassian.com/software/confluence', blurb: 'Documented engineering workflows and team project plans for C2S2' },
+  { name: 'Apache HTTP Server', icon: '/icons/apache-0671A4.svg', url: 'https://httpd.apache.org', blurb: "Maintained C2S2 site on Cornell's Apache HTTP Server" },
+  { name: 'PostHog', icon: '/icons/posthog-0671A4.svg', url: 'https://posthog.com', blurb: 'This site uses PostHog for product analytics' },
+  { name: 'Docker', icon: '/icons/docker-0671A4.svg', url: 'https://www.docker.com', blurb: 'Containerized app services for deployable apps to clients' },
+  { name: 'PostgreSQL', icon: '/icons/postgresql-0671A4.svg', url: 'https://www.postgresql.org', blurb: 'Designed relational schemas and queried analytics data for client applications' },
+  { name: 'Ollama', icon: '/icons/ollama-0671A4.svg', url: 'https://ollama.com', blurb: 'Ran local LLM inference pipelines for XAI' },
+  { name: 'Hugging Face', icon: '/icons/huggingface-0671A4.svg', url: 'https://huggingface.co', blurb: 'Pulled FineWeb shards and pretrained checkpoints from the Hub for ML training pipelines' },
+  { name: 'CUDA', icon: '/icons/nvidia-0671A4.svg', url: 'https://developer.nvidia.com/cuda-toolkit', blurb: 'Trained transformer models on H100 GPUs with FlashAttention 3 and CUDA 13' },
 ]
 
 const minorTech: TechItem[] = [
-  { name: 'Clerk', icon: 'https://cdn.simpleicons.org/clerk/0671A4', url: 'https://clerk.com' },
-  { name: 'Vue.js', icon: 'https://cdn.simpleicons.org/vuedotjs/0671A4', url: 'https://vuejs.org' },
-  { name: 'JavaScript', icon: 'https://cdn.simpleicons.org/javascript/0671A4', url: 'https://developer.mozilla.org/docs/Web/JavaScript' },
-  { name: 'FastAPI', icon: 'https://cdn.simpleicons.org/fastapi/0671A4', url: 'https://fastapi.tiangolo.com' },
-  { name: 'HTML5', icon: 'https://cdn.simpleicons.org/html5/0671A4', url: 'https://developer.mozilla.org/docs/Web/HTML', blurb: 'Built accessible page structure for production web interfaces' },
-  { name: 'CSS3', icon: 'https://cdn.simpleicons.org/css/0671A4', url: 'https://developer.mozilla.org/docs/Web/CSS', blurb: 'Implemented responsive layouts, theming systems, and polished UI interactions' },
-  { name: 'Flask', icon: 'https://cdn.simpleicons.org/flask/0671A4', url: 'https://flask.palletsprojects.com', blurb: 'Built lightweight API endpoints and backend utilities for rapid feature delivery' },
-  { name: 'Git', icon: 'https://cdn.simpleicons.org/git/0671A4', url: 'https://git-scm.com', blurb: 'Managed branching, review workflows, and release ready version control' },
-  { name: 'GitHub', icon: 'https://cdn.simpleicons.org/github/0671A4', url: 'https://github.com', blurb: 'Shipped collaborative code with PRs, issue tracking, and CI integrated repos' },
-  { name: 'Supabase', icon: 'https://cdn.simpleicons.org/supabase/0671A4', url: 'https://supabase.com' },
-  { name: 'Redis', icon: 'https://cdn.simpleicons.org/redis/0671A4', url: 'https://redis.io' },
-  { name: 'pandas', icon: 'https://cdn.simpleicons.org/pandas/0671A4', url: 'https://pandas.pydata.org' },
-  { name: 'NumPy', icon: 'https://cdn.simpleicons.org/numpy/0671A4', url: 'https://numpy.org' },
-  { name: 'MongoDB', icon: 'https://cdn.simpleicons.org/mongodb/0671A4', url: 'https://mongodb.com' },
-  { name: 'D3.js', icon: 'https://cdn.simpleicons.org/d3/0671A4', url: 'https://d3js.org' },
-  { name: 'Plotly', icon: 'https://cdn.simpleicons.org/plotly/0671A4', url: 'https://plotly.com', blurb: 'Created and presented KPI metrics using Plotly visualizations' },
-  { name: 'CodeMirror', icon: 'https://cdn.simpleicons.org/codemirror/0671A4', url: 'https://codemirror.net' },
-  { name: 'YAML', icon: 'https://cdn.simpleicons.org/yaml/0671A4', url: 'https://yaml.org', blurb: 'Built CI validation and configuration workflows for large open source codebases' },
-  { name: 'scikit-learn', icon: 'https://cdn.simpleicons.org/scikitlearn/0671A4', url: 'https://scikit-learn.org' },
-  { name: 'Express', icon: 'https://cdn.simpleicons.org/express/0671A4', url: 'https://expressjs.com' },
-  { name: 'Vercel', icon: 'https://cdn.simpleicons.org/vercel/0671A4', url: 'https://vercel.com' },
-  { name: 'TensorFlow', icon: 'https://cdn.simpleicons.org/tensorflow/0671A4', url: 'https://tensorflow.org' },
-  { name: 'GitHub Actions', icon: 'https://cdn.simpleicons.org/githubactions/0671A4', url: 'https://github.com/features/actions' },
-  { name: 'IPFS', icon: 'https://cdn.simpleicons.org/ipfs/0671A4', url: 'https://ipfs.tech' },
+  { name: 'Clerk', icon: '/icons/clerk-0671A4.svg', url: 'https://clerk.com' },
+  { name: 'Vue.js', icon: '/icons/vuedotjs-0671A4.svg', url: 'https://vuejs.org' },
+  { name: 'JavaScript', icon: '/icons/javascript-0671A4.svg', url: 'https://developer.mozilla.org/docs/Web/JavaScript' },
+  { name: 'FastAPI', icon: '/icons/fastapi-0671A4.svg', url: 'https://fastapi.tiangolo.com' },
+  { name: 'HTML5', icon: '/icons/html5-0671A4.svg', url: 'https://developer.mozilla.org/docs/Web/HTML', blurb: 'Built accessible page structure for production web interfaces' },
+  { name: 'CSS3', icon: '/icons/css-0671A4.svg', url: 'https://developer.mozilla.org/docs/Web/CSS', blurb: 'Implemented responsive layouts, theming systems, and polished UI interactions' },
+  { name: 'Flask', icon: '/icons/flask-0671A4.svg', url: 'https://flask.palletsprojects.com', blurb: 'Built lightweight API endpoints and backend utilities for rapid feature delivery' },
+  { name: 'Git', icon: '/icons/git-0671A4.svg', url: 'https://git-scm.com', blurb: 'Managed branching, review workflows, and release ready version control' },
+  { name: 'GitHub', icon: '/icons/github-0671A4.svg', url: 'https://github.com', blurb: 'Shipped collaborative code with PRs, issue tracking, and CI integrated repos' },
+  { name: 'Supabase', icon: '/icons/supabase-0671A4.svg', url: 'https://supabase.com' },
+  { name: 'Redis', icon: '/icons/redis-0671A4.svg', url: 'https://redis.io' },
+  { name: 'pandas', icon: '/icons/pandas-0671A4.svg', url: 'https://pandas.pydata.org' },
+  { name: 'NumPy', icon: '/icons/numpy-0671A4.svg', url: 'https://numpy.org' },
+  { name: 'MongoDB', icon: '/icons/mongodb-0671A4.svg', url: 'https://mongodb.com' },
+  { name: 'D3.js', icon: '/icons/d3-0671A4.svg', url: 'https://d3js.org' },
+  { name: 'Plotly', icon: '/icons/plotly-0671A4.svg', url: 'https://plotly.com', blurb: 'Created and presented KPI metrics using Plotly visualizations' },
+  { name: 'CodeMirror', icon: '/icons/codemirror-0671A4.svg', url: 'https://codemirror.net' },
+  { name: 'YAML', icon: '/icons/yaml-0671A4.svg', url: 'https://yaml.org', blurb: 'Built CI validation and configuration workflows for large open source codebases' },
+  { name: 'scikit-learn', icon: '/icons/scikitlearn-0671A4.svg', url: 'https://scikit-learn.org' },
+  { name: 'Express', icon: '/icons/express-0671A4.svg', url: 'https://expressjs.com' },
+  { name: 'Vercel', icon: '/icons/vercel-0671A4.svg', url: 'https://vercel.com' },
+  { name: 'TensorFlow', icon: '/icons/tensorflow-0671A4.svg', url: 'https://tensorflow.org' },
+  { name: 'GitHub Actions', icon: '/icons/githubactions-0671A4.svg', url: 'https://github.com/features/actions' },
+  { name: 'IPFS', icon: '/icons/ipfs-0671A4.svg', url: 'https://ipfs.tech' },
   { name: 'Claude API', icon: '/claude.svg', url: 'https://docs.anthropic.com' },
-  { name: 'Gemini API', icon: 'https://cdn.simpleicons.org/googlegemini/0671A4', url: 'https://ai.google.dev', blurb: 'Built multimodel AI workflows and fallback orchestration for production apps' },
-  { name: 'Mistral AI', icon: 'https://cdn.simpleicons.org/mistralai/0671A4', url: 'https://mistral.ai' },
-  { name: 'Leaflet', icon: 'https://cdn.simpleicons.org/leaflet/0671A4', url: 'https://leafletjs.com' },
-  { name: 'Palantir Foundry', icon: 'https://cdn.simpleicons.org/palantir/0671A4', url: 'https://www.palantir.com/platforms/foundry/', blurb: 'Built Galatea, an end to end blockchain risk analytics platform with address clustering and case management on Foundry' },
-  { name: 'MediaPipe', icon: 'https://cdn.simpleicons.org/mediapipe/0671A4', url: 'https://ai.google.dev/edge/mediapipe', blurb: 'Streamed real time pose keypoints from phone cameras to a 60Hz game server for hit detection' },
-  { name: 'ElevenLabs', icon: 'https://cdn.simpleicons.org/elevenlabs/0671A4', url: 'https://elevenlabs.io', blurb: 'Generated low latency AI commentary voices for live in browser game streams' },
+  { name: 'Gemini API', icon: '/icons/googlegemini-0671A4.svg', url: 'https://ai.google.dev', blurb: 'Built multimodel AI workflows and fallback orchestration for production apps' },
+  { name: 'Mistral AI', icon: '/icons/mistralai-0671A4.svg', url: 'https://mistral.ai' },
+  { name: 'Leaflet', icon: '/icons/leaflet-0671A4.svg', url: 'https://leafletjs.com' },
+  { name: 'Palantir Foundry', icon: '/icons/palantir-0671A4.svg', url: 'https://www.palantir.com/platforms/foundry/', blurb: 'Built Galatea, an end to end blockchain risk analytics platform with address clustering and case management on Foundry' },
+  { name: 'MediaPipe', icon: '/icons/mediapipe-0671A4.svg', url: 'https://ai.google.dev/edge/mediapipe', blurb: 'Streamed real time pose keypoints from phone cameras to a 60Hz game server for hit detection' },
+  { name: 'ElevenLabs', icon: '/icons/elevenlabs-0671A4.svg', url: 'https://elevenlabs.io', blurb: 'Generated low latency AI commentary voices for live in browser game streams' },
   { name: 'Matplotlib', icon: '/matplotlib-mark.svg', url: 'https://matplotlib.org', blurb: 'Visualized macro placements, training metrics, and sensor signals across ML and EDA projects' },
 ]
 

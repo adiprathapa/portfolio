@@ -14,6 +14,66 @@ function isMaskTinted(tech: TechItem) {
   return tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Matplotlib'
 }
 
+const ICON_MAX_RETRIES = 2
+
+function useIconLoader(iconUrl: string) {
+  const [iconLoaded, setIconLoaded] = useState(false)
+  const [iconFailed, setIconFailed] = useState(false)
+  const [retryKey, setRetryKey] = useState(0)
+  const attemptRef = useRef(0)
+
+  useEffect(() => {
+    let cancelled = false
+    attemptRef.current = 0
+    setIconLoaded(false)
+    setIconFailed(false)
+    setRetryKey(0)
+
+    const baseSrc = getIconSrc(iconUrl, false)
+    const hoverSrc = getIconSrc(iconUrl, true)
+
+    const tryLoad = () => {
+      if (cancelled) return
+      const img = new Image()
+      img.src = attemptRef.current > 0 ? `${baseSrc}${baseSrc.includes('?') ? '&' : '?'}r=${attemptRef.current}` : baseSrc
+      img.onload = () => { if (!cancelled) setIconLoaded(true) }
+      img.onerror = () => {
+        if (cancelled) return
+        if (attemptRef.current < ICON_MAX_RETRIES) {
+          attemptRef.current += 1
+          setTimeout(tryLoad, 700 * attemptRef.current)
+        } else {
+          setIconLoaded(true)
+          setIconFailed(true)
+        }
+      }
+    }
+    tryLoad()
+
+    if (hoverSrc !== baseSrc) {
+      const hoverImg = new Image()
+      hoverImg.src = hoverSrc
+    }
+
+    return () => { cancelled = true }
+  }, [iconUrl])
+
+  const handleImgError = useCallback(() => {
+    if (attemptRef.current < ICON_MAX_RETRIES) {
+      attemptRef.current += 1
+      setRetryKey(k => k + 1)
+    } else {
+      setIconFailed(true)
+    }
+  }, [])
+
+  const cacheBustSuffix = retryKey > 0
+    ? (iconUrl.includes('?') ? `&r=${retryKey}` : `?r=${retryKey}`)
+    : ''
+
+  return { iconLoaded, iconFailed, handleImgError, cacheBustSuffix }
+}
+
 function TintedIcon({ tech, hovered, hoverScale, onError }: {
   tech: TechItem
   hovered: boolean
@@ -47,8 +107,6 @@ function TintedIcon({ tech, hovered, hoverScale, onError }: {
         className="absolute inset-0 w-full h-full"
         loading="eager"
         decoding="async"
-        referrerPolicy="no-referrer"
-        crossOrigin="anonymous"
         style={{
           opacity: hovered ? 1 : 0,
           transform,
@@ -194,13 +252,12 @@ const minorTech: TechItem[] = [
 function SmallCard({ tech }: { tech: TechItem }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
-  const [iconLoaded, setIconLoaded] = useState(false)
-  const [iconFailed, setIconFailed] = useState(false)
   const canHoverRef = useRef(false)
   const iconSize = tech.name === 'Apache HTTP Server' ? 40 : tech.name === 'YAML' ? 24 : 32
   const accentColor = getTechAccentColor(tech)
   const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
   const textColor = hovered ? accentColor : '#0671A4'
+  const { iconLoaded, iconFailed, handleImgError, cacheBustSuffix } = useIconLoader(tech.icon)
   const showIcon = iconLoaded && !iconFailed
 
   useEffect(() => {
@@ -212,37 +269,6 @@ function SmallCard({ tech }: { tech: TechItem }) {
     mql.addEventListener('change', update)
     return () => mql.removeEventListener('change', update)
   }, [])
-
-  useEffect(() => {
-    let cancelled = false
-
-    const baseSrc = getIconSrc(tech.icon, false)
-    const hoverSrc = getIconSrc(tech.icon, true)
-    const base = new Image()
-    base.referrerPolicy = 'no-referrer'
-    base.crossOrigin = 'anonymous'
-    base.src = baseSrc
-    base.onload = () => {
-      if (!cancelled) setIconLoaded(true)
-    }
-    base.onerror = () => {
-      if (!cancelled) {
-        setIconLoaded(true)
-        setIconFailed(true)
-      }
-    }
-
-    if (hoverSrc !== baseSrc) {
-      const hoverImg = new Image()
-      hoverImg.referrerPolicy = 'no-referrer'
-      hoverImg.crossOrigin = 'anonymous'
-      hoverImg.src = hoverSrc
-    }
-
-    return () => {
-      cancelled = true
-    }
-  }, [tech.icon])
 
   return (
     <div
@@ -280,24 +306,20 @@ function SmallCard({ tech }: { tech: TechItem }) {
               tech={tech}
               hovered={hovered}
               hoverScale={1.1}
-              onError={() => setIconFailed(true)}
+              onError={handleImgError}
             />
           ) : (
             <img
-              src={getIconSrc(tech.icon, hovered)}
+              src={getIconSrc(tech.icon, hovered) + cacheBustSuffix}
               alt={tech.name}
               className="w-full h-full shrink-0"
               loading="eager"
               decoding="async"
-              referrerPolicy="no-referrer"
-              crossOrigin="anonymous"
               style={{
                 transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
                 transition: 'transform 0.2s ease',
               }}
-              onError={() => {
-                setIconFailed(true)
-              }}
+              onError={handleImgError}
             />
           )}
         </motion.div>
@@ -336,8 +358,6 @@ function SmallCard({ tech }: { tech: TechItem }) {
 function TallCard({ tech }: { tech: TechItem }) {
     const [hovered, setHovered] = useState(false)
     const [pressed, setPressed] = useState(false)
-    const [iconLoaded, setIconLoaded] = useState(false)
-    const [iconFailed, setIconFailed] = useState(false)
     const canHoverRef = useRef(false)
     const iconSize = tech.name === 'Apache HTTP Server' ? 52 : tech.name === 'YAML' ? 30 : 40
     const tallBlurb = (tech.blurb ?? `Applied ${tech.name} in shipped projects and internal workflows`).replace(/[.\s]+$/, '')
@@ -345,6 +365,7 @@ function TallCard({ tech }: { tech: TechItem }) {
     const borderColor = hovered ? accentColor : 'rgba(6, 113, 164, 0.3)'
     const textColor = hovered ? accentColor : '#0671A4'
     const blurbColor = hovered ? hexToRgba(accentColor, 0.75) : 'rgba(6, 113, 164, 0.7)'
+    const { iconLoaded, iconFailed, handleImgError, cacheBustSuffix } = useIconLoader(tech.icon)
     const showIcon = iconLoaded && !iconFailed
 
     useEffect(() => {
@@ -356,34 +377,6 @@ function TallCard({ tech }: { tech: TechItem }) {
       mql.addEventListener('change', update)
       return () => mql.removeEventListener('change', update)
     }, [])
-
-    useEffect(() => {
-      let cancelled = false
-
-      const baseSrc = getIconSrc(tech.icon, false)
-      const hoverSrc = getIconSrc(tech.icon, true)
-      const base = new Image()
-      base.referrerPolicy = 'no-referrer'
-      base.crossOrigin = 'anonymous'
-      base.src = baseSrc
-      base.onload = () => {
-        if (!cancelled) setIconLoaded(true)
-      }
-      base.onerror = () => {
-        if (!cancelled) setIconLoaded(true)
-      }
-
-      if (hoverSrc !== baseSrc) {
-        const hoverImg = new Image()
-        hoverImg.referrerPolicy = 'no-referrer'
-        hoverImg.crossOrigin = 'anonymous'
-        hoverImg.src = hoverSrc
-      }
-
-      return () => {
-        cancelled = true
-      }
-    }, [tech.icon])
 
     return (
       <div
@@ -421,24 +414,20 @@ function TallCard({ tech }: { tech: TechItem }) {
                 tech={tech}
                 hovered={hovered}
                 hoverScale={1.15}
-                onError={() => setIconFailed(true)}
+                onError={handleImgError}
               />
             ) : (
               <img
-                src={getIconSrc(tech.icon, hovered)}
+                src={getIconSrc(tech.icon, hovered) + cacheBustSuffix}
                 alt={tech.name}
                 className="w-full h-full"
                 loading="eager"
                 decoding="async"
-                referrerPolicy="no-referrer"
-                crossOrigin="anonymous"
                 style={{
                   transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
                   transition: 'transform 0.2s ease',
                 }}
-                onError={() => {
-                  setIconFailed(true)
-                }}
+                onError={handleImgError}
               />
             )}
           </motion.div>

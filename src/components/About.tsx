@@ -10,10 +10,59 @@ interface TechItem {
   blurb?: string
 }
 
-const networkxBlueFilter = 'brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(700%) hue-rotate(170deg) brightness(90%) contrast(95%)'
+function isMaskTinted(tech: TechItem) {
+  return tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Matplotlib'
+}
+
+function TintedIcon({ tech, hovered, hoverScale, onError }: {
+  tech: TechItem
+  hovered: boolean
+  hoverScale: number
+  onError: () => void
+}) {
+  const transform = hovered ? `rotate(-8deg) scale(${hoverScale})` : 'rotate(0deg)'
+  const transition = 'opacity 0.2s ease, transform 0.2s ease'
+  return (
+    <>
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundColor: '#0671A4',
+          WebkitMaskImage: `url(${tech.icon})`,
+          maskImage: `url(${tech.icon})`,
+          WebkitMaskSize: 'contain',
+          maskSize: 'contain',
+          WebkitMaskRepeat: 'no-repeat',
+          maskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'center',
+          maskPosition: 'center',
+          opacity: hovered ? 0 : 1,
+          transform,
+          transition,
+        }}
+      />
+      <img
+        src={getIconSrc(tech.icon, true)}
+        alt={tech.name}
+        className="absolute inset-0 w-full h-full"
+        loading="eager"
+        decoding="async"
+        referrerPolicy="no-referrer"
+        crossOrigin="anonymous"
+        style={{
+          opacity: hovered ? 1 : 0,
+          transform,
+          transition,
+        }}
+        onError={onError}
+      />
+    </>
+  )
+}
 
 function getIconSrc(icon: string, hovered: boolean) {
   if (!hovered) return icon
+  if (icon === '/matplotlib-mark.svg') return '/matplotlib-rainbow.svg'
   if (icon.includes('/confluence/0671A4')) return icon.replace('/0671A4', '/4C9AFF')
   if (icon.includes('/posthog/0671A4')) return icon.replace('/0671A4', '/F9BD2B')
   return icon.replace('/0671A4', '')
@@ -61,14 +110,19 @@ const techAccentColorsBySlug: Record<string, string> = {
   html5: '#E34F26',
   css: '#6E43B8',
   css3: '#6E43B8',
-  flask: '#000000',
+  flask: '#3BABC3',
   plotly: '#7A76FF',
   apache: '#D22128',
+  huggingface: '#FFD21E',
+  nvidia: '#76B900',
+  mediapipe: '#0097A7',
+  elevenlabs: '#000000',
 }
 
 function getTechAccentColor(tech: TechItem) {
   if (tech.name === 'NetworkX') return '#2B7BBB'
   if (tech.name === 'Claude API') return '#D97757'
+  if (tech.name === 'Matplotlib') return '#11557C'
   const slugMatch = tech.icon.match(/simpleicons\.org\/([^/]+)/)
   const slug = slugMatch?.[1]
   return (slug && techAccentColorsBySlug[slug]) ?? '#0671A4'
@@ -98,6 +152,8 @@ const majorTech: TechItem[] = [
   { name: 'Docker', icon: 'https://cdn.simpleicons.org/docker/0671A4', url: 'https://www.docker.com', blurb: 'Containerized app services for deployable apps to clients' },
   { name: 'PostgreSQL', icon: 'https://cdn.simpleicons.org/postgresql/0671A4', url: 'https://www.postgresql.org', blurb: 'Designed relational schemas and queried analytics data for client applications' },
   { name: 'Ollama', icon: 'https://cdn.simpleicons.org/ollama/0671A4', url: 'https://ollama.com', blurb: 'Ran local LLM inference pipelines for XAI' },
+  { name: 'Hugging Face', icon: 'https://cdn.simpleicons.org/huggingface/0671A4', url: 'https://huggingface.co', blurb: 'Pulled FineWeb shards and pretrained checkpoints from the Hub for ML training pipelines' },
+  { name: 'CUDA', icon: 'https://cdn.simpleicons.org/nvidia/0671A4', url: 'https://developer.nvidia.com/cuda-toolkit', blurb: 'Trained transformer models on H100 GPUs with FlashAttention 3 and CUDA 13' },
 ]
 
 const minorTech: TechItem[] = [
@@ -107,7 +163,7 @@ const minorTech: TechItem[] = [
   { name: 'FastAPI', icon: 'https://cdn.simpleicons.org/fastapi/0671A4', url: 'https://fastapi.tiangolo.com' },
   { name: 'HTML5', icon: 'https://cdn.simpleicons.org/html5/0671A4', url: 'https://developer.mozilla.org/docs/Web/HTML', blurb: 'Built accessible page structure for production web interfaces' },
   { name: 'CSS3', icon: 'https://cdn.simpleicons.org/css/0671A4', url: 'https://developer.mozilla.org/docs/Web/CSS', blurb: 'Implemented responsive layouts, theming systems, and polished UI interactions' },
-  { name: 'Flask', icon: 'https://cdn.simpleicons.org/flask/000000', url: 'https://flask.palletsprojects.com', blurb: 'Built lightweight API endpoints and backend utilities for rapid feature delivery' },
+  { name: 'Flask', icon: 'https://cdn.simpleicons.org/flask/0671A4', url: 'https://flask.palletsprojects.com', blurb: 'Built lightweight API endpoints and backend utilities for rapid feature delivery' },
   { name: 'Git', icon: 'https://cdn.simpleicons.org/git/0671A4', url: 'https://git-scm.com', blurb: 'Managed branching, review workflows, and release ready version control' },
   { name: 'GitHub', icon: 'https://cdn.simpleicons.org/github/0671A4', url: 'https://github.com', blurb: 'Shipped collaborative code with PRs, issue tracking, and CI integrated repos' },
   { name: 'Supabase', icon: 'https://cdn.simpleicons.org/supabase/0671A4', url: 'https://supabase.com' },
@@ -130,6 +186,9 @@ const minorTech: TechItem[] = [
   { name: 'Mistral AI', icon: 'https://cdn.simpleicons.org/mistralai/0671A4', url: 'https://mistral.ai' },
   { name: 'Leaflet', icon: 'https://cdn.simpleicons.org/leaflet/0671A4', url: 'https://leafletjs.com' },
   { name: 'Palantir Foundry', icon: 'https://cdn.simpleicons.org/palantir/0671A4', url: 'https://www.palantir.com/platforms/foundry/', blurb: 'Built Galatea, an end to end blockchain risk analytics platform with address clustering and case management on Foundry' },
+  { name: 'MediaPipe', icon: 'https://cdn.simpleicons.org/mediapipe/0671A4', url: 'https://ai.google.dev/edge/mediapipe', blurb: 'Streamed real time pose keypoints from phone cameras to a 60Hz game server for hit detection' },
+  { name: 'ElevenLabs', icon: 'https://cdn.simpleicons.org/elevenlabs/0671A4', url: 'https://elevenlabs.io', blurb: 'Generated low latency AI commentary voices for live in browser game streams' },
+  { name: 'Matplotlib', icon: '/matplotlib-mark.svg', url: 'https://matplotlib.org', blurb: 'Visualized macro placements, training metrics, and sensor signals across ML and EDA projects' },
 ]
 
 function SmallCard({ tech }: { tech: TechItem }) {
@@ -216,23 +275,31 @@ function SmallCard({ tech }: { tech: TechItem }) {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
         >
-          <img
-            src={getIconSrc(tech.icon, hovered)}
-            alt={tech.name}
-            className="w-full h-full shrink-0"
-            loading="eager"
-            decoding="async"
-            referrerPolicy="no-referrer"
-            crossOrigin="anonymous"
-            style={{
-              filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
-              transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
-              transition: 'transform 0.2s ease',
-            }}
-            onError={() => {
-              setIconFailed(true)
-            }}
-          />
+          {isMaskTinted(tech) ? (
+            <TintedIcon
+              tech={tech}
+              hovered={hovered}
+              hoverScale={1.1}
+              onError={() => setIconFailed(true)}
+            />
+          ) : (
+            <img
+              src={getIconSrc(tech.icon, hovered)}
+              alt={tech.name}
+              className="w-full h-full shrink-0"
+              loading="eager"
+              decoding="async"
+              referrerPolicy="no-referrer"
+              crossOrigin="anonymous"
+              style={{
+                transform: hovered ? 'rotate(-8deg) scale(1.1)' : 'rotate(0deg)',
+                transition: 'transform 0.2s ease',
+              }}
+              onError={() => {
+                setIconFailed(true)
+              }}
+            />
+          )}
         </motion.div>
       )}
       <motion.span
@@ -349,27 +416,35 @@ function TallCard({ tech }: { tech: TechItem }) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
           >
-            <img
-              src={getIconSrc(tech.icon, hovered)}
-              alt={tech.name}
-              className="w-full h-full"
-              loading="eager"
-              decoding="async"
-              referrerPolicy="no-referrer"
-              crossOrigin="anonymous"
-              style={{
-                filter: (tech.name === 'NetworkX' || tech.name === 'Claude API' || tech.name === 'Flask') && !hovered ? networkxBlueFilter : undefined,
-                transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
-                transition: 'transform 0.2s ease',
-              }}
-              onError={() => {
-                setIconFailed(true)
-              }}
-            />
+            {isMaskTinted(tech) ? (
+              <TintedIcon
+                tech={tech}
+                hovered={hovered}
+                hoverScale={1.15}
+                onError={() => setIconFailed(true)}
+              />
+            ) : (
+              <img
+                src={getIconSrc(tech.icon, hovered)}
+                alt={tech.name}
+                className="w-full h-full"
+                loading="eager"
+                decoding="async"
+                referrerPolicy="no-referrer"
+                crossOrigin="anonymous"
+                style={{
+                  transform: hovered ? 'rotate(-8deg) scale(1.15)' : 'rotate(0deg)',
+                  transition: 'transform 0.2s ease',
+                }}
+                onError={() => {
+                  setIconFailed(true)
+                }}
+              />
+            )}
           </motion.div>
         )}
         <motion.span layout transition={{ duration: 0.3, ease: 'easeOut' }} className="text-lg font-medium" style={{ color: textColor, transition: 'color 0.2s ease' }}>{tech.name}</motion.span>
-        <motion.span layout transition={{ duration: 0.3, ease: 'easeOut' }} className="text-sm leading-relaxed" style={{ color: blurbColor }}>{tallBlurb}</motion.span>
+        <motion.span layout transition={{ duration: 0.3, ease: 'easeOut' }} className="text-sm leading-relaxed" style={{ color: blurbColor, transition: 'color 0.2s ease' }}>{tallBlurb}</motion.span>
         <svg
           width="16"
           height="16"

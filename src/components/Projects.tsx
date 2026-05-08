@@ -18,6 +18,7 @@ const projectDisplayNames: Record<string, string> = {
   zamsizing: "ZAM",
   macroplace: "Macro Placement",
   galatea: "Galatea",
+  paramgolf: "Parameter Golf",
   spectre: "Spectre",
 }
 
@@ -28,6 +29,7 @@ const projectDescriptions: Record<string, string> = {
   zamsizing: "Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.",
   macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
   galatea: "Built for the Palantir Foundry FDSE technical challenge. Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry.",
+  paramgolf: "Submitted a non record entry to OpenAI's Parameter Golf, a parameter limited language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment plus an artifact fit guard that coarsens shared embeddings until the brotli compressed int6 model fits under the cap. Reached 1.107 val bpb on a single H100 across 86 FineWeb shards.",
   spectre: "Built for the Cornell Claude Builders Club Hackathon. A 1v1 fighting game where players throw real punches at their phone cameras while silhouettes battle in a shared browser overlay. MediaPipe pose estimation streams keypoints to a 60Hz Python game server for hit detection and damage logic, with a live AI commentator powered by Claude API and ElevenLabs TTS.",
 }
 
@@ -38,6 +40,7 @@ const projectLinks: Record<string, string> = {
   zamsizing: "https://zamsizing.vercel.app/",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026",
   galatea: "https://galatea.usw-3.palantirfoundry.com/stargate/oidc/ee802905-77f2-44a2-a9d0-ed41e2caea0e",
+  paramgolf: "https://github.com/openai/parameter-golf/pull/2161",
   spectre: "https://github.com/cx18121/claude-hackathon26",
 }
 
@@ -48,10 +51,11 @@ const projectRepoLinks: Record<string, string> = {
   zamsizing: "https://github.com/adiprathapa/ZAM",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026",
   galatea: "https://github.com/adiprathapa/galatea",
+  paramgolf: "https://github.com/openai/parameter-golf/pull/2161",
   spectre: "https://github.com/cx18121/claude-hackathon26",
 }
 
-const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea', 'spectre']
+const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea', 'paramgolf', 'spectre']
 
 const projectSafariProps: Record<string, { url: string; videoSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
   kiwix: { url: projectLinks['kiwix'], videoSrc: "/kiwix.mov" },
@@ -60,6 +64,7 @@ const projectSafariProps: Record<string, { url: string; videoSrc?: string; video
   zamsizing: { url: projectLinks['zamsizing'], videoSrc: "/zam-copy.mp4", videoCropTop: 110, videoCropBottom: 30, videoCropLeft: 270, videoCropRight: 272 },
   macroplace: { url: projectLinks['macroplace'] },
   galatea: { url: projectLinks['galatea'], videoSrc: "/recording-1.mov", videoCropTop: 23 },
+  paramgolf: { url: projectLinks['paramgolf'] },
   spectre: { url: projectLinks['spectre'], videoSrc: "/spectre.mp4", videoCropTop: "10%", videoStartTime: 10 },
 }
 
@@ -70,6 +75,7 @@ const projectLogos: Record<string, string> = {
   zamsizing: "/logo-zamsizing.png",
   macroplace: "",
   galatea: "/logo-galatea.png",
+  paramgolf: "",
   spectre: "/claude.png",
 }
 
@@ -80,6 +86,7 @@ const projectTaglines: Record<string, string> = {
   zamsizing: "One click AI market sizing with TAM/SAM/SOM visualization ",
   macroplace: "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge ",
   galatea: "Real time blockchain risk analytics with Palantir Foundry ",
+  paramgolf: "OpenAI Parameter Golf submission at 1.107 val bpb under 16 MB ",
   spectre: "Real time 1v1 fighting powered by phone cameras and AI commentary ",
 }
 
@@ -90,6 +97,7 @@ const projectBgImages: Record<string, string> = {
   zamsizing: '/zamsizingbg.jpg',
   macroplace: '/macroplace-bg.jpg',
   galatea: '/galateabg.jpg',
+  paramgolf: '/pexels-andrewshelley-8454632.jpg',
   spectre: '/pexels-dichupdi-35168139.jpg',
 }
 
@@ -100,6 +108,7 @@ const projectGradientColors: Record<string, string> = {
   zamsizing: '#E8740C',
   macroplace: '#1a1a2e',
   galatea: '#2c2c2c',
+  paramgolf: '#0E1F1B',
   spectre: '#DA7756',
 }
 
@@ -110,6 +119,7 @@ const projectTechStacks: Record<string, string[]> = {
   zamsizing: ["JavaScript", "React", "Node.js", "Express", "MongoDB", "Gemini API", "Vercel"],
   macroplace: ["PyTorch", "GNN", "NumPy", "FFT", "Python"],
   galatea: ["NetworkX", "Palantir Foundry", "JavaScript"],
+  paramgolf: ["PyTorch", "CUDA", "FlashAttention 3", "Brotli", "SentencePiece", "Hugging Face", "Python"],
   spectre: ["MediaPipe", "FastAPI", "React", "PixiJS", "Claude API", "ElevenLabs", "WebSocket"],
 }
 
@@ -172,6 +182,13 @@ function ProjectCard({
             <span className="text-white text-4xl font-light">&times;</span>
             <img src="/logo-partcl.png" alt="Partcl" className="h-20 object-contain" style={{ filter: 'grayscale(1) invert(1) brightness(3) contrast(10)' }} />
           </div>
+        ) : projectKey === 'paramgolf' ? (
+          <img
+            src="/openai.png"
+            alt="OpenAI"
+            className="h-14 object-contain"
+            style={{ filter: 'brightness(0) invert(1)', opacity: 0.95 }}
+          />
         ) : undefined}
         techStack={projectTechStacks[projectKey]}
         gradientColor={projectGradientColors[projectKey]}
@@ -254,7 +271,7 @@ export function Projects() {
   const expH = experienceRef.current?.offsetHeight ?? 550
   const stickyPt = readStickyPtPx()
   const experienceOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
-  const cardAnimationRail = 6 * spacing
+  const cardAnimationRail = 7 * spacing
   const totalRail = cardAnimationRail + experienceOverflow
   const cardAnimationEnd = totalRail > 0 ? cardAnimationRail / totalRail : 1
 
@@ -262,7 +279,7 @@ export function Projects() {
   const cardProgress = useTransform(scrollYProgress,
     [0, Math.min(cardAnimationEnd, 0.9999)],
     [0, 1])
-  const seg = 1 / 6
+  const seg = 1 / 7
 
   const cardY1 = useTransform(cardProgress, [0, 1], [0, 0])
 
@@ -287,18 +304,23 @@ export function Projects() {
     [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, stagger * 5])
 
   const cardY7 = useTransform(cardProgress,
-    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6],
-    [spacing * 6, spacing * 5 + stagger, spacing * 4 + stagger * 2, spacing * 3 + stagger * 3, spacing * 2 + stagger * 4, spacing + stagger * 5, 0])
+    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6, 1],
+    [spacing * 6, spacing * 5 + stagger, spacing * 4 + stagger * 2, spacing * 3 + stagger * 3, spacing * 2 + stagger * 4, spacing + stagger * 5, stagger * 6, stagger * 6])
 
-  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5, cardY6, cardY7]
+  const cardY8 = useTransform(cardProgress,
+    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6, seg * 7],
+    [spacing * 7, spacing * 6 + stagger, spacing * 5 + stagger * 2, spacing * 4 + stagger * 3, spacing * 3 + stagger * 4, spacing * 2 + stagger * 5, spacing + stagger * 6, 0])
 
-  const hideOp0 = useTransform(cardY7, (y: number) => Number(y > 0))
-  const hideOp1 = useTransform(cardY7, (y: number) => Number(y > stagger))
-  const hideOp2 = useTransform(cardY7, (y: number) => Number(y > stagger * 2))
-  const hideOp3 = useTransform(cardY7, (y: number) => Number(y > stagger * 3))
-  const hideOp4 = useTransform(cardY7, (y: number) => Number(y > stagger * 4))
-  const hideOp5 = useTransform(cardY7, (y: number) => Number(y > stagger * 5))
-  const cardOpacities: (MotionValue<number> | undefined)[] = [hideOp0, hideOp1, hideOp2, hideOp3, hideOp4, hideOp5, undefined]
+  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5, cardY6, cardY7, cardY8]
+
+  const hideOp0 = useTransform(cardY8, (y: number) => Number(y > 0))
+  const hideOp1 = useTransform(cardY8, (y: number) => Number(y > stagger))
+  const hideOp2 = useTransform(cardY8, (y: number) => Number(y > stagger * 2))
+  const hideOp3 = useTransform(cardY8, (y: number) => Number(y > stagger * 3))
+  const hideOp4 = useTransform(cardY8, (y: number) => Number(y > stagger * 4))
+  const hideOp5 = useTransform(cardY8, (y: number) => Number(y > stagger * 5))
+  const hideOp6 = useTransform(cardY8, (y: number) => Number(y > stagger * 6))
+  const cardOpacities: (MotionValue<number> | undefined)[] = [hideOp0, hideOp1, hideOp2, hideOp3, hideOp4, hideOp5, hideOp6, undefined]
 
   // Phase 2: after cards finish, scroll everything up so Experience fills viewport
   const phase2Offset = useTransform(scrollYProgress,
@@ -307,7 +329,7 @@ export function Projects() {
 
   // Experience Y relative to the phase2 wrapper (no stickyPt — the wrapper
   // is inside the section's padded area, so stickyPt is already accounted for)
-  const experienceInsideY = useTransform(cardY7, (y: number) => y + cardH + 96)
+  const experienceInsideY = useTransform(cardY8, (y: number) => y + cardH + 96)
   const stackOffset = useTransform(scrollYProgress, [0, 1], [0, 0])
 
   return (

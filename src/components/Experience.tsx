@@ -39,8 +39,8 @@ const work: ExperienceItem[] = [
       'Working on graph neural networks and graph attention networks',
     bullets: ['Incoming'],
     tech: [
-      { name: 'PyTorch Geometric', icon: 'https://cdn.simpleicons.org/pytorch' },
-      { name: 'Dash', icon: 'https://cdn.simpleicons.org/plotly' },
+      { name: 'PyTorch Geometric', icon: '/icons/pytorch.svg' },
+      { name: 'Dash', icon: '/icons/plotly.svg' },
     ],
     logo: '/mitre.png',
     logoHeight: 91,
@@ -64,8 +64,8 @@ const work: ExperienceItem[] = [
       'Traced execution across multi-class architectures and profiled runtime behavior to debug and resolve bottlenecks',
     ],
     tech: [
-      { name: 'Java', icon: 'https://cdn.simpleicons.org/openjdk' },
-      { name: 'JUnit', icon: 'https://cdn.simpleicons.org/junit5' },
+      { name: 'Java', icon: '/icons/openjdk.svg' },
+      { name: 'JUnit', icon: '/icons/junit5.svg' },
     ],
     logo: '/cornell.svg',
     logoHeight: 44,
@@ -86,8 +86,8 @@ const work: ExperienceItem[] = [
       'Iterated rapidly through weekly prototyping cycles, prioritizing user experience, accessibility compliance, and product clarity',
     ],
     tech: [
-      { name: 'ChatGPT API', icon: 'https://cdn.simpleicons.org/chatbot' },
-      { name: 'JavaScript', icon: 'https://cdn.simpleicons.org/javascript' },
+      { name: 'ChatGPT API', icon: '/icons/chatbot.svg' },
+      { name: 'JavaScript', icon: '/icons/javascript.svg' },
     ],
     logo: '/mines.png',
     logoHeight: 44,
@@ -110,8 +110,8 @@ const work: ExperienceItem[] = [
       'Presented findings at the Nebraska Summer Research Symposium after biweekly reviews with professor to refine methodology',
     ],
     tech: [
-      { name: 'scikit-learn', icon: 'https://cdn.simpleicons.org/scikitlearn' },
-      { name: 'Python', icon: 'https://cdn.simpleicons.org/python' },
+      { name: 'scikit-learn', icon: '/icons/scikitlearn.svg' },
+      { name: 'Python', icon: '/icons/python.svg' },
     ],
     logo: '/neb.png',
     logoHeight: 42,
@@ -134,8 +134,8 @@ const involvement: ExperienceItem[] = [
       'Delivering data prediction and visualization tools to clients',
     bullets: [],
     tech: [
-      { name: 'Redis', icon: 'https://cdn.simpleicons.org/redis' },
-      { name: 'PostgreSQL', icon: 'https://cdn.simpleicons.org/postgresql' },
+      { name: 'Redis', icon: '/icons/redis.svg' },
+      { name: 'PostgreSQL', icon: '/icons/postgresql.svg' },
     ],
     logo: '/logodsa.png',
     logoHeight: 79,
@@ -155,8 +155,8 @@ const involvement: ExperienceItem[] = [
       'Designing and taping out custom silicon chips as part of a student led project team',
     bullets: [],
     tech: [
-      { name: 'Confluence', icon: 'https://cdn.simpleicons.org/confluence' },
-      { name: 'Apache HTTP Server', icon: 'https://cdn.simpleicons.org/apache' },
+      { name: 'Confluence', icon: '/icons/confluence.svg' },
+      { name: 'Apache HTTP Server', icon: '/icons/apache.svg' },
     ],
     logo: '/c2s2logo.png',
     logoHeight: 72,
@@ -209,8 +209,6 @@ function TechLabel({ src, name, size }: { src: string; name: string; size: numbe
           className="object-contain"
           loading="lazy"
           decoding="async"
-          referrerPolicy="no-referrer"
-          crossOrigin="anonymous"
           style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
           onError={(event) => {
             setErrored(true)

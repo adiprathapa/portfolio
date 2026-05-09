@@ -663,7 +663,7 @@ export function Experience() {
               style={{ color: '#4B5563' }}
             >
               I have experience in software engineering, research, and full stack development.
-              Looking for Software and AI/ML engineering internship roles.
+              Looking for Summer 2027 Software and AI/ML engineering internship roles.
             </p>
           </div>
 

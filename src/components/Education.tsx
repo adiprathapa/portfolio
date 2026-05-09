@@ -10,6 +10,7 @@ type EduItem = {
   school: string
   degree: string
   period: string
+  date: string
   description: string
   bullets: string[]
   bgImage: string
@@ -22,6 +23,7 @@ const items: EduItem[] = [
     school: 'Cornell University',
     degree: 'B.A. Computer Science',
     period: 'Ithaca, NY',
+    date: 'Anticipated 2028',
     description: 'College of Arts and Sciences and Ann S. Bowers College of Computing and Information Science, minor in Artificial Intelligence.',
     bullets: [
       'Data Structures, Object-Oriented Programming, Theory of Computation, Discrete Math, Python Design and Development, Calculus 1, Calculus 2, Linear Algebra for Engineers',
@@ -34,6 +36,7 @@ const items: EduItem[] = [
     school: 'Millard North High School',
     degree: 'International Baccalaureate Diploma',
     period: 'Omaha, NE',
+    date: '',
     description: 'Math Higher Level, Biology Higher Level, English Higher Level, Psychology Standard Level, Spanish Standard Level, Music Standard Level.',
     bullets: [
       'AP Spanish, AP Human Geography, AP World History, AP Physics, AP Computer Science Principles',
@@ -111,10 +114,11 @@ function ListRow({
             {item.school}
           </span>
           <span
-            className={`${isActive ? 'text-sm sm:text-base' : 'hidden text-sm sm:inline sm:text-base'} leading-relaxed`}
+            className={`${isActive ? 'text-sm sm:text-base' : 'hidden text-sm sm:inline sm:text-base'} leading-relaxed text-right`}
             style={{ color: isActive ? '#0671A4' : '#7A7D72' }}
           >
-            {item.period}
+            <span className="block">{item.period}</span>
+            {isActive && item.date && <span className="block" style={{ color: '#7A7D72', fontSize: '0.85em' }}>{item.date}</span>}
           </span>
         </span>
 
@@ -205,7 +209,9 @@ export function Education() {
             className="mt-3 max-w-2xl text-base md:text-lg leading-relaxed"
             style={{ color: '#4B5563' }}
           >
-            Academic foundation from Omaha, Nebraska to Ithaca, New York.
+            {activeId === 'cornell'
+              ? 'Pursuing a B.A. in Computer Science with a minor in AI at Cornell University.'
+              : 'Earned my IB Diploma at Millard North High School.'}
           </p>
         </div>
       </div>

@@ -13,7 +13,7 @@ const footerLinks = [
 
 const resourceLinks = [
   { label: 'Resume', href: RESUME_PAGE_URL },
-  { label: 'Cal', href: '/calendar.html' },
+  { label: 'Calendar', href: '/calendar.html' },
 ]
 
 export function Footer() {

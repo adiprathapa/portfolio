@@ -1,7 +1,7 @@
 import { scrollToSection } from '../lib/scrollToSection'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 
-const RESUME_PAGE_URL = '/resume.html'
+const RESUME_PAGE_URL = 'https://amethyst-high-ostrich-443.mypinata.cloud/ipfs/bafkreiaeuwl7smwwdi4stlwc3ar6fj4kziabhmnjizznwzrg3atl4umkni?pinataGatewayToken=YCdehKj-KuPPWufhll8PN9cqatvMJIAgcET5Q9Uj-v7uubLjBiivI-z8SGCGmYtH'
 
 const footerLinks = [
   { label: 'About', href: '#about' },

@@ -149,7 +149,7 @@ const involvement: ExperienceItem[] = [
   {
     id: 'c2s2',
     company: 'Cornell Custom Silicon Systems',
-    role: 'Project Manager',
+    role: 'Operations Engineer',
     duration: 'Fall 2025 — Present',
     description:
       'Designing and taping out custom silicon chips as part of a student led project team',

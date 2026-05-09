@@ -21,6 +21,10 @@ dist
 
 # Playwright MCP
 .playwright-mcp
+portfolio-*.png
+og-preview.png
+generate-og-image.html
+test-results
 
 # Editor directories and files
 .vscode

@@ -114,11 +114,10 @@ function ListRow({
             {item.school}
           </span>
           <span
-            className={`${isActive ? 'text-sm sm:text-base' : 'hidden text-sm sm:inline sm:text-base'} leading-relaxed text-right`}
+            className={`${isActive ? 'text-sm sm:text-base' : 'hidden text-sm sm:inline sm:text-base'} leading-relaxed text-left sm:text-right`}
             style={{ color: isActive ? '#0671A4' : '#7A7D72' }}
           >
-            <span className="block">{item.period}</span>
-            {isActive && item.date && <span className="block" style={{ color: '#7A7D72', fontSize: '0.85em' }}>{item.date}</span>}
+            <span>{item.period}{item.date && isActive ? <>{' · '}<span style={{ color: '#7A7D72' }}>{item.date}</span></> : ''}</span>
           </span>
         </span>
 

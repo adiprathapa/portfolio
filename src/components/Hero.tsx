@@ -189,12 +189,43 @@ export function Hero() {
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
-  const coinHovered = useRef(false)
-  const [showCoinOverlay, setShowCoinOverlay] = useState(false)
-  const coinOverlayTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const [isSpinning, setIsSpinning] = useState(false)
+  const [streak, setStreak] = useState(0)
+  const [lastSide, setLastSide] = useState<'linkedin' | 'github' | null>(null)
+  const [tossCount, setTossCount] = useState(0)
+  const lastSideRef = useRef<'linkedin' | 'github' | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const h1Ref = useRef<HTMLHeadingElement>(null)
   const { displayText, current } = useTypewriter(greetings, tooltipActive, 120, 60, 2000)
+
+  const tossCoin = () => {
+    if (isSpinning) return
+    setIsSpinning(true)
+
+    const landsOnGithub = Math.random() > 0.5
+    const spins = 3 + Math.floor(Math.random() * 4) // 3–6 full rotations
+    const targetSideAngle = landsOnGithub ? 180 : 0
+
+    setCoinAngle(prev => {
+      const currentMod = ((prev % 360) + 360) % 360
+      let delta = targetSideAngle - currentMod
+      if (delta < 0) delta += 360
+      return prev + spins * 360 + delta
+    })
+
+    const side = landsOnGithub ? 'github' : 'linkedin'
+    setTimeout(() => {
+      setIsSpinning(false)
+      setTossCount(c => c + 1)
+      if (side === lastSideRef.current) {
+        setStreak(s => s + 1)
+      } else {
+        setStreak(1)
+      }
+      setLastSide(side)
+      lastSideRef.current = side
+    }, 1500)
+  }
 
   const renderSegmentedText = (text: string, segments: string[]) => {
     let charCount = 0
@@ -384,21 +415,8 @@ export function Hero() {
             const diff = endX - startX
             if (Math.abs(diff) > 30) {
               e.preventDefault()
-              // Rotate in swipe direction: left → -180, right → +180
               setCoinAngle(a => a + (diff < 0 ? -180 : 180))
             }
-          }}
-          onMouseEnter={() => {
-            if (coinHovered.current) return
-            coinHovered.current = true
-            setCoinAngle(a => a + 180)
-            clearTimeout(coinOverlayTimer.current)
-            coinOverlayTimer.current = setTimeout(() => setShowCoinOverlay(true), 0)
-          }}
-          onMouseLeave={() => {
-            coinHovered.current = false
-            clearTimeout(coinOverlayTimer.current)
-            setShowCoinOverlay(false)
           }}
         >
           <div
@@ -410,18 +428,21 @@ export function Hero() {
               left: '5%',
               borderRadius: '50%',
               transformStyle: 'preserve-3d',
-              transition: 'transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1)',
+              transition: isSpinning
+                ? 'transform 1.5s cubic-bezier(0.1, 0.7, 0.3, 1)'
+                : 'transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1)',
               transform: `rotateY(${coinAngle}deg)`,
             }}
           >
             {/* Front — headshot */}
             <div
-              className="absolute inset-0 overflow-hidden cursor-pointer"
+              className="absolute inset-0 overflow-hidden"
               style={{
                 borderRadius: '50%',
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
                 border: '3px solid rgba(6, 113, 164, 0.3)',
                 backfaceVisibility: 'hidden',
+                cursor: 'pointer',
               }}
               onClick={() => { posthog?.capture('linkedin_profile_clicked', { location: 'hero_coin' }); window.open('https://www.linkedin.com/in/adi-prathapa/', '_blank') }}
             >
@@ -436,14 +457,17 @@ export function Hero() {
                   transform: 'scale(1.1) translateY(-10px)',
                 }}
               />
-              {/* LinkedIn overlay — desktop only */}
+              {/* LinkedIn overlay */}
               <div
-                className="absolute inset-0 hidden md:block"
+                className="absolute inset-0"
+                onClick={(e) => { e.stopPropagation(); posthog?.capture('linkedin_profile_clicked', { location: 'hero_coin' }); window.open('https://www.linkedin.com/in/adi-prathapa/', '_blank') }}
                 style={{
                   borderRadius: '50%',
                   background: 'rgba(0, 0, 0, 0.35)',
-                  transition: 'opacity 0.15s ease',
-                  opacity: showCoinOverlay ? 1 : 0,
+                  transition: 'opacity 0.3s ease',
+                  opacity: !isSpinning && tossCount > 0 && lastSide === 'linkedin' ? 1 : 0,
+                  pointerEvents: !isSpinning && tossCount > 0 && lastSide === 'linkedin' ? 'auto' : 'none',
+                  cursor: 'pointer',
                 }}
               >
                 <svg viewBox="0 0 24 24" fill="#F4F4F4" className="absolute w-6 h-6 md:w-9 md:h-9" style={{ bottom: 'calc(15% + 10px)', right: 'calc(10% + 11px)' }}>
@@ -453,13 +477,14 @@ export function Hero() {
             </div>
             {/* Back — pixel cat */}
             <div
-              className="absolute inset-0 overflow-hidden cursor-pointer"
+              className="absolute inset-0 overflow-hidden"
               style={{
                 borderRadius: '50%',
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
                 border: '3px solid rgba(6, 113, 164, 0.3)',
                 backfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg)',
+                cursor: 'pointer',
               }}
               onClick={() => { posthog?.capture('github_profile_clicked', { location: 'hero_coin' }); window.open('https://github.com/adiprathapa', '_blank') }}
             >
@@ -472,14 +497,17 @@ export function Hero() {
                   objectFit: 'cover',
                 }}
               />
-              {/* GitHub overlay — desktop only */}
+              {/* GitHub overlay */}
               <div
-                className="absolute inset-0 hidden md:block"
+                className="absolute inset-0"
+                onClick={(e) => { e.stopPropagation(); posthog?.capture('github_profile_clicked', { location: 'hero_coin' }); window.open('https://github.com/adiprathapa', '_blank') }}
                 style={{
                   borderRadius: '50%',
                   background: 'rgba(0, 0, 0, 0.35)',
                   transition: 'opacity 0.3s ease',
-                  opacity: showCoinOverlay ? 1 : 0,
+                  opacity: !isSpinning && tossCount > 0 && lastSide === 'github' ? 1 : 0,
+                  pointerEvents: !isSpinning && tossCount > 0 && lastSide === 'github' ? 'auto' : 'none',
+                  cursor: 'pointer',
                 }}
               >
                 <svg viewBox="0 0 24 24" fill="#F4F4F4" className="absolute w-8 h-8 md:w-11 md:h-11" style={{ bottom: 'calc(15% + 10px)', right: 'calc(10% + 5px)' }}>
@@ -488,6 +516,48 @@ export function Hero() {
               </div>
             </div>
           </div>
+
+          {/* Coin toss result */}
+          {!isMobile && <AnimatePresence mode="wait">
+            {tossCount === 0 && !isSpinning ? (
+              <motion.div
+                key="hint"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, y: [0, -5, 5, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ y: { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' } }}
+                className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 whitespace-nowrap cursor-pointer"
+                style={{ bottom: isMobile ? '-14%' : '-2%', color: 'rgba(6, 113, 164, 0.45)' }}
+                onClick={tossCoin}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4l7.07 17 2.51-7.39L21 11.07z" />
+                </svg>
+                <span className="text-sm font-light tracking-wide">
+                  Click here to toss
+                </span>
+              </motion.div>
+            ) : !isSpinning && tossCount > 0 ? (
+              <motion.div
+                key={`result-${tossCount}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, y: [0, -5, 5, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ y: { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' } }}
+                className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 whitespace-nowrap cursor-pointer"
+                style={{ bottom: isMobile ? '-14%' : '-2%', color: 'rgba(6, 113, 164, 0.45)' }}
+                onClick={tossCoin}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4l7.07 17 2.51-7.39L21 11.07z" />
+                </svg>
+                <span className="text-sm font-light tracking-wide">
+                  {lastSide === 'linkedin' ? 'LinkedIn' : 'GitHub'}!
+                  {streak >= 2 && ` ${streak}x`} Click Again
+                </span>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>}
         </motion.div>
 
       </motion.div>

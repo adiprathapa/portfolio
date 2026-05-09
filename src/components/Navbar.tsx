@@ -6,7 +6,7 @@ import { MobileMenu } from './MobileMenu'
 import { usePostHog } from '@posthog/react'
 import { scrollToSection } from '../lib/scrollToSection'
 
-const RESUME_PAGE_URL = 'https://amethyst-high-ostrich-443.mypinata.cloud/ipfs/bafkreiaeuwl7smwwdi4stlwc3ar6fj4kziabhmnjizznwzrg3atl4umkni?pinataGatewayToken=YCdehKj-KuPPWufhll8PN9cqatvMJIAgcET5Q9Uj-v7uubLjBiivI-z8SGCGmYtH'
+const RESUME_PAGE_URL = '/resume.html'
 const CALENDAR_PAGE_URL = '/calendar.html'
 
 const navLinks = [

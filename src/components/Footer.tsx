@@ -100,7 +100,7 @@ export function Footer() {
             <div>
               <h4>Contact</h4>
               <a href="mailto:aprathapa01@gmail.com">Email</a>
-              <a href="https://linkedin.com/in/adiprathapa" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://www.linkedin.com/in/adi-prathapa" target="_blank" rel="noopener noreferrer">LinkedIn</a>
               <a href="https://github.com/adiprathapa" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </div>

@@ -114,8 +114,8 @@ const projectGradientColors: Record<string, string> = {
 
 const projectTechStacks: Record<string, string[]> = {
   kiwix: ["Vue.js", "Pinia", "GitHub Actions", "YAML", "Python", "CodeMirror"],
-  tauron: ["FastAPI", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas", "NumPy"],
-  helicity: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
+  tauron: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
+  helicity: ["FastAPI", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas", "NumPy"],
   zamsizing: ["JavaScript", "React", "Node.js", "Express", "MongoDB", "Gemini API", "Vercel"],
   macroplace: ["PyTorch", "GNN", "NumPy", "FFT", "Python"],
   galatea: ["NetworkX", "Palantir Foundry", "JavaScript"],

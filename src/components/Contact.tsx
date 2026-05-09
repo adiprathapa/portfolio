@@ -296,7 +296,7 @@ export function Contact() {
                 </svg>
               </a>
               <a
-                href="https://linkedin.com/in/adiprathapa"
+                href="https://www.linkedin.com/in/adi-prathapa"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-11 h-11 rounded-full transition-colors"

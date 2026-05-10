@@ -162,11 +162,15 @@ h1, h2, h3, h4, h5, h6 {
 
 .project-marquee {
   transform-origin: left center;
+  height: 340px;
 }
 
 @media (max-width: 1023px) {
   .project-marquee {
+    height: 255px;
     transform: scale(0.85);
+    transform-origin: left top;
+    width: 117.647%;
   }
 }
 

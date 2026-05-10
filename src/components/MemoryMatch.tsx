@@ -46,6 +46,18 @@ export const TECH_POOL = [
   { name: 'Hugging Face', icon: '/icons/huggingface-0671A4.svg', colorIcon: '/icons/huggingface.svg' },
   { name: 'Plotly', icon: '/icons/plotly-0671A4.svg', colorIcon: '/icons/plotly.svg' },
   { name: 'Apache', icon: '/icons/apache-0671A4.svg', colorIcon: '/icons/apache.svg' },
+  { name: 'NetworkX', icon: '/networkx.png', colorIcon: '/networkx.png' },
+  { name: 'Google ADK', icon: '/icons/google-0671A4.svg', colorIcon: '/icons/google.svg' },
+  { name: 'Confluence', icon: '/icons/confluence-0671A4.svg', colorIcon: '/icons/confluence.svg' },
+  { name: 'CodeMirror', icon: '/icons/codemirror-0671A4.svg', colorIcon: '/icons/codemirror.svg' },
+  { name: 'YAML', icon: '/icons/yaml-0671A4.svg', colorIcon: '/icons/yaml.svg' },
+  { name: 'GitHub Actions', icon: '/icons/githubactions-0671A4.svg', colorIcon: '/icons/githubactions.svg' },
+  { name: 'Claude API', icon: '/claude.svg', colorIcon: '/claude.svg' },
+  { name: 'Mistral AI', icon: '/icons/mistralai-0671A4.svg', colorIcon: '/icons/mistralai.svg' },
+  { name: 'Palantir', icon: '/icons/palantir-0671A4.svg', colorIcon: '/icons/palantir.svg' },
+  { name: 'MediaPipe', icon: '/icons/mediapipe-0671A4.svg', colorIcon: '/icons/mediapipe.svg' },
+  { name: 'ElevenLabs', icon: '/icons/elevenlabs-0671A4.svg', colorIcon: '/icons/elevenlabs.svg' },
+  { name: 'Matplotlib', icon: '/matplotlib-mark.svg', colorIcon: '/matplotlib-rainbow.svg' },
 ]
 
 interface Difficulty {
@@ -62,6 +74,8 @@ const DIFFICULTIES: Difficulty[] = [
   { label: 'Hard', pairs: 18, cols: 6, description: '36 cards (6×6)' },
   { label: 'Very Hard', pairs: TECH_POOL.length, cols: 0, description: 'Moving conveyor', conveyor: true },
 ]
+
+const CARD_BACKGROUND = '#f4f4f4'
 
 export function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -109,7 +123,7 @@ export function FlipCard({
       >
         <div
           className="absolute inset-0 rounded-xl flex items-center justify-center"
-          style={{ backfaceVisibility: 'hidden', background: '#fff', border: '1.5px solid rgba(6, 113, 164, 0.3)' }}
+          style={{ backfaceVisibility: 'hidden', background: CARD_BACKGROUND, border: '1.5px solid rgba(6, 113, 164, 0.3)' }}
         >
           <span className="text-2xl font-bold select-none" style={{ color: 'rgba(6, 113, 164, 0.25)' }}>?</span>
         </div>
@@ -118,7 +132,7 @@ export function FlipCard({
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
-            background: isMatched ? 'rgba(6, 113, 164, 0.08)' : '#fff',
+            background: CARD_BACKGROUND,
             border: '1.5px solid rgba(6, 113, 164, 0.3)',
             opacity: isMatched ? 0.5 : 1,
           }}
@@ -303,17 +317,17 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
                   onClick={() => diff.conveyor && onConveyorGame ? onConveyorGame() : startGame(diff)}
                   className="flex flex-col items-center gap-1 px-4 py-4 rounded-xl cursor-pointer"
                   style={{
-                    background: '#fff',
+                    background: CARD_BACKGROUND,
                     border: '1.5px solid rgba(6, 113, 164, 0.3)',
                     transition: 'border-color 0.2s ease, background 0.2s ease',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.5)'
-                    e.currentTarget.style.background = 'rgba(6, 113, 164, 0.04)'
+                    e.currentTarget.style.background = '#eef3f6'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.3)'
-                    e.currentTarget.style.background = '#fff'
+                    e.currentTarget.style.background = CARD_BACKGROUND
                   }}
                 >
                   <span className="text-sm font-normal" style={{ color: '#0671A4' }}>{diff.label}</span>

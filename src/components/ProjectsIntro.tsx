@@ -26,7 +26,16 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
   const [elapsed, setElapsed] = useState(0)
   const [gameOver, setGameOver] = useState(false)
   const [paused, setPaused] = useState(false)
+  const canHoverRef = useRef(false)
   const lockRef = useRef(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const update = () => { canHoverRef.current = mql.matches }
+    update()
+    mql.addEventListener('change', update)
+    return () => mql.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     if (!startTime || gameOver) return
@@ -91,7 +100,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
   const row1 = cards.slice(0, Math.ceil(cards.length / 2))
   const row2 = cards.slice(Math.ceil(cards.length / 2))
 
-  const cardSize = 'w-[130px] h-[100px] md:w-[200px] md:h-[138px]'
+  const cardSize = 'w-[112px] h-[82px] md:w-[200px] md:h-[138px]'
 
   return (
     <div className="h-full flex flex-col">
@@ -135,8 +144,8 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
       ) : (
         <div
           className="flex-1 flex flex-col justify-center space-y-2 md:space-y-3"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
+          onMouseEnter={() => { if (canHoverRef.current) setPaused(true) }}
+          onMouseLeave={() => { if (canHoverRef.current) setPaused(false) }}
         >
           {/* Row 1 — scrolls left */}
           <div className="overflow-hidden">
@@ -243,7 +252,9 @@ export function ProjectsIntro() {
             and more. My projects range from fintech applications to machine learning focused
             projects to apps that combine both.
           </p>
-          <button
+          <motion.button
+            layout
+            transition={{ layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] } }}
             onClick={() => { if (conveyorGameActive) { handleEndConveyorGame() } else { setShowMemoryGame(true) } }}
             className="shrink-0 self-center lg:self-auto flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full cursor-pointer"
             style={{
@@ -255,25 +266,43 @@ export function ProjectsIntro() {
             onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6, 113, 164, 0.15)'; e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.4)' }}
             onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(6, 113, 164, 0.08)'; e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.15)' }}
           >
-            {conveyorGameActive ? (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-                End Game
-              </>
-            ) : (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="2" width="8" height="8" rx="1" />
-                  <rect x="14" y="2" width="8" height="8" rx="1" />
-                  <rect x="2" y="14" width="8" height="8" rx="1" />
-                  <rect x="14" y="14" width="8" height="8" rx="1" />
-                </svg>
-                Matching Game
-              </>
-            )}
-          </button>
+            <AnimatePresence mode="popLayout" initial={false}>
+              {conveyorGameActive ? (
+                <motion.span
+                  key="end-game"
+                  layout
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  className="flex items-center gap-2 whitespace-nowrap"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                  End Game
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="matching-game"
+                  layout
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  className="flex items-center gap-2 whitespace-nowrap"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="2" width="8" height="8" rx="1" />
+                    <rect x="14" y="2" width="8" height="8" rx="1" />
+                    <rect x="2" y="14" width="8" height="8" rx="1" />
+                    <rect x="14" y="14" width="8" height="8" rx="1" />
+                  </svg>
+                  Matching
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </div>
       </div>
 
@@ -289,10 +318,11 @@ export function ProjectsIntro() {
       {/* Marquee conveyor / Conveyor game */}
       <div
         ref={conveyorRef}
-        className="relative mt-6 lg:mt-10 -my-4 overflow-hidden py-4"
+        className="relative mt-6 lg:mt-10 -my-4 overflow-hidden h-[255px] md:h-[340px]"
         style={{ perspective: 1200, height: lockedHeight ? lockedHeight : undefined }}
       >
         <motion.div
+          className="h-full"
           animate={{ rotateX: conveyorGameActive ? 180 : 0 }}
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
@@ -304,7 +334,7 @@ export function ProjectsIntro() {
           }}
         >
           <div
-            className="relative"
+            className="relative h-full"
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
@@ -324,7 +354,7 @@ export function ProjectsIntro() {
             />
           </div>
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 h-full"
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',

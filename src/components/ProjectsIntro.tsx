@@ -91,7 +91,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
   const row1 = cards.slice(0, Math.ceil(cards.length / 2))
   const row2 = cards.slice(Math.ceil(cards.length / 2))
 
-  const cardSize = 'w-[130px] h-[100px] md:w-[200px] md:h-[138px]'
+  const cardSize = 'w-[220px] h-[146px]'
 
   return (
     <div className="h-full flex flex-col">
@@ -134,7 +134,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
         </motion.div>
       ) : (
         <div
-          className="flex-1 flex flex-col justify-center space-y-2 md:space-y-3"
+          className="flex-1 flex flex-col justify-center space-y-2"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
@@ -195,6 +195,8 @@ export function ProjectsIntro() {
   const [conveyorGameKey, setConveyorGameKey] = useState(0)
   const [lockedHeight, setLockedHeight] = useState<number | undefined>(undefined)
   const [unlockHeightAfterReturn, setUnlockHeightAfterReturn] = useState(false)
+  // JS-controlled face visibility — Safari ignores backfaceVisibility in overflow contexts
+  const [showFront, setShowFront] = useState(true)
   const ref = useRef<HTMLElement>(null)
   const conveyorRef = useRef<HTMLDivElement>(null)
 
@@ -209,8 +211,15 @@ export function ProjectsIntro() {
     return () => observer.disconnect()
   }, [])
 
+  // Swap face visibility at the midpoint of the flip (when both faces are edge-on at 90deg)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowFront(!conveyorGameActive)
+    }, 300) // half of 0.6s transition
+    return () => clearTimeout(timer)
+  }, [conveyorGameActive])
+
   const handleConveyorGame = () => {
-    // Capture current height before switching
     if (conveyorRef.current) {
       setLockedHeight(conveyorRef.current.offsetHeight)
     }
@@ -303,11 +312,11 @@ export function ProjectsIntro() {
             }
           }}
         >
+          {/* Front face: marquee */}
           <div
             className="relative overflow-hidden"
             style={{
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
+              visibility: showFront ? 'visible' : 'hidden',
               pointerEvents: conveyorGameActive ? 'none' : 'auto',
             }}
           >
@@ -323,20 +332,16 @@ export function ProjectsIntro() {
               style={{ background: 'linear-gradient(to left, #E4EFF5, transparent)' }}
             />
           </div>
+          {/* Back face: game */}
           <div
             className="absolute inset-0"
             style={{
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
+              visibility: showFront ? 'hidden' : 'visible',
               transform: 'rotateX(180deg)',
               pointerEvents: conveyorGameActive ? 'auto' : 'none',
             }}
           >
-            <div
-              style={{
-                height: '100%',
-              }}
-            >
+            <div style={{ height: '100%' }}>
               <ConveyorMatchGame key={conveyorGameKey} onClose={handleEndConveyorGame} />
             </div>
           </div>

@@ -46,6 +46,18 @@ export const TECH_POOL = [
   { name: 'Hugging Face', icon: '/icons/huggingface-0671A4.svg', colorIcon: '/icons/huggingface.svg' },
   { name: 'Plotly', icon: '/icons/plotly-0671A4.svg', colorIcon: '/icons/plotly.svg' },
   { name: 'Apache', icon: '/icons/apache-0671A4.svg', colorIcon: '/icons/apache.svg' },
+  { name: 'NetworkX', icon: '/networkx.png', colorIcon: '/networkx.png' },
+  { name: 'Google ADK', icon: '/icons/google-0671A4.svg', colorIcon: '/icons/google.svg' },
+  { name: 'Confluence', icon: '/icons/confluence-0671A4.svg', colorIcon: '/icons/confluence.svg' },
+  { name: 'CodeMirror', icon: '/icons/codemirror-0671A4.svg', colorIcon: '/icons/codemirror.svg' },
+  { name: 'YAML', icon: '/icons/yaml-0671A4.svg', colorIcon: '/icons/yaml.svg' },
+  { name: 'GitHub Actions', icon: '/icons/githubactions-0671A4.svg', colorIcon: '/icons/githubactions.svg' },
+  { name: 'Claude API', icon: '/claude.svg', colorIcon: '/claude.svg' },
+  { name: 'Mistral AI', icon: '/icons/mistralai-0671A4.svg', colorIcon: '/icons/mistralai.svg' },
+  { name: 'Palantir', icon: '/icons/palantir-0671A4.svg', colorIcon: '/icons/palantir.svg' },
+  { name: 'MediaPipe', icon: '/icons/mediapipe-0671A4.svg', colorIcon: '/icons/mediapipe.svg' },
+  { name: 'ElevenLabs', icon: '/icons/elevenlabs-0671A4.svg', colorIcon: '/icons/elevenlabs.svg' },
+  { name: 'Matplotlib', icon: '/matplotlib-mark.svg', colorIcon: '/matplotlib-rainbow.svg' },
 ]
 
 interface Difficulty {

@@ -774,11 +774,50 @@ function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab, on
   )
 }
 
+function getThrowMessage(speed: number): string {
+  const pick = (msgs: string[]) => msgs[Math.floor(Math.random() * msgs.length)]
+  if (speed < 2500) return pick([
+    'Gentle toss',
+    'Easy there',
+    'Baby throw',
+    'That was cute',
+    'Soft hands',
+    'Not bad',
+    'Nice flick',
+  ])
+  if (speed < 5000) return pick([
+    'Getting warmer',
+    'Decent arm',
+    'Solid throw',
+    'Now we\'re talking',
+    'Strong arm!',
+    'Impressive',
+    'That had some zip',
+  ])
+  if (speed < 10000) return pick([
+    'Serious heat',
+    'Absolute cannon',
+    'Did you play baseball?',
+    'Sheesh',
+    'Certified launcher',
+    'That card had a family',
+  ])
+  return pick([
+    'Are you okay??',
+    'Call the police',
+    'Physics left the chat',
+    'Unholy velocity',
+    'Bro chill',
+    'NASA called, they want their rocket back',
+  ])
+}
+
 export function About() {
   // order[0] = top of stack (highest z), order[last] = bottom
   const [order, setOrder] = useState(() => CARDS.map((_, i) => i))
   const [hasGrabbed, setHasGrabbed] = useState(false)
   const [lastThrowSpeed, setLastThrowSpeed] = useState<number | null>(null)
+  const [throwMessage, setThrowMessage] = useState('')
   const [marqueeActive, setMarqueeActive] = useState(false)
   const [loadedCardImages, setLoadedCardImages] = useState<Record<string, boolean>>({})
   const sectionRef = useRef<HTMLElement>(null)
@@ -878,7 +917,7 @@ export function About() {
                 imageLoaded={!!loadedCardImages[card.id]}
                 onGone={handleGone}
                 onGrab={handleGrab}
-                onThrowSpeed={setLastThrowSpeed}
+                onThrowSpeed={(speed) => { setLastThrowSpeed(speed); setThrowMessage(getThrowMessage(speed)) }}
               />
             ))}
           </div>
@@ -894,7 +933,7 @@ export function About() {
               <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" />
               <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-5.9-2.4L3.3 16.8a2 2 0 0 1 3-2.6L8 16" />
             </svg>
-            {lastThrowSpeed !== null ? `Speed: ${lastThrowSpeed.toLocaleString()} px/s` : 'Drag to throw'}
+            {lastThrowSpeed !== null ? `${throwMessage}, ${lastThrowSpeed.toLocaleString()} px/s` : 'Drag to throw'}
           </motion.p>
         </motion.div>
       </motion.div>

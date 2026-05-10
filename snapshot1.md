@@ -1,0 +1,2369 @@
+- generic [ref=e2]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "आदि" [ref=e6] [cursor=pointer]:
+        - /url: /#top
+      - navigation [ref=e7]:
+        - link "About" [ref=e8] [cursor=pointer]:
+          - /url: "#about"
+        - link "Projects" [ref=e9] [cursor=pointer]:
+          - /url: "#projects"
+        - link "Experience" [ref=e10] [cursor=pointer]:
+          - /url: "#experience"
+        - link "Education" [ref=e11] [cursor=pointer]:
+          - /url: "#education"
+        - link "Resume" [ref=e12] [cursor=pointer]:
+          - /url: /resume.html
+        - link "Contact" [ref=e13] [cursor=pointer]:
+          - /url: "#contact"
+      - generic [ref=e14]:
+        - button "Let's talk" [ref=e15] [cursor=pointer]:
+          - generic [ref=e17]:
+            - generic [ref=e18]: Let's talk
+            - img [ref=e19]
+        - link "LinkedIn profile":
+          - /url: https://www.linkedin.com/in/adi-prathapa/
+          - img "Adi Prathapa"
+  - main [ref=e21]:
+    - generic [ref=e24]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - heading "నమస్కారం, నేను ఆది|" [level=1] [ref=e2087]:
+            - generic [ref=e34]: నమస్కారం, నేను ఆది|
+          - paragraph [ref=e35]: Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI.
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - generic [ref=e38] [cursor=pointer]:
+              - img "Adi Prathapa" [ref=e39]
+              - generic:
+                - img
+            - generic [ref=e40] [cursor=pointer]:
+              - img "GitHub avatar" [ref=e41]
+              - generic:
+                - img
+          - generic [ref=e42] [cursor=pointer]:
+            - img [ref=e43]
+            - generic [ref=e45]: Click here to toss
+      - generic [ref=e48]:
+        - generic [ref=e50]:
+          - heading "About me" [level=2] [ref=e52]
+          - paragraph [ref=e53]: I'm a Computer Science student at Cornell minoring in AI, originally from Nebraska. I am really interested in building and working with full stack web apps and experimenting with ML models.
+          - paragraph [ref=e54]: Lately I've been diving deep into web3, stablecoins, and IPFS, the idea of programmable money and decentralized finance is something I enjoy working with and learning about. I'm always looking for ways to connect what I'm learning in AI with applications outside the classroom, in clubs, hackathons, and through open source work.
+          - paragraph [ref=e55]: Outside of code, I'm an Eagle Scout who still loves getting outdoors, camping, hiking, that kind of thing. When I'm not on a trail, you'll probably find me gaming, tinkering with some new tech, or catching up on anime and other shows.
+        - generic [ref=e56]:
+          - generic [ref=e57]:
+            - generic [ref=e59]: Cornell Data Strategy Meeting
+            - generic [ref=e61]: Stablecoin Presentation at Cornell Hackathon
+            - generic [ref=e63]: Formal Organizing Group
+            - generic [ref=e65]: Hiking in Robert H. Treman State Park
+            - generic [ref=e67]: Eagle Scout Project
+            - generic [ref=e69]: After Eagle Scout Board of Review
+          - paragraph [ref=e70]:
+            - img [ref=e71]
+            - text: Drag to throw
+    - generic [ref=e76]:
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - heading "Projects" [level=2] [ref=e79]
+          - generic [ref=e80]:
+            - paragraph [ref=e81]: I am a fullstack developer who mainly works in Python, Java, and for frontend in JavaScript and TypeScript. I have experience working with a variety of machine learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas, and more. My projects range from fintech applications to machine learning focused projects to apps that combine both.
+            - button "Matching" [ref=e82] [cursor=pointer]:
+              - generic [ref=e83]:
+                - img [ref=e84]
+                - text: Matching
+        - generic [ref=e90]:
+          - generic [ref=e94]:
+            - generic [ref=e95]:
+              - generic [ref=e97] [cursor=pointer]:
+                - img "React" [ref=e99]
+                - generic [ref=e100]: React
+                - generic [ref=e101]: Built interactive UIs for data visualization web applications
+                - img [ref=e102]
+              - generic [ref=e105]:
+                - generic [ref=e106] [cursor=pointer]:
+                  - img "Clerk" [ref=e108]
+                  - generic [ref=e109]: Clerk
+                  - img [ref=e110]
+                - generic [ref=e113] [cursor=pointer]:
+                  - img "Vue.js" [ref=e115]
+                  - generic [ref=e116]: Vue.js
+                  - img [ref=e117]
+              - generic [ref=e121] [cursor=pointer]:
+                - img "Python" [ref=e123]
+                - generic [ref=e124]: Python
+                - generic [ref=e125]: Trained ML models and shipped backend APIs for data insights
+                - img [ref=e126]
+              - generic [ref=e129]:
+                - generic [ref=e130] [cursor=pointer]:
+                  - img "JavaScript" [ref=e132]
+                  - generic [ref=e133]: JavaScript
+                  - img [ref=e134]
+                - generic [ref=e137] [cursor=pointer]:
+                  - img "FastAPI" [ref=e139]
+                  - generic [ref=e140]: FastAPI
+                  - img [ref=e141]
+              - generic [ref=e145] [cursor=pointer]:
+                - img "TypeScript" [ref=e147]
+                - generic [ref=e148]: TypeScript
+                - generic [ref=e149]: Architected type safe frontends for clients
+                - img [ref=e150]
+              - generic [ref=e153]:
+                - generic [ref=e154] [cursor=pointer]:
+                  - img "HTML5" [ref=e156]
+                  - generic [ref=e157]: HTML5
+                  - img [ref=e158]
+                - generic [ref=e161] [cursor=pointer]:
+                  - img "CSS3" [ref=e163]
+                  - generic [ref=e164]: CSS3
+                  - img [ref=e165]
+              - generic [ref=e169] [cursor=pointer]:
+                - img "PyTorch" [ref=e171]
+                - generic [ref=e172]: PyTorch
+                - generic [ref=e173]: Trained GRU and GraphSAGE models for complex data analysis
+                - img [ref=e174]
+              - generic [ref=e177]:
+                - generic [ref=e178] [cursor=pointer]:
+                  - img "Flask" [ref=e180]
+                  - generic [ref=e181]: Flask
+                  - img [ref=e182]
+                - generic [ref=e185] [cursor=pointer]:
+                  - img "Git" [ref=e187]
+                  - generic [ref=e188]: Git
+                  - img [ref=e189]
+              - generic [ref=e193] [cursor=pointer]:
+                - img "Node.js" [ref=e195]
+                - generic [ref=e196]: Node.js
+                - generic [ref=e197]: Deployed fullstack apps and REST APIs to founders
+                - img [ref=e198]
+              - generic [ref=e201]:
+                - generic [ref=e202] [cursor=pointer]:
+                  - img "GitHub" [ref=e204]
+                  - generic [ref=e205]: GitHub
+                  - img [ref=e206]
+                - generic [ref=e209] [cursor=pointer]:
+                  - img "Supabase" [ref=e211]
+                  - generic [ref=e212]: Supabase
+                  - img [ref=e213]
+              - generic [ref=e217] [cursor=pointer]:
+                - img "Java" [ref=e219]
+                - generic [ref=e220]: Java
+                - generic [ref=e221]: Engineered backend systems and data structures
+                - img [ref=e222]
+              - generic [ref=e225]:
+                - generic [ref=e226] [cursor=pointer]:
+                  - img "Redis" [ref=e228]
+                  - generic [ref=e229]: Redis
+                  - img [ref=e230]
+                - generic [ref=e233] [cursor=pointer]:
+                  - img "pandas" [ref=e235]
+                  - generic [ref=e236]: pandas
+                  - img [ref=e237]
+              - generic [ref=e241] [cursor=pointer]:
+                - img "NetworkX" [ref=e244]
+                - generic [ref=e245]: NetworkX
+                - generic [ref=e246]: Constructed knowledge graphs and contact networks to detect anomalies
+                - img [ref=e247]
+              - generic [ref=e250]:
+                - generic [ref=e251] [cursor=pointer]:
+                  - img "NumPy" [ref=e253]
+                  - generic [ref=e254]: NumPy
+                  - img [ref=e255]
+                - generic [ref=e258] [cursor=pointer]:
+                  - img "MongoDB" [ref=e260]
+                  - generic [ref=e261]: MongoDB
+                  - img [ref=e262]
+              - generic [ref=e266] [cursor=pointer]:
+                - img "Google ADK" [ref=e268]
+                - generic [ref=e269]: Google ADK
+                - generic [ref=e270]: Orchestrated sequential multi agent workflows
+                - img [ref=e271]
+              - generic [ref=e274]:
+                - generic [ref=e275] [cursor=pointer]:
+                  - img "D3.js" [ref=e277]
+                  - generic [ref=e278]: D3.js
+                  - img [ref=e279]
+                - generic [ref=e282] [cursor=pointer]:
+                  - img "Plotly" [ref=e284]
+                  - generic [ref=e285]: Plotly
+                  - img [ref=e286]
+              - generic [ref=e290] [cursor=pointer]:
+                - img "Confluence" [ref=e292]
+                - generic [ref=e293]: Confluence
+                - generic [ref=e294]: Documented engineering workflows and team project plans for C2S2
+                - img [ref=e295]
+              - generic [ref=e298]:
+                - generic [ref=e299] [cursor=pointer]:
+                  - img "CodeMirror" [ref=e301]
+                  - generic [ref=e302]: CodeMirror
+                  - img [ref=e303]
+                - generic [ref=e306] [cursor=pointer]:
+                  - img "YAML" [ref=e308]
+                  - generic [ref=e309]: YAML
+                  - img [ref=e310]
+              - generic [ref=e314] [cursor=pointer]:
+                - img "Apache HTTP Server" [ref=e316]
+                - generic [ref=e317]: Apache HTTP Server
+                - generic [ref=e318]: Maintained C2S2 site on Cornell's Apache HTTP Server
+                - img [ref=e319]
+              - generic [ref=e322]:
+                - generic [ref=e323] [cursor=pointer]:
+                  - img "scikit-learn" [ref=e325]
+                  - generic [ref=e326]: scikit-learn
+                  - img [ref=e327]
+                - generic [ref=e330] [cursor=pointer]:
+                  - img "Express" [ref=e332]
+                  - generic [ref=e333]: Express
+                  - img [ref=e334]
+              - generic [ref=e338] [cursor=pointer]:
+                - img "PostHog" [ref=e340]
+                - generic [ref=e341]: PostHog
+                - generic [ref=e342]: This site uses PostHog for product analytics
+                - img [ref=e343]
+              - generic [ref=e346]:
+                - generic [ref=e347] [cursor=pointer]:
+                  - img "Vercel" [ref=e349]
+                  - generic [ref=e350]: Vercel
+                  - img [ref=e351]
+                - generic [ref=e354] [cursor=pointer]:
+                  - img "TensorFlow" [ref=e356]
+                  - generic [ref=e357]: TensorFlow
+                  - img [ref=e358]
+              - generic [ref=e362] [cursor=pointer]:
+                - img "Docker" [ref=e364]
+                - generic [ref=e365]: Docker
+                - generic [ref=e366]: Containerized app services for deployable apps to clients
+                - img [ref=e367]
+              - generic [ref=e370]:
+                - generic [ref=e371] [cursor=pointer]:
+                  - img "GitHub Actions" [ref=e373]
+                  - generic [ref=e374]: GitHub Actions
+                  - img [ref=e375]
+                - generic [ref=e378] [cursor=pointer]:
+                  - img "IPFS" [ref=e380]
+                  - generic [ref=e381]: IPFS
+                  - img [ref=e382]
+              - generic [ref=e386] [cursor=pointer]:
+                - img "PostgreSQL" [ref=e388]
+                - generic [ref=e389]: PostgreSQL
+                - generic [ref=e390]: Designed relational schemas and queried analytics data for client applications
+                - img [ref=e391]
+              - generic [ref=e394]:
+                - generic [ref=e395] [cursor=pointer]:
+                  - img "Claude API" [ref=e398]
+                  - generic [ref=e399]: Claude API
+                  - img [ref=e400]
+                - generic [ref=e403] [cursor=pointer]:
+                  - img "Gemini API" [ref=e405]
+                  - generic [ref=e406]: Gemini API
+                  - img [ref=e407]
+              - generic [ref=e411] [cursor=pointer]:
+                - img "Ollama" [ref=e413]
+                - generic [ref=e414]: Ollama
+                - generic [ref=e415]: Ran local LLM inference pipelines for XAI
+                - img [ref=e416]
+              - generic [ref=e419]:
+                - generic [ref=e420] [cursor=pointer]:
+                  - img "Mistral AI" [ref=e422]
+                  - generic [ref=e423]: Mistral AI
+                  - img [ref=e424]
+                - generic [ref=e427] [cursor=pointer]:
+                  - img "Leaflet" [ref=e429]
+                  - generic [ref=e430]: Leaflet
+                  - img [ref=e431]
+              - generic [ref=e435] [cursor=pointer]:
+                - img "Hugging Face" [ref=e437]
+                - generic [ref=e438]: Hugging Face
+                - generic [ref=e439]: Pulled FineWeb shards and pretrained checkpoints from the Hub for ML training pipelines
+                - img [ref=e440]
+              - generic [ref=e443]:
+                - generic [ref=e444] [cursor=pointer]:
+                  - img "Palantir Foundry" [ref=e446]
+                  - generic [ref=e447]: Palantir Foundry
+                  - img [ref=e448]
+                - generic [ref=e451] [cursor=pointer]:
+                  - img "MediaPipe" [ref=e453]
+                  - generic [ref=e454]: MediaPipe
+                  - img [ref=e455]
+              - generic [ref=e459] [cursor=pointer]:
+                - img "CUDA" [ref=e461]
+                - generic [ref=e462]: CUDA
+                - generic [ref=e463]: Trained transformer models on H100 GPUs with FlashAttention 3 and CUDA 13
+                - img [ref=e464]
+              - generic [ref=e467]:
+                - generic [ref=e468] [cursor=pointer]:
+                  - img "ElevenLabs" [ref=e470]
+                  - generic [ref=e471]: ElevenLabs
+                  - img [ref=e472]
+                - generic [ref=e475] [cursor=pointer]:
+                  - img "Matplotlib" [ref=e478]
+                  - generic [ref=e479]: Matplotlib
+                  - img [ref=e480]
+            - generic [ref=e483]:
+              - generic [ref=e485] [cursor=pointer]:
+                - img "React" [ref=e487]
+                - generic [ref=e488]: React
+                - generic [ref=e489]: Built interactive UIs for data visualization web applications
+                - img [ref=e490]
+              - generic [ref=e493]:
+                - generic [ref=e494] [cursor=pointer]:
+                  - img "Clerk" [ref=e496]
+                  - generic [ref=e497]: Clerk
+                  - img [ref=e498]
+                - generic [ref=e501] [cursor=pointer]:
+                  - img "Vue.js" [ref=e503]
+                  - generic [ref=e504]: Vue.js
+                  - img [ref=e505]
+              - generic [ref=e509] [cursor=pointer]:
+                - img "Python" [ref=e511]
+                - generic [ref=e512]: Python
+                - generic [ref=e513]: Trained ML models and shipped backend APIs for data insights
+                - img [ref=e514]
+              - generic [ref=e517]:
+                - generic [ref=e518] [cursor=pointer]:
+                  - img "JavaScript" [ref=e520]
+                  - generic [ref=e521]: JavaScript
+                  - img [ref=e522]
+                - generic [ref=e525] [cursor=pointer]:
+                  - img "FastAPI" [ref=e527]
+                  - generic [ref=e528]: FastAPI
+                  - img [ref=e529]
+              - generic [ref=e533] [cursor=pointer]:
+                - img "TypeScript" [ref=e535]
+                - generic [ref=e536]: TypeScript
+                - generic [ref=e537]: Architected type safe frontends for clients
+                - img [ref=e538]
+              - generic [ref=e541]:
+                - generic [ref=e542] [cursor=pointer]:
+                  - img "HTML5" [ref=e544]
+                  - generic [ref=e545]: HTML5
+                  - img [ref=e546]
+                - generic [ref=e549] [cursor=pointer]:
+                  - img "CSS3" [ref=e551]
+                  - generic [ref=e552]: CSS3
+                  - img [ref=e553]
+              - generic [ref=e557] [cursor=pointer]:
+                - img "PyTorch" [ref=e559]
+                - generic [ref=e560]: PyTorch
+                - generic [ref=e561]: Trained GRU and GraphSAGE models for complex data analysis
+                - img [ref=e562]
+              - generic [ref=e565]:
+                - generic [ref=e566] [cursor=pointer]:
+                  - img "Flask" [ref=e568]
+                  - generic [ref=e569]: Flask
+                  - img [ref=e570]
+                - generic [ref=e573] [cursor=pointer]:
+                  - img "Git" [ref=e575]
+                  - generic [ref=e576]: Git
+                  - img [ref=e577]
+              - generic [ref=e581] [cursor=pointer]:
+                - img "Node.js" [ref=e583]
+                - generic [ref=e584]: Node.js
+                - generic [ref=e585]: Deployed fullstack apps and REST APIs to founders
+                - img [ref=e586]
+              - generic [ref=e589]:
+                - generic [ref=e590] [cursor=pointer]:
+                  - img "GitHub" [ref=e592]
+                  - generic [ref=e593]: GitHub
+                  - img [ref=e594]
+                - generic [ref=e597] [cursor=pointer]:
+                  - img "Supabase" [ref=e599]
+                  - generic [ref=e600]: Supabase
+                  - img [ref=e601]
+              - generic [ref=e605] [cursor=pointer]:
+                - img "Java" [ref=e607]
+                - generic [ref=e608]: Java
+                - generic [ref=e609]: Engineered backend systems and data structures
+                - img [ref=e610]
+              - generic [ref=e613]:
+                - generic [ref=e614] [cursor=pointer]:
+                  - img "Redis" [ref=e616]
+                  - generic [ref=e617]: Redis
+                  - img [ref=e618]
+                - generic [ref=e621] [cursor=pointer]:
+                  - img "pandas" [ref=e623]
+                  - generic [ref=e624]: pandas
+                  - img [ref=e625]
+              - generic [ref=e629] [cursor=pointer]:
+                - img "NetworkX" [ref=e632]
+                - generic [ref=e633]: NetworkX
+                - generic [ref=e634]: Constructed knowledge graphs and contact networks to detect anomalies
+                - img [ref=e635]
+              - generic [ref=e638]:
+                - generic [ref=e639] [cursor=pointer]:
+                  - img "NumPy" [ref=e641]
+                  - generic [ref=e642]: NumPy
+                  - img [ref=e643]
+                - generic [ref=e646] [cursor=pointer]:
+                  - img "MongoDB" [ref=e648]
+                  - generic [ref=e649]: MongoDB
+                  - img [ref=e650]
+              - generic [ref=e654] [cursor=pointer]:
+                - img "Google ADK" [ref=e656]
+                - generic [ref=e657]: Google ADK
+                - generic [ref=e658]: Orchestrated sequential multi agent workflows
+                - img [ref=e659]
+              - generic [ref=e662]:
+                - generic [ref=e663] [cursor=pointer]:
+                  - img "D3.js" [ref=e665]
+                  - generic [ref=e666]: D3.js
+                  - img [ref=e667]
+                - generic [ref=e670] [cursor=pointer]:
+                  - img "Plotly" [ref=e672]
+                  - generic [ref=e673]: Plotly
+                  - img [ref=e674]
+              - generic [ref=e678] [cursor=pointer]:
+                - img "Confluence" [ref=e680]
+                - generic [ref=e681]: Confluence
+                - generic [ref=e682]: Documented engineering workflows and team project plans for C2S2
+                - img [ref=e683]
+              - generic [ref=e686]:
+                - generic [ref=e687] [cursor=pointer]:
+                  - img "CodeMirror" [ref=e689]
+                  - generic [ref=e690]: CodeMirror
+                  - img [ref=e691]
+                - generic [ref=e694] [cursor=pointer]:
+                  - img "YAML" [ref=e696]
+                  - generic [ref=e697]: YAML
+                  - img [ref=e698]
+              - generic [ref=e702] [cursor=pointer]:
+                - img "Apache HTTP Server" [ref=e704]
+                - generic [ref=e705]: Apache HTTP Server
+                - generic [ref=e706]: Maintained C2S2 site on Cornell's Apache HTTP Server
+                - img [ref=e707]
+              - generic [ref=e710]:
+                - generic [ref=e711] [cursor=pointer]:
+                  - img "scikit-learn" [ref=e713]
+                  - generic [ref=e714]: scikit-learn
+                  - img [ref=e715]
+                - generic [ref=e718] [cursor=pointer]:
+                  - img "Express" [ref=e720]
+                  - generic [ref=e721]: Express
+                  - img [ref=e722]
+              - generic [ref=e726] [cursor=pointer]:
+                - img "PostHog" [ref=e728]
+                - generic [ref=e729]: PostHog
+                - generic [ref=e730]: This site uses PostHog for product analytics
+                - img [ref=e731]
+              - generic [ref=e734]:
+                - generic [ref=e735] [cursor=pointer]:
+                  - img "Vercel" [ref=e737]
+                  - generic [ref=e738]: Vercel
+                  - img [ref=e739]
+                - generic [ref=e742] [cursor=pointer]:
+                  - img "TensorFlow" [ref=e744]
+                  - generic [ref=e745]: TensorFlow
+                  - img [ref=e746]
+              - generic [ref=e750] [cursor=pointer]:
+                - img "Docker" [ref=e752]
+                - generic [ref=e753]: Docker
+                - generic [ref=e754]: Containerized app services for deployable apps to clients
+                - img [ref=e755]
+              - generic [ref=e758]:
+                - generic [ref=e759] [cursor=pointer]:
+                  - img "GitHub Actions" [ref=e761]
+                  - generic [ref=e762]: GitHub Actions
+                  - img [ref=e763]
+                - generic [ref=e766] [cursor=pointer]:
+                  - img "IPFS" [ref=e768]
+                  - generic [ref=e769]: IPFS
+                  - img [ref=e770]
+              - generic [ref=e774] [cursor=pointer]:
+                - img "PostgreSQL" [ref=e776]
+                - generic [ref=e777]: PostgreSQL
+                - generic [ref=e778]: Designed relational schemas and queried analytics data for client applications
+                - img [ref=e779]
+              - generic [ref=e782]:
+                - generic [ref=e783] [cursor=pointer]:
+                  - img "Claude API" [ref=e786]
+                  - generic [ref=e787]: Claude API
+                  - img [ref=e788]
+                - generic [ref=e791] [cursor=pointer]:
+                  - img "Gemini API" [ref=e793]
+                  - generic [ref=e794]: Gemini API
+                  - img [ref=e795]
+              - generic [ref=e799] [cursor=pointer]:
+                - img "Ollama" [ref=e801]
+                - generic [ref=e802]: Ollama
+                - generic [ref=e803]: Ran local LLM inference pipelines for XAI
+                - img [ref=e804]
+              - generic [ref=e807]:
+                - generic [ref=e808] [cursor=pointer]:
+                  - img "Mistral AI" [ref=e810]
+                  - generic [ref=e811]: Mistral AI
+                  - img [ref=e812]
+                - generic [ref=e815] [cursor=pointer]:
+                  - img "Leaflet" [ref=e817]
+                  - generic [ref=e818]: Leaflet
+                  - img [ref=e819]
+              - generic [ref=e823] [cursor=pointer]:
+                - img "Hugging Face" [ref=e825]
+                - generic [ref=e826]: Hugging Face
+                - generic [ref=e827]: Pulled FineWeb shards and pretrained checkpoints from the Hub for ML training pipelines
+                - img [ref=e828]
+              - generic [ref=e831]:
+                - generic [ref=e832] [cursor=pointer]:
+                  - img "Palantir Foundry" [ref=e834]
+                  - generic [ref=e835]: Palantir Foundry
+                  - img [ref=e836]
+                - generic [ref=e839] [cursor=pointer]:
+                  - img "MediaPipe" [ref=e841]
+                  - generic [ref=e842]: MediaPipe
+                  - img [ref=e843]
+              - generic [ref=e847] [cursor=pointer]:
+                - img "CUDA" [ref=e849]
+                - generic [ref=e850]: CUDA
+                - generic [ref=e851]: Trained transformer models on H100 GPUs with FlashAttention 3 and CUDA 13
+                - img [ref=e852]
+              - generic [ref=e855]:
+                - generic [ref=e856] [cursor=pointer]:
+                  - img "ElevenLabs" [ref=e858]
+                  - generic [ref=e859]: ElevenLabs
+                  - img [ref=e860]
+                - generic [ref=e863] [cursor=pointer]:
+                  - img "Matplotlib" [ref=e866]
+                  - generic [ref=e867]: Matplotlib
+                  - img [ref=e868]
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Very Hard
+                  - generic: 0:00 · 0 moves · 0/48
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PostHog"
+                            - generic: PostHog
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Gemini API"
+                            - generic: Gemini API
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "NetworkX"
+                            - generic: NetworkX
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PyTorch"
+                            - generic: PyTorch
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CodeMirror"
+                            - generic: CodeMirror
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Clerk"
+                            - generic: Clerk
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Leaflet"
+                            - generic: Leaflet
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Plotly"
+                            - generic: Plotly
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "GitHub"
+                            - generic: GitHub
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "TypeScript"
+                            - generic: TypeScript
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "TensorFlow"
+                            - generic: TensorFlow
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Supabase"
+                            - generic: Supabase
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "IPFS"
+                            - generic: IPFS
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "pandas"
+                            - generic: pandas
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Flask"
+                            - generic: Flask
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Hugging Face"
+                            - generic: Hugging Face
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Gemini API"
+                            - generic: Gemini API
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Node.js"
+                            - generic: Node.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "JavaScript"
+                            - generic: JavaScript
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "FastAPI"
+                            - generic: FastAPI
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Vue.js"
+                            - generic: Vue.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Confluence"
+                            - generic: Confluence
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "pandas"
+                            - generic: pandas
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PostgreSQL"
+                            - generic: PostgreSQL
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Vercel"
+                            - generic: Vercel
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PyTorch"
+                            - generic: PyTorch
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "D3.js"
+                            - generic: D3.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Leaflet"
+                            - generic: Leaflet
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CUDA"
+                            - generic: CUDA
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Python"
+                            - generic: Python
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Node.js"
+                            - generic: Node.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Supabase"
+                            - generic: Supabase
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "IPFS"
+                            - generic: IPFS
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "MongoDB"
+                            - generic: MongoDB
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Express"
+                            - generic: Express
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "TensorFlow"
+                            - generic: TensorFlow
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "React"
+                            - generic: React
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "MediaPipe"
+                            - generic: MediaPipe
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "D3.js"
+                            - generic: D3.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Docker"
+                            - generic: Docker
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Java"
+                            - generic: Java
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Ollama"
+                            - generic: Ollama
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Git"
+                            - generic: Git
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "React"
+                            - generic: React
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Clerk"
+                            - generic: Clerk
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Redis"
+                            - generic: Redis
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Plotly"
+                            - generic: Plotly
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "scikit-learn"
+                            - generic: scikit-learn
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PostHog"
+                            - generic: PostHog
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Gemini API"
+                            - generic: Gemini API
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "NetworkX"
+                            - generic: NetworkX
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PyTorch"
+                            - generic: PyTorch
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CodeMirror"
+                            - generic: CodeMirror
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Clerk"
+                            - generic: Clerk
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Leaflet"
+                            - generic: Leaflet
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Plotly"
+                            - generic: Plotly
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "GitHub"
+                            - generic: GitHub
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "TypeScript"
+                            - generic: TypeScript
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "TensorFlow"
+                            - generic: TensorFlow
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Supabase"
+                            - generic: Supabase
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "IPFS"
+                            - generic: IPFS
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "pandas"
+                            - generic: pandas
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Flask"
+                            - generic: Flask
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Hugging Face"
+                            - generic: Hugging Face
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Gemini API"
+                            - generic: Gemini API
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Node.js"
+                            - generic: Node.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "JavaScript"
+                            - generic: JavaScript
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "FastAPI"
+                            - generic: FastAPI
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Vue.js"
+                            - generic: Vue.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Confluence"
+                            - generic: Confluence
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "pandas"
+                            - generic: pandas
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PostgreSQL"
+                            - generic: PostgreSQL
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Vercel"
+                            - generic: Vercel
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PyTorch"
+                            - generic: PyTorch
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "D3.js"
+                            - generic: D3.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Leaflet"
+                            - generic: Leaflet
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CUDA"
+                            - generic: CUDA
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Python"
+                            - generic: Python
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Node.js"
+                            - generic: Node.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Supabase"
+                            - generic: Supabase
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "IPFS"
+                            - generic: IPFS
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "MongoDB"
+                            - generic: MongoDB
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Express"
+                            - generic: Express
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "TensorFlow"
+                            - generic: TensorFlow
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "React"
+                            - generic: React
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "MediaPipe"
+                            - generic: MediaPipe
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "D3.js"
+                            - generic: D3.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Docker"
+                            - generic: Docker
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Java"
+                            - generic: Java
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Ollama"
+                            - generic: Ollama
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Git"
+                            - generic: Git
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "React"
+                            - generic: React
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Clerk"
+                            - generic: Clerk
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Redis"
+                            - generic: Redis
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Plotly"
+                            - generic: Plotly
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "scikit-learn"
+                            - generic: scikit-learn
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Mistral AI"
+                            - generic: Mistral AI
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Vue.js"
+                            - generic: Vue.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Google ADK"
+                            - generic: Google ADK
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Claude API"
+                            - generic: Claude API
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Claude API"
+                            - generic: Claude API
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "YAML"
+                            - generic: YAML
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Google ADK"
+                            - generic: Google ADK
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Express"
+                            - generic: Express
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Apache"
+                            - generic: Apache
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "MongoDB"
+                            - generic: MongoDB
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "YAML"
+                            - generic: YAML
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Palantir"
+                            - generic: Palantir
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "NetworkX"
+                            - generic: NetworkX
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "scikit-learn"
+                            - generic: scikit-learn
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Flask"
+                            - generic: Flask
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Palantir"
+                            - generic: Palantir
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Apache"
+                            - generic: Apache
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "NumPy"
+                            - generic: NumPy
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Ollama"
+                            - generic: Ollama
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Vercel"
+                            - generic: Vercel
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "GitHub Actions"
+                            - generic: GitHub Actions
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "NumPy"
+                            - generic: NumPy
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Matplotlib"
+                            - generic: Matplotlib
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Hugging Face"
+                            - generic: Hugging Face
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "GitHub Actions"
+                            - generic: GitHub Actions
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Python"
+                            - generic: Python
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "TypeScript"
+                            - generic: TypeScript
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Redis"
+                            - generic: Redis
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CSS3"
+                            - generic: CSS3
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "JavaScript"
+                            - generic: JavaScript
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Confluence"
+                            - generic: Confluence
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CUDA"
+                            - generic: CUDA
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Java"
+                            - generic: Java
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "MediaPipe"
+                            - generic: MediaPipe
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "HTML5"
+                            - generic: HTML5
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Git"
+                            - generic: Git
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "FastAPI"
+                            - generic: FastAPI
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PostgreSQL"
+                            - generic: PostgreSQL
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CodeMirror"
+                            - generic: CodeMirror
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Docker"
+                            - generic: Docker
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CSS3"
+                            - generic: CSS3
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "GitHub"
+                            - generic: GitHub
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PostHog"
+                            - generic: PostHog
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Matplotlib"
+                            - generic: Matplotlib
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "ElevenLabs"
+                            - generic: ElevenLabs
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "HTML5"
+                            - generic: HTML5
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "ElevenLabs"
+                            - generic: ElevenLabs
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Mistral AI"
+                            - generic: Mistral AI
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Mistral AI"
+                            - generic: Mistral AI
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Vue.js"
+                            - generic: Vue.js
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Google ADK"
+                            - generic: Google ADK
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Claude API"
+                            - generic: Claude API
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Claude API"
+                            - generic: Claude API
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "YAML"
+                            - generic: YAML
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Google ADK"
+                            - generic: Google ADK
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Express"
+                            - generic: Express
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Apache"
+                            - generic: Apache
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "MongoDB"
+                            - generic: MongoDB
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "YAML"
+                            - generic: YAML
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Palantir"
+                            - generic: Palantir
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "NetworkX"
+                            - generic: NetworkX
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "scikit-learn"
+                            - generic: scikit-learn
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Flask"
+                            - generic: Flask
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Palantir"
+                            - generic: Palantir
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Apache"
+                            - generic: Apache
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "NumPy"
+                            - generic: NumPy
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Ollama"
+                            - generic: Ollama
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Vercel"
+                            - generic: Vercel
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "GitHub Actions"
+                            - generic: GitHub Actions
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "NumPy"
+                            - generic: NumPy
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Matplotlib"
+                            - generic: Matplotlib
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Hugging Face"
+                            - generic: Hugging Face
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "GitHub Actions"
+                            - generic: GitHub Actions
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Python"
+                            - generic: Python
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "TypeScript"
+                            - generic: TypeScript
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Redis"
+                            - generic: Redis
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CSS3"
+                            - generic: CSS3
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "JavaScript"
+                            - generic: JavaScript
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Confluence"
+                            - generic: Confluence
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CUDA"
+                            - generic: CUDA
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Java"
+                            - generic: Java
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "MediaPipe"
+                            - generic: MediaPipe
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "HTML5"
+                            - generic: HTML5
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Git"
+                            - generic: Git
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "FastAPI"
+                            - generic: FastAPI
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PostgreSQL"
+                            - generic: PostgreSQL
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CodeMirror"
+                            - generic: CodeMirror
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Docker"
+                            - generic: Docker
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "CSS3"
+                            - generic: CSS3
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "GitHub"
+                            - generic: GitHub
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "PostHog"
+                            - generic: PostHog
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Matplotlib"
+                            - generic: Matplotlib
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "ElevenLabs"
+                            - generic: ElevenLabs
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "HTML5"
+                            - generic: HTML5
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "ElevenLabs"
+                            - generic: ElevenLabs
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: "?"
+                          - generic:
+                            - img "Mistral AI"
+                            - generic: Mistral AI
+        - generic [ref=e874]:
+          - generic [ref=e875]:
+            - generic [ref=e1656]:
+              - generic [ref=e1657]: Jan
+              - generic [ref=e1662]: Feb
+              - generic [ref=e1666]: Mar
+              - generic [ref=e1671]: Apr
+              - generic [ref=e1675]: May
+              - generic [ref=e1680]: Jun
+              - generic [ref=e1684]: Jul
+              - generic [ref=e1688]: Aug
+              - generic [ref=e1693]: Sep
+              - generic [ref=e1697]: Oct
+              - generic [ref=e1701]: Nov
+              - generic [ref=e1706]: Dec
+            - generic [ref=e2084] [cursor=pointer]: Click to play Snake
+            - generic [ref=e2086]: 678 contributions in 2026
+          - generic [ref=e876]:
+            - heading "View my projects on GitHub" [level=2] [ref=e877]
+            - paragraph [ref=e878]: Every square is another commit toward open source work, research prototypes, and side projects. Browse the full set on GitHub.
+            - link "github.com/adiprathapa" [ref=e879] [cursor=pointer]:
+              - /url: https://github.com/adiprathapa
+              - generic [ref=e880]: github.com/adiprathapa
+              - img [ref=e881]
+      - generic [ref=e883]:
+        - generic [ref=e886]:
+          - generic [ref=e887]:
+            - generic [ref=e891]:
+              - generic [ref=e893]:
+                - generic [ref=e894]:
+                  - heading "Offline education for everyone, everywhere" [level=3] [ref=e895]
+                  - paragraph [ref=e896]: Open source contributor on FreeCodeCamp which is part of the openZIM and Kiwix projects. I engineered a YAML based CI suite for locale key validation, implemented system wide dark mode with CSS variables and CodeMirror, and refactored core Vue components for optimized markdown parsing.
+                - generic [ref=e897]:
+                  - generic [ref=e898]:
+                    - generic [ref=e899]: Vue.js
+                    - generic [ref=e900]: Pinia
+                    - generic [ref=e901]: GitHub Actions
+                    - generic [ref=e902]: YAML
+                    - generic [ref=e903]: Python
+                    - generic [ref=e904]: CodeMirror
+                  - generic [ref=e905]:
+                    - button "View Video" [ref=e906] [cursor=pointer]:
+                      - generic [ref=e908]:
+                        - generic [ref=e909]: View Video
+                        - img [ref=e910]
+                    - button "Repository" [ref=e912] [cursor=pointer]:
+                      - generic [ref=e914]:
+                        - img [ref=e915]
+                        - generic [ref=e917]: Repository
+              - img "Kiwix" [ref=e920]
+            - generic [ref=e925]:
+              - generic [ref=e927]:
+                - generic [ref=e928]:
+                  - heading "Predicting livestock disease 48 hours before symptoms appear" [level=3] [ref=e929]
+                  - paragraph [ref=e930]: Trained a GRU and GraphSAGE model over a 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.
+                - generic [ref=e931]:
+                  - generic [ref=e932]:
+                    - generic [ref=e933]: PyTorch
+                    - generic [ref=e934]: FastAPI
+                    - generic [ref=e935]: React
+                    - generic [ref=e936]: Ollama
+                    - generic [ref=e937]: D3.js
+                    - generic [ref=e938]: Mistral AI
+                    - generic [ref=e939]: NetworkX
+                    - generic [ref=e940]: scikit-learn
+                  - generic [ref=e941]:
+                    - button "View Video" [ref=e942] [cursor=pointer]:
+                      - generic [ref=e944]:
+                        - generic [ref=e945]: View Video
+                        - img [ref=e946]
+                    - button "Repository" [ref=e948] [cursor=pointer]:
+                      - generic [ref=e950]:
+                        - img [ref=e951]
+                        - generic [ref=e953]: Repository
+              - img "Tauron" [ref=e956]
+            - generic [ref=e961]:
+              - generic [ref=e963]:
+                - generic [ref=e964]:
+                  - heading "AI powered liquidity stress scoring with verifiable audit trails" [level=3] [ref=e965]
+                  - paragraph [ref=e966]: Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up multimodel LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.
+                - generic [ref=e967]:
+                  - generic [ref=e968]:
+                    - generic [ref=e969]: FastAPI
+                    - generic [ref=e970]: Claude API
+                    - generic [ref=e971]: Gemini API
+                    - generic [ref=e972]: IPFS
+                    - generic [ref=e973]: Leaflet
+                    - generic [ref=e974]: React
+                    - generic [ref=e975]: pandas
+                    - generic [ref=e976]: NumPy
+                  - generic [ref=e977]:
+                    - button "View Video" [ref=e978] [cursor=pointer]:
+                      - generic [ref=e980]:
+                        - generic [ref=e981]: View Video
+                        - img [ref=e982]
+                    - button "Repository" [ref=e984] [cursor=pointer]:
+                      - generic [ref=e986]:
+                        - img [ref=e987]
+                        - generic [ref=e989]: Repository
+              - img "Helicity" [ref=e992]
+            - generic [ref=e997]:
+              - generic [ref=e999]:
+                - generic [ref=e1000]:
+                  - heading "One click AI market sizing with TAM/SAM/SOM visualization" [level=3] [ref=e1001]
+                  - paragraph [ref=e1002]: Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.
+                - generic [ref=e1003]:
+                  - generic [ref=e1004]:
+                    - generic [ref=e1005]: JavaScript
+                    - generic [ref=e1006]: React
+                    - generic [ref=e1007]: Node.js
+                    - generic [ref=e1008]: Express
+                    - generic [ref=e1009]: MongoDB
+                    - generic [ref=e1010]: Gemini API
+                    - generic [ref=e1011]: Vercel
+                  - generic [ref=e1012]:
+                    - button "View Video" [ref=e1013] [cursor=pointer]:
+                      - generic [ref=e1015]:
+                        - generic [ref=e1016]: View Video
+                        - img [ref=e1017]
+                    - button "Repository" [ref=e1019] [cursor=pointer]:
+                      - generic [ref=e1021]:
+                        - img [ref=e1022]
+                        - generic [ref=e1024]: Repository
+              - img "ZAM" [ref=e1027]
+            - generic [ref=e1032]:
+              - generic [ref=e1034]:
+                - generic [ref=e1035]:
+                  - heading "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge" [level=3] [ref=e1036]
+                  - paragraph [ref=e1037]: Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.
+                - generic [ref=e1038]:
+                  - generic [ref=e1039]:
+                    - generic [ref=e1040]: PyTorch
+                    - generic [ref=e1041]: GNN
+                    - generic [ref=e1042]: NumPy
+                    - generic [ref=e1043]: FFT
+                    - generic [ref=e1044]: Python
+                  - button "Repository" [ref=e1046] [cursor=pointer]:
+                    - generic [ref=e1048]:
+                      - img [ref=e1049]
+                      - generic [ref=e1051]: Repository
+              - generic [ref=e1055]:
+                - img "HRT" [ref=e1056]
+                - generic [ref=e1057]: ×
+                - img "Partcl" [ref=e1058]
+            - generic [ref=e1063]:
+              - generic [ref=e1065]:
+                - generic [ref=e1066]:
+                  - heading "Real time blockchain risk analytics with Palantir Foundry" [level=3] [ref=e1067]
+                  - paragraph [ref=e1068]: Built for the Palantir Foundry FDSE technical challenge. Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry.
+                - generic [ref=e1069]:
+                  - generic [ref=e1070]:
+                    - generic [ref=e1071]: NetworkX
+                    - generic [ref=e1072]: Palantir Foundry
+                    - generic [ref=e1073]: JavaScript
+                  - generic [ref=e1074]:
+                    - button "View Video" [ref=e1075] [cursor=pointer]:
+                      - generic [ref=e1077]:
+                        - generic [ref=e1078]: View Video
+                        - img [ref=e1079]
+                    - button "Repository" [ref=e1081] [cursor=pointer]:
+                      - generic [ref=e1083]:
+                        - img [ref=e1084]
+                        - generic [ref=e1086]: Repository
+              - img "Galatea" [ref=e1089]
+            - generic [ref=e1094]:
+              - generic [ref=e1096]:
+                - generic [ref=e1097]:
+                  - heading "OpenAI Parameter Golf submission at 1.107 val bpb under 16 MB" [level=3] [ref=e1098]
+                  - paragraph [ref=e1099]: Submitted a non record entry to OpenAI's Parameter Golf, a parameter limited language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment plus an artifact fit guard that coarsens shared embeddings until the brotli compressed int6 model fits under the cap. Reached 1.107 val bpb on a single H100 across 86 FineWeb shards.
+                - generic [ref=e1100]:
+                  - generic [ref=e1101]:
+                    - generic [ref=e1102]: PyTorch
+                    - generic [ref=e1103]: CUDA
+                    - generic [ref=e1104]: FlashAttention 3
+                    - generic [ref=e1105]: Brotli
+                    - generic [ref=e1106]: SentencePiece
+                    - generic [ref=e1107]: Hugging Face
+                    - generic [ref=e1108]: Python
+                  - button "Repository" [ref=e1110] [cursor=pointer]:
+                    - generic [ref=e1112]:
+                      - img [ref=e1113]
+                      - generic [ref=e1115]: Repository
+              - img "OpenAI" [ref=e1119]
+            - generic [ref=e1124]:
+              - generic [ref=e1126]:
+                - generic [ref=e1127]:
+                  - heading "Real time 1v1 fighting powered by phone cameras and AI commentary" [level=3] [ref=e1128]
+                  - paragraph [ref=e1129]: Built for the Cornell Claude Builders Club Hackathon. A 1v1 fighting game where players throw real punches at their phone cameras while silhouettes battle in a shared browser overlay. MediaPipe pose estimation streams keypoints to a 60Hz Python game server for hit detection and damage logic, with a live AI commentator powered by Claude API and ElevenLabs TTS.
+                - generic [ref=e1130]:
+                  - generic [ref=e1131]:
+                    - generic [ref=e1132]: MediaPipe
+                    - generic [ref=e1133]: FastAPI
+                    - generic [ref=e1134]: React
+                    - generic [ref=e1135]: PixiJS
+                    - generic [ref=e1136]: Claude API
+                    - generic [ref=e1137]: ElevenLabs
+                    - generic [ref=e1138]: WebSocket
+                  - generic [ref=e1139]:
+                    - button "View Video" [ref=e1140] [cursor=pointer]:
+                      - generic [ref=e1142]:
+                        - generic [ref=e1143]: View Video
+                        - img [ref=e1144]
+                    - button "Repository" [ref=e1146] [cursor=pointer]:
+                      - generic [ref=e1148]:
+                        - img [ref=e1149]
+                        - generic [ref=e1151]: Repository
+              - img "Spectre" [ref=e1154]
+          - generic [ref=e1160]:
+            - generic [ref=e1161]:
+              - generic [ref=e1162]:
+                - heading "Experience" [level=2] [ref=e1163]
+                - paragraph [ref=e1164]: I have experience in software engineering, research, and full stack development. Looking for Summer 2027 Software and AI/ML engineering internship roles.
+              - generic [ref=e1165]:
+                - button "Work" [ref=e1166] [cursor=pointer]
+                - button "Involvement" [ref=e1167] [cursor=pointer]
+            - generic [ref=e1169]:
+              - button [ref=e1170] [cursor=pointer]:
+                - img [ref=e1171]
+              - button [ref=e1173] [cursor=pointer]:
+                - img [ref=e1174]
+              - generic [ref=e1176]:
+                - generic [ref=e1179] [cursor=pointer]:
+                  - img "MITRE" [ref=e1180]
+                  - paragraph [ref=e1183]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1186] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1187]
+                  - paragraph [ref=e1190]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1193] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1194]
+                  - paragraph [ref=e1197]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1200] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1201]
+                  - paragraph [ref=e1204]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1207] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1208]
+                  - paragraph [ref=e1211]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1214] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1215]
+                  - paragraph [ref=e1218]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1221] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1222]
+                  - paragraph [ref=e1225]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1228] [cursor=pointer]:
+                  - img "MITRE" [ref=e1229]
+                  - paragraph [ref=e1232]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1235] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1236]
+                  - paragraph [ref=e1239]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1242] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1243]
+                  - paragraph [ref=e1246]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1249] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1250]
+                  - paragraph [ref=e1253]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1256] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1257]
+                  - paragraph [ref=e1260]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1263] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1264]
+                  - paragraph [ref=e1267]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1270] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1271]
+                  - paragraph [ref=e1274]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1277] [cursor=pointer]:
+                  - img "MITRE" [ref=e1278]
+                  - paragraph [ref=e1281]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1284] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1285]
+                  - paragraph [ref=e1288]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1291] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1292]
+                  - paragraph [ref=e1295]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1298] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1299]
+                  - paragraph [ref=e1302]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1305] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1306]
+                  - paragraph [ref=e1309]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1312] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1313]
+                  - paragraph [ref=e1316]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1319] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1320]
+                  - paragraph [ref=e1323]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1326] [cursor=pointer]:
+                  - img "MITRE" [ref=e1327]
+                  - generic [ref=e1329]:
+                    - paragraph [ref=e1330]: Incoming Summer 2026
+                    - heading "Data Science Intern" [level=3] [ref=e1331]
+                    - paragraph [ref=e1332]: Working on graph neural networks and graph attention networks
+                    - generic [ref=e1333]:
+                      - generic [ref=e1335]:
+                        - img "PyTorch Geometric" [ref=e1336]
+                        - generic [ref=e1337]: PyTorch Geometric
+                      - generic [ref=e1339]:
+                        - img "Dash" [ref=e1340]
+                        - generic [ref=e1341]: Dash
+                - generic [ref=e1344] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1345]
+                  - paragraph [ref=e1348]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1351] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1352]
+                  - paragraph [ref=e1355]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1358] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1359]
+                  - paragraph [ref=e1362]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1365] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1366]
+                  - paragraph [ref=e1369]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1372] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1373]
+                  - paragraph [ref=e1376]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1379] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1380]
+                  - paragraph [ref=e1383]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1386] [cursor=pointer]:
+                  - img "MITRE" [ref=e1387]
+                  - paragraph [ref=e1390]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1393] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1394]
+                  - paragraph [ref=e1397]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1400] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1401]
+                  - paragraph [ref=e1404]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1407] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1408]
+                  - paragraph [ref=e1411]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1414] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1415]
+                  - paragraph [ref=e1418]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1421] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1422]
+                  - paragraph [ref=e1425]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1428] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1429]
+                  - paragraph [ref=e1432]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1435] [cursor=pointer]:
+                  - img "MITRE" [ref=e1436]
+                  - paragraph [ref=e1439]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1442] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1443]
+                  - paragraph [ref=e1446]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1449] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1450]
+                  - paragraph [ref=e1453]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1456] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1457]
+                  - paragraph [ref=e1460]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1463] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1464]
+                  - paragraph [ref=e1467]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1470] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1471]
+                  - paragraph [ref=e1474]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1477] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1478]
+                  - paragraph [ref=e1481]: Representing the College of Arts & Sciences to prospective students and families
+                - generic [ref=e1484] [cursor=pointer]:
+                  - img "MITRE" [ref=e1485]
+                  - paragraph [ref=e1488]: Working on graph neural networks and graph attention networks
+                - generic [ref=e1491] [cursor=pointer]:
+                  - img "Cornell Bowers CIS" [ref=e1492]
+                  - paragraph [ref=e1495]: Implementing modular class designs, data structures, and algorithms
+                - generic [ref=e1498] [cursor=pointer]:
+                  - img "Colorado School of Mines" [ref=e1499]
+                  - paragraph [ref=e1502]: Built an AI chatbot and tools to improve access to cybersecurity resources
+                - generic [ref=e1505] [cursor=pointer]:
+                  - img "University of Nebraska–Lincoln" [ref=e1506]
+                  - paragraph [ref=e1509]: Data visualization through 3D printing for Bohmian trajectories
+                - generic [ref=e1512] [cursor=pointer]:
+                  - img "Cornell Data & Strategy" [ref=e1513]
+                  - paragraph [ref=e1516]: Delivering data prediction and visualization tools to clients
+                - generic [ref=e1519] [cursor=pointer]:
+                  - img "Cornell Custom Silicon Systems" [ref=e1520]
+                  - paragraph [ref=e1523]: Designing and taping out custom silicon chips as part of a student led project team
+                - generic [ref=e1526] [cursor=pointer]:
+                  - img "Cornell Arts & Sciences" [ref=e1527]
+                  - paragraph [ref=e1530]: Representing the College of Arts & Sciences to prospective students and families
+        - generic [ref=e1534]:
+          - generic [ref=e1536]:
+            - heading "Education" [level=2] [ref=e1537]
+            - paragraph [ref=e1538]: Pursuing a B.A. in Computer Science with a minor in AI at Cornell University.
+          - generic [ref=e1545]:
+            - button "Cornell University Ithaca, NY · Anticipated 2028 B.A. Computer Science College of Arts and Sciences and Ann S. Bowers College of Computing and Information Science, minor in Artificial Intelligence. Data Structures, Object-Oriented Programming, Theory of Computation, Discrete Math, Python Design and Development, Calculus 1, Calculus 2, Linear Algebra for Engineers" [expanded] [ref=e1547] [cursor=pointer]:
+              - generic [ref=e1548]:
+                - generic [ref=e1549]:
+                  - generic [ref=e1550]: Cornell University
+                  - generic [ref=e1552]: Ithaca, NY · Anticipated 2028
+                - generic [ref=e1554]:
+                  - generic [ref=e1555]: B.A. Computer Science
+                  - generic [ref=e1556]: College of Arts and Sciences and Ann S. Bowers College of Computing and Information Science, minor in Artificial Intelligence.
+                  - generic [ref=e1558]: Data Structures, Object-Oriented Programming, Theory of Computation, Discrete Math, Python Design and Development, Calculus 1, Calculus 2, Linear Algebra for Engineers
+            - button "Millard North High School Omaha, NE" [ref=e1560] [cursor=pointer]:
+              - generic [ref=e1562]:
+                - generic [ref=e1563]: Millard North High School
+                - generic [ref=e1564]: Omaha, NE
+    - generic [ref=e1566]:
+      - generic [ref=e1569]:
+        - generic [ref=e1570]:
+          - heading "Let's work together" [level=2] [ref=e1571]:
+            - text: Let's work
+            - text: together
+          - paragraph [ref=e1572]: Have a project or opportunity in mind or just want to connect? Drop your email and I'll reach out.
+        - generic [ref=e1573]:
+          - generic [ref=e1575]:
+            - textbox "your@email.com" [ref=e1576]
+            - button "Get in touch" [ref=e1577]:
+              - generic [ref=e1578]:
+                - generic [ref=e1579]: Get in touch
+                - img [ref=e1580]
+          - generic [ref=e1582]:
+            - link [ref=e1583] [cursor=pointer]:
+              - /url: https://github.com/adiprathapa
+              - img [ref=e1584]
+            - link [ref=e1586] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/adi-prathapa
+              - img [ref=e1587]
+            - link [ref=e1589] [cursor=pointer]:
+              - /url: mailto:aprathapa01@gmail.com
+              - img [ref=e1590]
+        - generic [ref=e1594]:
+          - img "MacBook Air Midnight" [ref=e1595]
+          - generic [ref=e1596]:
+            - img "ACSU"
+          - generic [ref=e1598]:
+            - img "Riley's Way"
+          - generic [ref=e1600]:
+            - img "Tata-Cornell Institute"
+          - generic [ref=e1602]:
+            - img "Cornell Data Strategy"
+          - generic [ref=e1604]:
+            - img "TrexQuant"
+          - generic [ref=e1606]:
+            - img "C2S2"
+          - generic [ref=e1608]:
+            - img "Ampersand"
+          - generic [ref=e1610]:
+            - img "Coneflower"
+          - generic [ref=e1612]:
+            - img "Hackathons Cornell"
+          - generic [ref=e1614]:
+            - img "Cornell University"
+          - generic [ref=e1616]:
+            - img "Claude"
+          - generic [ref=e1618]:
+            - img "Google for Education"
+          - generic [ref=e1620]:
+            - img "tabs+"
+          - generic [ref=e1622]:
+            - img "CU mascot"
+          - generic [ref=e1624]:
+            - img "Claude"
+          - generic [ref=e1626]:
+            - img "YC"
+      - generic [ref=e1629]:
+        - generic "आदि" [ref=e1630]
+        - generic [ref=e1633]:
+          - navigation "Footer navigation" [ref=e1634]:
+            - heading "Explore" [level=4] [ref=e1635]
+            - link "About" [ref=e1636] [cursor=pointer]:
+              - /url: "#about"
+            - link "Projects" [ref=e1637] [cursor=pointer]:
+              - /url: "#projects"
+            - link "Experience" [ref=e1638] [cursor=pointer]:
+              - /url: "#experience"
+            - link "Education" [ref=e1639] [cursor=pointer]:
+              - /url: "#education"
+            - link "Contact" [ref=e1640] [cursor=pointer]:
+              - /url: "#contact"
+          - navigation "Resources" [ref=e1641]:
+            - heading "Resources" [level=4] [ref=e1642]
+            - link "Resume" [ref=e1643] [cursor=pointer]:
+              - /url: /resume.html
+            - link "Calendar" [ref=e1644] [cursor=pointer]:
+              - /url: /calendar.html
+          - generic [ref=e1645]:
+            - heading "Contact" [level=4] [ref=e1646]
+            - link "Email" [ref=e1647] [cursor=pointer]:
+              - /url: mailto:aprathapa01@gmail.com
+            - link "LinkedIn" [ref=e1648] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/adi-prathapa
+            - link "GitHub" [ref=e1649] [cursor=pointer]:
+              - /url: https://github.com/adiprathapa
+        - generic [ref=e1650]:
+          - link "Back to hero" [ref=e1651] [cursor=pointer]:
+            - /url: /#top
+            - text: आदि
+          - generic [ref=e1652]: © 2026 Adi Prathapa. All rights reserved.
+          - button "Back to top" [ref=e1653] [cursor=pointer]

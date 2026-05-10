@@ -171,7 +171,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
           onMouseLeave={() => { if (canHoverRef.current) setPaused(false) }}
         >
           {/* Row 1 — scrolls left */}
-          <div className="overflow-hidden">
+          <div className="conveyor-row-clip">
             <div
               className="flex gap-3 md:gap-4"
               style={{
@@ -193,7 +193,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
             </div>
           </div>
           {/* Row 2 — scrolls right */}
-          <div className="overflow-hidden">
+          <div className="conveyor-row-clip">
             <div
               className="flex gap-3 md:gap-4"
               style={{
@@ -341,8 +341,8 @@ export function ProjectsIntro() {
       {/* Marquee conveyor / Conveyor game */}
       <div
         ref={conveyorRef}
-        className="conveyor-flip-stage relative mt-6 lg:mt-10 -my-4 overflow-hidden"
-        style={{ perspective: 1200, height: lockedHeight ? lockedHeight : undefined }}
+        className="conveyor-flip-stage relative mt-6 lg:mt-10 -my-4"
+        style={{ perspective: 1200, height: lockedHeight ? lockedHeight : undefined, overflow: conveyorGameActive ? 'visible' : 'hidden' }}
       >
         <motion.div
           className="h-full"

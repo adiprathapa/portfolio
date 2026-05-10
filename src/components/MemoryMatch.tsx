@@ -113,12 +113,12 @@ export function FlipCard({
   return (
     <div
       className={`cursor-pointer shrink-0 ${sizeClass ?? defaultSizeClass}`}
-      style={{ perspective: 600 }}
+      style={{ perspective: 600, overflow: 'visible' }}
       onClick={onFlip}
     >
       <motion.div
         className="w-full h-full relative"
-        style={{ transformStyle: 'preserve-3d' }}
+        style={{ transformStyle: 'preserve-3d', overflow: 'visible', willChange: 'transform' }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.35, ease: [0.2, 0.8, 0.3, 1] }}
       >
@@ -410,7 +410,7 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
             onMouseLeave={() => setConveyorPaused(false)}
           >
             {/* Row 1 — scrolls left */}
-            <div className="overflow-hidden rounded-xl">
+            <div style={{ clipPath: 'inset(-8px 0 -8px 0 round 12px)' }}>
               <div
                 className="flex gap-2.5"
                 style={{
@@ -432,7 +432,7 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
               </div>
             </div>
             {/* Row 2 — scrolls right */}
-            <div className="overflow-hidden rounded-xl">
+            <div style={{ clipPath: 'inset(-8px 0 -8px 0 round 12px)' }}>
               <div
                 className="flex gap-2.5"
                 style={{

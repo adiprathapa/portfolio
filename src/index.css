@@ -170,7 +170,18 @@ h1, h2, h3, h4, h5, h6 {
 .conveyor-flip-stage {
   --conveyor-stage-height: min(255px, 38dvh);
   --conveyor-card-size: min(112px, 28vw, calc((var(--conveyor-stage-height) - 44px) / 2));
+  --conveyor-flip-bleed: clamp(18px, calc(var(--conveyor-card-size) * 0.25), 44px);
   height: var(--conveyor-stage-height);
+}
+
+.conveyor-row-clip {
+  overflow: visible;
+  clip-path: inset(
+    calc(-1 * var(--conveyor-flip-bleed))
+    calc(-1 * var(--conveyor-flip-bleed))
+    calc(-1 * var(--conveyor-flip-bleed))
+    calc(-1 * var(--conveyor-flip-bleed))
+  );
 }
 
 @media (max-width: 1023px) {

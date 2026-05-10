@@ -289,8 +289,8 @@ export function ProjectsIntro() {
       {/* Marquee conveyor / Conveyor game */}
       <div
         ref={conveyorRef}
-        className="relative mt-6 lg:mt-10 -my-4 overflow-hidden py-4"
-        style={{ perspective: 1200, height: lockedHeight ? lockedHeight : undefined }}
+        className="relative mt-6 lg:mt-10 -my-4 py-4"
+        style={{ overflow: 'clip', perspective: 1200, height: lockedHeight ? lockedHeight : undefined }}
       >
         <motion.div
           animate={{ rotateX: conveyorGameActive ? 180 : 0 }}
@@ -304,7 +304,7 @@ export function ProjectsIntro() {
           }}
         >
           <div
-            className="relative"
+            className="relative overflow-hidden"
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',

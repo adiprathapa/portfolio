@@ -4,6 +4,7 @@ import { ProjectMarquee } from './About'
 import { GithubHeatmap } from './GithubHeatmap'
 import { MemoryMatch, TECH_POOL, buildDeck, FlipCard, formatTime } from './MemoryMatch'
 import type { TechCard } from './MemoryMatch'
+import { RippleButton } from './ui/ripple-button'
 
 const CONVEYOR_GAME_CSS = `
 @keyframes cg-left {
@@ -125,20 +126,42 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
             Very Hard &middot; {formatTime(elapsed)} &middot; {moves} moves
           </p>
           <div className="flex gap-3">
-            <button
+            <RippleButton
               onClick={restart}
               className="px-5 py-2 rounded-full text-sm font-medium text-white cursor-pointer"
-              style={{ background: '#0671A4' }}
+              rippleColor="#38BDF8"
+              style={{
+                backgroundColor: '#0671A4',
+                border: '2px solid transparent',
+                boxShadow: '0 2px 8px rgba(6, 113, 164, 0.12)',
+                transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#055a84' }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0671A4' }}
             >
               Play Again
-            </button>
-            <button
+            </RippleButton>
+            <RippleButton
               onClick={onClose}
               className="px-5 py-2 rounded-full text-sm font-normal cursor-pointer"
-              style={{ color: '#0671A4', background: 'rgba(6, 113, 164, 0.08)', border: '1.5px solid rgba(6, 113, 164, 0.3)' }}
+              rippleColor="#38BDF8"
+              style={{
+                color: '#0671A4',
+                backgroundColor: 'transparent',
+                border: '2px solid rgba(6, 113, 164, 0.3)',
+                transition: 'background-color 0.3s, border-color 0.3s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(6, 113, 164, 0.06)'
+                e.currentTarget.style.borderColor = '#0671A4'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent'
+                e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.3)'
+              }}
             >
               Exit
-            </button>
+            </RippleButton>
           </div>
         </motion.div>
       ) : (
@@ -333,8 +356,10 @@ export function ProjectsIntro() {
             }
           }}
         >
-          <div
+          <motion.div
             className="relative h-full"
+            animate={{ opacity: conveyorGameActive ? 0 : 1 }}
+            transition={{ duration: 0.08, delay: conveyorGameActive ? 0.26 : 0.26 }}
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
@@ -352,9 +377,11 @@ export function ProjectsIntro() {
               className="pointer-events-none absolute inset-y-0 right-0 w-8 lg:w-32 z-10"
               style={{ background: 'linear-gradient(to left, #E4EFF5, transparent)' }}
             />
-          </div>
-          <div
+          </motion.div>
+          <motion.div
             className="absolute inset-0 h-full"
+            animate={{ opacity: conveyorGameActive ? 1 : 0 }}
+            transition={{ duration: 0.08, delay: conveyorGameActive ? 0.26 : 0.26 }}
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
@@ -369,7 +396,7 @@ export function ProjectsIntro() {
             >
               <ConveyorMatchGame key={conveyorGameKey} onClose={handleEndConveyorGame} />
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
 

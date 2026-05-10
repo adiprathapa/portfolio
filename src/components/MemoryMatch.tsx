@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { RippleButton } from './ui/ripple-button'
 
 export interface TechCard {
   id: number
@@ -424,20 +425,42 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
                 {difficulty?.label} &middot; {formatTime(elapsed)} &middot; {moves} moves
               </p>
               <div className="flex gap-3">
-                <button
+                <RippleButton
                   onClick={() => startGame(difficulty!)}
                   className="px-5 py-2 rounded-full text-sm font-medium text-white"
-                  style={{ background: '#0671A4' }}
+                  rippleColor="#38BDF8"
+                  style={{
+                    backgroundColor: '#0671A4',
+                    border: '2px solid transparent',
+                    boxShadow: '0 2px 8px rgba(6, 113, 164, 0.12)',
+                    transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#055a84' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0671A4' }}
                 >
                   Play Again
-                </button>
-                <button
+                </RippleButton>
+                <RippleButton
                   onClick={() => setDifficulty(null)}
                   className="px-5 py-2 rounded-full text-sm font-normal"
-                  style={{ color: '#0671A4', background: 'rgba(6, 113, 164, 0.08)', border: '1.5px solid rgba(6, 113, 164, 0.3)' }}
+                  rippleColor="#38BDF8"
+                  style={{
+                    color: '#0671A4',
+                    backgroundColor: 'transparent',
+                    border: '2px solid rgba(6, 113, 164, 0.3)',
+                    transition: 'background-color 0.3s, border-color 0.3s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(6, 113, 164, 0.06)'
+                    e.currentTarget.style.borderColor = '#0671A4'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent'
+                    e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.3)'
+                  }}
                 >
                   Change Difficulty
-                </button>
+                </RippleButton>
               </div>
             </motion.div>
           )}

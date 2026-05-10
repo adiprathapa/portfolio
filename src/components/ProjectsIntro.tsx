@@ -91,10 +91,10 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
   const row1 = cards.slice(0, Math.ceil(cards.length / 2))
   const row2 = cards.slice(Math.ceil(cards.length / 2))
 
-  const cardSize = 'w-[220px] h-[146px]'
+  const cardSize = 'w-[130px] h-[100px] md:w-[200px] md:h-[138px]'
 
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <style>{CONVEYOR_GAME_CSS}</style>
 
       {/* Stats bar */}
@@ -134,14 +134,14 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
         </motion.div>
       ) : (
         <div
-          className="flex flex-col justify-center space-y-2"
+          className="flex-1 flex flex-col justify-center space-y-2 md:space-y-3"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
           {/* Row 1 — scrolls left */}
           <div className="overflow-hidden">
             <div
-              className="flex gap-4"
+              className="flex gap-3 md:gap-4"
               style={{
                 width: 'max-content',
                 animation: 'cg-left 60s linear infinite',
@@ -163,7 +163,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
           {/* Row 2 — scrolls right */}
           <div className="overflow-hidden">
             <div
-              className="flex gap-4"
+              className="flex gap-3 md:gap-4"
               style={{
                 width: 'max-content',
                 animation: 'cg-right 65s linear infinite',
@@ -188,14 +188,13 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
   )
 }
 
-const flipTransition = { duration: 0.2, ease: [0.4, 0, 0.2, 1] }
-
 export function ProjectsIntro() {
   const [active, setActive] = useState(false)
   const [showMemoryGame, setShowMemoryGame] = useState(false)
   const [conveyorGameActive, setConveyorGameActive] = useState(false)
   const [conveyorGameKey, setConveyorGameKey] = useState(0)
   const [lockedHeight, setLockedHeight] = useState<number | undefined>(undefined)
+  const [unlockHeightAfterReturn, setUnlockHeightAfterReturn] = useState(false)
   const ref = useRef<HTMLElement>(null)
   const conveyorRef = useRef<HTMLDivElement>(null)
 
@@ -211,9 +210,11 @@ export function ProjectsIntro() {
   }, [])
 
   const handleConveyorGame = () => {
+    // Capture current height before switching
     if (conveyorRef.current) {
       setLockedHeight(conveyorRef.current.offsetHeight)
     }
+    setUnlockHeightAfterReturn(false)
     setShowMemoryGame(false)
     setConveyorGameKey((key) => key + 1)
     setConveyorGameActive(true)
@@ -224,6 +225,7 @@ export function ProjectsIntro() {
 
   const handleEndConveyorGame = () => {
     setConveyorGameActive(false)
+    setUnlockHeightAfterReturn(true)
   }
 
   return (
@@ -288,48 +290,57 @@ export function ProjectsIntro() {
       <div
         ref={conveyorRef}
         className="relative mt-6 lg:mt-10 -my-4 overflow-hidden py-4"
-        style={{ minHeight: lockedHeight || undefined }}
+        style={{ perspective: 1200, height: lockedHeight ? lockedHeight : undefined }}
       >
-        <AnimatePresence
-          mode="wait"
-          onExitComplete={() => {
-            if (!conveyorGameActive) setLockedHeight(undefined)
+        <motion.div
+          animate={{ rotateX: conveyorGameActive ? 180 : 0 }}
+          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+          style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
+          onAnimationComplete={() => {
+            if (!conveyorGameActive && unlockHeightAfterReturn) {
+              setLockedHeight(undefined)
+              setUnlockHeightAfterReturn(false)
+            }
           }}
         >
-          {conveyorGameActive ? (
-            <motion.div
-              key="game"
-              initial={{ scaleY: 0, opacity: 0 }}
-              animate={{ scaleY: 1, opacity: 1 }}
-              exit={{ scaleY: 0, opacity: 0 }}
-              transition={flipTransition}
-              style={{ transformOrigin: 'center center' }}
+          <div
+            className="relative"
+            style={{
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              pointerEvents: conveyorGameActive ? 'none' : 'auto',
+            }}
+          >
+            <div className="project-marquee">
+              <ProjectMarquee active={active && !conveyorGameActive} />
+            </div>
+            <div
+              className="pointer-events-none absolute inset-y-0 left-0 w-8 lg:w-32 z-10"
+              style={{ background: 'linear-gradient(to right, #E4EFF5, transparent)' }}
+            />
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 w-8 lg:w-32 z-10"
+              style={{ background: 'linear-gradient(to left, #E4EFF5, transparent)' }}
+            />
+          </div>
+          <div
+            className="absolute inset-0"
+            style={{
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateX(180deg)',
+              pointerEvents: conveyorGameActive ? 'auto' : 'none',
+            }}
+          >
+            <div
+              style={{
+                height: '100%',
+              }}
             >
               <ConveyorMatchGame key={conveyorGameKey} onClose={handleEndConveyorGame} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="marquee"
-              initial={{ scaleY: 0, opacity: 0 }}
-              animate={{ scaleY: 1, opacity: 1 }}
-              exit={{ scaleY: 0, opacity: 0 }}
-              transition={flipTransition}
-              style={{ transformOrigin: 'center center' }}
-            >
-              <div className="project-marquee">
-                <ProjectMarquee active={active} />
-              </div>
-              <div
-                className="pointer-events-none absolute inset-y-0 left-0 w-8 lg:w-32 z-10"
-                style={{ background: 'linear-gradient(to right, #E4EFF5, transparent)' }}
-              />
-              <div
-                className="pointer-events-none absolute inset-y-0 right-0 w-8 lg:w-32 z-10"
-                style={{ background: 'linear-gradient(to left, #E4EFF5, transparent)' }}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* GitHub heatmap */}

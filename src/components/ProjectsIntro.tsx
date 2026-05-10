@@ -101,7 +101,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
   const row1 = cards.slice(0, Math.ceil(cards.length / 2))
   const row2 = cards.slice(Math.ceil(cards.length / 2))
 
-  const cardSize = 'w-[112px] h-[82px] md:w-[200px] md:h-[138px]'
+  const cardSize = 'w-[var(--conveyor-card-size)] h-[var(--conveyor-card-size)]'
 
   return (
     <div className="h-full flex flex-col">
@@ -341,7 +341,7 @@ export function ProjectsIntro() {
       {/* Marquee conveyor / Conveyor game */}
       <div
         ref={conveyorRef}
-        className="relative mt-6 lg:mt-10 -my-4 overflow-hidden h-[255px] md:h-[340px]"
+        className="conveyor-flip-stage relative mt-6 lg:mt-10 -my-4 overflow-hidden"
         style={{ perspective: 1200, height: lockedHeight ? lockedHeight : undefined }}
       >
         <motion.div

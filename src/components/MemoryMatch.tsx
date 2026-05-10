@@ -175,6 +175,8 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
   const [elapsed, setElapsed] = useState(0)
   const [gameOver, setGameOver] = useState(false)
   const [conveyorPaused, setConveyorPaused] = useState(false)
+  const [gridCardSize, setGridCardSize] = useState(80)
+  const modalRef = useRef<HTMLDivElement>(null)
   const lockRef = useRef(false)
 
   const startGame = (diff: Difficulty) => {
@@ -250,6 +252,7 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
   const isConveyor = difficulty?.conveyor
   const row1 = cards.slice(0, Math.ceil(cards.length / 2))
   const row2 = cards.slice(Math.ceil(cards.length / 2))
+  const gridGap = 10
 
   const modalWidth = !difficulty
     ? 'w-[min(95vw,400px)]'
@@ -258,6 +261,39 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
       : difficulty.cols === 6
         ? 'w-[min(95vw,680px)]'
         : 'w-[min(95vw,520px)]'
+
+  useEffect(() => {
+    if (!difficulty || difficulty.conveyor || gameOver) return
+
+    const computeCardSize = () => {
+      const modal = modalRef.current
+      if (!modal) return
+
+      const rows = Math.ceil(cards.length / difficulty.cols)
+      const modalRect = modal.getBoundingClientRect()
+      const horizontalPadding = 40
+      const verticalPadding = 20
+      const headerHeight = modal.querySelector<HTMLElement>('[data-match-header]')?.offsetHeight ?? 72
+      const maxUsableHeight = Math.min(window.innerHeight - 32, window.innerHeight * 0.9)
+      const availableWidth = modalRect.width - horizontalPadding
+      const availableHeight = maxUsableHeight - headerHeight - verticalPadding
+      const widthFit = (availableWidth - gridGap * (difficulty.cols - 1)) / difficulty.cols
+      const heightFit = (availableHeight - gridGap * (rows - 1)) / rows
+      const idealSize = difficulty.cols === 4 ? 104 : 96
+      const nextSize = Math.max(44, Math.floor(Math.min(widthFit, heightFit, idealSize)))
+
+      setGridCardSize(nextSize)
+    }
+
+    computeCardSize()
+    window.addEventListener('resize', computeCardSize)
+    const ro = new ResizeObserver(computeCardSize)
+    if (modalRef.current) ro.observe(modalRef.current)
+    return () => {
+      window.removeEventListener('resize', computeCardSize)
+      ro.disconnect()
+    }
+  }, [cards.length, difficulty, gameOver])
 
   return (
     <motion.div
@@ -271,16 +307,17 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
     >
       {isConveyor && <style>{CONVEYOR_CSS}</style>}
       <motion.div
+        ref={modalRef}
         initial={{ opacity: 0, scale: 0.92, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
         transition={{ duration: 0.3, ease: [0.2, 0.8, 0.3, 1] }}
         className={`relative rounded-2xl shadow-2xl overflow-hidden ${modalWidth}`}
-        style={{ background: 'rgba(239, 243, 248, 0.95)', backdropFilter: 'blur(20px)', border: '1.5px solid rgba(6, 113, 164, 0.3)' }}
+        style={{ background: 'rgba(239, 243, 248, 0.95)', backdropFilter: 'blur(20px)', border: '1.5px solid rgba(6, 113, 164, 0.3)', maxHeight: 'calc(100dvh - 32px)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-4 pb-2">
+        <div data-match-header className="flex items-center justify-between px-5 pt-4 pb-2">
           <div>
             <h3 className="text-lg font-normal" style={{ color: '#0671A4' }}>Matching Game</h3>
             <p className="text-xs mt-0.5" style={{ color: 'rgba(6, 113, 164, 0.5)' }}>
@@ -342,7 +379,14 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
         {/* Grid mode */}
         {difficulty && !isConveyor && !gameOver && (
           <div className="px-5 pb-5 pt-2">
-            <div className="grid gap-2.5" style={{ gridTemplateColumns: `repeat(${difficulty.cols}, 1fr)` }}>
+            <div
+              className="grid justify-center"
+              style={{
+                gap: gridGap,
+                gridTemplateColumns: `repeat(${difficulty.cols}, ${gridCardSize}px)`,
+                '--match-card-size': `${gridCardSize}px`,
+              } as React.CSSProperties}
+            >
               {cards.map((card) => (
                 <FlipCard
                   key={card.id}
@@ -350,7 +394,8 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
                   isFlipped={flipped.has(card.id) || matched.has(card.id)}
                   isMatched={matched.has(card.id)}
                   onFlip={() => handleFlip(card.id)}
-                  small={difficulty.cols === 6}
+                  small={gridCardSize < 82}
+                  sizeClass="w-[var(--match-card-size)] h-[var(--match-card-size)]"
                 />
               ))}
             </div>

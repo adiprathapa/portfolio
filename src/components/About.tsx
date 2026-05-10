@@ -613,15 +613,54 @@ const CARDS: {
   { id: 'card-5', image: '/coh.png', caption: 'After Eagle Scout Board of Review', bgSize: '180%', bgPosition: 'center center' },
 ]
 
-function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab }: {
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
+
+function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab, onThrowSpeed }: {
   card: typeof CARDS[number]
   zIndex: number
   rotation: number
   imageLoaded: boolean
   onGone: (id: string) => void
   onGrab?: () => void
+  onThrowSpeed?: (speed: number) => void
 }) {
   const controls = useAnimation()
+  const cardRef = useRef<HTMLDivElement>(null)
+  const throwSampleRef = useRef({
+    lastTime: 0,
+    lastVx: 0,
+    lastVy: 0,
+    peakSpeed: 0,
+    peakAcceleration: 0,
+  })
+
+  const resetThrowSample = useCallback(() => {
+    throwSampleRef.current = {
+      lastTime: performance.now(),
+      lastVx: 0,
+      lastVy: 0,
+      peakSpeed: 0,
+      peakAcceleration: 0,
+    }
+    onGrab?.()
+  }, [onGrab])
+
+  const sampleThrowMotion = useCallback((_: unknown, info: PanInfo) => {
+    const now = performance.now()
+    const sample = throwSampleRef.current
+    const dt = Math.max((now - sample.lastTime) / 1000, 0.016)
+    const speed = Math.hypot(info.velocity.x, info.velocity.y)
+    const acceleration = Math.hypot(
+      info.velocity.x - sample.lastVx,
+      info.velocity.y - sample.lastVy
+    ) / dt
+
+    sample.lastTime = now
+    sample.lastVx = info.velocity.x
+    sample.lastVy = info.velocity.y
+    sample.peakSpeed = Math.max(sample.peakSpeed, speed)
+    sample.peakAcceleration = Math.max(sample.peakAcceleration, acceleration)
+  }, [])
 
   const handleDragEnd = useCallback(async (_: unknown, info: PanInfo) => {
     const vx = info.velocity.x
@@ -629,14 +668,53 @@ function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab }: 
     const speed = Math.sqrt(vx * vx + vy * vy)
 
     if (speed > 300) {
-      const s = 2000 / speed
+      onThrowSpeed?.(Math.round(speed))
+      const { peakSpeed, peakAcceleration } = throwSampleRef.current
+      const releaseForce = clamp((speed - 300) / 1800, 0, 1)
+      const peakForce = clamp((peakSpeed - 300) / 2600, 0, 1)
+      const accelerationForce = clamp((peakAcceleration - 1800) / 22000, 0, 1)
+      const rawThrowForce = clamp(releaseForce * 0.45 + peakForce * 0.3 + accelerationForce * 0.25, 0, 1)
+      const throwForce = Math.pow(rawThrowForce, 0.72)
+      const viewportExitDistance = clamp(Math.hypot(window.innerWidth, window.innerHeight) * 0.68, 680, 1300)
+      const forceDistance = viewportExitDistance * (0.7 + throwForce * 0.22)
+      const directionX = vx / speed
+      const directionY = vy / speed
+      const rect = cardRef.current?.getBoundingClientRect()
+      const cardCenterX = rect ? rect.left + rect.width / 2 : window.innerWidth / 2
+      const cardCenterY = rect ? rect.top + rect.height / 2 : window.innerHeight / 2
+      const exitX = directionX > 0
+        ? (window.innerWidth - cardCenterX) / directionX
+        : directionX < 0
+          ? -cardCenterX / directionX
+          : Number.POSITIVE_INFINITY
+      const exitY = directionY > 0
+        ? (window.innerHeight - cardCenterY) / directionY
+        : directionY < 0
+          ? -cardCenterY / directionY
+          : Number.POSITIVE_INFINITY
+      const distanceToEdge = Math.min(exitX, exitY)
+      const clearDistance = Number.isFinite(distanceToEdge)
+        ? distanceToEdge + Math.max(rect?.width ?? 400, rect?.height ?? 420)
+        : viewportExitDistance
+      const throwDistance = Math.max(forceDistance, clearDistance)
+      const speedFloor = 2000
+      const speedCeiling = 100000
+      const clampedSpeed = clamp(speed, speedFloor, speedCeiling)
+      const speedRange = Math.log(clampedSpeed / speedFloor) / Math.log(speedCeiling / speedFloor)
+      const speedCurve = Math.pow(speedRange, 0.55)
+      const visualPixelsPerSecond = (620 + speedCurve * 2600) * 1.5
+      const throwDuration = clamp(throwDistance / visualPixelsPerSecond, 0.32, 1.8)
+      const spinDirection = vx >= 0 ? 1 : -1
+      const spin = spinDirection * (7 + throwForce * 24)
+
       await controls.start({
-        x: vx * s,
-        y: vy * s,
-        transition: { duration: 0.5, ease: 'easeOut' },
+        x: info.offset.x + directionX * throwDistance,
+        y: info.offset.y + directionY * throwDistance,
+        rotate: rotation + spin,
+        transition: { duration: throwDuration, ease: 'linear' },
       })
       onGone(card.id)
-      controls.set({ x: 0, y: 0, scale: 0.95 })
+      controls.set({ x: 0, y: 0, rotate: rotation, scale: 0.95 })
       await controls.start({
         opacity: 1,
         scale: 1,
@@ -649,12 +727,14 @@ function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab }: 
         transition: { type: 'spring', stiffness: 300, damping: 25 },
       })
     }
-  }, [controls, card.id, onGone])
+  }, [controls, card.id, onGone, onThrowSpeed, rotation])
 
   return (
     <motion.div
+      ref={cardRef}
       drag
-      onDragStart={onGrab}
+      onDragStart={resetThrowSample}
+      onDrag={sampleThrowMotion}
       dragElastic={0.8}
       dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
       onDragEnd={handleDragEnd}
@@ -698,6 +778,7 @@ export function About() {
   // order[0] = top of stack (highest z), order[last] = bottom
   const [order, setOrder] = useState(() => CARDS.map((_, i) => i))
   const [hasGrabbed, setHasGrabbed] = useState(false)
+  const [lastThrowSpeed, setLastThrowSpeed] = useState<number | null>(null)
   const [marqueeActive, setMarqueeActive] = useState(false)
   const [loadedCardImages, setLoadedCardImages] = useState<Record<string, boolean>>({})
   const sectionRef = useRef<HTMLElement>(null)
@@ -797,14 +878,15 @@ export function About() {
                 imageLoaded={!!loadedCardImages[card.id]}
                 onGone={handleGone}
                 onGrab={handleGrab}
+                onThrowSpeed={setLastThrowSpeed}
               />
             ))}
           </div>
           <motion.p
             className="mt-4 lg:mt-6 flex items-center gap-2 text-sm select-none"
             style={{ color: 'rgba(6, 113, 164, 0.45)' }}
-            animate={hasGrabbed ? { opacity: 0 } : { x: [0, 6, -6, 0] }}
-            transition={hasGrabbed ? { duration: 0.2 } : { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
+            animate={lastThrowSpeed !== null ? { opacity: 1, x: 0 } : hasGrabbed ? { opacity: 0 } : { x: [0, 6, -6, 0] }}
+            transition={lastThrowSpeed !== null || hasGrabbed ? { duration: 0.2 } : { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v0" />
@@ -812,7 +894,7 @@ export function About() {
               <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" />
               <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-5.9-2.4L3.3 16.8a2 2 0 0 1 3-2.6L8 16" />
             </svg>
-            Drag to throw
+            {lastThrowSpeed !== null ? `Speed: ${lastThrowSpeed.toLocaleString()} px/s` : 'Drag to throw'}
           </motion.p>
         </motion.div>
       </motion.div>

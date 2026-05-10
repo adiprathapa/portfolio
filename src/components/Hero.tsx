@@ -182,6 +182,7 @@ export function Hero() {
   const [hoveredWordIndex, setHoveredWordIndex] = useState<number | null>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [coinAngle, setCoinAngle] = useState(0)
+  const [coinHovered, setCoinHovered] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -196,7 +197,26 @@ export function Hero() {
   const lastSideRef = useRef<'linkedin' | 'github' | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const h1Ref = useRef<HTMLHeadingElement>(null)
+  const coinRef = useRef<HTMLDivElement>(null)
   const { displayText, current } = useTypewriter(greetings, tooltipActive, 120, 60, 2000)
+  const coinFaceAngle = ((coinAngle % 360) + 360) % 360
+  const currentCoinSide = coinFaceAngle > 90 && coinFaceAngle < 270 ? 'github' : 'linkedin'
+  const showCoinHoverOverlay = coinHovered && !isMobile && !isSpinning
+
+  const updateCoinHover = (clientX: number, clientY: number) => {
+    if (isMobile) return
+
+    const rect = coinRef.current?.getBoundingClientRect()
+    if (!rect) return
+
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+    const radius = Math.min(rect.width, rect.height) / 2
+    const dx = clientX - centerX
+    const dy = clientY - centerY
+
+    setCoinHovered(dx * dx + dy * dy <= radius * radius)
+  }
 
   const tossCoin = () => {
     if (isSpinning) return
@@ -406,9 +426,13 @@ export function Hero() {
           className="shrink-0 w-62 md:w-84 relative group"
           style={{ aspectRatio: '1 / 1', marginRight: -30, perspective: 800 }}
           onTouchStart={(e) => {
+            setCoinHovered(false)
             const touch = e.touches[0]
             ;(e.currentTarget as HTMLElement).dataset.touchX = String(touch.clientX)
           }}
+          onMouseEnter={(e) => updateCoinHover(e.clientX, e.clientY)}
+          onMouseMove={(e) => updateCoinHover(e.clientX, e.clientY)}
+          onMouseLeave={() => setCoinHovered(false)}
           onTouchEnd={(e) => {
             const startX = Number((e.currentTarget as HTMLElement).dataset.touchX ?? 0)
             const endX = e.changedTouches[0].clientX
@@ -420,6 +444,7 @@ export function Hero() {
           }}
         >
           <div
+            ref={coinRef}
             className="absolute block"
             style={{
               width: '85%',
@@ -465,8 +490,8 @@ export function Hero() {
                   borderRadius: '50%',
                   background: 'rgba(0, 0, 0, 0.35)',
                   transition: 'opacity 0.3s ease',
-                  opacity: !isSpinning && tossCount > 0 && lastSide === 'linkedin' ? 1 : 0,
-                  pointerEvents: !isSpinning && tossCount > 0 && lastSide === 'linkedin' ? 'auto' : 'none',
+                  opacity: showCoinHoverOverlay && currentCoinSide === 'linkedin' ? 1 : 0,
+                  pointerEvents: showCoinHoverOverlay && currentCoinSide === 'linkedin' ? 'auto' : 'none',
                   cursor: 'pointer',
                 }}
               >
@@ -505,8 +530,8 @@ export function Hero() {
                   borderRadius: '50%',
                   background: 'rgba(0, 0, 0, 0.35)',
                   transition: 'opacity 0.3s ease',
-                  opacity: !isSpinning && tossCount > 0 && lastSide === 'github' ? 1 : 0,
-                  pointerEvents: !isSpinning && tossCount > 0 && lastSide === 'github' ? 'auto' : 'none',
+                  opacity: showCoinHoverOverlay && currentCoinSide === 'github' ? 1 : 0,
+                  pointerEvents: showCoinHoverOverlay && currentCoinSide === 'github' ? 'auto' : 'none',
                   cursor: 'pointer',
                 }}
               >

@@ -94,7 +94,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
   const cardSize = 'w-[220px] h-[146px]'
 
   return (
-    <div className="h-full flex flex-col">
+    <div>
       <style>{CONVEYOR_GAME_CSS}</style>
 
       {/* Stats bar */}
@@ -134,14 +134,14 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
         </motion.div>
       ) : (
         <div
-          className="flex-1 flex flex-col justify-center space-y-2"
+          className="flex flex-col justify-center space-y-2"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
           {/* Row 1 — scrolls left */}
           <div className="overflow-hidden">
             <div
-              className="flex gap-3 md:gap-4"
+              className="flex gap-4"
               style={{
                 width: 'max-content',
                 animation: 'cg-left 60s linear infinite',
@@ -163,7 +163,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
           {/* Row 2 — scrolls right */}
           <div className="overflow-hidden">
             <div
-              className="flex gap-3 md:gap-4"
+              className="flex gap-4"
               style={{
                 width: 'max-content',
                 animation: 'cg-right 65s linear infinite',
@@ -188,15 +188,14 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
   )
 }
 
+const flipTransition = { duration: 0.2, ease: [0.4, 0, 0.2, 1] }
+
 export function ProjectsIntro() {
   const [active, setActive] = useState(false)
   const [showMemoryGame, setShowMemoryGame] = useState(false)
   const [conveyorGameActive, setConveyorGameActive] = useState(false)
   const [conveyorGameKey, setConveyorGameKey] = useState(0)
   const [lockedHeight, setLockedHeight] = useState<number | undefined>(undefined)
-  const [unlockHeightAfterReturn, setUnlockHeightAfterReturn] = useState(false)
-  // JS-controlled face visibility — Safari ignores backfaceVisibility in overflow contexts
-  const [showFront, setShowFront] = useState(true)
   const ref = useRef<HTMLElement>(null)
   const conveyorRef = useRef<HTMLDivElement>(null)
 
@@ -211,19 +210,10 @@ export function ProjectsIntro() {
     return () => observer.disconnect()
   }, [])
 
-  // Swap face visibility at the midpoint of the flip (when both faces are edge-on at 90deg)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowFront(!conveyorGameActive)
-    }, 300) // half of 0.6s transition
-    return () => clearTimeout(timer)
-  }, [conveyorGameActive])
-
   const handleConveyorGame = () => {
     if (conveyorRef.current) {
       setLockedHeight(conveyorRef.current.offsetHeight)
     }
-    setUnlockHeightAfterReturn(false)
     setShowMemoryGame(false)
     setConveyorGameKey((key) => key + 1)
     setConveyorGameActive(true)
@@ -234,7 +224,6 @@ export function ProjectsIntro() {
 
   const handleEndConveyorGame = () => {
     setConveyorGameActive(false)
-    setUnlockHeightAfterReturn(true)
   }
 
   return (
@@ -298,54 +287,49 @@ export function ProjectsIntro() {
       {/* Marquee conveyor / Conveyor game */}
       <div
         ref={conveyorRef}
-        className="relative mt-6 lg:mt-10 -my-4 py-4"
-        style={{ overflow: 'clip', perspective: 1200, height: lockedHeight ? lockedHeight : undefined }}
+        className="relative mt-6 lg:mt-10 -my-4 overflow-hidden py-4"
+        style={{ minHeight: lockedHeight || undefined }}
       >
-        <motion.div
-          animate={{ rotateX: conveyorGameActive ? 180 : 0 }}
-          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
-          onAnimationComplete={() => {
-            if (!conveyorGameActive && unlockHeightAfterReturn) {
-              setLockedHeight(undefined)
-              setUnlockHeightAfterReturn(false)
-            }
+        <AnimatePresence
+          mode="wait"
+          onExitComplete={() => {
+            if (!conveyorGameActive) setLockedHeight(undefined)
           }}
         >
-          {/* Front face: marquee */}
-          <div
-            className="relative overflow-hidden"
-            style={{
-              visibility: showFront ? 'visible' : 'hidden',
-              pointerEvents: conveyorGameActive ? 'none' : 'auto',
-            }}
-          >
-            <div className="project-marquee">
-              <ProjectMarquee active={active && !conveyorGameActive} />
-            </div>
-            <div
-              className="pointer-events-none absolute inset-y-0 left-0 w-8 lg:w-32 z-10"
-              style={{ background: 'linear-gradient(to right, #E4EFF5, transparent)' }}
-            />
-            <div
-              className="pointer-events-none absolute inset-y-0 right-0 w-8 lg:w-32 z-10"
-              style={{ background: 'linear-gradient(to left, #E4EFF5, transparent)' }}
-            />
-          </div>
-          {/* Back face: game */}
-          <div
-            className="absolute inset-0"
-            style={{
-              visibility: showFront ? 'hidden' : 'visible',
-              transform: 'rotateX(180deg)',
-              pointerEvents: conveyorGameActive ? 'auto' : 'none',
-            }}
-          >
-            <div style={{ height: '100%' }}>
+          {conveyorGameActive ? (
+            <motion.div
+              key="game"
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 1 }}
+              exit={{ scaleY: 0, opacity: 0 }}
+              transition={flipTransition}
+              style={{ transformOrigin: 'center center' }}
+            >
               <ConveyorMatchGame key={conveyorGameKey} onClose={handleEndConveyorGame} />
-            </div>
-          </div>
-        </motion.div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="marquee"
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 1 }}
+              exit={{ scaleY: 0, opacity: 0 }}
+              transition={flipTransition}
+              style={{ transformOrigin: 'center center' }}
+            >
+              <div className="project-marquee">
+                <ProjectMarquee active={active} />
+              </div>
+              <div
+                className="pointer-events-none absolute inset-y-0 left-0 w-8 lg:w-32 z-10"
+                style={{ background: 'linear-gradient(to right, #E4EFF5, transparent)' }}
+              />
+              <div
+                className="pointer-events-none absolute inset-y-0 right-0 w-8 lg:w-32 z-10"
+                style={{ background: 'linear-gradient(to left, #E4EFF5, transparent)' }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* GitHub heatmap */}

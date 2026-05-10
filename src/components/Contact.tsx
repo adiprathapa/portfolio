@@ -1,11 +1,98 @@
 import { type FormEvent, type CSSProperties, useRef, useState, useEffect, useCallback } from 'react'
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, animate } from 'framer-motion'
 import { Button } from './ui/button'
 import { usePostHog } from '@posthog/react'
 
-function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOffsetX, hoverArea, disabled, rotation }: { src: string; alt: string; label: string; style: CSSProperties; tooltipTop?: number; tooltipBottom?: number; tooltipOffsetX?: number; hoverArea?: CSSProperties; disabled?: boolean; rotation?: number }) {
+function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOffsetX, hoverArea, disabled, rotation, constraintsRef }: { src: string; alt: string; label: string; style: CSSProperties; tooltipTop?: number; tooltipBottom?: number; tooltipOffsetX?: number; hoverArea?: CSSProperties; disabled?: boolean; rotation?: number; constraintsRef?: React.RefObject<HTMLDivElement | null> }) {
   const [hovered, setHovered] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
   const stickerRef = useRef<HTMLDivElement>(null)
+  const peelRef = useRef<HTMLDivElement>(null)
+  const dragX = useMotionValue(0)
+  const dragY = useMotionValue(0)
+  const lastTapRef = useRef(0)
+  // Opaque pixel insets (fraction of image on each side that is transparent)
+  const [opaqueInsets, setOpaqueInsets] = useState<{ top: number; left: number; right: number; bottom: number } | null>(null)
+  const [dragBounds, setDragBounds] = useState<{ top: number; left: number; right: number; bottom: number } | undefined>()
+
+  const resetPosition = useCallback(() => {
+    animate(dragX, 0, { type: 'spring', stiffness: 300, damping: 25 })
+    animate(dragY, 0, { type: 'spring', stiffness: 300, damping: 25 })
+  }, [dragX, dragY])
+
+  // Scan image pixels to find the bounding box of non-transparent content
+  useEffect(() => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.naturalWidth
+      canvas.height = img.naturalHeight
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      ctx.drawImage(img, 0, 0)
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+      let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0
+      for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+          if (data[(y * canvas.width + x) * 4 + 3] > 10) {
+            if (x < minX) minX = x
+            if (y < minY) minY = y
+            if (x > maxX) maxX = x
+            if (y > maxY) maxY = y
+          }
+        }
+      }
+      if (maxX >= minX && maxY >= minY) {
+        setOpaqueInsets({
+          top: minY / canvas.height,
+          left: minX / canvas.width,
+          right: 1 - (maxX + 1) / canvas.width,
+          bottom: 1 - (maxY + 1) / canvas.height,
+        })
+      }
+    }
+    img.src = src
+  }, [src])
+
+  // Compute drag bounds from opaque pixel edges and lid surface, correcting for parent transforms
+  useEffect(() => {
+    if (disabled || !constraintsRef?.current || !stickerRef.current || !opaqueInsets) {
+      setDragBounds(undefined)
+      return
+    }
+    const id = requestAnimationFrame(() => {
+      const lidEl = constraintsRef?.current
+      const el = stickerRef.current
+      if (!lidEl || !el) return
+      const lid = lidEl.getBoundingClientRect()
+      const rect = el.getBoundingClientRect()
+      // Lid surface edges (inset from SVG viewBox padding)
+      const lidLeft = lid.left + lid.width * 0.035
+      const lidTop = lid.top + lid.height * 0.05
+      const lidRight = lid.right - lid.width * 0.035
+      const lidBottom = lid.bottom - lid.height * 0.045
+      // Account for whileDrag scale (sticker grows 1.1x from center while dragging)
+      const dragScale = 1.1
+      const growX = rect.width * (dragScale - 1) / 2
+      const growY = rect.height * (dragScale - 1) / 2
+      // Visible content edges at dragged size (using pixel-scanned opaque bounds)
+      const visLeft = rect.left - growX + opaqueInsets.left * (rect.width * dragScale)
+      const visTop = rect.top - growY + opaqueInsets.top * (rect.height * dragScale)
+      const visRight = rect.right + growX - opaqueInsets.right * (rect.width * dragScale)
+      const visBottom = rect.bottom + growY - opaqueInsets.bottom * (rect.height * dragScale)
+      // Convert from viewport space to element-local space (parent scale + zoom)
+      const scaleX = rect.width / el.offsetWidth || 1
+      const scaleY = rect.height / el.offsetHeight || 1
+      setDragBounds({
+        top: (lidTop - visTop) / scaleY,
+        left: (lidLeft - visLeft) / scaleX,
+        right: (lidRight - visRight) / scaleX,
+        bottom: (lidBottom - visBottom) / scaleY,
+      })
+    })
+    return () => cancelAnimationFrame(id)
+  }, [disabled, constraintsRef, opaqueInsets])
 
   useEffect(() => {
     if (!hovered) return
@@ -21,7 +108,7 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
   )
 
   const mouseHandlers = disabled || isTouchDevice ? {} : {
-    onMouseEnter: () => setHovered(true),
+    onMouseEnter: () => { if (!isDragging) setHovered(true) },
     onMouseLeave: () => setHovered(false),
   }
 
@@ -46,25 +133,82 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
   }, [tooltipOffsetX])
 
   return (
-    <div
+    <motion.div
       ref={stickerRef}
       className="absolute select-none"
-      style={{ ...style, zIndex: hovered ? 100 : undefined }}
+      style={{
+        ...style,
+        x: dragX,
+        y: dragY,
+        zIndex: isDragging ? 1000 : hovered ? 100 : undefined,
+        cursor: disabled ? 'default' : isDragging ? 'grabbing' : 'grab',
+      }}
+      drag={!disabled}
+      dragConstraints={dragBounds}
+      dragMomentum={false}
+      dragElastic={0}
+      onDragStart={() => {
+        setIsDragging(true)
+        setHovered(false)
+        if (peelRef.current) {
+          animate(peelRef.current, {
+            rotateX: [0, 18, 4, 0],
+            scale: [1, 1.04, 1.08, 1.1],
+            filter: [
+              'drop-shadow(0 1px 2px rgba(0,0,0,0.1))',
+              'drop-shadow(0 8px 14px rgba(0,0,0,0.28))',
+              'drop-shadow(0 10px 20px rgba(0,0,0,0.32))',
+              'drop-shadow(0 12px 24px rgba(0,0,0,0.35))',
+            ],
+          }, { duration: 0.3, ease: [0.33, 0, 0.2, 1] })
+        }
+      }}
+      onDragEnd={() => {
+        setIsDragging(false)
+        if (peelRef.current) {
+          animate(peelRef.current, {
+            rotateX: [0, -5, 1, 0],
+            scale: [1.1, 0.96, 1.01, 1],
+            filter: [
+              'drop-shadow(0 12px 24px rgba(0,0,0,0.35))',
+              'drop-shadow(0 2px 4px rgba(0,0,0,0.15))',
+              'drop-shadow(0 2px 5px rgba(0,0,0,0.1))',
+              'drop-shadow(0 1px 2px rgba(0,0,0,0.08))',
+            ],
+          }, { duration: 0.3, ease: [0.33, 0, 0.2, 1] })
+        }
+      }}
+      onTap={() => {
+        const now = Date.now()
+        if (now - lastTapRef.current < 300) resetPosition()
+        lastTapRef.current = now
+      }}
       {...(hoverArea ? {} : mouseHandlers)}
     >
       {hoverArea && (
-        <div className="absolute" style={{ ...hoverArea, cursor: 'default' }} {...mouseHandlers} />
+        <div className="absolute" style={{ ...hoverArea, cursor: 'inherit' }} {...mouseHandlers} />
       )}
-      <img
-        src={src}
-        alt={alt}
-        className="w-full h-auto pointer-events-none"
-        style={{
-          transition: 'transform 0.2s ease',
-          transform: `${rotation ? `rotate(${rotation}deg) ` : ''}${hovered ? 'scale(1.08)' : 'scale(1)'}`,
-        }}
-      />
-      {hovered && (
+      <div style={{ perspective: 600 }}>
+        <div
+          ref={peelRef}
+          style={{
+            transformOrigin: 'center top',
+            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.08))',
+            willChange: 'transform, filter',
+          }}
+        >
+          <img
+            src={src}
+            alt={alt}
+            className="w-full h-auto pointer-events-none"
+            style={{
+              transition: isDragging ? 'none' : 'transform 0.2s ease',
+              transform: `${rotation ? `rotate(${rotation}deg) ` : ''}${hovered && !isDragging ? 'scale(1.08)' : 'scale(1)'}`,
+            }}
+          />
+        </div>
+      </div>
+      {hovered && !isDragging && (
         <div
           ref={tooltipRefCb}
           className="absolute whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-medium pointer-events-none"
@@ -82,7 +226,7 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
           {label}
         </div>
       )}
-    </div>
+    </motion.div>
   )
 }
 
@@ -141,6 +285,7 @@ export function Contact() {
   }, [isLg])
 
   const laptopRef = useRef<HTMLDivElement>(null)
+  const lidRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: laptopRef,
     offset: ['start end', 'end start'],
@@ -359,6 +504,7 @@ export function Contact() {
             }}
           >
             <motion.div
+              ref={lidRef}
               className="relative w-full"
               style={{
                 maxWidth: '78rem',
@@ -380,28 +526,28 @@ export function Contact() {
 
               {/* Stickers on lid — rendered bottom-to-top so upper stickers layer correctly */}
               {/* Row bottom */}
-              <Sticker disabled={!laptopOpen} src="/sticker-acsu2.png" alt="ACSU" label="From Association of Computer Science Undergraduates" tooltipTop={-56} style={{ bottom: 'calc(10% + 18px)', left: 'calc(68% + 17px)', width: '23.3%' }} hoverArea={{ top: '5%', left: '2%', width: '96%', height: '89%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-acsu.png" alt="Riley's Way" label="From Team Mentor Role at Riley's Way Retreat '26" tooltipTop={-56} style={{ bottom: 'calc(10% + 11px)', left: 'calc(55% - 13px)', width: '16%' }} hoverArea={{ top: '4%', left: '6%', width: '83%', height: '96%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-tata.png" alt="Tata-Cornell Institute" label="From Cornell Food Hackathon Sponsored by Tata-Cornell Institute" tooltipTop={0} style={{ bottom: 'calc(10% - 31px)', left: 'calc(30% - 86px)', width: '37%' }} hoverArea={{ top: '33%', left: '20%', width: '69%', height: '36%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-data.png" alt="Cornell Data Strategy" label="From Cornell Data Strategy" tooltipTop={-19} style={{ bottom: 'calc(10% - 40px)', left: 'calc(6% - 72px)', width: '37%' }} hoverArea={{ top: '24%', left: '32%', width: '36%', height: '47%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-acsu2.png" alt="ACSU" label="From Association of Computer Science Undergraduates" tooltipTop={-56} style={{ bottom: 'calc(10% + 18px)', left: 'calc(68% + 17px)', width: '23.3%' }} hoverArea={{ top: '5%', left: '2%', width: '96%', height: '89%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-acsu.png" alt="Riley's Way" label="From Team Mentor Role at Riley's Way Retreat '26" tooltipTop={-56} style={{ bottom: 'calc(10% + 11px)', left: 'calc(55% - 13px)', width: '16%' }} hoverArea={{ top: '4%', left: '6%', width: '83%', height: '96%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-tata.png" alt="Tata-Cornell Institute" label="From Cornell Food Hackathon Sponsored by Tata-Cornell Institute" tooltipTop={0} style={{ bottom: 'calc(10% - 31px)', left: 'calc(30% - 86px)', width: '37%' }} hoverArea={{ top: '33%', left: '20%', width: '69%', height: '36%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-data.png" alt="Cornell Data Strategy" label="From Cornell Data Strategy" tooltipTop={-19} style={{ bottom: 'calc(10% - 40px)', left: 'calc(6% - 72px)', width: '37%' }} hoverArea={{ top: '24%', left: '32%', width: '36%', height: '47%', zIndex: 10 }} />
               {/* Row middle */}
-              <Sticker disabled={!laptopOpen} src="/sticker-frog.png" alt="TrexQuant" label="From first Career Fair at Cornell" tooltipTop={-56} style={{ bottom: 'calc(10% + 91px)', left: 'calc(70% + 40px)', width: '14.4%' }} hoverArea={{ top: '7%', left: '8%', width: '85%', height: '85%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-c2s2.png" alt="C2S2" label="From Cornell Custom Silicon Systems" tooltipTop={-56} style={{ bottom: isLg ? 'calc(10% + 105px)' : 'calc(10% + 110px)', left: 'calc(55% + 20px)', width: '15.04%' }} hoverArea={{ top: '5%', left: '5%', width: '92%', height: '92%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-gemini-char.png" alt="Ampersand" label="From Cornell Days '26" tooltipTop={-56} style={{ bottom: 'calc(10% + 115px)', left: 'calc(8% - 10px)', width: '18%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-gemini.png" alt="Coneflower" label="From my favorite creamery in Omaha, NE" tooltipTop={-56} tooltipOffsetX={11} style={{ bottom: 'calc(10% + 90px)', left: 'calc(30% - 63px)', width: '28.52%' }} hoverArea={{ top: '5%', left: '14%', width: '78%', height: '91%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-purple.png" alt="Hackathons Cornell" label="From first hackathon at Cornell" tooltipTop={-56} style={{ bottom: isLg ? 'calc(10% + 210px)' : 'calc(10% + 215px)', left: 'calc(70% + 20px)', width: '22%' }} hoverArea={{ top: '10%', left: '4%', width: '94%', height: '76%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-frog.png" alt="TrexQuant" label="From first Career Fair at Cornell" tooltipTop={-56} style={{ bottom: 'calc(10% + 91px)', left: 'calc(70% + 40px)', width: '14.4%' }} hoverArea={{ top: '7%', left: '8%', width: '85%', height: '85%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-c2s2.png" alt="C2S2" label="From Cornell Custom Silicon Systems" tooltipTop={-56} style={{ bottom: isLg ? 'calc(10% + 105px)' : 'calc(10% + 110px)', left: 'calc(55% + 20px)', width: '15.04%' }} hoverArea={{ top: '5%', left: '5%', width: '92%', height: '92%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-gemini-char.png" alt="Ampersand" label="From Cornell Days '26" tooltipTop={-56} style={{ bottom: 'calc(10% + 115px)', left: 'calc(8% - 10px)', width: '18%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-gemini.png" alt="Coneflower" label="From my favorite creamery in Omaha, NE" tooltipTop={-56} tooltipOffsetX={11} style={{ bottom: 'calc(10% + 90px)', left: 'calc(30% - 63px)', width: '28.52%' }} hoverArea={{ top: '5%', left: '14%', width: '78%', height: '91%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-purple.png" alt="Hackathons Cornell" label="From first hackathon at Cornell" tooltipTop={-56} style={{ bottom: isLg ? 'calc(10% + 210px)' : 'calc(10% + 215px)', left: 'calc(70% + 20px)', width: '22%' }} hoverArea={{ top: '10%', left: '4%', width: '94%', height: '76%', zIndex: 10 }} />
               {/* Row top */}
-              <Sticker disabled={!laptopOpen} src="/sticker-nell.png" alt="Cornell University" label="From Orientation Week" tooltipTop={-59} style={{ bottom: isLg ? 'calc(10% + 260px)' : 'calc(10% + 285px)', left: 'calc(70% + 40px)', width: '16.2%' }} hoverArea={{ top: '0%', left: '2%', width: '96%', height: '97%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-claude.png" alt="Claude" label="From Claude Builders Club" tooltipTop={-37} style={{ bottom: isLg ? 'calc(10% + 197px)' : 'calc(10% + 202px)', left: 'calc(52% + 25px)', width: '18%' }} hoverArea={{ top: '16%', left: '12%', width: '77%', height: '68%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-tabs.png" alt="Google for Education" label="From event at Okenshields" tooltipTop={-37} style={{ bottom: isLg ? 'calc(10% + 315px)' : 'calc(10% + 340px)', left: 'calc(34% + 130px)', width: '19.8%' }} hoverArea={{ top: '25%', left: '3%', width: '95%', height: '72%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-tab.png" alt="tabs+" label="From Cornell AI Hackathon hosted at tabs" tooltipTop={-40} style={{ bottom: isLg ? 'calc(10% + 243px)' : 'calc(10% + 253px)', left: isLg ? 'calc(16% + 180px)' : 'calc(16% + 185px)', width: '12.6%' }} hoverArea={{ top: '12%', left: '5%', width: '91%', height: '71%', zIndex: 10 }} />
-              <Sticker disabled={!laptopOpen} src="/sticker-cu.png" alt="CU mascot" label="From Georgetown '24 Civic Innovation Academy" tooltipTop={-35} style={{ bottom: isLg ? 'calc(10% + 280px)' : 'calc(10% + 305px)', left: 'calc(2% + 225px)', width: '12.6%' }} hoverArea={{ top: '20%', left: '6%', width: '91%', height: '67%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-nell.png" alt="Cornell University" label="From Orientation Week" tooltipTop={-59} style={{ bottom: isLg ? 'calc(10% + 260px)' : 'calc(10% + 285px)', left: 'calc(70% + 40px)', width: '16.2%' }} hoverArea={{ top: '0%', left: '2%', width: '96%', height: '97%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-claude.png" alt="Claude" label="From Claude Builders Club" tooltipTop={-37} style={{ bottom: isLg ? 'calc(10% + 197px)' : 'calc(10% + 202px)', left: 'calc(52% + 25px)', width: '18%' }} hoverArea={{ top: '16%', left: '12%', width: '77%', height: '68%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-tabs.png" alt="Google for Education" label="From event at Okenshields" tooltipTop={-37} style={{ bottom: isLg ? 'calc(10% + 315px)' : 'calc(10% + 340px)', left: 'calc(34% + 130px)', width: '19.8%' }} hoverArea={{ top: '25%', left: '3%', width: '95%', height: '72%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-tab.png" alt="tabs+" label="From Cornell AI Hackathon hosted at tabs" tooltipTop={-40} style={{ bottom: isLg ? 'calc(10% + 243px)' : 'calc(10% + 253px)', left: isLg ? 'calc(16% + 180px)' : 'calc(16% + 185px)', width: '12.6%' }} hoverArea={{ top: '12%', left: '5%', width: '91%', height: '71%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-cu.png" alt="CU mascot" label="From Georgetown '24 Civic Innovation Academy" tooltipTop={-35} style={{ bottom: isLg ? 'calc(10% + 280px)' : 'calc(10% + 305px)', left: 'calc(2% + 225px)', width: '12.6%' }} hoverArea={{ top: '20%', left: '6%', width: '91%', height: '67%', zIndex: 10 }} />
 
               {/* Claude confused — left of Coneflower, below YC */}
-              <Sticker disabled={!laptopOpen} src="/sticker-claude-confused.png" alt="Claude" label="From Claude Builders Club Hackathon" tooltipTop={-56} rotation={30} style={{ bottom: isLg ? 'calc(10% + 209px)' : 'calc(10% + 219px)', left: 'calc(8% + 40px)', width: '18%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-claude-confused.png" alt="Claude" label="From Claude Builders Club Hackathon" tooltipTop={-56} rotation={30} style={{ bottom: isLg ? 'calc(10% + 209px)' : 'calc(10% + 219px)', left: 'calc(8% + 40px)', width: '18%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
 
               {/* YC sticker — top left of lid */}
-              <Sticker disabled={!laptopOpen} src="/gemini-sticker.png" alt="YC" label="From YC @ Cornell" tooltipTop={-21} style={{ top: isLg ? 'calc(10% - 51px)' : 'calc(10% - 59px)', bottom: 'auto', left: 'calc(8% + 5px)', width: '20%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
+              <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/gemini-sticker.png" alt="YC" label="From YC @ Cornell" tooltipTop={-21} style={{ top: isLg ? 'calc(10% - 51px)' : 'calc(10% - 59px)', bottom: 'auto', left: 'calc(8% + 5px)', width: '20%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
 
               {/* Apple logo — dark, like on real Midnight MacBook */}
               <img

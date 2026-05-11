@@ -104,11 +104,12 @@ function ListRow({
       <span className={`block ${isActive ? 'px-6 py-9 sm:px-7 lg:px-8' : 'px-6 py-8 sm:px-7 sm:py-9 lg:px-8'}`} style={{ paddingTop: isActive ? '2.694rem' : '2.444rem', paddingBottom: isActive ? '2.694rem' : '2.444rem' }}>
         <span className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
           <span
-            className="text-lg sm:text-xl lg:text-2xl font-medium leading-tight"
+            className="font-medium leading-tight"
             style={{
               color: isActive ? '#111827' : '#202321',
               overflowWrap: 'anywhere',
               transition: 'color 0.25s ease',
+              fontSize: 'clamp(1.125rem, 0.75vw + 0.75rem, 1.5rem)',
             }}
           >
             {item.school}
@@ -133,14 +134,14 @@ function ListRow({
             >
               <span className="block pt-6">
                 <span
-                  className="block text-base sm:text-lg leading-relaxed"
-                  style={{ color: '#515850' }}
+                  className="block leading-relaxed"
+                  style={{ color: '#515850', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
                 >
                   {item.degree}
                 </span>
                 <span
-                  className="mt-5 block text-base sm:text-lg leading-relaxed"
-                  style={{ color: '#515850' }}
+                  className="mt-5 block leading-relaxed"
+                  style={{ color: '#515850', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
                 >
                   {item.description}
                 </span>
@@ -148,8 +149,8 @@ function ListRow({
                   {item.bullets.map((bullet) => (
                     <span
                       key={bullet}
-                      className="block text-base sm:text-lg leading-relaxed"
-                      style={{ color: '#515850' }}
+                      className="block leading-relaxed"
+                      style={{ color: '#515850', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
                     >
                       {bullet}
                     </span>
@@ -201,12 +202,12 @@ export function Education() {
       <div>
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
-          <GradientText as="h2" className="text-2xl md:text-3xl font-normal">
+          <GradientText as="h2" className="font-normal" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
             Education
           </GradientText>
           <p
-            className="mt-3 max-w-2xl text-base md:text-lg leading-relaxed"
-            style={{ color: '#4B5563' }}
+            className="mt-3 max-w-2xl leading-relaxed"
+            style={{ color: '#4B5563', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
           >
             {activeId === 'cornell'
               ? 'Pursuing a B.A. in Computer Science with a minor in AI at Cornell University.'

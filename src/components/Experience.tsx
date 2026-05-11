@@ -324,16 +324,17 @@ function CarouselCard({
                 {item.duration}
               </p>
               <h3
-                className="text-xl font-semibold mt-1.5 leading-snug"
-                style={{ color: '#FFFFFF', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
+                className="font-semibold mt-1.5 leading-snug"
+                style={{ color: '#FFFFFF', textShadow: '0 1px 4px rgba(0,0,0,0.3)', fontSize: 'clamp(1.125rem, 0.75vw + 0.75rem, 1.5rem)' }}
               >
                 {item.role}
               </h3>
               <p
-                className="text-lg mt-2.5 leading-relaxed"
+                className="mt-2.5 leading-relaxed"
                 style={{
                   color: 'rgba(255,255,255,0.88)',
                   textShadow: '0 1px 3px rgba(0,0,0,0.3)',
+                  fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)',
                 }}
               >
                 {item.description}
@@ -350,10 +351,11 @@ function CarouselCard({
           ) : (
             <div>
               <p
-                className="text-lg leading-relaxed"
+                className="leading-relaxed"
                 style={{
                   color: 'rgba(255,255,255,0.88)',
                   textShadow: '0 1px 3px rgba(0,0,0,0.4)',
+                  fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)',
                 }}
               >
                 {item.description}
@@ -655,12 +657,12 @@ export function Experience() {
         {/* Header row: description text + toggle */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <GradientText as="h2" className="text-2xl md:text-3xl font-normal">
+            <GradientText as="h2" className="font-normal" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
               Experience
             </GradientText>
             <p
-              className="mt-3 text-base md:text-lg leading-relaxed max-w-2xl"
-              style={{ color: '#4B5563' }}
+              className="mt-3 leading-relaxed max-w-2xl"
+              style={{ color: '#4B5563', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
             >
               I have experience in software engineering, research, and full stack development.
               Looking for Summer 2027 Software and AI/ML engineering internship roles.
@@ -887,7 +889,7 @@ export function Experience() {
               className="mt-10 flex items-center justify-center"
               style={{ minHeight: 300 }}
             >
-              <p className="text-base" style={{ color: '#94A3B8' }}>
+              <p style={{ color: '#94A3B8', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>
                 More coming soon.
               </p>
             </motion.div>

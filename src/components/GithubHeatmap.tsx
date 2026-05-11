@@ -661,12 +661,12 @@ export function GithubHeatmap() {
 
         {/* ── text panel ── */}
         <div className="order-1 lg:order-2 w-full lg:w-auto lg:max-w-md lg:text-right lg:shrink-0">
-          <h2 className="text-2xl md:text-3xl font-normal gradient-text">
+          <h2 className="font-normal gradient-text" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
             View my projects on GitHub
           </h2>
           <p
-            className="mt-3 text-base md:text-lg leading-relaxed"
-            style={{ color: '#4B5563' }}
+            className="mt-3 leading-relaxed"
+            style={{ color: '#4B5563', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
           >
             Every square is another commit toward open source work, research
             prototypes, and side projects. Browse the full set on GitHub.
@@ -675,8 +675,8 @@ export function GithubHeatmap() {
             href="https://github.com/adiprathapa"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 mt-4 text-base md:text-lg font-medium transition-opacity hover:opacity-70"
-            style={{ color: '#0671A4' }}
+            className="inline-flex items-center gap-1.5 mt-4 font-medium transition-opacity hover:opacity-70"
+            style={{ color: '#0671A4', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
             onMouseEnter={() => setLinkHov(true)}
             onMouseLeave={() => setLinkHov(false)}
           >

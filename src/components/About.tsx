@@ -881,21 +881,21 @@ export function About() {
         <motion.div variants={heroChild}>
           <motion.div className="lg:-mt-[16px]" variants={staggerContainer}>
             <motion.div variants={heroChild}>
-              <GradientText as="h2" className="text-2xl lg:text-3xl font-normal mb-1">
+              <GradientText as="h2" className="font-normal mb-1" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
                 About me
               </GradientText>
             </motion.div>
-            <motion.p variants={heroChild} className="text-black text-lg lg:text-xl leading-relaxed mb-4">
+            <motion.p variants={heroChild} className="text-black leading-relaxed mb-4" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>
               I'm a Computer Science student at Cornell minoring in AI, originally
               from Nebraska. I am really interested in building and working with full stack web
               apps and experimenting with ML models.
             </motion.p>
-            <motion.p variants={heroChild} className="text-black text-lg lg:text-xl leading-relaxed mb-4">
+            <motion.p variants={heroChild} className="text-black leading-relaxed mb-4" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>
               Lately I've been diving deep into web3, stablecoins, and IPFS, the idea of
               programmable money and decentralized finance is something I enjoy working with and learning about. I'm always looking for ways to connect what I'm learning in AI
               with applications outside the classroom, in clubs, hackathons, and through open source work.
             </motion.p>
-            <motion.p variants={heroChild} className="text-black text-lg lg:text-xl leading-relaxed">
+            <motion.p variants={heroChild} className="text-black leading-relaxed" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>
               Outside of code, I'm an Eagle Scout who still loves getting outdoors,
               camping, hiking, that kind of thing. When I'm not on a trail, you'll
               probably find me gaming, tinkering with some new tech, or catching up

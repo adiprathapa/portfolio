@@ -342,8 +342,8 @@ export function Contact() {
           {/* Top text — heading + description */}
           <div className="order-1 lg:col-start-1 lg:row-start-1">
             <h2
-              className="text-2xl md:text-3xl font-normal mb-6 leading-tight text-left"
-              style={{ color: '#FFFFFF' }}
+              className="font-normal mb-6 leading-tight text-left"
+              style={{ color: '#FFFFFF', fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}
             >
               Let's work
               <br />
@@ -351,7 +351,8 @@ export function Contact() {
             </h2>
 
             <p
-              className="text-black text-lg md:text-xl lg:mb-10 max-w-lg leading-relaxed"
+              className="text-black lg:mb-10 max-w-lg leading-relaxed"
+              style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
             >
               Have a project or opportunity in mind or just want to connect? Drop your email and
               I'll reach out.
@@ -365,7 +366,7 @@ export function Contact() {
               className="mb-12 text-center lg:text-left"
             >
               {submitted ? (
-                <p className="text-white text-lg md:text-xl leading-relaxed">Thanks! I'll be in touch soon.</p>
+                <p className="text-white leading-relaxed" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>Thanks! I'll be in touch soon.</p>
               ) : (
                 <>
                   <div className="glassmorphism mx-auto flex max-w-md flex-col items-stretch gap-2 rounded-xl p-2 sm:flex-row sm:items-center lg:mx-0">

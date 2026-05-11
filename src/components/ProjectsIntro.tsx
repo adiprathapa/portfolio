@@ -121,7 +121,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center justify-center py-16 md:py-20"
         >
-          <p className="text-2xl font-normal mb-1" style={{ color: '#0671A4' }}>Nice!</p>
+          <p className="font-normal mb-1" style={{ color: '#0671A4', fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>Nice!</p>
           <p className="text-sm mb-5" style={{ color: 'rgba(6, 113, 164, 0.5)' }}>
             Very Hard &middot; {formatTime(elapsed)} &middot; {moves} moves
           </p>
@@ -264,11 +264,11 @@ export function ProjectsIntro() {
     <section ref={ref} id="projects-intro" className="pt-6 pb-0 lg:pt-12" style={{ background: '#E4EFF5' }}>
       {/* Projects heading + description */}
       <div className="mx-auto max-w-7xl px-6">
-        <h2 className="text-2xl lg:text-3xl font-normal gradient-text">
+        <h2 className="font-normal gradient-text" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
           Projects
         </h2>
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mt-2">
-          <p className="text-black text-base lg:text-xl leading-relaxed max-w-4xl">
+          <p className="text-black leading-relaxed max-w-4xl" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>
             I am a fullstack developer who mainly works in Python, Java, and for frontend
             in JavaScript and TypeScript. I have experience working with a variety of machine
             learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas,

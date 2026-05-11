@@ -319,7 +319,7 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
         {/* Header */}
         <div data-match-header className="flex items-center justify-between px-5 pt-4 pb-2">
           <div>
-            <h3 className="text-lg font-normal" style={{ color: '#0671A4' }}>Matching Game</h3>
+            <h3 className="font-normal" style={{ color: '#0671A4', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>Matching Game</h3>
             <p className="text-xs mt-0.5" style={{ color: 'rgba(6, 113, 164, 0.5)' }}>
               {difficulty ? `${difficulty.label} · ${difficulty.description}` : 'Match the tech stack pairs'}
             </p>
@@ -465,7 +465,7 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
               exit={{ opacity: 0 }}
               className="flex flex-col items-center justify-center py-12"
             >
-              <p className="text-2xl font-normal mb-1" style={{ color: '#0671A4' }}>Nice!</p>
+              <p className="font-normal mb-1" style={{ color: '#0671A4', fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>Nice!</p>
               <p className="text-sm mb-5" style={{ color: 'rgba(6, 113, 164, 0.5)' }}>
                 {difficulty?.label} &middot; {formatTime(elapsed)} &middot; {moves} moves
               </p>

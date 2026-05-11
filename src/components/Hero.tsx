@@ -308,7 +308,7 @@ export function Hero() {
         >
           <h1
             ref={h1Ref}
-            className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-heading tracking-tight whitespace-nowrap"
+            className="font-heading font-bold text-heading tracking-tight whitespace-nowrap"
             style={{ lineHeight: 1.3, minHeight: '2.6em', fontSize: 'clamp(2rem, 5vw, 4.5rem)' }}
           >
             <span
@@ -410,10 +410,11 @@ export function Hero() {
         {/* Subtitle */}
         <motion.p
           variants={heroChild}
-          className="text-lg md:text-xl text-black mb-10 max-w-md mx-auto md:mx-0"
+          className="text-black mb-10 max-w-md mx-auto md:mx-0"
           style={{
             marginTop: isMobile ? '-20px' : tooltipActive ? '92px' : '-76px',
             transition: 'margin-top 280ms ease',
+            fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)',
           }}
         >
           Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI.
@@ -622,13 +623,14 @@ export function Hero() {
           >
             {/* Text clone — scaled from cursor point */}
             <h1
-              className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-heading tracking-tight absolute whitespace-nowrap"
+              className="font-heading font-bold text-heading tracking-tight absolute whitespace-nowrap"
               style={{
                 left: cloneLeft,
                 top: cloneTop,
                 transform: `scale(${MAGNIFY})`,
                 transformOrigin: `${originX}px ${originY}px`,
                 lineHeight: 1.2,
+                fontSize: 'clamp(2rem, 5vw, 4.5rem)',
               }}
             >
               <span className="text-primary">

@@ -187,7 +187,7 @@ export function Navbar() {
                   window.location.href = CALENDAR_PAGE_URL
                 }}
               >
-                <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
                   <span>Let's talk</span>
                   <svg
                     width="14"

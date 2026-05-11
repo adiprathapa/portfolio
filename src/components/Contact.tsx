@@ -889,7 +889,7 @@ export function Contact() {
                       <img src={gameStickers[gameRound].src} alt={gameStickers[gameRound].name} className="w-8 h-8 object-contain" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium" style={{ color: '#111827' }}>
+                      <p className="font-medium" style={{ color: '#111827', fontSize: isLg ? '0.875rem' : 'clamp(0.7rem, 3.2vw, 0.875rem)', whiteSpace: 'nowrap' }}>
                         {roundAccuracy !== null ? (
                           <>
                             {getAccuracyMessage(roundAccuracy)} <span style={{ color: '#0671A4' }}>{roundAccuracy}%</span>

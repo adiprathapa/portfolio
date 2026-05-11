@@ -18,7 +18,18 @@ const resourceLinks = [
 
 export function Footer() {
   const wordRef = useRef<HTMLDivElement>(null)
+  const paintCanvasRef = useRef<HTMLCanvasElement>(null)
   const [maskReady, setMaskReady] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const update = () => setIsDesktop(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     const el = wordRef.current
@@ -49,6 +60,98 @@ export function Footer() {
     applyCanvasMask()
   }, [])
 
+  useEffect(() => {
+    if (!isDesktop) return
+    const wordEl = wordRef.current
+    const canvas = paintCanvasRef.current
+    if (!wordEl || !canvas) return
+
+    const W = 1200
+    const H = 780
+    canvas.width = W
+    canvas.height = H
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(0, 0, W, H)
+
+    let lastX: number | null = null
+    let lastY: number | null = null
+    let lastClientX: number | null = null
+    let lastClientY: number | null = null
+
+    const erase = (x: number, y: number, radius: number) => {
+      ctx.globalCompositeOperation = 'destination-out'
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, radius)
+      grad.addColorStop(0, 'rgba(0,0,0,1)')
+      grad.addColorStop(0.55, 'rgba(0,0,0,0.5)')
+      grad.addColorStop(1, 'rgba(0,0,0,0)')
+      ctx.fillStyle = grad
+      ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2)
+    }
+
+    const paintAtClient = (clientX: number, clientY: number) => {
+      const rect = wordEl.getBoundingClientRect()
+      if (rect.width === 0 || rect.height === 0) return
+      if (
+        clientX < rect.left ||
+        clientX > rect.right ||
+        clientY < rect.top ||
+        clientY > rect.bottom
+      ) {
+        lastX = null
+        lastY = null
+        return
+      }
+      const x = ((clientX - rect.left) / rect.width) * W
+      const y = ((clientY - rect.top) / rect.height) * H
+      const radius = 110
+
+      if (lastX !== null && lastY !== null) {
+        const dx = x - lastX
+        const dy = y - lastY
+        const dist = Math.hypot(dx, dy)
+        const steps = Math.max(1, Math.ceil(dist / (radius * 0.3)))
+        for (let i = 1; i <= steps; i++) {
+          const t = i / steps
+          erase(lastX + dx * t, lastY + dy * t, radius)
+        }
+      } else {
+        erase(x, y, radius)
+      }
+
+      lastX = x
+      lastY = y
+    }
+
+    const handlePointerMove = (e: PointerEvent) => {
+      lastClientX = e.clientX
+      lastClientY = e.clientY
+      paintAtClient(e.clientX, e.clientY)
+    }
+
+    let scrollRaf = 0
+    const handleScroll = () => {
+      if (lastClientX === null || lastClientY === null) return
+      if (scrollRaf) return
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = 0
+        if (lastClientX !== null && lastClientY !== null) {
+          paintAtClient(lastClientX, lastClientY)
+        }
+      })
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('scroll', handleScroll)
+      if (scrollRaf) cancelAnimationFrame(scrollRaf)
+    }
+  }, [isDesktop])
+
   const handleFooterLinkClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     if (href.startsWith('#')) {
       e.preventDefault()
@@ -75,6 +178,13 @@ export function Footer() {
             playsInline
             preload="auto"
           />
+          {isDesktop && (
+            <canvas
+              ref={paintCanvasRef}
+              className="video-footer__paint"
+              aria-hidden
+            />
+          )}
         </div>
 
         <div className="video-footer__content">

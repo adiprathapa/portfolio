@@ -11,6 +11,7 @@
 }
 
 .video-footer__word {
+  position: relative;
   aspect-ratio: 1200 / 780;
   width: min(100%, 1560px);
   margin-inline: auto;
@@ -22,6 +23,14 @@
   mask-repeat: no-repeat;
   -webkit-mask-size: contain;
   mask-size: contain;
+}
+
+.video-footer__paint {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 .video-footer__svg {

@@ -187,14 +187,13 @@ export function FlipSafari({
             >
             <div>
             <h3
-              className="font-normal font-heading text-left gradient-text"
-              style={{ lineHeight: 1.16, fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}
+              className="font-normal font-heading text-left text-[16px] lg:text-[clamp(1.5rem,1vw+1rem,1.875rem)] gradient-text"
+              style={{ lineHeight: 1.16 }}
             >
               {projectTagline || projectName}
             </h3>
             <p
-              className="mt-2 leading-relaxed text-left text-heading"
-              style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
+              className="mt-2 text-[13px] leading-[1.3] lg:leading-relaxed text-left text-heading lg:text-[clamp(1rem,0.5vw+0.75rem,1.25rem)]"
             >
               {projectDescription}
             </p>

@@ -334,7 +334,8 @@ export function Contact() {
     target: laptopRef,
     offset: ['start end', 'end start'],
   })
-  const rotateX = useTransform(scrollYProgress, [0, 0.4], [70, 0], { clamp: true })
+  const laptopOpenProgress = isLg ? 0.4 : 0.24
+  const rotateX = useTransform(scrollYProgress, [0, laptopOpenProgress], [70, 0], { clamp: true })
   const scale = useTransform(scrollYProgress, [0, 0.4], [0.935, 1.1], { clamp: true })
   const [laptopOpen, setLaptopOpen] = useState(false)
   useMotionValueEvent(rotateX, 'change', (v) => setLaptopOpen(v <= 1))

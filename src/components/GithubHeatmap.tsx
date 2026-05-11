@@ -372,7 +372,7 @@ export function GithubHeatmap() {
     lineHeight: 1,
     minHeight: 34,
     padding: '0 14px',
-    backgroundColor: '#EFF3F8',
+    backgroundColor: '#E4EFF5',
     transition: 'background-color 0.3s, border-color 0.3s, color 0.3s',
   } satisfies CSSProperties
 
@@ -592,11 +592,11 @@ export function GithubHeatmap() {
                         rippleColor="#38BDF8"
                         style={gameButtonStyle}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(6, 113, 164, 0.06)'
+                          e.currentTarget.style.backgroundColor = '#D7E8F1'
                           e.currentTarget.style.borderColor = '#0671A4'
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#EFF3F8'
+                          e.currentTarget.style.backgroundColor = '#E4EFF5'
                           e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.3)'
                         }}
                         onClick={(e) => {

@@ -1,6 +1,7 @@
-import { type FormEvent, type CSSProperties, useRef, useState, useEffect, useCallback } from 'react'
-import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, animate } from 'framer-motion'
+import { type FormEvent, type CSSProperties, useRef, useState, useEffect, useCallback, useMemo } from 'react'
+import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, animate, AnimatePresence } from 'framer-motion'
 import { Button } from './ui/button'
+import { RippleButton } from './ui/ripple-button'
 import { usePostHog } from '@posthog/react'
 
 function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOffsetX, hoverArea, disabled, rotation, constraintsRef }: { src: string; alt: string; label: string; style: CSSProperties; tooltipTop?: number; tooltipBottom?: number; tooltipOffsetX?: number; hoverArea?: CSSProperties; disabled?: boolean; rotation?: number; constraintsRef?: React.RefObject<HTMLDivElement | null> }) {
@@ -230,6 +231,49 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
   )
 }
 
+interface GameSticker {
+  src: string
+  name: string
+  rotation?: number
+  getStyle: (isLg: boolean) => CSSProperties
+}
+
+const GAME_STICKERS: GameSticker[] = [
+  { src: '/sticker-claude.png', name: 'Claude', getStyle: (isLg) => ({ bottom: isLg ? 'calc(10% + 197px)' : 'calc(10% + 202px)', left: 'calc(52% + 25px)', width: '18%' }) },
+  { src: '/sticker-nell.png', name: 'Cornell', getStyle: (isLg) => ({ bottom: isLg ? 'calc(10% + 260px)' : 'calc(10% + 285px)', left: 'calc(70% + 40px)', width: '16.2%' }) },
+  { src: '/sticker-gemini.png', name: 'Coneflower', getStyle: () => ({ bottom: 'calc(10% + 90px)', left: 'calc(30% - 63px)', width: '28.52%' }) },
+  { src: '/gemini-sticker.png', name: 'YC', getStyle: (isLg) => ({ top: isLg ? 'calc(10% - 51px)' : 'calc(10% - 59px)', bottom: 'auto', left: 'calc(8% + 5px)', width: '20%' }) },
+  { src: '/sticker-c2s2.png', name: 'C2S2', getStyle: (isLg) => ({ bottom: isLg ? 'calc(10% + 105px)' : 'calc(10% + 110px)', left: 'calc(55% + 20px)', width: '15.04%' }) },
+  { src: '/sticker-purple.png', name: 'Hackathon', getStyle: (isLg) => ({ bottom: isLg ? 'calc(10% + 210px)' : 'calc(10% + 215px)', left: 'calc(70% + 20px)', width: '22%' }) },
+  { src: '/sticker-data.png', name: 'Data Strategy', getStyle: () => ({ bottom: 'calc(10% - 40px)', left: 'calc(6% - 72px)', width: '37%' }) },
+  { src: '/sticker-tabs.png', name: 'Google', getStyle: (isLg) => ({ bottom: isLg ? 'calc(10% + 315px)' : 'calc(10% + 340px)', left: 'calc(34% + 130px)', width: '19.8%' }) },
+  { src: '/sticker-acsu2.png', name: 'ACSU', getStyle: () => ({ bottom: 'calc(10% + 18px)', left: 'calc(68% + 17px)', width: '23.3%' }) },
+  { src: '/sticker-acsu.png', name: "Riley's Way", getStyle: () => ({ bottom: 'calc(10% + 11px)', left: 'calc(55% - 13px)', width: '16%' }) },
+  { src: '/sticker-tata.png', name: 'Tata-Cornell', getStyle: () => ({ bottom: 'calc(10% - 31px)', left: 'calc(30% - 86px)', width: '37%' }) },
+  { src: '/sticker-frog.png', name: 'TrexQuant', getStyle: () => ({ bottom: 'calc(10% + 91px)', left: 'calc(70% + 40px)', width: '14.4%' }) },
+  { src: '/sticker-gemini-char.png', name: 'Arts & Sciences', getStyle: () => ({ bottom: 'calc(10% + 115px)', left: 'calc(8% - 10px)', width: '18%' }) },
+  { src: '/sticker-tab.png', name: 'tabs', getStyle: (isLg) => ({ bottom: isLg ? 'calc(10% + 243px)' : 'calc(10% + 253px)', left: isLg ? 'calc(16% + 180px)' : 'calc(16% + 185px)', width: '12.6%' }) },
+  { src: '/sticker-cu.png', name: 'Civics Unplugged', getStyle: (isLg) => ({ bottom: isLg ? 'calc(10% + 280px)' : 'calc(10% + 305px)', left: 'calc(2% + 225px)', width: '12.6%' }) },
+  { src: '/sticker-claude-confused.png', name: 'Claude Code', rotation: 30, getStyle: (isLg) => ({ bottom: isLg ? 'calc(10% + 209px)' : 'calc(10% + 219px)', left: 'calc(8% + 40px)', width: '18%' }) },
+]
+
+function getAccuracyMessage(acc: number) {
+  if (acc >= 95) return 'Perfect!'
+  if (acc >= 80) return 'Great!'
+  if (acc >= 60) return 'Good!'
+  if (acc >= 40) return 'Not bad'
+  if (acc >= 20) return 'Close-ish'
+  return 'Way off!'
+}
+
+function getFinalMessage(avg: number) {
+  if (avg >= 90) return 'Sticker Master'
+  if (avg >= 70) return 'Great Memory'
+  if (avg >= 50) return 'Not Bad'
+  if (avg >= 30) return 'Keep Practicing'
+  return 'Try Again?'
+}
+
 export function Contact() {
   const posthog = usePostHog()
   const [email, setEmail] = useState('')
@@ -295,6 +339,101 @@ export function Contact() {
   const [laptopOpen, setLaptopOpen] = useState(false)
   useMotionValueEvent(rotateX, 'change', (v) => setLaptopOpen(v <= 1))
 
+  const gamePanelRef = useRef<HTMLDivElement>(null)
+  const gameButtonRef = useRef<HTMLButtonElement>(null)
+  const [gamePanelHeight, setGamePanelHeight] = useState(0)
+
+  // ── Sticker placement game ──
+  const [gameActive, setGameActive] = useState(false)
+  const [gameRound, setGameRound] = useState(0)
+  const [gameScores, setGameScores] = useState<number[]>([])
+  const [userClick, setUserClick] = useState<{ x: number; y: number } | null>(null)
+  const [userPlacements, setUserPlacements] = useState<Array<{ x: number; y: number }>>([])
+  const [roundAccuracy, setRoundAccuracy] = useState<number | null>(null)
+  const [gameFinished, setGameFinished] = useState(false)
+  const targetRefs = useRef<(HTMLDivElement | null)[]>([])
+  const gameStickers = useMemo(() => GAME_STICKERS.map(s => ({ src: s.src, name: s.name, rotation: s.rotation, style: s.getStyle(isLg) })), [isLg])
+
+  const startGame = useCallback(() => {
+    setGameActive(true)
+    setGameRound(0)
+    setGameScores([])
+    setUserClick(null)
+    setUserPlacements([])
+    setRoundAccuracy(null)
+    setGameFinished(false)
+  }, [])
+
+  const exitGame = useCallback(() => {
+    setGameActive(false)
+    setGameFinished(false)
+  }, [])
+
+  const handleLidGameClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!gameActive || gameFinished || roundAccuracy !== null) return
+    const lid = lidRef.current
+    if (!lid) return
+
+    const lidRect = lid.getBoundingClientRect()
+    const clickX = e.clientX - lidRect.left
+    const clickY = e.clientY - lidRect.top
+
+    const target = targetRefs.current[gameRound]
+    if (!target) return
+
+    const targetRect = target.getBoundingClientRect()
+    const targetCX = targetRect.left + targetRect.width / 2 - lidRect.left
+    const targetCY = targetRect.top + targetRect.height / 2 - lidRect.top
+
+    const dist = Math.sqrt((clickX - targetCX) ** 2 + (clickY - targetCY) ** 2)
+    const lidDiag = Math.sqrt(lidRect.width ** 2 + lidRect.height ** 2)
+    const acc = Math.max(0, Math.round((1 - dist / (lidDiag * 0.3)) * 100))
+
+    const userPct = { x: (clickX / lidRect.width) * 100, y: (clickY / lidRect.height) * 100 }
+    setUserClick(userPct)
+    setUserPlacements(prev => [...prev, userPct])
+    setRoundAccuracy(acc)
+    setGameScores(prev => [...prev, acc])
+    posthog?.capture('sticker_game_placed', { sticker: gameStickers[gameRound].name, accuracy: acc })
+  }, [gameActive, gameFinished, gameRound, roundAccuracy, gameStickers, posthog])
+
+  const nextGameRound = useCallback(() => {
+    if (gameRound + 1 >= gameStickers.length) {
+      setGameFinished(true)
+      const avg = Math.round([...gameScores].reduce((a, b) => a + b, 0) / gameScores.length)
+      posthog?.capture('sticker_game_finished', { average_accuracy: avg, rounds: gameScores.length })
+    } else {
+      setGameRound(r => r + 1)
+    }
+    setUserClick(null)
+    setRoundAccuracy(null)
+  }, [gameRound, gameStickers.length, gameScores, posthog])
+
+  useEffect(() => {
+    if (isLg || roundAccuracy === null || gameFinished) return
+    const id = window.setTimeout(nextGameRound, 850)
+    return () => window.clearTimeout(id)
+  }, [isLg, roundAccuracy, gameFinished, nextGameRound])
+
+  const avgScore = gameScores.length > 0 ? Math.round(gameScores.reduce((a, b) => a + b, 0) / gameScores.length) : 0
+
+  useEffect(() => {
+    if (!isLg || !laptopOpen) {
+      setGamePanelHeight(0)
+      return
+    }
+    const target = gameActive ? gamePanelRef.current : gameButtonRef.current
+    if (!target) {
+      setGamePanelHeight(0)
+      return
+    }
+    const update = () => setGamePanelHeight(target.offsetHeight)
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(target)
+    return () => ro.disconnect()
+  }, [isLg, laptopOpen, gameActive, gameFinished, gameRound, roundAccuracy])
+
   const validateEmail = (value: string) => {
     if (!value) return 'Please enter your email.'
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Please enter a valid email address.'
@@ -336,11 +475,13 @@ export function Contact() {
     <section
       id="contact"
       className="px-6 pb-28 pt-24 md:py-28 lg:flex lg:items-start lg:pb-16 lg:pt-28"
+      style={isLg && gamePanelHeight ? { paddingBottom: `calc(4rem + ${gamePanelHeight + 16}px)` } : undefined}
     >
       <div className="max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-8 lg:gap-x-24 lg:gap-y-6 items-center">
-          {/* Top text — heading + description */}
-          <div className="order-1 lg:col-start-1 lg:row-start-1">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-8 lg:gap-x-24 lg:gap-y-6 items-center lg:items-stretch">
+          {/* Left column — text, form, social. `contents` on mobile so children act as grid items, flex column on desktop */}
+          <div className="contents lg:flex lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:flex-col lg:justify-between lg:pb-16">
+            <div className="order-1 lg:order-none">
             <h2
               className="font-normal mb-6 leading-tight text-left"
               style={{ color: '#FFFFFF', fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}
@@ -357,10 +498,9 @@ export function Contact() {
               Have a project or opportunity in mind or just want to connect? Drop your email and
               I'll reach out.
             </p>
-          </div>
+            </div>
 
-          {/* Form + social links — below laptop on mobile */}
-          <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-2">
+            <div className="order-3 lg:order-none">
             <form
               onSubmit={handleSubmit}
               className="mb-12 text-center lg:text-left"
@@ -490,13 +630,14 @@ export function Contact() {
                 </svg>
               </a>
             </div>
+            </div>
           </div>
 
           {/* Right — MacBook lid with scroll-driven 3D closing animation */}
-          <div ref={laptopContainerRef} className="mt-[30px] lg:mt-0 order-2 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2">
+          <div ref={laptopContainerRef} className="flex flex-col lg:block mt-[30px] lg:mt-0 order-2 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2">
           <div
             ref={laptopRef}
-            className="relative flex items-center justify-center lg:ml-[110px]"
+            className="relative flex items-center justify-center order-2 lg:order-none mt-6 lg:mt-0 lg:ml-[110px]"
             style={{
               perspective: 1200,
               width: isLg ? DESKTOP_REF_WIDTH : MOBILE_REF_WIDTH,
@@ -525,7 +666,8 @@ export function Contact() {
                 }}
               />
 
-              {/* Stickers on lid — rendered bottom-to-top so upper stickers layer correctly */}
+              {/* Stickers on lid — hidden during game */}
+              <div style={{ opacity: gameActive ? 0 : 1, transition: 'opacity 0.5s ease', pointerEvents: gameActive ? 'none' : 'auto' }}>
               {/* Row bottom */}
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-acsu2.png" alt="ACSU" label="From Association of Computer Science Undergraduates" tooltipTop={-56} style={{ bottom: 'calc(10% + 18px)', left: 'calc(68% + 17px)', width: '23.3%' }} hoverArea={{ top: '5%', left: '2%', width: '96%', height: '89%', zIndex: 10 }} />
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-acsu.png" alt="Riley's Way" label="From Team Mentor Role at Riley's Way Retreat '26" tooltipTop={-56} style={{ bottom: 'calc(10% + 11px)', left: 'calc(55% - 13px)', width: '16%' }} hoverArea={{ top: '4%', left: '6%', width: '83%', height: '96%', zIndex: 10 }} />
@@ -543,12 +685,91 @@ export function Contact() {
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-tabs.png" alt="Google for Education" label="From event at Okenshields" tooltipTop={-37} style={{ bottom: isLg ? 'calc(10% + 315px)' : 'calc(10% + 340px)', left: 'calc(34% + 130px)', width: '19.8%' }} hoverArea={{ top: '25%', left: '3%', width: '95%', height: '72%', zIndex: 10 }} />
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-tab.png" alt="tabs+" label="From Cornell AI Hackathon hosted at tabs" tooltipTop={-40} style={{ bottom: isLg ? 'calc(10% + 243px)' : 'calc(10% + 253px)', left: isLg ? 'calc(16% + 180px)' : 'calc(16% + 185px)', width: '12.6%' }} hoverArea={{ top: '12%', left: '5%', width: '91%', height: '71%', zIndex: 10 }} />
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-cu.png" alt="CU mascot" label="From Georgetown '24 Civic Innovation Academy" tooltipTop={-35} style={{ bottom: isLg ? 'calc(10% + 280px)' : 'calc(10% + 305px)', left: 'calc(2% + 225px)', width: '12.6%' }} hoverArea={{ top: '20%', left: '6%', width: '91%', height: '67%', zIndex: 10 }} />
-
-              {/* Claude confused — left of Coneflower, below YC */}
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-claude-confused.png" alt="Claude" label="From Claude Builders Club Hackathon" tooltipTop={-56} rotation={30} style={{ bottom: isLg ? 'calc(10% + 209px)' : 'calc(10% + 219px)', left: 'calc(8% + 40px)', width: '18%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
-
-              {/* YC sticker — top left of lid */}
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/gemini-sticker.png" alt="YC" label="From YC @ Cornell" tooltipTop={-21} style={{ top: isLg ? 'calc(10% - 51px)' : 'calc(10% - 59px)', bottom: 'auto', left: 'calc(8% + 5px)', width: '20%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
+              </div>
+
+              {/* ── Sticker game elements ── */}
+              {gameActive && (
+                <>
+                  {/* Hidden targets to measure correct positions */}
+                  {gameStickers.map((s, i) => (
+                    <div
+                      key={`target-${i}`}
+                      ref={el => { targetRefs.current[i] = el }}
+                      className="absolute pointer-events-none"
+                      style={{ ...s.style, opacity: 0 }}
+                    >
+                      <img src={s.src} className="w-full h-auto" alt="" />
+                    </div>
+                  ))}
+
+                  {/* Click overlay */}
+                  {!gameFinished && roundAccuracy === null && (
+                    <div
+                      className="absolute z-50"
+                      style={{ inset: '3%', cursor: 'crosshair', borderRadius: 8 }}
+                      onClick={handleLidGameClick}
+                    />
+                  )}
+
+                  {/* Placed stickers — at user positions during play, at actual positions when finished */}
+                  {gameScores.map((_, i) => {
+                    if (i === gameRound && roundAccuracy !== null && !gameFinished) return null
+                    const sticker = gameStickers[i]
+                    const userPos = userPlacements[i]
+                    if (!gameFinished && userPos) {
+                      return (
+                        <div
+                          key={`placed-${i}`}
+                          className="absolute pointer-events-none"
+                          style={{
+                            left: `${userPos.x}%`,
+                            top: `${userPos.y}%`,
+                            width: sticker.style.width as string,
+                            transform: `translate(-50%, -50%)${sticker.rotation ? ` rotate(${sticker.rotation}deg)` : ''}`,
+                          }}
+                        >
+                          <img src={sticker.src} className="w-full h-auto" alt="" />
+                        </div>
+                      )
+                    }
+                    return (
+                      <div
+                        key={`placed-${i}`}
+                        className="absolute pointer-events-none"
+                        style={{
+                          ...sticker.style,
+                          ...(sticker.rotation ? { transform: `rotate(${sticker.rotation}deg)` } : {}),
+                        }}
+                      >
+                        <img src={sticker.src} className="w-full h-auto" alt="" />
+                      </div>
+                    )
+                  })}
+
+                  {/* Current round sticker — animated entry at user's clicked position */}
+                  <AnimatePresence>
+                    {roundAccuracy !== null && !gameFinished && userClick && (
+                      <motion.div
+                        className="absolute pointer-events-none"
+                        style={{
+                          left: `${userClick.x}%`,
+                          top: `${userClick.y}%`,
+                          width: gameStickers[gameRound].style.width as string,
+                          translateX: '-50%',
+                          translateY: '-50%',
+                        }}
+                        initial={{ opacity: 0, scale: 0.5, rotate: gameStickers[gameRound].rotation ?? 0 }}
+                        animate={{ opacity: 1, scale: 1, rotate: gameStickers[gameRound].rotation ?? 0 }}
+                        transition={{ duration: 0.35, ease: 'easeOut' }}
+                      >
+                        <img src={gameStickers[gameRound].src} className="w-full h-auto" alt="" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              )}
 
               {/* Apple logo — dark, like on real Midnight MacBook */}
               <img
@@ -566,6 +787,151 @@ export function Contact() {
                 }}
               />
             </motion.div>
+          </div>
+
+          {/* ── Sticker game panel ── */}
+          <div className="order-1 lg:order-none lg:relative">
+          {!gameActive && (
+            <motion.button
+              ref={gameButtonRef}
+              initial={false}
+              animate={{ opacity: laptopOpen ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex items-center gap-2 mt-4 mb-8 mx-auto select-none cursor-pointer lg:absolute lg:top-0 lg:mb-0"
+              style={{
+                color: 'rgba(255, 255, 255, 0.7)',
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                pointerEvents: laptopOpen ? 'auto' : 'none',
+                ...(isLg ? { marginLeft: DESKTOP_LEFT_OFFSET - DESKTOP_REF_WIDTH * ((1400 / 1500) * 1.1 - 1) / 2 } : {}),
+              }}
+              onClick={startGame}
+            >
+              <motion.svg
+                width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                animate={{ x: [0, 3, -3, 0] }}
+                transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
+              >
+                <rect x="2" y="6" width="20" height="12" rx="2" />
+                <path d="M12 12h.01" />
+                <path d="M17 12h.01" />
+                <path d="M7 12h.01" />
+              </motion.svg>
+              <span className="text-sm font-medium">Sticker placement</span>
+            </motion.button>
+          )}
+
+          <AnimatePresence>
+            {gameActive && (
+              <motion.div
+                ref={gamePanelRef}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.3 }}
+                className={isLg
+                  ? 'mt-4 mb-0 mx-auto rounded-xl px-5 py-4 absolute top-0'
+                  : 'mt-4 mb-10 mx-auto rounded-xl px-5 py-4'
+                }
+                style={{
+                  background: 'rgba(239, 243, 248, 0.95)',
+                  border: '1.5px solid rgba(6, 113, 164, 0.2)',
+                  backdropFilter: 'blur(12px)',
+                  width: isLg
+                    ? DESKTOP_REF_WIDTH * (1400 / 1500) * 1.1
+                    : MOBILE_REF_WIDTH * laptopScale,
+                  maxWidth: '100%',
+                  zoom: isLg ? laptopScale : undefined,
+                  ...(isLg ? { marginLeft: DESKTOP_LEFT_OFFSET - DESKTOP_REF_WIDTH * ((1400 / 1500) * 1.1 - 1) / 2 } : {}),
+                }}
+              >
+                {gameFinished ? (
+                  <div className="flex flex-col items-center py-4 gap-3">
+                    <p className="font-normal" style={{ color: '#0671A4', fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
+                      {getFinalMessage(avgScore)}
+                    </p>
+                    <p className="text-sm" style={{ color: 'rgba(6, 113, 164, 0.6)' }}>
+                      Average accuracy: {avgScore}%
+                    </p>
+                    <div className="flex gap-2 mt-2">
+                      <RippleButton
+                        onClick={startGame}
+                        className="group rounded-full px-4 py-2 text-sm font-medium"
+                        rippleColor="#38BDF8"
+                        style={{ backgroundColor: '#0671A4', color: '#FFFFFF', border: '2px solid transparent', transition: 'background-color 0.3s' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#055a84' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0671A4' }}
+                      >
+                        <span className="inline-flex items-center gap-1.5">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-500 group-hover:rotate-[360deg]">
+                            <path d="M21 12a9 9 0 1 1-2.64-6.36" /><path d="M21 3v6h-6" />
+                          </svg>
+                          <span>Play Again</span>
+                        </span>
+                      </RippleButton>
+                      <RippleButton
+                        onClick={exitGame}
+                        className="rounded-full px-4 py-2 text-sm font-medium"
+                        rippleColor="#38BDF8"
+                        style={{ color: '#0671A4', backgroundColor: '#E4EFF5', border: '2px solid rgba(6, 113, 164, 0.3)', transition: 'background-color 0.3s, border-color 0.3s' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#D7E8F1'; e.currentTarget.style.borderColor = '#0671A4' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#E4EFF5'; e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.3)' }}
+                      >
+                        Exit
+                      </RippleButton>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-4">
+                    <div className="shrink-0 w-12 h-12 flex items-center justify-center rounded-lg" style={{ background: 'rgba(6, 113, 164, 0.08)' }}>
+                      <img src={gameStickers[gameRound].src} alt={gameStickers[gameRound].name} className="w-8 h-8 object-contain" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium" style={{ color: '#111827' }}>
+                        {roundAccuracy !== null ? (
+                          <>
+                            {getAccuracyMessage(roundAccuracy)} <span style={{ color: '#0671A4' }}>{roundAccuracy}%</span>
+                          </>
+                        ) : (
+                          <>
+                            Place the <span style={{ color: '#0671A4' }}>{gameStickers[gameRound].name}</span> sticker
+                          </>
+                        )}
+                      </p>
+                      <p className="text-xs mt-0.5" style={{ color: 'rgba(6, 113, 164, 0.5)' }}>
+                        {gameRound + 1} / {gameStickers.length} &middot; Click on the lid where it belongs
+                      </p>
+                    </div>
+                    {roundAccuracy !== null && isLg ? (
+                      <RippleButton
+                        onClick={nextGameRound}
+                        className="shrink-0 rounded-full px-4 py-1.5 text-sm font-medium"
+                        rippleColor="#38BDF8"
+                        style={{ backgroundColor: '#0671A4', color: '#FFFFFF', border: '2px solid transparent', transition: 'background-color 0.3s' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#055a84' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0671A4' }}
+                      >
+                        {gameRound + 1 >= gameStickers.length ? 'Results' : 'Next'}
+                      </RippleButton>
+                    ) : (
+                      <button
+                        onClick={exitGame}
+                        className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full transition-colors cursor-pointer"
+                        style={{ color: '#0671A4', background: 'none', border: 'none' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6, 113, 164, 0.1)' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                          <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
           </div>
           </div>
         </div>

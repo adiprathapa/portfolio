@@ -5,6 +5,7 @@ import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
 import { usePostHog } from '@posthog/react'
 import { scrollToSection } from '../lib/scrollToSection'
+import { warmCalendarPage, warmResumePage } from '../lib/prefetch'
 
 const RESUME_PAGE_URL = '/resume.html'
 const CALENDAR_PAGE_URL = '/calendar.html'
@@ -150,6 +151,9 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
+                    onMouseEnter={link.href === RESUME_PAGE_URL ? warmResumePage : undefined}
+                    onFocus={link.href === RESUME_PAGE_URL ? warmResumePage : undefined}
+                    onTouchStart={link.href === RESUME_PAGE_URL ? warmResumePage : undefined}
                     className={`relative text-base font-medium rounded-xl px-4 py-1.5 transition-all duration-300 ${
                       isActive
                         ? 'text-primary bg-primary/10'
@@ -175,9 +179,12 @@ export function Navbar() {
                   transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
                 }}
                 onMouseEnter={(e) => {
+                  warmCalendarPage()
                   setCtaHovered(true)
                   e.currentTarget.style.backgroundColor = '#055a84'
                 }}
+                onFocus={warmCalendarPage}
+                onTouchStart={warmCalendarPage}
                 onMouseLeave={(e) => {
                   setCtaHovered(false)
                   e.currentTarget.style.backgroundColor = '#0671A4'

@@ -831,42 +831,78 @@ export function About() {
   const [lastThrowSpeed, setLastThrowSpeed] = useState<number | null>(null)
   const [throwMessage, setThrowMessage] = useState('')
   const [marqueeActive, setMarqueeActive] = useState(false)
+  const [aboutMediaActive, setAboutMediaActive] = useState(false)
   const [loadedCardImages, setLoadedCardImages] = useState<Record<string, boolean>>({})
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const el = sectionRef.current
     if (!el) return
-    const observer = new IntersectionObserver(
+    const marqueeObserver = new IntersectionObserver(
       ([entry]) => setMarqueeActive(entry.isIntersecting),
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     )
-    observer.observe(el)
-    return () => observer.disconnect()
+    const mediaObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setAboutMediaActive(true)
+          mediaObserver.disconnect()
+        }
+      },
+      { rootMargin: '320px 0px', threshold: 0.1 },
+    )
+
+    marqueeObserver.observe(el)
+    mediaObserver.observe(el)
+    return () => {
+      marqueeObserver.disconnect()
+      mediaObserver.disconnect()
+    }
   }, [])
 
   useEffect(() => {
+    if (!aboutMediaActive) return
     let cancelled = false
+    let idleId: number | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+    let index = 0
 
-    CARDS.forEach((card) => {
+    const loadNext = () => {
+      if (cancelled || index >= CARDS.length) return
+      const card = CARDS[index++]
       const img = new Image()
       img.src = card.image
       img.onload = () => {
         if (!cancelled) {
           setLoadedCardImages((prev) => ({ ...prev, [card.id]: true }))
+          scheduleNext()
         }
       }
       img.onerror = () => {
         if (!cancelled) {
           setLoadedCardImages((prev) => ({ ...prev, [card.id]: true }))
+          scheduleNext()
         }
       }
-    })
+    }
+
+    const scheduleNext = () => {
+      if (cancelled || index >= CARDS.length) return
+      if (typeof requestIdleCallback === 'function') {
+        idleId = requestIdleCallback(loadNext)
+      } else {
+        timeoutId = setTimeout(loadNext, 80)
+      }
+    }
+
+    loadNext()
 
     return () => {
       cancelled = true
+      if (idleId !== null && typeof cancelIdleCallback === 'function') cancelIdleCallback(idleId)
+      if (timeoutId !== null) clearTimeout(timeoutId)
     }
-  }, [])
+  }, [aboutMediaActive])
 
   const handleGrab = useCallback(() => {
     setHasGrabbed(true)

@@ -1,5 +1,6 @@
 import { scrollToSection } from '../lib/scrollToSection'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { warmCalendarPage, warmResumePage } from '../lib/prefetch'
 
 const RESUME_PAGE_URL = '/resume.html'
 
@@ -21,6 +22,7 @@ export function Footer() {
   const paintCanvasRef = useRef<HTMLCanvasElement>(null)
   const [maskReady, setMaskReady] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
+  const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -58,6 +60,24 @@ export function Footer() {
     }
 
     applyCanvasMask()
+  }, [])
+
+  useEffect(() => {
+    const el = wordRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVideoReady(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '700px 0px' },
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [])
 
   useEffect(() => {
@@ -170,13 +190,13 @@ export function Footer() {
         >
           <video
             className="video-footer__media"
-            src="/footer-letters.mp4"
+            src={videoReady ? '/footer-letters.mp4' : undefined}
             poster="/footer-letters-poster.jpg"
             autoPlay
             muted
             loop
             playsInline
-            preload="auto"
+            preload={videoReady ? 'metadata' : 'none'}
           />
           {isDesktop && (
             <canvas
@@ -201,7 +221,13 @@ export function Footer() {
             <nav aria-label="Resources">
               <h4>Resources</h4>
               {resourceLinks.map((link) => (
-                <a key={link.href} href={link.href}>
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onMouseEnter={link.href === RESUME_PAGE_URL ? warmResumePage : warmCalendarPage}
+                  onFocus={link.href === RESUME_PAGE_URL ? warmResumePage : warmCalendarPage}
+                  onTouchStart={link.href === RESUME_PAGE_URL ? warmResumePage : warmCalendarPage}
+                >
                   {link.label}
                 </a>
               ))}

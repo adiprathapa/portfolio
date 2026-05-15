@@ -4,6 +4,19 @@ import { RippleButton } from './ripple-button'
 import type { SafariProps } from './safari'
 import { usePostHog } from '@posthog/react'
 
+const warmedProjectVideos = new Map<string, HTMLVideoElement>()
+
+function warmProjectVideoMetadata(src: string | undefined) {
+  if (!src || warmedProjectVideos.has(src)) return
+
+  const video = document.createElement('video')
+  video.preload = 'metadata'
+  video.muted = true
+  video.src = src
+  video.load()
+  warmedProjectVideos.set(src, video)
+}
+
 // Split text into word spans tagged for the Capoo game. Only ~2 of every 3 words
 // become actual platforms — the rest are rendered as invisible gaps so the level
 // reads like a real platformer with jumps between platforms.
@@ -285,9 +298,12 @@ export function FlipSafari({
                   transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
                 }}
                 onMouseEnter={(e) => {
+                  warmProjectVideoMetadata(safariProps.videoSrc)
                   setIsVideoHovered(true)
                   e.currentTarget.style.backgroundColor = '#055a84'
                 }}
+                onFocus={() => warmProjectVideoMetadata(safariProps.videoSrc)}
+                onTouchStart={() => warmProjectVideoMetadata(safariProps.videoSrc)}
                 onMouseLeave={(e) => {
                   setIsVideoHovered(false)
                   e.currentTarget.style.backgroundColor = '#0671A4'

@@ -29,8 +29,8 @@ const projectDescriptions: Record<string, string> = {
   zamsizing: "Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.",
   macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
   galatea: "Built for the Palantir Foundry FDSE technical challenge. Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry.",
-  paramgolf: "Submitted a non record entry to OpenAI's Parameter Golf, a parameter limited language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment plus an artifact fit guard that coarsens shared embeddings until the brotli compressed int6 model fits under the cap. Reached 1.107 val bpb on a single H100 across 86 FineWeb shards.",
-  spectre: "Built for the Cornell Claude Builders Club Hackathon. A 1v1 fighting game where players throw real punches at their phone cameras while silhouettes battle in a shared browser overlay. MediaPipe pose estimation streams keypoints to a 60Hz Python game server for hit detection and damage logic, with a live AI commentator powered by Claude API and ElevenLabs TTS.",
+  paramgolf: "Submitted a non record entry to OpenAI's Parameter Golf, a language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment, reaching 1.107 val bpb on a single H100 across 86 FineWeb shards.",
+  spectre: "Built for the Cornell Claude Builders Club Hackathon. A 1v1 fighting game where players throw real punches at their phone cameras while silhouettes battle in a shared browser overlay, with a live AI commentator powered by Claude API and ElevenLabs TTS.",
 }
 
 const projectLinks: Record<string, string> = {
@@ -156,6 +156,7 @@ function ProjectCard({
 
   return (
     <motion.div
+      data-project-card={projectKey}
       className="absolute inset-x-0 top-0 w-full origin-bottom"
       style={{
         y: combinedY,
@@ -209,7 +210,11 @@ function readStickyPtPx() {
   return parseFloat(raw) || 0
 }
 
-export function Projects() {
+export function Projects({
+  onStartGame,
+}: {
+  onStartGame?: () => void
+} = {}) {
   const containerRef = useRef<HTMLDivElement>(null)
   const cardHProbeRef = useRef<HTMLDivElement>(null)
   const experienceRef = useRef<HTMLDivElement>(null)
@@ -267,7 +272,10 @@ export function Projects() {
 
   // Two-phase scroll: Phase 1 = card stacking, Phase 2 = scroll Experience
   // into viewport. Both share the same sticky section so they stay in sync.
-  const stagger = 28
+  // Stagger scales proportionally so the stack visually matches desktop on
+  // mobile (same stagger/cardH ratio, 28/500 ≈ 5.6%) instead of taking a
+  // disproportionately larger fraction of the smaller mobile card.
+  const stagger = isMobile ? Math.max(14, Math.round(cardH * 0.056)) : 28
   const expH = experienceRef.current?.offsetHeight ?? 550
   const stickyPt = readStickyPtPx()
   const experienceOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
@@ -334,7 +342,7 @@ export function Projects() {
 
   return (
     <>
-    <div ref={containerRef} className="relative" style={{ height: sectionHeight, zIndex: 5, ...(isMobile ? {} : { backgroundColor: '#E4EFF5' }) }}>
+    <div id="projects-rail" ref={containerRef} className="relative" style={{ height: sectionHeight, zIndex: 5, ...(isMobile ? {} : { backgroundColor: '#E4EFF5' }) }}>
       <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen pt-[var(--project-sticky-pt)] px-6" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-420px' : '-600px'} 0px)` }}>
         {/* Phase 2 wrapper: scrolls cards + Experience up together after
             the card animation ends, keeping the 48px gap constant. */}

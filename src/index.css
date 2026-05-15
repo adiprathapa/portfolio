@@ -93,6 +93,189 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Capoo game: "gap" words are invisible — they keep horizontal layout space
+   but don't act as platforms, creating real jumps between platforms. */
+html.capoo-game .game-gap {
+  color: transparent;
+  display: inline-block;
+}
+
+/* Capoo game: every word becomes a uniform skinny platform during game mode.
+   Kept thin so the card layout doesn't shift visibly from non-game mode. */
+html.capoo-game .game-word {
+  display: inline-block;
+  height: 5px;
+  vertical-align: middle;
+  margin-right: 0.6em;
+  background: linear-gradient(180deg, #38BDF8 0%, #0671A4 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 2px;
+  color: transparent !important;
+  text-shadow: none;
+  box-shadow: 0 1px 2px rgba(6, 113, 164, 0.3);
+  position: relative;
+  line-height: 1;
+}
+html.capoo-game .game-word:last-child {
+  margin-right: 0;
+}
+/* Keep tagline fill from bleeding through */
+html.capoo-game .gradient-text .game-word {
+  -webkit-text-fill-color: transparent;
+  background-clip: border-box;
+}
+/* Mobile: always give the card content wrapper a real box (instead of
+   display:contents) so the auto-fit transform:scale can shrink overflowing
+   content uniformly to fit inside the card on small screens. Use flex column
+   with justify-between to preserve the original "tagline at top, buttons at
+   bottom" mobile layout that leftCol's justify-between used to produce. */
+@media (max-width: 1023px) {
+  /* Mobile padding: top must stay >= the rail's stagger (~19px / cardH * 0.056)
+     so the stacked-card slivers above the active card only show empty padding
+     instead of bleeding the tagline through. Bottom can be tighter. */
+  [data-card-leftcol] {
+    padding-top: 1.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  /* Dynamic mobile typography — scales with viewport width so text shrinks
+     on smaller phones to fit the reduced card content area, and lerps up
+     to the desktop hand-off size on larger mobile widths. */
+  [data-card-leftcol] h3 {
+    font-size: clamp(13px, 4.2vw, 17px) !important;
+    line-height: 1.18 !important;
+  }
+  [data-card-leftcol] p {
+    font-size: clamp(11px, 3.2vw, 13px) !important;
+    line-height: 1.32 !important;
+  }
+  [data-card-leftcol] [class*="rounded-xl"] {
+    font-size: clamp(9px, 2.6vw, 11px) !important;
+  }
+  .card-content-wrapper {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  html.capoo-game .game-word {
+    margin-right: 0.25em;
+    height: 4px;
+  }
+  html.capoo-game .game-word,
+  html.capoo-game .game-gap {
+    margin-bottom: 0;
+  }
+  html.capoo-game .flag-landing-pad.game-word {
+    height: 4px;
+    min-width: 44px;
+  }
+  html.capoo-game .card-flag {
+    width: 18px;
+    height: 22px;
+    font-size: 12px;
+    left: 10px;
+    bottom: 3px;
+  }
+}
+
+/* Flag cluster — keeps landing pad + flag together on one line */
+html.capoo-game .flag-cluster {
+  display: inline-flex !important;
+  align-items: flex-end;
+  vertical-align: middle;
+  margin-left: 0.4em;
+  position: relative;
+}
+
+/* Wider landing pad platform right under the flag, so Capoo always has
+   somewhere to stand to touch the flag. */
+html.capoo-game .flag-landing-pad.game-word {
+  height: 5px;
+  min-width: 56px;
+  margin-right: 0;
+  background: linear-gradient(180deg, #2EA56F 0%, #1E7A50 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 2px;
+  color: transparent !important;
+  box-shadow: 0 1px 2px rgba(46, 165, 111, 0.35);
+}
+
+/* The flag itself — sits directly above the landing pad */
+html.capoo-game .card-flag {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 26px;
+  background: #DA7756;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(218, 119, 86, 0.45);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  position: absolute;
+  left: 12px;
+  bottom: 4px;
+  animation: capoo-flag-wave 1.4s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+html.capoo-game .card-flag.flag-reached {
+  background: #2EA56F;
+  animation: none;
+}
+@keyframes capoo-flag-wave {
+  from { transform: rotate(-4deg); }
+  to { transform: rotate(4deg); }
+}
+
+/* Hide the global navbar while the Capoo game is active so the HUD
+   (flag counter, exit button) isn't covered by it. */
+html.capoo-game [data-navbar] {
+  display: none !important;
+}
+
+/* Capoo intro modal keyboard chip */
+.capoo-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: rgba(6, 113, 164, 0.12);
+  border: 1px solid rgba(6, 113, 164, 0.25);
+  font-size: 11px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #0671A4;
+  line-height: 1;
+}
+
+/* Spin the retry icon when hovering the Try Again button */
+.retry-icon {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+button:hover .retry-icon {
+  transform: rotate(-360deg);
+}
+
+/* Brief screen shake when Capoo dies */
+html.capoo-shake body {
+  animation: capoo-shake-anim 0.38s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes capoo-shake-anim {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
 ::selection {
   background-color: var(--color-primary);
   color: white;

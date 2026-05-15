@@ -635,10 +635,10 @@ export function Contact() {
           </div>
 
           {/* Right — MacBook lid with scroll-driven 3D closing animation */}
-          <div ref={laptopContainerRef} className="flex flex-col lg:block mt-[30px] lg:mt-0 order-2 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2">
+          <div ref={laptopContainerRef} className="flex flex-col lg:block mt-1 lg:mt-0 order-2 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2">
           <div
             ref={laptopRef}
-            className="relative flex items-center justify-center order-2 lg:order-none mt-6 lg:mt-0 lg:ml-[110px]"
+            className="relative flex items-center justify-center order-2 lg:order-none mt-2 lg:mt-0 lg:ml-[110px]"
             style={{
               perspective: 1200,
               width: isLg ? DESKTOP_REF_WIDTH : MOBILE_REF_WIDTH,
@@ -798,7 +798,7 @@ export function Contact() {
               initial={false}
               animate={{ opacity: laptopOpen ? 1 : 0 }}
               transition={{ duration: 0.3 }}
-              className="flex items-center gap-2 mt-4 mb-8 mx-auto select-none cursor-pointer lg:absolute lg:top-0 lg:mb-0"
+              className="flex items-center gap-2 mt-0 mb-4 mx-auto select-none cursor-pointer lg:absolute lg:top-0 lg:mb-0 lg:mt-4"
               style={{
                 color: 'rgba(255, 255, 255, 0.7)',
                 background: 'none',

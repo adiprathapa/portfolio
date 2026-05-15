@@ -1,8 +1,36 @@
-import { useState, useRef, useEffect, useLayoutEffect, type CSSProperties } from 'react'
+import { useState, useRef, useEffect, useLayoutEffect, type CSSProperties, Fragment } from 'react'
 import { Safari } from './safari'
 import { RippleButton } from './ripple-button'
 import type { SafariProps } from './safari'
 import { usePostHog } from '@posthog/react'
+
+// Split text into word spans tagged for the Capoo game. Only ~2 of every 3 words
+// become actual platforms — the rest are rendered as invisible gaps so the level
+// reads like a real platformer with jumps between platforms.
+function renderWordSpans(text: string | undefined, projectKey: string) {
+  if (!text) return null
+  const parts = text.split(/(\s+)/)
+  let wordIdx = 0
+  return parts.map((part, i) => {
+    if (part.length === 0) return null
+    if (/^\s+$/.test(part)) return <Fragment key={i}>{part}</Fragment>
+    const idx = wordIdx++
+    // Gap pattern: every 3rd word is rendered as a non-platform gap
+    const isGap = idx % 3 === 2
+    if (isGap) {
+      return (
+        <span key={i} className="game-gap">
+          {part}
+        </span>
+      )
+    }
+    return (
+      <span key={i} data-game-word={projectKey} className="game-word">
+        {part}
+      </span>
+    )
+  })
+}
 
 interface FlipSafariProps {
   safariProps: SafariProps
@@ -49,14 +77,15 @@ export function FlipSafari({
     const ct = contentRef.current
     if (!lc || !ct) return
     const update = () => {
-      if (window.innerWidth < 1024) { setContentScale(1); return }
       const cs = getComputedStyle(lc)
       const padTop = parseFloat(cs.paddingTop) || 0
       const padBottom = parseFloat(cs.paddingBottom) || 0
       const availH = lc.clientHeight - padTop - padBottom
       const naturalH = ct.scrollHeight
       if (availH <= 0 || naturalH <= 0) { setContentScale(1); return }
-      setContentScale(Math.min(1, availH / naturalH))
+      // Clamp to a 0.88 floor so the card still uses most of its space —
+      // slight overflow is acceptable, content shouldn't shrink dramatically.
+      setContentScale(Math.max(0.88, Math.min(1, availH / naturalH)))
     }
     update()
     const ro = new ResizeObserver(update)
@@ -176,13 +205,13 @@ export function FlipSafari({
             }}
           />
           {/* Left column — text content */}
-          <div ref={leftColRef} className="flex flex-col justify-between lg:justify-center px-4 pt-8 pb-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+          <div ref={leftColRef} data-card-leftcol className="flex flex-col justify-between lg:justify-center px-4 pt-8 pb-4 lg:px-10 lg:py-8" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
             <div
               ref={contentRef}
-              className="contents lg:flex lg:flex-col"
+              className="card-content-wrapper contents lg:flex lg:flex-col"
               style={contentScale < 1 ? {
                 transform: `scale(${contentScale})`,
-                transformOrigin: 'center',
+                transformOrigin: 'top center',
               } : undefined}
             >
             <div>
@@ -195,7 +224,27 @@ export function FlipSafari({
             <p
               className="mt-2 text-[13px] leading-[1.3] lg:leading-relaxed text-left text-heading lg:text-[clamp(1rem,0.5vw+0.75rem,1.25rem)]"
             >
-              {projectDescription}
+              {renderWordSpans(projectDescription, projectName)}
+              {/* Flag landing pad + checkpoint flag — only shown during game mode.
+                  The landing pad is a wider platform that lives right under the
+                  flag so Capoo always has something to stand on to reach it. */}
+              {' '}
+              <span className="flag-cluster" style={{ display: 'none', whiteSpace: 'nowrap', position: 'relative' }}>
+                <span
+                  data-game-word={projectName}
+                  className="game-word flag-landing-pad"
+                  aria-hidden="true"
+                >
+                  GOAL
+                </span>
+                <span
+                  data-card-flag={projectName}
+                  className="card-flag"
+                  aria-hidden="true"
+                >
+                  ⚑
+                </span>
+              </span>
             </p>
             </div>
 
@@ -219,7 +268,7 @@ export function FlipSafari({
               </div>
             )}
 
-            <div className="flex justify-center lg:justify-start gap-2.5 lg:mt-[18px]">
+            <div className="flex justify-center lg:justify-start gap-2.5 lg:mt-[18px] items-center">
               {safariProps.videoSrc && (
               <RippleButton
                 className="hidden lg:inline-flex px-5 py-2.5 text-base"

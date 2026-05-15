@@ -350,6 +350,10 @@ h1, h2, h3, h4, h5, h6 {
   padding-top: 14px;
 }
 
+.projects-intro-heatmap-placeholder {
+  min-height: clamp(320px, 34vw, 390px);
+}
+
 .conveyor-flip-stage {
   --conveyor-stage-height: 262px;
   --conveyor-card-size: min(112px, 28vw, calc((var(--conveyor-stage-height) - 44px) / 2));
@@ -358,7 +362,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .conveyor-row-clip {
-  overflow: visible;
+  width: 100%;
+  overflow: hidden;
+  overflow-x: clip;
   clip-path: inset(
     calc(-1 * var(--conveyor-flip-bleed))
     calc(-1 * var(--conveyor-flip-bleed))
@@ -381,6 +387,12 @@ h1, h2, h3, h4, h5, h6 {
   .conveyor-flip-stage {
     --conveyor-stage-height: 348px;
     --conveyor-card-size: min(138px, 14vw, calc((var(--conveyor-stage-height) - 56px) / 2));
+  }
+}
+
+@media (min-width: 1024px) {
+  .projects-intro-heatmap-placeholder {
+    min-height: clamp(240px, 24vw, 320px);
   }
 }
 

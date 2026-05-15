@@ -222,6 +222,7 @@ function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
 
 export function ProjectsIntro() {
   const [active, setActive] = useState(false)
+  const [heavyContentReady, setHeavyContentReady] = useState(false)
   const [showMemoryGame, setShowMemoryGame] = useState(false)
   const [conveyorGameActive, setConveyorGameActive] = useState(false)
   const [conveyorGameKey, setConveyorGameKey] = useState(0)
@@ -240,6 +241,27 @@ export function ProjectsIntro() {
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || heavyContentReady) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHeavyContentReady(true)
+          observer.disconnect()
+        }
+      },
+      {
+        rootMargin: '700px 0px',
+        threshold: 0.01,
+      },
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [heavyContentReady])
 
   const handleConveyorGame = () => {
     // Capture current height before switching
@@ -342,7 +364,12 @@ export function ProjectsIntro() {
       <div
         ref={conveyorRef}
         className="conveyor-flip-stage relative mt-6 lg:mt-10 -my-4"
-        style={{ perspective: 1200, height: lockedHeight ? lockedHeight : undefined, overflow: conveyorGameActive ? 'visible' : 'hidden' }}
+        style={{
+          perspective: 1200,
+          height: lockedHeight ? lockedHeight : undefined,
+          overflowX: 'hidden',
+          overflowY: conveyorGameActive ? 'visible' : 'hidden',
+        }}
       >
         <motion.div
           className="h-full"
@@ -366,9 +393,13 @@ export function ProjectsIntro() {
               pointerEvents: conveyorGameActive ? 'none' : 'auto',
             }}
           >
-            <div className="project-marquee">
-              <ProjectMarquee active={active && !conveyorGameActive} />
-            </div>
+            {heavyContentReady ? (
+              <div className="project-marquee">
+                <ProjectMarquee active={active && !conveyorGameActive} />
+              </div>
+            ) : (
+              <div className="project-marquee" aria-hidden="true" />
+            )}
             <div
               className="pointer-events-none absolute inset-y-0 left-0 w-8 lg:w-32 z-10"
               style={{ background: 'linear-gradient(to right, #E4EFF5, transparent)' }}
@@ -402,7 +433,11 @@ export function ProjectsIntro() {
 
       {/* GitHub heatmap */}
       <div className="mt-4 lg:mt-8">
-        <GithubHeatmap />
+        {heavyContentReady ? (
+          <GithubHeatmap />
+        ) : (
+          <div className="projects-intro-heatmap-placeholder" aria-hidden="true" />
+        )}
       </div>
     </section>
   )

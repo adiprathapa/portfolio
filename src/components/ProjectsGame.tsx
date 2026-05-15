@@ -192,7 +192,6 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
   const lastGroundedAtRef = useRef(0) // perf timestamp of last frame standing on a word
   const jumpBufferedUntilRef = useRef(0) // jump press is queued until this perf time
   const jumpHeldRef = useRef(false)
-  const isShakingRef = useRef(false)
   const restartRef = useRef<(() => void) | null>(null)
   const currentCardIdxRef = useRef(0)
   const teleportingRef = useRef(false)
@@ -220,14 +219,6 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
     // fighting the user's touch scroll.
     if (becomingDead || p === 'won') {
       scrollAnimRef.current = null
-    }
-    if (wasAlive && becomingDead && !isShakingRef.current) {
-      isShakingRef.current = true
-      document.documentElement.classList.add('capoo-shake')
-      window.setTimeout(() => {
-        document.documentElement.classList.remove('capoo-shake')
-        isShakingRef.current = false
-      }, 380)
     }
   }, [])
 

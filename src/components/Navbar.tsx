@@ -238,7 +238,7 @@ export function Navbar() {
                 }}
               >
                 <img
-                  src="/headshot.jpg"
+                  src="/headshot.webp"
                   alt="Adi Prathapa"
                   className="w-full h-full object-cover transition-[filter] duration-200 group-hover:brightness-75"
                   style={{ objectPosition: 'center 28%' }}

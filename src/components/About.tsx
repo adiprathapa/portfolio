@@ -617,12 +617,12 @@ const CARDS: {
   bgPosition?: string
   topLeftBlue?: boolean
 }[] = [
-  { id: 'card-1', image: '/img3.jpg', caption: 'Cornell Data Strategy Meeting' },
-  { id: 'card-2', image: '/team-presentation.png', caption: 'Stablecoin Presentation at Cornell Hackathon' },
-  { id: 'card-3', image: '/img3.png', caption: 'Formal Organizing Group' },
-  { id: 'card-6', image: '/treman-hiking.png', caption: 'Hiking in Robert H. Treman State Park', topLeftBlue: true },
-  { id: 'card-4', image: '/card-3.png', caption: 'Eagle Scout Project' },
-  { id: 'card-5', image: '/coh.png', caption: 'After Eagle Scout Board of Review', bgSize: '180%', bgPosition: 'center center' },
+  { id: 'card-1', image: '/img3.webp', caption: 'Cornell Data Strategy Meeting' },
+  { id: 'card-2', image: '/team-presentation.webp', caption: 'Stablecoin Presentation at Cornell Hackathon' },
+  { id: 'card-3', image: '/img3-stack.webp', caption: 'Formal Organizing Group' },
+  { id: 'card-6', image: '/treman-hiking.webp', caption: 'Hiking in Robert H. Treman State Park', topLeftBlue: true },
+  { id: 'card-4', image: '/card-3.webp', caption: 'Eagle Scout Project' },
+  { id: 'card-5', image: '/coh.webp', caption: 'After Eagle Scout Board of Review', bgSize: '180%', bgPosition: 'center center' },
 ]
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
@@ -838,6 +838,8 @@ export function About() {
   useEffect(() => {
     const el = sectionRef.current
     if (!el) return
+    let warmupIdleId: number | null = null
+    let warmupTimeoutId: ReturnType<typeof setTimeout> | null = null
     const marqueeObserver = new IntersectionObserver(
       ([entry]) => setMarqueeActive(entry.isIntersecting),
       { threshold: 0.3 },
@@ -854,9 +856,21 @@ export function About() {
 
     marqueeObserver.observe(el)
     mediaObserver.observe(el)
+
+    // The About panel is the next horizontal stop on desktop. Its card images
+    // are now compact WebPs, so warming them shortly after first paint is cheap
+    // and avoids the hero -> About transition waiting on media work.
+    if (typeof requestIdleCallback === 'function') {
+      warmupIdleId = requestIdleCallback(() => setAboutMediaActive(true), { timeout: 1200 })
+    } else {
+      warmupTimeoutId = setTimeout(() => setAboutMediaActive(true), 700)
+    }
+
     return () => {
       marqueeObserver.disconnect()
       mediaObserver.disconnect()
+      if (warmupIdleId !== null && typeof cancelIdleCallback === 'function') cancelIdleCallback(warmupIdleId)
+      if (warmupTimeoutId !== null) clearTimeout(warmupTimeoutId)
     }
   }, [])
 

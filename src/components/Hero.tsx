@@ -318,6 +318,7 @@ export function Hero() {
         <motion.div
           variants={heroChild}
           className="relative inline-block mb-6"
+          data-nosnippet=""
           onMouseEnter={() => { if (window.innerWidth >= 768) { setTooltipActive(true); posthog?.capture('hero_language_tooltip_viewed', { language: current.subtitle }) } }}
         >
           <h1
@@ -487,7 +488,7 @@ export function Hero() {
               onClick={() => { posthog?.capture('linkedin_profile_clicked', { location: 'hero_coin' }); window.open('https://www.linkedin.com/in/adi-prathapa/', '_blank') }}
             >
               <img
-                src="/headshot.jpg"
+                src="/headshot.webp"
                 alt="Adi Prathapa"
                 style={{
                   width: '100%',

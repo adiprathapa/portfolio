@@ -900,7 +900,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
           }}
         >
           <img
-            src="/headshot.jpg"
+            src="/headshot.webp"
             alt="Player"
             draggable={false}
             style={{

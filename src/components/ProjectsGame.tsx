@@ -211,7 +211,6 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
   const capooRef = useRef<HTMLDivElement>(null)
 
   const setPhaseSync = useCallback((p: Phase) => {
-    const wasAlive = phaseRef.current === 'playing' || phaseRef.current === 'starting'
     const becomingDead = p === 'dead-top' || p === 'dead-bottom' || p === 'dead-squish'
     phaseRef.current = p
     setPhase(p)

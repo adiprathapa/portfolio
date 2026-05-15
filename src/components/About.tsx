@@ -461,6 +461,7 @@ export function ProjectMarquee({ active }: { active: boolean }) {
     const halfRef = useRef<HTMLDivElement>(null)
     const trackRef = useRef<HTMLDivElement>(null)
     const offsetRef = useRef(0)
+    const halfWidthRef = useRef(0)
     const rafRef = useRef<number>(0)
     const pausedRef = useRef(false)
     const speedMultiplierRef = useRef(1)
@@ -510,18 +511,29 @@ export function ProjectMarquee({ active }: { active: boolean }) {
     }, [])
 
     useEffect(() => {
+      const halfEl = halfRef.current
+      if (!halfEl) return
+
+      const updateHalfWidth = () => {
+        halfWidthRef.current = halfEl.offsetWidth + 16
+      }
+
+      updateHalfWidth()
+      const ro = new ResizeObserver(updateHalfWidth)
+      ro.observe(halfEl)
+
+      return () => ro.disconnect()
+    }, [])
+
+    useEffect(() => {
       if (!active) return
-      const GAP = 16 // gap-4 = 16px
       const baseSpeed = 1.5
       const tick = () => {
         if (!pausedRef.current) {
-          const halfEl = halfRef.current
-          if (halfEl) {
-            const halfWidth = halfEl.offsetWidth + GAP
+          const halfWidth = halfWidthRef.current
+          if (halfWidth > 0) {
             offsetRef.current -= baseSpeed * speedMultiplierRef.current
-            if (offsetRef.current <= -halfWidth) {
-              offsetRef.current += halfWidth
-            }
+            if (offsetRef.current <= -halfWidth) offsetRef.current += halfWidth
           }
           if (trackRef.current) {
             trackRef.current.style.transform = `translateX(${offsetRef.current}px)`
@@ -826,7 +838,7 @@ export function About() {
     const el = sectionRef.current
     if (!el) return
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setMarqueeActive(true) },
+      ([entry]) => setMarqueeActive(entry.isIntersecting),
       { threshold: 0.3 }
     )
     observer.observe(el)

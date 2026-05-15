@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useLayoutEffect } from 'react'
-import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { FlipSafari } from './ui/flip-safari'
 import { Experience } from './Experience'
 import { Education } from './Education'
@@ -91,14 +91,14 @@ const projectTaglines: Record<string, string> = {
 }
 
 const projectBgImages: Record<string, string> = {
-  kiwix: '/kiwixbg.png',
-  tauron: '/tauronbg.jpg',
-  helicity: '/helicitybg.jpg',
-  zamsizing: '/zamsizingbg.jpg',
-  macroplace: '/macroplace-bg.jpg',
-  galatea: '/galateabg.jpg',
-  paramgolf: '/pexels-andrewshelley-8454632.jpg',
-  spectre: '/pexels-dichupdi-35168139.jpg',
+  kiwix: '/kiwixbg.webp',
+  tauron: '/tauronbg.webp',
+  helicity: '/helicitybg.webp',
+  zamsizing: '/zamsizingbg.webp',
+  macroplace: '/macroplace-bg.webp',
+  galatea: '/galateabg.webp',
+  paramgolf: '/pexels-andrewshelley-8454632.webp',
+  spectre: '/pexels-dichupdi-35168139.webp',
 }
 
 const projectGradientColors: Record<string, string> = {
@@ -128,25 +128,21 @@ const projectTechStacks: Record<string, string[]> = {
 function ProjectCard({
   projectKey,
   yValue,
-  stackOffset,
   zIndex,
   opacity,
+  enableBackground,
+  interactive,
 }: {
   projectKey: string
   yValue: MotionValue<number>
-  stackOffset: MotionValue<number>
   zIndex: number
   opacity?: MotionValue<number>
+  enableBackground: boolean
+  interactive: boolean
 }) {
-  const combinedY = useTransform([yValue, stackOffset], ([y, offset]) => {
-    const currentY = Number(y)
-    const currentOffset = Number(offset)
-    return currentY + currentOffset
-  })
   // Full size once the card's top reaches the bottom of the previous card (~500px),
   // smallest at 1120px away, linear ramp between
-  const scale = useTransform(() => {
-    const y = yValue.get()
+  const scale = useTransform(yValue, (y) => {
     const minScale = 0.85
     const fullSizeAt = 500
     if (y <= fullSizeAt) return 1
@@ -159,7 +155,7 @@ function ProjectCard({
       data-project-card={projectKey}
       className="absolute inset-x-0 top-0 w-full origin-bottom"
       style={{
-        y: combinedY,
+        y: yValue,
         scale,
         zIndex,
         ...(opacity ? { opacity } : {}),
@@ -194,6 +190,8 @@ function ProjectCard({
         techStack={projectTechStacks[projectKey]}
         gradientColor={projectGradientColors[projectKey]}
         bgImage={projectBgImages[projectKey]}
+        enableBackground={enableBackground}
+        interactive={interactive}
       />
     </motion.div>
   )
@@ -215,6 +213,8 @@ export function Projects() {
   const cardHProbeRef = useRef<HTMLDivElement>(null)
   const experienceRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024)
+  const [activeCardIndex, setActiveCardIndex] = useState(0)
+  const [preparedCardIndex, setPreparedCardIndex] = useState(2)
   const [sectionHeight, setSectionHeight] = useState('calc(100dvh + clamp(8rem, 20dvh, 12rem))')
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024)
@@ -283,6 +283,11 @@ export function Projects() {
   const cardProgress = useTransform(scrollYProgress,
     [0, Math.min(cardAnimationEnd, 0.9999)],
     [0, 1])
+  useMotionValueEvent(cardProgress, 'change', (latest) => {
+    const nextIndex = Math.max(0, Math.min(projectOrder.length - 1, Math.floor(latest * (projectOrder.length - 1) + 0.001)))
+    setActiveCardIndex((current) => current === nextIndex ? current : nextIndex)
+    setPreparedCardIndex((current) => Math.max(current, Math.min(projectOrder.length - 1, nextIndex + 2)))
+  })
   const seg = 1 / 7
 
   const cardY1 = useTransform(cardProgress, [0, 1], [0, 0])
@@ -334,7 +339,6 @@ export function Projects() {
   // Experience Y relative to the phase2 wrapper (no stickyPt — the wrapper
   // is inside the section's padded area, so stickyPt is already accounted for)
   const experienceInsideY = useTransform(cardY8, (y: number) => y + cardH + 96)
-  const stackOffset = useTransform(scrollYProgress, [0, 1], [0, 0])
 
   return (
     <>
@@ -349,9 +353,10 @@ export function Projects() {
                 key={key}
                 projectKey={key}
                 yValue={cardYValues[i]}
-                stackOffset={stackOffset}
                 zIndex={i + 1}
                 opacity={cardOpacities[i]}
+                enableBackground={i <= preparedCardIndex}
+                interactive={i >= activeCardIndex && i <= activeCardIndex + 1}
               />
             ))}
           </div>

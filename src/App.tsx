@@ -1,15 +1,20 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import { Navbar } from './components/Navbar'
 import { HorizontalScrollSection } from './components/HorizontalScrollSection'
 import { ProjectsIntro } from './components/ProjectsIntro'
 import { Projects } from './components/Projects'
-import { ProjectsGame } from './components/ProjectsGame'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { scrollToSection } from './lib/scrollToSection'
 
-// Preload below-fold assets during idle time while user is on hero
+const ProjectsGame = lazy(() =>
+  import('./components/ProjectsGame').then((module) => ({ default: module.ProjectsGame })),
+)
+
+// Preload only lightweight below-fold images after the first interaction window.
+// Large videos are intentionally left on demand so they do not compete with the
+// hero/horizontal-scroll experience.
 const PRELOAD_IMAGES = [
   // About / Experience section
   '/nell.webp', '/cornell.svg', '/mnhs.webp', '/mnhs-removebg-preview.png',
@@ -18,18 +23,14 @@ const PRELOAD_IMAGES = [
   // Project logos & backgrounds
   '/logo-kiwix.png', '/logo-tauron.png', '/logo-helicity.png',
   '/logo-zamsizing.png', '/logo-galatea.png', '/logo-hrt.png', '/logo-partcl.png',
-  '/kiwixbg.png', '/tauronbg.jpg', '/helicitybg.jpg',
-  '/zamsizingbg.jpg', '/macroplace-bg.jpg', '/galateabg.jpg',
+  '/kiwixbg.webp', '/tauronbg.webp', '/helicitybg.webp',
+  '/zamsizingbg.webp', '/macroplace-bg.webp', '/galateabg.webp',
   // Contact stickers & laptop
   '/macbook-lid.svg', '/appl.png',
   '/sticker-acsu2.png', '/sticker-acsu.png', '/sticker-tata.png', '/sticker-data.png',
   '/sticker-frog.png', '/sticker-c2s2.png', '/sticker-gemini.png', '/sticker-purple.png',
   '/sticker-nell.png', '/sticker-claude.png', '/sticker-tabs.png', '/sticker-tab.png',
   '/sticker-cu.png',
-]
-
-const PRELOAD_VIDEOS = [
-  '/kiwix.mov', '/tauron.mov', '/helicity.mov', '/zam-copy.mp4', '/recording-1.mov',
 ]
 
 function preloadAssets() {
@@ -45,26 +46,16 @@ function preloadAssets() {
           setTimeout(loadNext, 50)
         }
       }
-    } else if (i - PRELOAD_IMAGES.length < PRELOAD_VIDEOS.length) {
-      const vi = i - PRELOAD_IMAGES.length
-      const link = document.createElement('link')
-      link.rel = 'prefetch'
-      link.href = PRELOAD_VIDEOS[vi]
-      link.as = 'video'
-      document.head.appendChild(link)
-      i++
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadNext)
-      } else {
-        setTimeout(loadNext, 50)
-      }
     }
   }
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(loadNext)
-  } else {
-    setTimeout(loadNext, 200)
+  const start = () => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadNext)
+    } else {
+      setTimeout(loadNext, 50)
+    }
   }
+  setTimeout(start, 2500)
 }
 
 function App() {
@@ -127,7 +118,9 @@ function App() {
           </div>
         </div>
         {projectsGameActive && (
-          <ProjectsGame onExit={() => setProjectsGameActive(false)} />
+          <Suspense fallback={null}>
+            <ProjectsGame onExit={() => setProjectsGameActive(false)} />
+          </Suspense>
         )}
         <div className="contact-footer-handoff relative z-[1]" style={{ background: '#f4f4f4' }}>
           <div aria-hidden style={{ height: 'var(--contact-mobile-pt, 0px)', background: '#f4f4f4' }} />

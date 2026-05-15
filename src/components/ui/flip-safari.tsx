@@ -44,6 +44,8 @@ interface FlipSafariProps {
   gradientColor?: string
   bgImage?: string
   cardHeight?: string
+  enableBackground?: boolean
+  interactive?: boolean
 }
 
 export function FlipSafari({
@@ -58,6 +60,8 @@ export function FlipSafari({
   gradientColor = '#F4F4F4',
   bgImage,
   cardHeight = 'var(--project-card-h)',
+  enableBackground = true,
+  interactive = true,
 }: FlipSafariProps) {
   const posthog = usePostHog()
   const [showVideo, setShowVideo] = useState(false)
@@ -98,7 +102,7 @@ export function FlipSafari({
   }, [projectDescription, projectTagline, techStack])
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (showVideo || !innerRef.current) return
+    if (!interactive || showVideo || !innerRef.current) return
     if (!rectRef.current) {
       rectRef.current = innerRef.current.getBoundingClientRect()
     }
@@ -159,7 +163,7 @@ export function FlipSafari({
       className="h-[var(--flip-safari-card-h)]"
       style={{ perspective: '1200px', position: 'relative', '--flip-safari-card-h': cardHeight, ...safariStyle } as CSSProperties}
       onMouseEnter={() => {
-        if (!showVideo && innerRef.current) {
+        if (interactive && !showVideo && innerRef.current) {
           setCardHovered(true)
           rectRef.current = innerRef.current.getBoundingClientRect()
           innerRef.current.style.transition = 'transform 0.1s ease-out'
@@ -175,7 +179,7 @@ export function FlipSafari({
         style={{
           transformStyle: 'preserve-3d',
           transform: 'rotateX(0deg) rotateY(0deg) translateY(0px)',
-          willChange: 'transform',
+          willChange: cardHovered || showVideo ? 'transform' : 'auto',
         }}
       >
         {/* Front face */}
@@ -357,14 +361,16 @@ export function FlipSafari({
               backgroundColor: gradientColor,
             }}
           >
-            {bgImage && (
+            {enableBackground && bgImage && (
               <img
                 src={bgImage}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             )}
-            {bgImage && (
+            {enableBackground && bgImage && (
               <div
                 className="absolute inset-0"
                 style={{

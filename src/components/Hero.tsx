@@ -177,6 +177,7 @@ function useTypewriter(
 
 export function Hero() {
   const posthog = usePostHog()
+  const [effectsActive, setEffectsActive] = useState(true)
   const [tooltipActive, setTooltipActive] = useState(false)
   const [headingHovered, setHeadingHovered] = useState(false)
   const [hoveredWordIndex, setHoveredWordIndex] = useState<number | null>(null)
@@ -198,7 +199,7 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
   const h1Ref = useRef<HTMLHeadingElement>(null)
   const coinRef = useRef<HTMLDivElement>(null)
-  const { displayText, current } = useTypewriter(greetings, tooltipActive, 120, 60, 2000)
+  const { displayText, current } = useTypewriter(greetings, tooltipActive || !effectsActive, 120, 60, 2000)
   const coinFaceAngle = ((coinAngle % 360) + 360) % 360
   const currentCoinSide = coinFaceAngle > 90 && coinFaceAngle < 270 ? 'github' : 'linkedin'
   const showCoinHoverOverlay = coinHovered && !isMobile && !isSpinning
@@ -264,6 +265,19 @@ export function Hero() {
 
   // Track tooltip zone via h1 position — dismiss when cursor leaves the zone
   useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setEffectsActive(entry.isIntersecting),
+      { rootMargin: '120px 0px', threshold: 0.01 },
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
     if (!tooltipActive) return
     const handleMouseMove = (e: MouseEvent) => {
       const hRect = h1Ref.current?.getBoundingClientRect()
@@ -290,8 +304,8 @@ export function Hero() {
       className="relative min-h-svh lg:h-full flex items-center justify-center overflow-hidden"
       style={{ paddingBottom: '0' }}
     >
-      <AnimatedGradientBackground />
-      <FluidCursor />
+      <AnimatedGradientBackground active={effectsActive} />
+      <FluidCursor active={effectsActive} />
 
       <motion.div
         className="relative z-10 text-center md:text-left max-w-5xl w-full px-6 flex flex-col-reverse md:flex-row items-center md:items-center gap-8 md:gap-12"

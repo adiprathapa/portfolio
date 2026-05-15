@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 
 interface AnimatedGradientBackgroundProps {
   className?: string
+  active?: boolean
 }
 
 // Spread-out cloud-like blobs — large, soft, slow drift across the section
@@ -44,14 +45,40 @@ function buildGradient(blobList: Blob[], t: number, base?: string) {
   return parts.join(', ')
 }
 
-export function AnimatedGradientBackground({ className = '' }: AnimatedGradientBackgroundProps) {
+export function AnimatedGradientBackground({
+  className = '',
+  active = true,
+}: AnimatedGradientBackgroundProps) {
   const layer1Ref = useRef<HTMLDivElement>(null)
   const layer2Ref = useRef<HTMLDivElement>(null)
   const rafId = useRef<number>(0)
 
   useEffect(() => {
+    if (!active) {
+      if (layer1Ref.current) {
+        layer1Ref.current.style.background = buildGradient(
+          blobs,
+          0,
+          'linear-gradient(135deg, #eef6fb 0%, #e0f2fe 50%, #f0f9ff 100%)',
+        )
+      }
+      if (layer2Ref.current) {
+        layer2Ref.current.style.background = buildGradient(blobs2, 0)
+      }
+      return
+    }
+
+    let lastPaint = 0
+    const minFrameInterval = 1000 / 30
     const tick = () => {
-      const t = performance.now() / 1000
+      const now = performance.now()
+      if (now - lastPaint < minFrameInterval) {
+        rafId.current = requestAnimationFrame(tick)
+        return
+      }
+
+      lastPaint = now
+      const t = now / 1000
 
       if (layer1Ref.current) {
         layer1Ref.current.style.background = buildGradient(
@@ -69,7 +96,7 @@ export function AnimatedGradientBackground({ className = '' }: AnimatedGradientB
 
     rafId.current = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(rafId.current)
-  }, [])
+  }, [active])
 
   return (
     <motion.div

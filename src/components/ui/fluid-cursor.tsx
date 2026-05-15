@@ -9,12 +9,12 @@ import { useEffect, useRef } from 'react'
 const SPLAT_FORCE = 6000
 const SPLAT_RADIUS = 0.25
 const CURL_AMOUNT = 30
-const PRESSURE_ITERATIONS = 20
+const PRESSURE_ITERATIONS = 12
 const DENSITY_DISSIPATION = 2.0
 const VELOCITY_DISSIPATION = 0.2
 const PRESSURE_VAL = 0.8
 const SIM_RESOLUTION = 128
-const DYE_RESOLUTION = 1024
+const DYE_RESOLUTION = 512
 const SPLAT_COLOR = { r: 0.94, g: 0.95, b: 0.97 }
 
 // --- Shader Sources ---
@@ -259,10 +259,12 @@ const gradientSubtractShaderSource = `
 
 // --- Component ---
 
-export function FluidCursor() {
+export function FluidCursor({ active = true }: { active?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
+    if (!active) return
+
     const canvas = canvasRef.current!
     if (!canvas) return
 
@@ -283,7 +285,7 @@ export function FluidCursor() {
     const { gl, ext } = ctx
 
     const isMobile = /Mobi|Android/i.test(navigator.userAgent)
-    const dyeRes = isMobile ? 512 : DYE_RESOLUTION
+    const dyeRes = isMobile ? 384 : DYE_RESOLUTION
 
     // Compile shaders
     const baseVertexShader = compileShader(gl.VERTEX_SHADER, baseVertexShaderSource)
@@ -367,19 +369,34 @@ export function FluidCursor() {
     // --- Animation loop ---
     let lastUpdateTime = Date.now()
     let animFrameId = 0
+    let lastInteractionTime = 0
+    let lastScrollTime = 0
+    let hasRenderedSinceIdle = false
 
     function update() {
-      const dt = calcDeltaTime()
       if (resizeCanvas()) initFramebuffers()
-      applyInputs()
-      step(dt)
-      render()
+      const now = performance.now()
+      const isScrolling = now - lastScrollTime < 120
+      const shouldSimulate = !isScrolling && (pointer.moved || now - lastInteractionTime < 450)
+
+      if (shouldSimulate) {
+        const dt = calcDeltaTime()
+        applyInputs()
+        step(dt)
+        render()
+        hasRenderedSinceIdle = false
+      } else if (!hasRenderedSinceIdle) {
+        render()
+        hasRenderedSinceIdle = true
+      }
+
       animFrameId = requestAnimationFrame(update)
     }
     animFrameId = requestAnimationFrame(update)
 
     // --- Event listeners ---
     function handleMouseMove(e: MouseEvent) {
+      lastInteractionTime = performance.now()
       const rect = canvas.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
@@ -409,6 +426,7 @@ export function FluidCursor() {
     }
 
     function handleTouchMove(e: TouchEvent) {
+      lastInteractionTime = performance.now()
       const touch = e.touches[0]
       if (!touch) return
       const rect = canvas.getBoundingClientRect()
@@ -439,7 +457,12 @@ export function FluidCursor() {
       pointer.down = false
     }
 
+    function handleScroll() {
+      lastScrollTime = performance.now()
+    }
+
     window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('touchmove', handleTouchMove, { passive: true })
     window.addEventListener('touchend', handleTouchEnd)
 
@@ -785,10 +808,11 @@ export function FluidCursor() {
     return () => {
       cancelAnimationFrame(animFrameId)
       window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('touchmove', handleTouchMove)
       window.removeEventListener('touchend', handleTouchEnd)
     }
-  }, [])
+  }, [active])
 
   return (
     <canvas

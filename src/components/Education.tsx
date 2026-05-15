@@ -211,7 +211,7 @@ export function Education() {
           >
             {activeId === 'cornell'
               ? 'Pursuing a B.A. in Computer Science with a minor in AI at Cornell University.'
-              : 'Earned my IB Diploma at Millard North High School.'}
+              : 'Earned my International Baccalaureate Diploma at Millard North High School.'}
           </p>
         </div>
       </div>

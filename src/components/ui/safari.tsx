@@ -16,6 +16,7 @@ export interface SafariProps extends HTMLAttributes<HTMLDivElement> {
   url?: string
   imageSrc?: string
   videoSrc?: string
+  posterSrc?: string
   videoCropTop?: number | string
   videoCropBottom?: number | string
   videoCropLeft?: number | string
@@ -27,6 +28,7 @@ export interface SafariProps extends HTMLAttributes<HTMLDivElement> {
 export function Safari({
   imageSrc,
   videoSrc,
+  posterSrc,
   url,
   videoCropTop,
   videoCropBottom,
@@ -79,6 +81,7 @@ export function Safari({
             ref={videoRef}
             className="block size-full max-w-none object-cover object-top"
             src={videoSrc}
+            poster={posterSrc}
             autoPlay={playing === undefined}
             loop
             muted
@@ -107,7 +110,7 @@ export function Safari({
 
       {hasVideo && !videoLoaded && (
         <div
-          className="pointer-events-none absolute z-[1] flex flex-col items-center justify-center"
+          className="pointer-events-none absolute z-[1] flex flex-col items-center justify-center overflow-hidden"
           style={{
             left: `${LEFT_PCT}%`,
             top: `${TOP_PCT}%`,
@@ -117,14 +120,21 @@ export function Safari({
             background: 'rgba(244,244,244,0.15)',
           }}
         >
+          {posterSrc && (
+            <img
+              src={posterSrc}
+              alt=""
+              className="absolute inset-0 block size-full object-cover object-top"
+            />
+          )}
           {/* Safari-style spinner */}
-          <svg width="24" height="24" viewBox="0 0 24 24" className="animate-spin">
+          <svg width="24" height="24" viewBox="0 0 24 24" className="relative z-[1] animate-spin">
             <circle cx="12" cy="12" r="10" stroke="rgba(244,244,244,0.2)" strokeWidth="2.5" fill="none" />
             <path d="M12 2a10 10 0 0 1 10 10" stroke="rgba(244,244,244,0.6)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
           </svg>
           {/* Safari-style top progress bar */}
           <div
-            className="absolute top-0 left-0 right-0 overflow-hidden"
+            className="absolute top-0 left-0 right-0 z-[1] overflow-hidden"
             style={{ height: '2px' }}
           >
             <div

@@ -48,7 +48,7 @@ const work: ExperienceItem[] = [
     logoOffsetY: -25,
     mobileLogoOffsetX: -62,
     mobileLogoOffsetY: -22,
-    bgImage: '/pexels-pinamon-17647329.jpg',
+    bgImage: '/pexels-pinamon-17647329.webp',
     gradientColor: '#0671A4',
   },
   {
@@ -70,7 +70,7 @@ const work: ExperienceItem[] = [
     logo: '/cornell.svg',
     logoHeight: 44,
     logoInvert: true,
-    bgImage: '/bowers.jpg',
+    bgImage: '/bowers.webp',
     gradientColor: '#B31B1B',
   },
   {
@@ -94,7 +94,7 @@ const work: ExperienceItem[] = [
     logoInvert: true,
     logoOffsetY: 0,
     mobileLogoOffsetX: -42,
-    bgImage: '/mines-bg.jpg',
+    bgImage: '/mines-bg.webp',
     gradientColor: '#21314D',
   },
   {
@@ -119,7 +119,7 @@ const work: ExperienceItem[] = [
     logoOffsetY: -1,
     logoOffsetX: -12,
     mobileLogoOffsetX: -74,
-    bgImage: '/unl-bg.jpg',
+    bgImage: '/unl-bg.webp',
     gradientColor: '#D00000',
   },
 ]
@@ -143,7 +143,7 @@ const involvement: ExperienceItem[] = [
     logoOffsetY: -16,
     mobileLogoOffsetX: -61,
     mobileLogoOffsetY: -17,
-    bgImage: '/cornell data strategy.png',
+    bgImage: '/cornell-data-strategy.webp',
     gradientColor: '#1C3D6B',
   },
   {
@@ -165,7 +165,7 @@ const involvement: ExperienceItem[] = [
     logoOffsetX: -4,
     mobileLogoOffsetX: -72,
     mobileLogoOffsetY: -8,
-    bgImage: '/c2s2.jpeg',
+    bgImage: '/c2s2.webp',
     gradientColor: '#B31B1B',
   },
   {

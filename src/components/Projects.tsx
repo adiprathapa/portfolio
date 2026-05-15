@@ -58,12 +58,12 @@ const projectRepoLinks: Record<string, string> = {
 const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea', 'paramgolf', 'spectre']
 
 const projectSafariProps: Record<string, { url: string; videoSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
-  kiwix: { url: projectLinks['kiwix'], videoSrc: "/kiwix.mov" },
-  tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mov", videoCropTop: 25 },
-  helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mov" },
+  kiwix: { url: projectLinks['kiwix'], videoSrc: "/kiwix.mp4" },
+  tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mp4", videoCropTop: 25 },
+  helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mp4" },
   zamsizing: { url: projectLinks['zamsizing'], videoSrc: "/zam-copy.mp4", videoCropTop: 110, videoCropBottom: 30, videoCropLeft: 270, videoCropRight: 272 },
   macroplace: { url: projectLinks['macroplace'] },
-  galatea: { url: projectLinks['galatea'], videoSrc: "/recording-1.mov", videoCropTop: 23 },
+  galatea: { url: projectLinks['galatea'], videoSrc: "/recording-1.mp4", videoCropTop: 23 },
   paramgolf: { url: projectLinks['paramgolf'] },
   spectre: { url: projectLinks['spectre'], videoSrc: "/spectre.mp4", videoCropTop: "10%", videoStartTime: 10 },
 }

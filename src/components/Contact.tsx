@@ -4,7 +4,7 @@ import { Button } from './ui/button'
 import { RippleButton } from './ui/ripple-button'
 import { usePostHog } from '@posthog/react'
 
-function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOffsetX, hoverArea, disabled, rotation, constraintsRef }: { src: string; alt: string; label: string; style: CSSProperties; tooltipTop?: number; tooltipBottom?: number; tooltipOffsetX?: number; hoverArea?: CSSProperties; disabled?: boolean; rotation?: number; constraintsRef?: React.RefObject<HTMLDivElement | null> }) {
+function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOffsetX, hoverArea, disabled, rotation, constraintsRef, active = true }: { src: string; alt: string; label: string; style: CSSProperties; tooltipTop?: number; tooltipBottom?: number; tooltipOffsetX?: number; hoverArea?: CSSProperties; disabled?: boolean; rotation?: number; constraintsRef?: React.RefObject<HTMLDivElement | null>; active?: boolean }) {
   const [hovered, setHovered] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const stickerRef = useRef<HTMLDivElement>(null)
@@ -23,6 +23,7 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
 
   // Scan image pixels to find the bounding box of non-transparent content
   useEffect(() => {
+    if (!active) return
     const img = new Image()
     img.crossOrigin = 'anonymous'
     img.onload = () => {
@@ -54,7 +55,7 @@ function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOff
       }
     }
     img.src = src
-  }, [src])
+  }, [active, src])
 
   // Compute drag bounds from opaque pixel edges and lid surface, correcting for parent transforms
   useEffect(() => {
@@ -281,6 +282,26 @@ export function Contact() {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [ctaHovered, setCtaHovered] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const [visualsReady, setVisualsReady] = useState(false)
+
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisualsReady(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '900px 0px' },
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   const [isLg, setIsLg] = useState(false)
   useEffect(() => {
@@ -474,6 +495,7 @@ export function Contact() {
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
       className="px-6 pb-28 pt-24 md:py-28 lg:flex lg:items-start lg:pb-16 lg:pt-28"
       style={isLg && gamePanelHeight ? { paddingBottom: `calc(4rem + ${gamePanelHeight + 16}px)` } : undefined}
@@ -668,6 +690,7 @@ export function Contact() {
               />
 
               {/* Stickers on lid — hidden during game */}
+              {visualsReady && (
               <div style={{ opacity: gameActive ? 0 : 1, transition: 'opacity 0.5s ease', pointerEvents: gameActive ? 'none' : 'auto' }}>
               {/* Row bottom */}
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-acsu2.png" alt="ACSU" label="From Association of Computer Science Undergraduates" tooltipTop={-56} style={{ bottom: 'calc(10% + 18px)', left: 'calc(68% + 17px)', width: '23.3%' }} hoverArea={{ top: '5%', left: '2%', width: '96%', height: '89%', zIndex: 10 }} />
@@ -689,6 +712,7 @@ export function Contact() {
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-claude-confused.png" alt="Claude" label="From Claude Builders Club Hackathon" tooltipTop={-56} rotation={30} style={{ bottom: isLg ? 'calc(10% + 209px)' : 'calc(10% + 219px)', left: 'calc(8% + 40px)', width: '18%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
               <Sticker constraintsRef={lidRef} disabled={!laptopOpen} src="/gemini-sticker.png" alt="YC" label="From YC @ Cornell" tooltipTop={-21} style={{ top: isLg ? 'calc(10% - 51px)' : 'calc(10% - 59px)', bottom: 'auto', left: 'calc(8% + 5px)', width: '20%' }} hoverArea={{ top: '5%', left: '5%', width: '90%', height: '90%', zIndex: 10 }} />
               </div>
+              )}
 
               {/* ── Sticker game elements ── */}
               {gameActive && (

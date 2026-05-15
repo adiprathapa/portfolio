@@ -18,20 +18,14 @@ const ProjectsGame = lazy(() =>
 const PRELOAD_IMAGES = [
   // About / Experience section
   '/nell.webp', '/cornell.svg', '/mnhs.webp', '/mnhs-removebg-preview.png',
-  '/pexels-pinamon-17647329.jpg', '/bowers.jpg', '/mines-bg.jpg', '/unl-bg.jpg',
-  '/cornell data strategy.png', '/c2s2.jpeg', '/cas.webp',
+  '/pexels-pinamon-17647329.webp', '/bowers.webp', '/mines-bg.webp', '/unl-bg.webp',
+  '/cornell-data-strategy.webp', '/c2s2.webp', '/cas.webp',
   // Project logos & backgrounds
   '/logo-kiwix.png', '/logo-tauron.png', '/logo-helicity.png',
   '/logo-zamsizing.png', '/logo-galatea.png', '/logo-hrt.png', '/logo-partcl.png',
   '/kiwixbg.webp', '/tauronbg.webp', '/helicitybg.webp',
   '/zamsizingbg.webp', '/macroplace-bg.webp', '/galateabg.webp',
   '/pexels-andrewshelley-8454632.webp', '/pexels-dichupdi-35168139.webp',
-  // Contact stickers & laptop
-  '/macbook-lid.svg', '/appl.png',
-  '/sticker-acsu2.png', '/sticker-acsu.png', '/sticker-tata.png', '/sticker-data.png',
-  '/sticker-frog.png', '/sticker-c2s2.png', '/sticker-gemini.png', '/sticker-purple.png',
-  '/sticker-nell.png', '/sticker-claude.png', '/sticker-tabs.png', '/sticker-tab.png',
-  '/sticker-cu.png',
 ]
 
 function preloadAssets() {

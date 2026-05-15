@@ -210,11 +210,7 @@ function readStickyPtPx() {
   return parseFloat(raw) || 0
 }
 
-export function Projects({
-  onStartGame,
-}: {
-  onStartGame?: () => void
-} = {}) {
+export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null)
   const cardHProbeRef = useRef<HTMLDivElement>(null)
   const experienceRef = useRef<HTMLDivElement>(null)

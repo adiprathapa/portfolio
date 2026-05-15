@@ -214,7 +214,6 @@ export function Projects() {
   const experienceRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024)
   const [activeCardIndex, setActiveCardIndex] = useState(0)
-  const [preparedCardIndex, setPreparedCardIndex] = useState(2)
   const [sectionHeight, setSectionHeight] = useState('calc(100dvh + clamp(8rem, 20dvh, 12rem))')
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024)
@@ -286,7 +285,6 @@ export function Projects() {
   useMotionValueEvent(cardProgress, 'change', (latest) => {
     const nextIndex = Math.max(0, Math.min(projectOrder.length - 1, Math.floor(latest * (projectOrder.length - 1) + 0.001)))
     setActiveCardIndex((current) => current === nextIndex ? current : nextIndex)
-    setPreparedCardIndex((current) => Math.max(current, Math.min(projectOrder.length - 1, nextIndex + 2)))
   })
   const seg = 1 / 7
 
@@ -355,7 +353,7 @@ export function Projects() {
                 yValue={cardYValues[i]}
                 zIndex={i + 1}
                 opacity={cardOpacities[i]}
-                enableBackground={i <= preparedCardIndex}
+                enableBackground
                 interactive={i >= activeCardIndex && i <= activeCardIndex + 1}
               />
             ))}

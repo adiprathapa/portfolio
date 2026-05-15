@@ -25,6 +25,7 @@ const PRELOAD_IMAGES = [
   '/logo-zamsizing.png', '/logo-galatea.png', '/logo-hrt.png', '/logo-partcl.png',
   '/kiwixbg.webp', '/tauronbg.webp', '/helicitybg.webp',
   '/zamsizingbg.webp', '/macroplace-bg.webp', '/galateabg.webp',
+  '/pexels-andrewshelley-8454632.webp', '/pexels-dichupdi-35168139.webp',
   // Contact stickers & laptop
   '/macbook-lid.svg', '/appl.png',
   '/sticker-acsu2.png', '/sticker-acsu.png', '/sticker-tata.png', '/sticker-data.png',

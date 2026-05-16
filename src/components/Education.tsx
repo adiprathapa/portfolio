@@ -203,9 +203,9 @@ export function Education() {
       className="education-section relative"
       style={{
         background: isMobile
-          ? 'linear-gradient(to bottom, #f4f4f4 0%, #E4EFF5 48px, #E4EFF5 100%)'
+          ? 'linear-gradient(to bottom, #f4f4f4 0%, #E4EFF5 64px, #E4EFF5 100%)'
           : 'linear-gradient(to bottom, #f4f4f4 0%, #f4f4f4 calc(clamp(11rem, 24vh, 20rem) - 61px), #E4EFF5 calc(clamp(11rem, 24vh, 20rem) - 61px), #E4EFF5 100%)',
-        paddingTop: isMobile ? 'clamp(4rem, 9vh, 7rem)' : 'clamp(11rem, 24vh, 20rem)',
+        paddingTop: isMobile ? 'clamp(6rem, 13vh, 10rem)' : 'clamp(11rem, 24vh, 20rem)',
         paddingBottom: 'clamp(7rem, 12vh, 10rem)',
       }}
     >

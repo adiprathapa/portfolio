@@ -4,7 +4,7 @@ import { useActiveSection } from '../hooks/useActiveSection'
 import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
 import { usePostHog } from '@posthog/react'
-import { scrollToSection } from '../lib/scrollToSection'
+import { scrollToSection, sectionScrollTop } from '../lib/scrollToSection'
 import { warmCalendarPage, warmResumePage } from '../lib/prefetch'
 
 const RESUME_PAGE_URL = '/resume.html'
@@ -35,19 +35,17 @@ export function Navbar() {
   const [ctaHovered, setCtaHovered] = useState(false)
   const [forceHidden, setForceHidden] = useState(false)
   const [pastAboutMobile, setPastAboutMobile] = useState(false)
-  const scrolledRef = useRef(scrolled)
+  const navbarRef = useRef<HTMLDivElement>(null)
+  const pinnedFromScrollYRef = useRef<number | null>(null)
 
-  useEffect(() => {
-    scrolledRef.current = scrolled
-  }, [scrolled])
-
-  const pinNavbarTemporarily = () => {
-    setPinned(true)
+  const pinNavbarUntilScrollDistance = (targetTop?: number | null) => {
     setForceHidden(false)
-    setTimeout(() => {
-      setPinned(false)
-      if (scrolledRef.current) setForceHidden(true)
-    }, 2000)
+    const navbarHeight = navbarRef.current?.offsetHeight ?? 64
+    const hasMeaningfulTravel =
+      typeof targetTop !== 'number' || Math.abs(targetTop - window.scrollY) >= navbarHeight
+    const shouldPin = window.innerWidth >= 1024 && hasMeaningfulTravel
+    setPinned(shouldPin)
+    pinnedFromScrollYRef.current = shouldPin ? window.scrollY : null
   }
 
   // Clear forceHidden on any scroll-up
@@ -57,6 +55,25 @@ export function Navbar() {
       if (window.scrollY < lastY) setForceHidden(false)
       lastY = window.scrollY
     }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // After a desktop nav click, keep the bar visible until the page has moved
+  // about one navbar-height. That keeps it present through the initial travel
+  // without relying on an arbitrary timeout.
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.innerWidth < 1024) return
+      const pinnedFrom = pinnedFromScrollYRef.current
+      if (pinnedFrom === null) return
+      const navbarHeight = navbarRef.current?.offsetHeight ?? 64
+      if (Math.abs(window.scrollY - pinnedFrom) >= navbarHeight) {
+        pinnedFromScrollYRef.current = null
+        setPinned(false)
+      }
+    }
+
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -97,9 +114,9 @@ export function Navbar() {
     }
 
     posthog?.capture('nav_link_clicked', { section: href.replace('#', '') })
-    pinNavbarTemporarily()
-
     if (href.startsWith('#')) {
+      const targetTop = sectionScrollTop(href)
+      pinNavbarUntilScrollDistance(targetTop)
       e.preventDefault()
       scrollToSection(href)
     }
@@ -107,7 +124,7 @@ export function Navbar() {
 
   return (
     <>
-      <div data-navbar className="fixed top-0 left-0 right-0 z-[1001] transition-all duration-500"
+      <div ref={navbarRef} data-navbar className="fixed top-0 left-0 right-0 z-[1001] transition-all duration-500"
         style={{
           transform: (hidden && !pinned) || forceHidden || (pastAboutMobile && !menuOpen) ? 'translateY(-100%)' : 'translateY(0)',
         }}
@@ -132,7 +149,7 @@ export function Navbar() {
               href="/#top"
               className="font-heading font-semibold text-lg text-primary"
               onClick={() => {
-                pinNavbarTemporarily()
+                pinNavbarUntilScrollDistance(0)
                 window.location.href = '/#top'
               }}
             >

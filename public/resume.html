@@ -616,12 +616,13 @@
           <a class="nav-link" href="/#about">About</a>
           <a class="nav-link" href="/#projects">Projects</a>
           <a class="nav-link" href="/#experience">Experience</a>
-          <a class="nav-link" href="/resume.html">Resume</a>
+          <a class="nav-link" href="/#education">Education</a>
+          <a class="nav-link active" href="/resume.html" data-warm-page="resume">Resume</a>
           <a class="nav-link" href="/#contact">Contact</a>
         </nav>
 
         <div class="nav-right" style="display: flex; align-items: center; gap: 0.85rem;">
-          <a class="nav-cta" href="/calendar.html">
+          <a class="nav-cta" href="/calendar.html" data-warm-page="calendar">
             <span>Let's talk</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path class="arrow-chevron" d="M8 5l7 7-7 7" />
@@ -654,9 +655,10 @@
         <a class="mobile-link" href="/#about">About</a>
         <a class="mobile-link" href="/#projects">Projects</a>
         <a class="mobile-link" href="/#experience">Experience</a>
-        <a class="mobile-link" href="/resume.html">Resume</a>
+        <a class="mobile-link" href="/#education">Education</a>
+        <a class="mobile-link" href="/resume.html" data-warm-page="resume">Resume</a>
         <a class="mobile-link" href="/#contact" style="border-bottom: none;">Contact</a>
-        <a class="mobile-cta" href="/calendar.html">Let's talk</a>
+        <a class="mobile-cta" href="/calendar.html" data-warm-page="calendar">Let's talk</a>
       </nav>
     </div>
 
@@ -804,6 +806,38 @@
       mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
         if (mobileToggle.classList.contains('open')) toggleMobileMenu();
       }));
+
+      const warmedLinks = new Set();
+      function appendWarmLink(rel, href, extras = {}) {
+        const key = `${rel}:${href}`;
+        if (warmedLinks.has(key)) return;
+        warmedLinks.add(key);
+        const link = document.createElement('link');
+        link.rel = rel;
+        link.href = href;
+        Object.entries(extras).forEach(([name, value]) => link.setAttribute(name, value));
+        document.head.appendChild(link);
+      }
+      function warmResumePage() {
+        appendWarmLink('prefetch', '/resume.html', { as: 'document' });
+        appendWarmLink('preconnect', 'https://cdnjs.cloudflare.com', { crossorigin: 'anonymous' });
+        appendWarmLink('preconnect', 'https://amethyst-high-ostrich-443.mypinata.cloud', { crossorigin: 'anonymous' });
+      }
+      function warmCalendarPage() {
+        appendWarmLink('prefetch', '/calendar.html', { as: 'document' });
+        appendWarmLink('preconnect', 'https://app.cal.com', { crossorigin: 'anonymous' });
+        appendWarmLink('preconnect', 'https://cal.com', { crossorigin: 'anonymous' });
+      }
+      document.querySelectorAll('[data-warm-page="resume"]').forEach((link) => {
+        link.addEventListener('mouseenter', warmResumePage);
+        link.addEventListener('focus', warmResumePage);
+        link.addEventListener('touchstart', warmResumePage, { passive: true });
+      });
+      document.querySelectorAll('[data-warm-page="calendar"]').forEach((link) => {
+        link.addEventListener('mouseenter', warmCalendarPage);
+        link.addEventListener('focus', warmCalendarPage);
+        link.addEventListener('touchstart', warmCalendarPage, { passive: true });
+      });
 
       const RESUME_URL = "https://amethyst-high-ostrich-443.mypinata.cloud/ipfs/bafkreianuuvng3kae3yoywts5q7nh3jdhhzsfi73p2fnk5gbhjbci2djly?pinataGatewayToken=YCdehKj-KuPPWufhll8PN9cqatvMJIAgcET5Q9Uj-v7uubLjBiivI-z8SGCGmYtH";
 

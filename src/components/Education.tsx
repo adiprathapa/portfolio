@@ -170,6 +170,9 @@ export function Education() {
   const mobileVisualRef = useRef<HTMLDivElement>(null)
   const desktopVisualRef = useRef<HTMLDivElement>(null)
   const [visualHeight, setVisualHeight] = useState(0)
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < 1024 : false,
+  )
   const active = items.find((item) => item.id === activeId) ?? items[0]
 
   useEffect(() => {
@@ -184,6 +187,12 @@ export function Education() {
     return () => ro.disconnect()
   }, [])
 
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 1024)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
   const handleSelect = (id: EduId) => {
     setActiveId(id)
   }
@@ -193,9 +202,10 @@ export function Education() {
       id="education"
       className="education-section relative"
       style={{
-        background:
-          'linear-gradient(to bottom, #f4f4f4 0%, #f4f4f4 calc(clamp(11rem, 24vh, 20rem) - 61px), #E4EFF5 calc(clamp(11rem, 24vh, 20rem) - 61px), #E4EFF5 100%)',
-        paddingTop: 'clamp(11rem, 24vh, 20rem)',
+        background: isMobile
+          ? 'linear-gradient(to bottom, #f4f4f4 0%, #E4EFF5 48px, #E4EFF5 100%)'
+          : 'linear-gradient(to bottom, #f4f4f4 0%, #f4f4f4 calc(clamp(11rem, 24vh, 20rem) - 61px), #E4EFF5 calc(clamp(11rem, 24vh, 20rem) - 61px), #E4EFF5 100%)',
+        paddingTop: isMobile ? 'clamp(4rem, 9vh, 7rem)' : 'clamp(11rem, 24vh, 20rem)',
         paddingBottom: 'clamp(7rem, 12vh, 10rem)',
       }}
     >

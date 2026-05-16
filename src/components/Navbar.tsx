@@ -6,6 +6,10 @@ import { MobileMenu } from './MobileMenu'
 import { usePostHog } from '@posthog/react'
 import { scrollToSection, sectionScrollTop } from '../lib/scrollToSection'
 import { warmCalendarPage, warmResumePage } from '../lib/prefetch'
+import {
+  announceHomeSectionNavigation,
+  HOME_SECTION_NAVIGATION_EVENT,
+} from '../lib/homeSectionNavigation'
 
 const RESUME_PAGE_URL = '/resume.html'
 const CALENDAR_PAGE_URL = '/calendar.html'
@@ -104,6 +108,17 @@ export function Navbar() {
     }
   }, [])
 
+  useEffect(() => {
+    const onHomeSectionNavigation = (event: Event) => {
+      const href = (event as CustomEvent<string>).detail
+      if (!href?.startsWith('#')) return
+      pinNavbarThroughNavScroll(sectionScrollTop(href))
+    }
+
+    window.addEventListener(HOME_SECTION_NAVIGATION_EVENT, onHomeSectionNavigation)
+    return () => window.removeEventListener(HOME_SECTION_NAVIGATION_EVENT, onHomeSectionNavigation)
+  }, [])
+
   // On mobile, the navbar should drop sticky behavior past the About section.
   // We track whether we've scrolled past About (= top of projects-intro).
   useEffect(() => {
@@ -141,8 +156,7 @@ export function Navbar() {
 
     posthog?.capture('nav_link_clicked', { section: href.replace('#', '') })
     if (href.startsWith('#')) {
-      const targetTop = sectionScrollTop(href)
-      pinNavbarThroughNavScroll(targetTop)
+      announceHomeSectionNavigation(href)
       e.preventDefault()
       scrollToSection(href)
     }
@@ -175,7 +189,7 @@ export function Navbar() {
               href="/#top"
               className="font-heading font-semibold text-lg text-primary"
               onClick={() => {
-                pinNavbarThroughNavScroll(0)
+                announceHomeSectionNavigation('#top')
                 window.location.href = '/#top'
               }}
             >

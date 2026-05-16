@@ -1,6 +1,7 @@
 import { scrollToSection } from '../lib/scrollToSection'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { warmCalendarPage, warmResumePage } from '../lib/prefetch'
+import { announceHomeSectionNavigation } from '../lib/homeSectionNavigation'
 
 const RESUME_PAGE_URL = '/resume.html'
 
@@ -168,6 +169,7 @@ export function Footer() {
   const handleFooterLinkClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     if (href.startsWith('#')) {
       e.preventDefault()
+      announceHomeSectionNavigation(href)
       scrollToSection(href)
     }
   }

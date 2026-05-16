@@ -7,6 +7,7 @@ import { Projects } from './components/Projects'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { scrollToSection } from './lib/scrollToSection'
+import { announceHomeSectionNavigation } from './lib/homeSectionNavigation'
 
 const ProjectsGame = lazy(() =>
   import('./components/ProjectsGame').then((module) => ({ default: module.ProjectsGame })),
@@ -70,6 +71,7 @@ function App() {
     if (!hash) return
     // Delay to let React render the target elements
     setTimeout(() => {
+      if (pendingHomeSection) announceHomeSectionNavigation(hash)
       scrollToSection(hash)
     }, 500)
   }, [])

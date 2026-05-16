@@ -82,6 +82,20 @@
     else if (mq.addListener) mq.addListener(onChange);
   }
 
+  function setupHomeSectionLinks() {
+    document.querySelectorAll('.video-footer a[href^="/#"]').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        var href = link.getAttribute('href');
+        if (!href) return;
+        var hashIndex = href.indexOf('#');
+        if (hashIndex === -1) return;
+        event.preventDefault();
+        sessionStorage.setItem('pending-home-section', href.slice(hashIndex));
+        window.location.href = '/';
+      });
+    });
+  }
+
   function setupPaint(el) {
     if (paintCleanup) {
       paintCleanup();
@@ -177,6 +191,7 @@
   function init() {
     var el = document.querySelector('.video-footer__word');
     if (!el) return;
+    setupHomeSectionLinks();
     setupVideoLoading(el);
     setupPaint(el);
 

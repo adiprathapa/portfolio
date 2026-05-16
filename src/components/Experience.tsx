@@ -649,8 +649,8 @@ export function Experience() {
       className="experience-section"
       style={{
         backgroundColor: '#f4f4f4',
-        paddingBottom: 0,
-        marginBottom: -48,
+        paddingBottom: isMobileView ? 32 : 0,
+        marginBottom: isMobileView ? 0 : -48,
       }}
     >
       <div ref={sectionRef}>

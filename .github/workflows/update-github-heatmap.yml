@@ -1,0 +1,30 @@
+name: Update GitHub heatmap cache
+
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/update-github-heatmap.mjs
+      - name: Commit refreshed cache
+        run: |
+          if git diff --quiet -- public/github-heatmap.json; then
+            echo "No heatmap changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/github-heatmap.json
+          git commit -m "chore: refresh github heatmap cache"
+          git push

@@ -4,26 +4,82 @@
   var H = 780;
   var paintCleanup = null;
 
-  function applyAadiMask(el) {
-    var c = document.createElement('canvas');
-    var mw = 1200, mh = 740, s = 2;
-    c.width = mw * s;
-    c.height = mh * s;
-    var ctx = c.getContext('2d');
-    if (!ctx) return;
-    ctx.scale(s, s);
-    ctx.font = '600 620px "Poppins"';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'alphabetic';
-    ctx.fillStyle = 'white';
-    ctx.fillText('आदि', mw / 2, 690);
-    var url = 'url(' + c.toDataURL('image/png') + ')';
-    el.style.webkitMaskImage = url;
-    el.style.maskImage = url;
-    el.style.visibility = 'visible';
-
+  function loadVideo(el) {
     var v = el.querySelector('video');
-    if (v) v.play().catch(function () {});
+    if (!v || v.dataset.loaded === 'true') return;
+    var src = v.dataset.src;
+    if (!src) return;
+    v.src = src;
+    v.preload = 'metadata';
+    v.dataset.loaded = 'true';
+    v.load();
+    v.play().catch(function () {});
+  }
+
+  function setupVideoLoading(el) {
+    var footerNear = false;
+    var pointerCleanup = null;
+
+    function stopWatchingPointer() {
+      if (pointerCleanup) {
+        pointerCleanup();
+        pointerCleanup = null;
+      }
+    }
+
+    function maybeLoadFromPointer(e) {
+      if (!footerNear || window.innerWidth < DESKTOP_MIN_WIDTH) return;
+      var rect = el.getBoundingClientRect();
+      var proximity = 180;
+      var withinX = e.clientX >= rect.left - proximity && e.clientX <= rect.right + proximity;
+      var withinY = e.clientY >= rect.top - proximity && e.clientY <= rect.bottom + proximity;
+      if (withinX && withinY) {
+        loadVideo(el);
+        stopWatchingPointer();
+      }
+    }
+
+    function startWatchingPointer() {
+      if (pointerCleanup || window.innerWidth < DESKTOP_MIN_WIDTH) return;
+      window.addEventListener('pointermove', maybeLoadFromPointer, { passive: true });
+      var onEnter = function () {
+        loadVideo(el);
+        stopWatchingPointer();
+      };
+      el.addEventListener('pointerenter', onEnter);
+      pointerCleanup = function () {
+        window.removeEventListener('pointermove', maybeLoadFromPointer);
+        el.removeEventListener('pointerenter', onEnter);
+      };
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        if (!entries[0].isIntersecting) return;
+        footerNear = true;
+        observer.disconnect();
+        if (window.innerWidth < DESKTOP_MIN_WIDTH) {
+          loadVideo(el);
+        } else {
+          startWatchingPointer();
+        }
+      },
+      { rootMargin: '700px 0px' }
+    );
+    observer.observe(el);
+
+    var mq = window.matchMedia('(min-width: ' + DESKTOP_MIN_WIDTH + 'px)');
+    var onChange = function () {
+      if (!footerNear) return;
+      if (mq.matches) {
+        startWatchingPointer();
+      } else {
+        stopWatchingPointer();
+        loadVideo(el);
+      }
+    };
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else if (mq.addListener) mq.addListener(onChange);
   }
 
   function setupPaint(el) {
@@ -121,7 +177,7 @@
   function init() {
     var el = document.querySelector('.video-footer__word');
     if (!el) return;
-    applyAadiMask(el);
+    setupVideoLoading(el);
     setupPaint(el);
 
     var mq = window.matchMedia('(min-width: ' + DESKTOP_MIN_WIDTH + 'px)');
@@ -130,11 +186,9 @@
     else if (mq.addListener) mq.addListener(onChange);
   }
 
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(init);
-  } else if (document.readyState === 'complete') {
-    init();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    window.addEventListener('load', init);
+    init();
   }
 })();

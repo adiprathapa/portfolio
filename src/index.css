@@ -441,6 +441,8 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 3rem;
   margin-inline: auto;
   width: min(100%, 1560px);
+  -webkit-mask-image: url('/footer-aadi-mask.svg');
+  mask-image: url('/footer-aadi-mask.svg');
   -webkit-mask-position: center;
   mask-position: center;
   -webkit-mask-repeat: no-repeat;

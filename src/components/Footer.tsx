@@ -20,8 +20,8 @@ const resourceLinks = [
 export function Footer() {
   const wordRef = useRef<HTMLDivElement>(null)
   const paintCanvasRef = useRef<HTMLCanvasElement>(null)
-  const [maskReady, setMaskReady] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
+  const [footerNear, setFooterNear] = useState(false)
   const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
@@ -37,39 +37,10 @@ export function Footer() {
     const el = wordRef.current
     if (!el) return
 
-    const applyCanvasMask = async () => {
-      await document.fonts.ready
-      const canvas = document.createElement('canvas')
-      const w = 1200
-      const h = 740
-      const scale = 2
-      canvas.width = w * scale
-      canvas.height = h * scale
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-      ctx.scale(scale, scale)
-      ctx.font = '600 620px "Poppins"'
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'alphabetic'
-      ctx.fillStyle = 'white'
-      ctx.fillText('\u0906\u0926\u093F', w / 2, 690)
-      const url = `url(${canvas.toDataURL('image/png')})`
-      el.style.webkitMaskImage = url
-      el.style.maskImage = url
-      setMaskReady(true)
-    }
-
-    applyCanvasMask()
-  }, [])
-
-  useEffect(() => {
-    const el = wordRef.current
-    if (!el) return
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVideoReady(true)
+          setFooterNear(true)
           observer.disconnect()
         }
       },
@@ -79,6 +50,28 @@ export function Footer() {
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
+
+  useEffect(() => {
+    if (!footerNear || isDesktop) return
+    setVideoReady(true)
+  }, [footerNear, isDesktop])
+
+  useEffect(() => {
+    if (!footerNear || !isDesktop || videoReady) return
+    const wordEl = wordRef.current
+    if (!wordEl) return
+
+    const proximity = 180
+    const handlePointerMove = (e: PointerEvent) => {
+      const rect = wordEl.getBoundingClientRect()
+      const withinX = e.clientX >= rect.left - proximity && e.clientX <= rect.right + proximity
+      const withinY = e.clientY >= rect.top - proximity && e.clientY <= rect.bottom + proximity
+      if (withinX && withinY) setVideoReady(true)
+    }
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true })
+    return () => window.removeEventListener('pointermove', handlePointerMove)
+  }, [footerNear, isDesktop, videoReady])
 
   useEffect(() => {
     if (!isDesktop) return
@@ -186,7 +179,9 @@ export function Footer() {
           ref={wordRef}
           className="video-footer__word"
           aria-label="आदि"
-          style={{ visibility: maskReady ? 'visible' : 'hidden' }}
+          onPointerEnter={() => {
+            if (isDesktop) setVideoReady(true)
+          }}
         >
           <video
             className="video-footer__media"

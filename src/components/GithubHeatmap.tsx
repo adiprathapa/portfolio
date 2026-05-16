@@ -7,6 +7,12 @@ import { RippleButton } from './ui/ripple-button'
 type Phase = 'idle' | 'playing' | 'over'
 type Dir = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
 interface Pos { r: number; c: number }
+interface CachedHeatmap {
+  year: number
+  updatedAt: string
+  total: number
+  weeks: number[][]
+}
 
 /* ─── palette & constants ─── */
 const LEVELS = ['#EFF3F8', '#BAE0F5', '#7CCAF0', '#38BDF8', '#0671A4']
@@ -53,6 +59,33 @@ function makeFallback(): number[][] {
   return weeks
 }
 
+function buildWeeksFromContributions(days: { date: string; count: number; level: number }[]) {
+  const weeks: number[][] = []
+  let week: number[] = []
+  if (days.length) {
+    const dow = new Date(days[0].date + 'T00:00').getDay()
+    for (let i = 0; i < dow; i++) week.push(-1)
+  }
+  for (const day of days) {
+    week.push(Math.min(4, day.level ?? 0))
+    if (week.length === 7) { weeks.push(week); week = [] }
+  }
+  if (week.length) { while (week.length < 7) week.push(-1); weeks.push(week) }
+  return weeks
+}
+
+function isCachedHeatmap(value: unknown): value is CachedHeatmap {
+  if (!value || typeof value !== 'object') return false
+  const candidate = value as Partial<CachedHeatmap>
+  return (
+    candidate.year === YEAR &&
+    typeof candidate.updatedAt === 'string' &&
+    typeof candidate.total === 'number' &&
+    Array.isArray(candidate.weeks) &&
+    candidate.weeks.every((week) => Array.isArray(week))
+  )
+}
+
 /* ─── component ─── */
 export function GithubHeatmap() {
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -92,8 +125,26 @@ export function GithubHeatmap() {
   /* ═══════════════════════════════ data fetch ═══════════════════════════════ */
   useEffect(() => {
     let cancelled = false
+    const applyHeatmap = (weeks: number[][], nextTotal: number) => {
+      origRef.current = weeks.map(w => [...w])
+      gridRef.current = weeks.map(w => [...w])
+      setGrid(weeks)
+      setTotal(nextTotal)
+      setLoading(false)
+    }
+
     ;(async () => {
       try {
+        const cachedResponse = await fetch('/github-heatmap.json')
+        if (cachedResponse.ok) {
+          const cached = await cachedResponse.json()
+          if (isCachedHeatmap(cached)) {
+            if (cancelled) return
+            applyHeatmap(cached.weeks, cached.total)
+            return
+          }
+        }
+
         const res = await fetch(
           `https://github-contributions-api.jogruber.de/v4/${USER}?y=${YEAR}`,
         )
@@ -105,34 +156,15 @@ export function GithubHeatmap() {
           )
         days.sort((a, b) => a.date.localeCompare(b.date))
 
-        const weeks: number[][] = []
-        let wk: number[] = []
-        if (days.length) {
-          const dow = new Date(days[0].date + 'T00:00').getDay()
-          for (let i = 0; i < dow; i++) wk.push(-1)
-        }
-        let tot = 0
-        for (const d of days) {
-          wk.push(Math.min(4, d.level ?? 0))
-          tot += d.count
-          if (wk.length === 7) { weeks.push(wk); wk = [] }
-        }
-        if (wk.length) { while (wk.length < 7) wk.push(-1); weeks.push(wk) }
+        const weeks = buildWeeksFromContributions(days)
+        const tot = days.reduce((sum, day) => sum + day.count, 0)
         if (cancelled) return
 
-        origRef.current = weeks.map(w => [...w])
-        gridRef.current = weeks.map(w => [...w])
-        setGrid(weeks)
-        setTotal(tot)
-        setLoading(false)
+        applyHeatmap(weeks, tot)
       } catch {
         if (cancelled) return
         const fb = makeFallback()
-        origRef.current = fb.map(w => [...w])
-        gridRef.current = fb.map(w => [...w])
-        setGrid(fb)
-        setTotal(fb.flat().filter(v => v > 0).length * 3)
-        setLoading(false)
+        applyHeatmap(fb, fb.flat().filter(v => v > 0).length * 3)
       }
     })()
     return () => { cancelled = true }

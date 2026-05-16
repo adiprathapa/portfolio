@@ -36,16 +36,27 @@ export function Navbar() {
   const [forceHidden, setForceHidden] = useState(false)
   const [pastAboutMobile, setPastAboutMobile] = useState(false)
   const navbarRef = useRef<HTMLDivElement>(null)
-  const pinnedFromScrollYRef = useRef<number | null>(null)
+  const navPinPhaseRef = useRef<'idle' | 'traveling' | 'settled'>('idle')
+  const releaseFromScrollYRef = useRef<number | null>(null)
+  const settleTimerRef = useRef<number | null>(null)
 
-  const pinNavbarUntilScrollDistance = (targetTop?: number | null) => {
+  const clearSettleTimer = () => {
+    if (settleTimerRef.current !== null) {
+      window.clearTimeout(settleTimerRef.current)
+      settleTimerRef.current = null
+    }
+  }
+
+  const pinNavbarThroughNavScroll = (targetTop?: number | null) => {
     setForceHidden(false)
     const navbarHeight = navbarRef.current?.offsetHeight ?? 64
     const hasMeaningfulTravel =
       typeof targetTop !== 'number' || Math.abs(targetTop - window.scrollY) >= navbarHeight
     const shouldPin = window.innerWidth >= 1024 && hasMeaningfulTravel
     setPinned(shouldPin)
-    pinnedFromScrollYRef.current = shouldPin ? window.scrollY : null
+    clearSettleTimer()
+    navPinPhaseRef.current = shouldPin ? 'traveling' : 'idle'
+    releaseFromScrollYRef.current = null
   }
 
   // Clear forceHidden on any scroll-up
@@ -59,23 +70,38 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // After a desktop nav click, keep the bar visible until the page has moved
-  // about one navbar-height. That keeps it present through the initial travel
-  // without relying on an arbitrary timeout.
+  // After a desktop nav click, keep the bar visible through the automatic
+  // smooth-scroll. Once that motion settles, wait until the user's next scroll
+  // moves about one navbar-height before returning to normal hide/show behavior.
   useEffect(() => {
     const onScroll = () => {
       if (window.innerWidth < 1024) return
-      const pinnedFrom = pinnedFromScrollYRef.current
-      if (pinnedFrom === null) return
+
+      if (navPinPhaseRef.current === 'traveling') {
+        clearSettleTimer()
+        settleTimerRef.current = window.setTimeout(() => {
+          navPinPhaseRef.current = 'settled'
+          releaseFromScrollYRef.current = window.scrollY
+          settleTimerRef.current = null
+        }, 160)
+        return
+      }
+
+      const releaseFrom = releaseFromScrollYRef.current
+      if (navPinPhaseRef.current !== 'settled' || releaseFrom === null) return
       const navbarHeight = navbarRef.current?.offsetHeight ?? 64
-      if (Math.abs(window.scrollY - pinnedFrom) >= navbarHeight) {
-        pinnedFromScrollYRef.current = null
+      if (Math.abs(window.scrollY - releaseFrom) >= navbarHeight) {
+        navPinPhaseRef.current = 'idle'
+        releaseFromScrollYRef.current = null
         setPinned(false)
       }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      clearSettleTimer()
+    }
   }, [])
 
   // On mobile, the navbar should drop sticky behavior past the About section.
@@ -116,7 +142,7 @@ export function Navbar() {
     posthog?.capture('nav_link_clicked', { section: href.replace('#', '') })
     if (href.startsWith('#')) {
       const targetTop = sectionScrollTop(href)
-      pinNavbarUntilScrollDistance(targetTop)
+      pinNavbarThroughNavScroll(targetTop)
       e.preventDefault()
       scrollToSection(href)
     }
@@ -149,7 +175,7 @@ export function Navbar() {
               href="/#top"
               className="font-heading font-semibold text-lg text-primary"
               onClick={() => {
-                pinNavbarUntilScrollDistance(0)
+                pinNavbarThroughNavScroll(0)
                 window.location.href = '/#top'
               }}
             >

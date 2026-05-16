@@ -77,7 +77,7 @@ export function sectionScrollTop(href: string) {
   if (href === '#experience') {
     const container = projectsContainer()
     if (container) {
-      const nudge = window.innerWidth < 1024 ? 50 : 25
+      const nudge = window.innerWidth < 1024 ? 70 : 25
       return documentTop(container) + container.offsetHeight - window.innerHeight + experienceTopInsideViewport() - offset - 50 + nudge
     }
   }

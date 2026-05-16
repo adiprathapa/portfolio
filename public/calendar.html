@@ -715,6 +715,18 @@
         if (mobileToggle.classList.contains('open')) toggleMobileMenu();
       }));
 
+      document.querySelectorAll('.nav-links a[href^="/#"], .mobile-menu a[href^="/#"]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const href = link.getAttribute('href');
+          if (!href) return;
+          const hashIndex = href.indexOf('#');
+          if (hashIndex === -1) return;
+          event.preventDefault();
+          sessionStorage.setItem('pending-home-section', href.slice(hashIndex));
+          window.location.href = '/';
+        });
+      });
+
       const warmedLinks = new Set();
       function appendWarmLink(rel, href, extras = {}) {
         const key = `${rel}:${href}`;

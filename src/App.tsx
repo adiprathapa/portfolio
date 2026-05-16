@@ -60,7 +60,13 @@ function App() {
     // Start preloading after initial render
     preloadAssets()
 
-    const hash = window.location.hash
+    const pendingHomeSection = sessionStorage.getItem('pending-home-section')
+    if (pendingHomeSection) {
+      sessionStorage.removeItem('pending-home-section')
+      window.history.replaceState(null, '', pendingHomeSection)
+    }
+
+    const hash = pendingHomeSection || window.location.hash
     if (!hash) return
     // Delay to let React render the target elements
     setTimeout(() => {

@@ -21,9 +21,13 @@ const resourceLinks = [
 export function Footer() {
   const wordRef = useRef<HTMLDivElement>(null)
   const paintCanvasRef = useRef<HTMLCanvasElement>(null)
-  const [isDesktop, setIsDesktop] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
+  )
+  const [maskReady, setMaskReady] = useState(false)
   const [footerNear, setFooterNear] = useState(false)
   const [videoReady, setVideoReady] = useState(false)
+  const [videoPlaying, setVideoPlaying] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -73,6 +77,47 @@ export function Footer() {
     window.addEventListener('pointermove', handlePointerMove, { passive: true })
     return () => window.removeEventListener('pointermove', handlePointerMove)
   }, [footerNear, isDesktop, videoReady])
+
+  useEffect(() => {
+    const el = wordRef.current
+    if (!el) return
+
+    let cancelled = false
+    setMaskReady(false)
+
+    const applyCanvasMask = async () => {
+      await document.fonts.ready
+      if (cancelled) return
+
+      const canvas = document.createElement('canvas')
+      const width = 1200
+      const height = 740
+      const scale = 2
+      canvas.width = width * scale
+      canvas.height = height * scale
+
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+
+      ctx.scale(scale, scale)
+      ctx.font = '600 620px "Poppins"'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'alphabetic'
+      ctx.fillStyle = 'white'
+      ctx.fillText('\u0906\u0926\u093F', width / 2, 690)
+
+      const maskUrl = `url(${canvas.toDataURL('image/png')})`
+      el.style.webkitMaskImage = maskUrl
+      el.style.maskImage = maskUrl
+      setMaskReady(true)
+    }
+
+    void applyCanvasMask()
+
+    return () => {
+      cancelled = true
+    }
+  }, [isDesktop])
 
   useEffect(() => {
     if (!isDesktop) return
@@ -179,8 +224,9 @@ export function Footer() {
       <div className="video-footer__inner">
         <div
           ref={wordRef}
-          className="video-footer__word"
+          className={`video-footer__word${videoPlaying ? ' video-footer__word--video-playing' : ''}`}
           aria-label="आदि"
+          style={{ visibility: !maskReady ? 'hidden' : 'visible' }}
           onPointerEnter={() => {
             if (isDesktop) setVideoReady(true)
           }}
@@ -188,12 +234,13 @@ export function Footer() {
           <video
             className="video-footer__media"
             src={videoReady ? '/footer-letters.mp4' : undefined}
-            poster="/footer-letters-poster.jpg"
             autoPlay
             muted
             loop
             playsInline
             preload={videoReady ? 'metadata' : 'none'}
+            onPlaying={() => setVideoPlaying(true)}
+            onError={() => setVideoPlaying(false)}
           />
           {isDesktop && (
             <canvas

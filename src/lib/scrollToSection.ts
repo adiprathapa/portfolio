@@ -15,6 +15,14 @@ function scrollToTop(top: number, behavior: ScrollBehaviorOption = 'smooth') {
   })
 }
 
+function jumpToTop(top: number) {
+  const root = document.documentElement
+  const previousScrollBehavior = root.style.scrollBehavior
+  root.style.scrollBehavior = 'auto'
+  window.scrollTo(0, Math.max(0, Math.round(top)))
+  root.style.scrollBehavior = previousScrollBehavior
+}
+
 function projectsContainer() {
   return document.getElementById('projects')?.parentElement ?? null
 }
@@ -85,7 +93,7 @@ export function sectionScrollTop(href: string) {
   if (href === '#education') {
     const education = document.getElementById('education')
     if (education) {
-      const nudge = window.innerWidth < 1024 ? 55 : 145
+      const nudge = window.innerWidth < 1024 ? 25 : 145
       return documentTop(education) + nudge
     }
   }
@@ -115,5 +123,12 @@ export function scrollToSection(href: string, behavior: ScrollBehaviorOption = '
   const top = sectionScrollTop(href)
   if (top !== null) {
     scrollToTop(top, behavior)
+  }
+}
+
+export function jumpToSection(href: string) {
+  const top = sectionScrollTop(href)
+  if (top !== null) {
+    jumpToTop(top)
   }
 }

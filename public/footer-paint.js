@@ -4,6 +4,30 @@
   var H = 780;
   var paintCleanup = null;
 
+  function applyAadiMask(el) {
+    el.style.visibility = 'hidden';
+
+    var c = document.createElement('canvas');
+    var mw = 1200, mh = 740, s = 2;
+    c.width = mw * s;
+    c.height = mh * s;
+    var ctx = c.getContext('2d');
+    if (!ctx) {
+      el.style.visibility = 'visible';
+      return;
+    }
+    ctx.scale(s, s);
+    ctx.font = '600 620px "Poppins"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = 'white';
+    ctx.fillText('आदि', mw / 2, 690);
+    var url = 'url(' + c.toDataURL('image/png') + ')';
+    el.style.webkitMaskImage = url;
+    el.style.maskImage = url;
+    el.style.visibility = 'visible';
+  }
+
   function loadVideo(el) {
     var v = el.querySelector('video');
     if (!v || v.dataset.loaded === 'true') return;
@@ -12,6 +36,12 @@
     v.src = src;
     v.preload = 'metadata';
     v.dataset.loaded = 'true';
+    v.addEventListener('playing', function () {
+      el.classList.add('video-footer__word--video-playing');
+    }, { once: true });
+    v.addEventListener('error', function () {
+      el.classList.remove('video-footer__word--video-playing');
+    });
     v.load();
     v.play().catch(function () {});
   }
@@ -193,17 +223,23 @@
     if (!el) return;
     setupHomeSectionLinks();
     setupVideoLoading(el);
+    applyAadiMask(el);
     setupPaint(el);
 
     var mq = window.matchMedia('(min-width: ' + DESKTOP_MIN_WIDTH + 'px)');
-    var onChange = function () { setupPaint(el); };
+    var onChange = function () {
+      applyAadiMask(el);
+      setupPaint(el);
+    };
     if (mq.addEventListener) mq.addEventListener('change', onChange);
     else if (mq.addListener) mq.addListener(onChange);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(init);
+  } else if (document.readyState === 'complete') {
     init();
+  } else {
+    window.addEventListener('load', init);
   }
 })();

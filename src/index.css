@@ -441,8 +441,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 3rem;
   margin-inline: auto;
   width: min(100%, 1560px);
-  -webkit-mask-image: url('/footer-aadi-mask.svg');
-  mask-image: url('/footer-aadi-mask.svg');
+  background: #ffffff;
   -webkit-mask-position: center;
   mask-position: center;
   -webkit-mask-repeat: no-repeat;
@@ -475,6 +474,12 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   object-fit: cover;
   filter: saturate(0.95) contrast(1.05) brightness(1.05);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.video-footer__word--video-playing .video-footer__media {
+  opacity: 1;
 }
 
 .video-footer__content {
@@ -639,6 +644,7 @@ h1, h2, h3, h4, h5, h6 {
 
   .video-footer__word {
     margin-top: 0;
+    visibility: hidden;
   }
 
   .video-footer__columns {
@@ -664,6 +670,11 @@ h1, h2, h3, h4, h5, h6 {
 
   .video-footer__inner {
     padding-top: 2.5rem;
+  }
+
+  .video-footer__word {
+    aspect-ratio: 1200 / 780;
+    background: transparent;
   }
 }
 

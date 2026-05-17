@@ -6,7 +6,7 @@ import { ProjectsIntro } from './components/ProjectsIntro'
 import { Projects } from './components/Projects'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
-import { scrollToSection } from './lib/scrollToSection'
+import { jumpToSection, scrollToSection } from './lib/scrollToSection'
 import { announceHomeSectionNavigation } from './lib/homeSectionNavigation'
 
 const ProjectsGame = lazy(() =>
@@ -69,9 +69,25 @@ function App() {
 
     const hash = pendingHomeSection || window.location.hash
     if (!hash) return
-    // Delay to let React render the target elements
+
+    if (pendingHomeSection) {
+      const settleCrossPageArrival = async () => {
+        await document.fonts.ready
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            announceHomeSectionNavigation(hash)
+            jumpToSection(hash)
+            window.setTimeout(() => jumpToSection(hash), 350)
+          })
+        })
+      }
+
+      settleCrossPageArrival()
+      return
+    }
+
+    // Delay normal hash restores to let React render the target elements.
     setTimeout(() => {
-      if (pendingHomeSection) announceHomeSectionNavigation(hash)
       scrollToSection(hash)
     }, 500)
   }, [])

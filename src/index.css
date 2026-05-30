@@ -363,14 +363,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .conveyor-row-clip {
   width: 100%;
-  overflow: hidden;
   overflow-x: clip;
-  clip-path: inset(
-    calc(-1 * var(--conveyor-flip-bleed))
-    calc(-1 * var(--conveyor-flip-bleed))
-    calc(-1 * var(--conveyor-flip-bleed))
-    calc(-1 * var(--conveyor-flip-bleed))
-  );
+  overflow-y: visible;
 }
 
 @media (max-width: 1023px) {

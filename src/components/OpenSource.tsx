@@ -81,7 +81,12 @@ export function OpenSource() {
               decoding="async"
               className="h-12 w-12 object-contain"
               style={{
-                filter: item.id === 'kubeflow' ? 'grayscale(1)' : 'grayscale(1) contrast(1.4)',
+                filter:
+                  item.id === 'kubeflow'
+                    ? 'grayscale(1)'
+                    : item.id === 'kiwix'
+                      ? 'grayscale(1) brightness(1.4) contrast(0.6)'
+                      : 'grayscale(1) contrast(1.4)',
                 opacity: 0.85,
                 mixBlendMode: 'multiply',
               }}

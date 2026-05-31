@@ -18,7 +18,7 @@
     }
     var text = 'आदि';
     var baselineY = 690;
-    var font = '600 620px "Poppins"';
+    var font = '600 480px "Poppins"';
 
     ctx.scale(s, s);
     ctx.font = font;

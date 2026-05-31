@@ -16,12 +16,40 @@
       el.style.visibility = 'visible';
       return;
     }
+    var text = 'आदि';
+    var baselineY = 690;
+    var font = '600 620px "Poppins"';
+
     ctx.scale(s, s);
-    ctx.font = '600 620px "Poppins"';
+    ctx.font = font;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = 'white';
-    ctx.fillText('आदि', mw / 2, 690);
+    ctx.fillText(text, mw / 2, baselineY);
+
+    var pixels = ctx.getImageData(0, 0, c.width, c.height).data;
+    var minX = c.width;
+    var maxX = -1;
+    for (var y = 0; y < c.height; y += 1) {
+      for (var x = 0; x < c.width; x += 1) {
+        if (pixels[(y * c.width + x) * 4 + 3] > 0) {
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+        }
+      }
+    }
+
+    if (maxX >= minX) {
+      var glyphCenter = (minX + maxX) / 2;
+      var visualCenterCorrection = (c.width / 2 - glyphCenter) / s;
+      ctx.clearRect(0, 0, mw, mh);
+      ctx.font = font;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = 'white';
+      ctx.fillText(text, mw / 2 + visualCenterCorrection, baselineY);
+    }
+
     var url = 'url(' + c.toDataURL('image/png') + ')';
     el.style.webkitMaskImage = url;
     el.style.maskImage = url;

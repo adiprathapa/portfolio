@@ -100,12 +100,39 @@ export function Footer() {
       const ctx = canvas.getContext('2d')
       if (!ctx) return
 
+      const text = '\u0906\u0926\u093F'
+      const baselineY = 690
+      const font = '600 620px "Poppins"'
+
       ctx.scale(scale, scale)
-      ctx.font = '600 620px "Poppins"'
+      ctx.font = font
       ctx.textAlign = 'center'
       ctx.textBaseline = 'alphabetic'
       ctx.fillStyle = 'white'
-      ctx.fillText('\u0906\u0926\u093F', width / 2, 690)
+      ctx.fillText(text, width / 2, baselineY)
+
+      const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+      let minX = canvas.width
+      let maxX = -1
+      for (let y = 0; y < canvas.height; y += 1) {
+        for (let x = 0; x < canvas.width; x += 1) {
+          if (pixels[(y * canvas.width + x) * 4 + 3] > 0) {
+            if (x < minX) minX = x
+            if (x > maxX) maxX = x
+          }
+        }
+      }
+
+      if (maxX >= minX) {
+        const glyphCenter = (minX + maxX) / 2
+        const visualCenterCorrection = (canvas.width / 2 - glyphCenter) / scale
+        ctx.clearRect(0, 0, width, height)
+        ctx.font = font
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'alphabetic'
+        ctx.fillStyle = 'white'
+        ctx.fillText(text, width / 2 + visualCenterCorrection, baselineY)
+      }
 
       const maskUrl = `url(${canvas.toDataURL('image/png')})`
       el.style.webkitMaskImage = maskUrl

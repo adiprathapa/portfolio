@@ -123,7 +123,7 @@ export function Footer() {
         }
       }
 
-      if (isDesktop && maxX >= minX) {
+      if (maxX >= minX) {
         const glyphCenter = (minX + maxX) / 2
         const visualCenterCorrection = (canvas.width / 2 - glyphCenter) / scale
         ctx.clearRect(0, 0, width, height)

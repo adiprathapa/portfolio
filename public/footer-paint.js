@@ -28,19 +28,20 @@
     ctx.fillText(text, mw / 2, baselineY);
 
     var pixels = ctx.getImageData(0, 0, c.width, c.height).data;
-    var minX = c.width;
-    var maxX = -1;
+    var sumX = 0;
+    var totalAlpha = 0;
     for (var y = 0; y < c.height; y += 1) {
       for (var x = 0; x < c.width; x += 1) {
-        if (pixels[(y * c.width + x) * 4 + 3] > 0) {
-          if (x < minX) minX = x;
-          if (x > maxX) maxX = x;
+        var a = pixels[(y * c.width + x) * 4 + 3];
+        if (a > 0) {
+          sumX += x * a;
+          totalAlpha += a;
         }
       }
     }
 
-    if (maxX >= minX) {
-      var glyphCenter = (minX + maxX) / 2;
+    if (totalAlpha > 0) {
+      var glyphCenter = sumX / totalAlpha;
       var visualCenterCorrection = (c.width / 2 - glyphCenter) / s;
       ctx.clearRect(0, 0, mw, mh);
       ctx.font = font;

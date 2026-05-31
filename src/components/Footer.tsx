@@ -112,19 +112,20 @@ export function Footer() {
       ctx.fillText(text, width / 2, baselineY)
 
       const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data
-      let minX = canvas.width
-      let maxX = -1
+      let sumX = 0
+      let totalAlpha = 0
       for (let y = 0; y < canvas.height; y += 1) {
         for (let x = 0; x < canvas.width; x += 1) {
-          if (pixels[(y * canvas.width + x) * 4 + 3] > 0) {
-            if (x < minX) minX = x
-            if (x > maxX) maxX = x
+          const a = pixels[(y * canvas.width + x) * 4 + 3]
+          if (a > 0) {
+            sumX += x * a
+            totalAlpha += a
           }
         }
       }
 
-      if (maxX >= minX) {
-        const glyphCenter = (minX + maxX) / 2
+      if (totalAlpha > 0) {
+        const glyphCenter = sumX / totalAlpha
         const visualCenterCorrection = (canvas.width / 2 - glyphCenter) / scale
         ctx.clearRect(0, 0, width, height)
         ctx.font = font

@@ -195,19 +195,13 @@
   }
 
   .video-footer__word {
-    aspect-ratio: 1200 / 780;
-    background: transparent;
+    display: none;
   }
 }
 
 @media (max-width: 640px) {
   .video-footer__inner {
     padding-inline: 1.25rem;
-  }
-
-  .video-footer__word {
-    width: min(100%, 35rem);
-    margin-inline: auto;
   }
 
   .video-footer__content {

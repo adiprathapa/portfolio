@@ -102,7 +102,7 @@ export function Footer() {
 
       const text = '\u0906\u0926\u093F'
       const baselineY = 690
-      const font = '600 560px "Noto Sans Devanagari", "Poppins"'
+      const font = '600 620px "Poppins"'
 
       ctx.scale(scale, scale)
       ctx.font = font
@@ -112,20 +112,19 @@ export function Footer() {
       ctx.fillText(text, width / 2, baselineY)
 
       const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data
-      let sumX = 0
-      let totalAlpha = 0
+      let minX = canvas.width
+      let maxX = -1
       for (let y = 0; y < canvas.height; y += 1) {
         for (let x = 0; x < canvas.width; x += 1) {
-          const a = pixels[(y * canvas.width + x) * 4 + 3]
-          if (a > 0) {
-            sumX += x * a
-            totalAlpha += a
+          if (pixels[(y * canvas.width + x) * 4 + 3] > 0) {
+            if (x < minX) minX = x
+            if (x > maxX) maxX = x
           }
         }
       }
 
-      if (totalAlpha > 0) {
-        const glyphCenter = sumX / totalAlpha
+      if (isDesktop && maxX >= minX) {
+        const glyphCenter = (minX + maxX) / 2
         const visualCenterCorrection = (canvas.width / 2 - glyphCenter) / scale
         ctx.clearRect(0, 0, width, height)
         ctx.font = font

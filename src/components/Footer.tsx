@@ -102,7 +102,7 @@ export function Footer() {
 
       const text = '\u0906\u0926\u093F'
       const baselineY = 690
-      const font = '600 480px "Poppins"'
+      const font = '600 560px "Noto Sans Devanagari", "Poppins"'
 
       ctx.scale(scale, scale)
       ctx.font = font

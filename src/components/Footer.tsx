@@ -126,12 +126,13 @@ export function Footer() {
       if (maxX >= minX) {
         const glyphCenter = (minX + maxX) / 2
         const visualCenterCorrection = (canvas.width / 2 - glyphCenter) / scale
+        const mobileExtraShift = isDesktop ? 0 : -15
         ctx.clearRect(0, 0, width, height)
         ctx.font = font
         ctx.textAlign = 'center'
         ctx.textBaseline = 'alphabetic'
         ctx.fillStyle = 'white'
-        ctx.fillText(text, width / 2 + visualCenterCorrection, baselineY)
+        ctx.fillText(text, width / 2 + visualCenterCorrection + mobileExtraShift, baselineY)
       }
 
       const maskUrl = `url(${canvas.toDataURL('image/png')})`

@@ -43,3 +43,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# Generated agent/browser reports
+snapshot*.md
+posthog-setup-report.md

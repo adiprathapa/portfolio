@@ -10,6 +10,7 @@ const footerLinks = [
   { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
   { label: 'Education', href: '#education' },
+  { label: 'Open Source', href: '#open-source' },
   { label: 'Contact', href: '#contact' },
 ]
 

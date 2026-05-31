@@ -98,6 +98,14 @@ export function sectionScrollTop(href: string) {
     }
   }
 
+  if (href === '#open-source') {
+    const el = document.getElementById('open-source')
+    if (el) {
+      const nudge = window.innerWidth < 1024 ? 23 : 13
+      return documentTop(el) - offset + nudge
+    }
+  }
+
   if (href === '#contact') {
     const contact = document.getElementById('contact')
     const content = contact?.firstElementChild

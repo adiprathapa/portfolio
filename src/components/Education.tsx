@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Section } from './ui/section'
 import { GradientText } from './ui/gradient-text'
@@ -170,6 +170,8 @@ export function Education() {
   const mobileVisualRef = useRef<HTMLDivElement>(null)
   const desktopVisualRef = useRef<HTMLDivElement>(null)
   const [visualHeight, setVisualHeight] = useState(0)
+  const [stableColumnFloor, setStableColumnFloor] = useState(0)
+  const ghostRefs = useRef<Map<EduId, HTMLDivElement | null>>(new Map())
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < 1024 : false,
   )
@@ -187,6 +189,25 @@ export function Education() {
     return () => ro.disconnect()
   }, [])
 
+  useLayoutEffect(() => {
+    const measure = () => {
+      let max = 0
+      ghostRefs.current.forEach((el) => {
+        if (el) max = Math.max(max, el.offsetHeight)
+      })
+      setStableColumnFloor((prev) => (max > 0 && max !== prev ? max : prev))
+    }
+    measure()
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(measure)
+    }
+    const ro = new ResizeObserver(measure)
+    ghostRefs.current.forEach((el) => {
+      if (el) ro.observe(el)
+    })
+    return () => ro.disconnect()
+  }, [])
+
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 1024)
     window.addEventListener('resize', onResize)
@@ -196,6 +217,8 @@ export function Education() {
   const handleSelect = (id: EduId) => {
     setActiveId(id)
   }
+
+  const listColumnMinHeight = Math.max(visualHeight, stableColumnFloor)
 
   return (
     <Section
@@ -239,20 +262,53 @@ export function Education() {
           </div>
         </div>
 
-        <div
-          className="flex flex-col gap-4 lg:col-span-6"
-          style={visualHeight > 0 ? { minHeight: visualHeight } : undefined}
-        >
-          {items.map((item) => (
-            <div key={item.id} style={item.id === activeId ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined}>
-              <ListRow
-                item={item}
-                isActive={item.id === activeId}
-                onClick={() => handleSelect(item.id)}
-                style={item.id === activeId ? { flex: 1 } : undefined}
-              />
-            </div>
-          ))}
+        <div className="lg:col-span-6" style={{ position: 'relative' }}>
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              visibility: 'hidden',
+              pointerEvents: 'none',
+              zIndex: -1,
+            }}
+          >
+            {items.map((scenario) => (
+              <div
+                key={`ghost-${scenario.id}`}
+                ref={(el) => { ghostRefs.current.set(scenario.id, el) }}
+                className="flex flex-col gap-4"
+                style={{ position: 'absolute', top: 0, left: 0, right: 0 }}
+              >
+                {items.map((item) => (
+                  <ListRow
+                    key={item.id}
+                    item={item}
+                    isActive={item.id === scenario.id}
+                    onClick={() => {}}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div
+            className="flex flex-col gap-4"
+            style={visualHeight > 0 ? { minHeight: listColumnMinHeight } : undefined}
+          >
+            {items.map((item) => (
+              <div key={item.id} style={item.id === activeId ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined}>
+                <ListRow
+                  item={item}
+                  isActive={item.id === activeId}
+                  onClick={() => handleSelect(item.id)}
+                  style={item.id === activeId ? { flex: 1 } : undefined}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       </div>

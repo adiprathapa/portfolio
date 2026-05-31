@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar'
 import { HorizontalScrollSection } from './components/HorizontalScrollSection'
 import { ProjectsIntro } from './components/ProjectsIntro'
 import { Projects } from './components/Projects'
+import { OpenSource } from './components/OpenSource'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { jumpToSection, scrollToSection } from './lib/scrollToSection'
@@ -24,7 +25,7 @@ const PRELOAD_IMAGES = [
   // Project logos & backgrounds
   '/logo-kiwix.png', '/logo-tauron.png', '/logo-helicity.png',
   '/logo-zamsizing.png', '/logo-galatea.png', '/logo-hrt.png', '/logo-partcl.png',
-  '/kiwixbg.webp', '/tauronbg.webp', '/helicitybg.webp',
+  '/tauronbg.webp', '/helicitybg.webp',
   '/zamsizingbg.webp', '/macroplace-bg.webp', '/galateabg.webp',
   '/pexels-andrewshelley-8454632.webp', '/pexels-dichupdi-35168139.webp',
 ]
@@ -141,6 +142,7 @@ function App() {
             <ProjectsGame onExit={() => setProjectsGameActive(false)} />
           </Suspense>
         )}
+        <OpenSource />
         <div className="contact-footer-handoff relative z-[1]" style={{ background: '#f4f4f4' }}>
           <div aria-hidden style={{ height: 'var(--contact-mobile-pt, 0px)', background: '#f4f4f4' }} />
           <div className="contact-footer-surface">

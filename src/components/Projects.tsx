@@ -12,7 +12,6 @@ import { Education } from './Education'
 // const images = slugs.map(...)
 
 const projectDisplayNames: Record<string, string> = {
-  kiwix: "Kiwix",
   tauron: "Tauron",
   helicity: "Helicity",
   zamsizing: "ZAM",
@@ -23,7 +22,6 @@ const projectDisplayNames: Record<string, string> = {
 }
 
 const projectDescriptions: Record<string, string> = {
-  kiwix: "Open source contributor on FreeCodeCamp which is part of the openZIM and Kiwix projects. I engineered a YAML based CI suite for locale key validation, implemented system wide dark mode with CSS variables and CodeMirror, and refactored core Vue components for optimized markdown parsing.",
   helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up multimodel LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
   tauron: "Trained a GRU and GraphSAGE model over a 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
   zamsizing: "Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.",
@@ -34,7 +32,6 @@ const projectDescriptions: Record<string, string> = {
 }
 
 const projectLinks: Record<string, string> = {
-  kiwix: "https://browse.library.kiwix.org/viewer#freecodecamp_en_all_2026-02",
   tauron: "https://adiprathapa.github.io/Tauron/reveal_slides",
   helicity: "https://helicity-theta.vercel.app/",
   zamsizing: "https://zamsizing.vercel.app/",
@@ -45,7 +42,6 @@ const projectLinks: Record<string, string> = {
 }
 
 const projectRepoLinks: Record<string, string> = {
-  kiwix: "https://github.com/adiprathapa/freecodecamp",
   tauron: "https://github.com/adiprathapa/Tauron",
   helicity: "https://github.com/AI-HackathonNYC/helicity",
   zamsizing: "https://github.com/adiprathapa/ZAM",
@@ -55,10 +51,9 @@ const projectRepoLinks: Record<string, string> = {
   spectre: "https://github.com/cx18121/claude-hackathon26",
 }
 
-const projectOrder = ['kiwix', 'tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea', 'paramgolf', 'spectre']
+const projectOrder = ['tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea', 'paramgolf', 'spectre']
 
 const projectSafariProps: Record<string, { url: string; videoSrc?: string; posterSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
-  kiwix: { url: projectLinks['kiwix'], videoSrc: "/kiwix.mp4", posterSrc: "/kiwix-poster.webp" },
   tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mp4", posterSrc: "/tauron-poster.webp", videoCropTop: 25 },
   helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mp4", posterSrc: "/helicity-poster.webp" },
   zamsizing: { url: projectLinks['zamsizing'], videoSrc: "/zam-copy.mp4", posterSrc: "/zam-copy-poster.webp", videoCropTop: 110, videoCropBottom: 30, videoCropLeft: 270, videoCropRight: 272 },
@@ -69,7 +64,6 @@ const projectSafariProps: Record<string, { url: string; videoSrc?: string; poste
 }
 
 const projectLogos: Record<string, string> = {
-  kiwix: "/logo-kiwix.png",
   tauron: "/logo-tauron.png",
   helicity: "/logo-helicity.png",
   zamsizing: "/logo-zamsizing.png",
@@ -80,7 +74,6 @@ const projectLogos: Record<string, string> = {
 }
 
 const projectTaglines: Record<string, string> = {
-  kiwix: "Offline education for everyone, everywhere ",
   tauron: "Predicting livestock disease 48 hours before symptoms appear ",
   helicity: "AI powered liquidity stress scoring with verifiable audit trails ",
   zamsizing: "One click AI market sizing with TAM/SAM/SOM visualization ",
@@ -91,7 +84,6 @@ const projectTaglines: Record<string, string> = {
 }
 
 const projectBgImages: Record<string, string> = {
-  kiwix: '/kiwixbg.webp',
   tauron: '/tauronbg.webp',
   helicity: '/helicitybg.webp',
   zamsizing: '/zamsizingbg.webp',
@@ -102,7 +94,6 @@ const projectBgImages: Record<string, string> = {
 }
 
 const projectGradientColors: Record<string, string> = {
-  kiwix: '#0A0A23',
   tauron: '#4C867A',
   helicity: '#6366F1',
   zamsizing: '#E8740C',
@@ -113,7 +104,6 @@ const projectGradientColors: Record<string, string> = {
 }
 
 const projectTechStacks: Record<string, string[]> = {
-  kiwix: ["Vue.js", "Pinia", "GitHub Actions", "YAML", "Python", "CodeMirror"],
   tauron: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
   helicity: ["FastAPI", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas", "NumPy"],
   zamsizing: ["JavaScript", "React", "Node.js", "Express", "MongoDB", "Gemini API", "Vercel"],
@@ -274,7 +264,7 @@ export function Projects() {
   const expH = experienceRef.current?.offsetHeight ?? 550
   const stickyPt = readStickyPtPx()
   const experienceOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
-  const cardAnimationRail = 7 * spacing
+  const cardAnimationRail = 6 * spacing
   const totalRail = cardAnimationRail + experienceOverflow
   const cardAnimationEnd = totalRail > 0 ? cardAnimationRail / totalRail : 1
 
@@ -286,7 +276,7 @@ export function Projects() {
     const nextIndex = Math.max(0, Math.min(projectOrder.length - 1, Math.floor(latest * (projectOrder.length - 1) + 0.001)))
     setActiveCardIndex((current) => current === nextIndex ? current : nextIndex)
   })
-  const seg = 1 / 7
+  const seg = 1 / 6
 
   const cardY1 = useTransform(cardProgress, [0, 1], [0, 0])
 
@@ -311,23 +301,18 @@ export function Projects() {
     [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, stagger * 5])
 
   const cardY7 = useTransform(cardProgress,
-    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6, 1],
-    [spacing * 6, spacing * 5 + stagger, spacing * 4 + stagger * 2, spacing * 3 + stagger * 3, spacing * 2 + stagger * 4, spacing + stagger * 5, stagger * 6, stagger * 6])
+    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6],
+    [spacing * 6, spacing * 5 + stagger, spacing * 4 + stagger * 2, spacing * 3 + stagger * 3, spacing * 2 + stagger * 4, spacing + stagger * 5, 0])
 
-  const cardY8 = useTransform(cardProgress,
-    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6, seg * 7],
-    [spacing * 7, spacing * 6 + stagger, spacing * 5 + stagger * 2, spacing * 4 + stagger * 3, spacing * 3 + stagger * 4, spacing * 2 + stagger * 5, spacing + stagger * 6, 0])
+  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5, cardY6, cardY7]
 
-  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5, cardY6, cardY7, cardY8]
-
-  const hideOp0 = useTransform(cardY8, (y: number) => Number(y > 0))
-  const hideOp1 = useTransform(cardY8, (y: number) => Number(y > stagger))
-  const hideOp2 = useTransform(cardY8, (y: number) => Number(y > stagger * 2))
-  const hideOp3 = useTransform(cardY8, (y: number) => Number(y > stagger * 3))
-  const hideOp4 = useTransform(cardY8, (y: number) => Number(y > stagger * 4))
-  const hideOp5 = useTransform(cardY8, (y: number) => Number(y > stagger * 5))
-  const hideOp6 = useTransform(cardY8, (y: number) => Number(y > stagger * 6))
-  const cardOpacities: (MotionValue<number> | undefined)[] = [hideOp0, hideOp1, hideOp2, hideOp3, hideOp4, hideOp5, hideOp6, undefined]
+  const hideOp0 = useTransform(cardY7, (y: number) => Number(y > 0))
+  const hideOp1 = useTransform(cardY7, (y: number) => Number(y > stagger))
+  const hideOp2 = useTransform(cardY7, (y: number) => Number(y > stagger * 2))
+  const hideOp3 = useTransform(cardY7, (y: number) => Number(y > stagger * 3))
+  const hideOp4 = useTransform(cardY7, (y: number) => Number(y > stagger * 4))
+  const hideOp5 = useTransform(cardY7, (y: number) => Number(y > stagger * 5))
+  const cardOpacities: (MotionValue<number> | undefined)[] = [hideOp0, hideOp1, hideOp2, hideOp3, hideOp4, hideOp5, undefined]
 
   // Phase 2: after cards finish, scroll everything up so Experience fills viewport
   const phase2Offset = useTransform(scrollYProgress,
@@ -336,7 +321,7 @@ export function Projects() {
 
   // Experience Y relative to the phase2 wrapper (no stickyPt — the wrapper
   // is inside the section's padded area, so stickyPt is already accounted for)
-  const experienceInsideY = useTransform(cardY8, (y: number) => y + cardH + 96)
+  const experienceInsideY = useTransform(cardY7, (y: number) => y + cardH + 96)
 
   return (
     <>

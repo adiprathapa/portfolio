@@ -21,8 +21,9 @@ dist
 
 # Playwright MCP
 .playwright-mcp
-portfolio-*.png
-og-preview.png
+/*.png
+/*.jpg
+/*.jpeg
 generate-og-image.html
 test-results
 

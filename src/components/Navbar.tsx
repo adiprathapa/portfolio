@@ -19,6 +19,7 @@ const navLinks = [
   { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
   { label: 'Education', href: '#education' },
+  { label: 'Open Source', href: '#open-source' },
   { label: 'Resume', href: RESUME_PAGE_URL },
   { label: 'Contact', href: '#contact' },
 ]
@@ -33,6 +34,7 @@ export function Navbar() {
     activeSection === 'projects' ||
     activeSection === 'experience' ||
     activeSection === 'education' ||
+    activeSection === 'open-source' ||
     activeSection === 'contact'
   const [menuOpen, setMenuOpen] = useState(false)
   const [pinned, setPinned] = useState(false)
@@ -181,8 +183,8 @@ export function Navbar() {
           }}
         >
           <div
-            className="flex items-center justify-between h-16 max-w-7xl mx-auto px-6"
-            style={{ gap: '2rem' }}
+            className="flex items-center justify-between h-16 mx-auto px-6"
+            style={{ gap: '1.75rem', maxWidth: '82rem' }}
           >
             {/* Logo */}
             <a
@@ -199,7 +201,7 @@ export function Navbar() {
             {/* Desktop nav */}
             <nav
               className="hidden lg:flex items-center"
-              style={{ gap: '2rem' }}
+              style={{ gap: '1.5rem' }}
             >
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href.slice(1)

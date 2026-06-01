@@ -52,12 +52,11 @@ type FlagRect = {
 
 // Project display names used as data-game-word / data-card-flag identifiers.
 // Order matches Projects.tsx so we know which flag is the final goal.
-const PROJECT_NAMES = ['Kiwix', 'Tauron', 'Helicity', 'ZAM', 'Macro Placement', 'Galatea', 'Parameter Golf', 'Spectre']
+const PROJECT_NAMES = ['Tauron', 'Helicity', 'ZAM', 'Macro Placement', 'Galatea', 'Parameter Golf', 'Spectre']
 const FINAL_PROJECT_KEY = 'Spectre'
 
 // data-project-card uses the lowercase key; data-game-word/data-card-flag use the display name
 const PROJECT_KEY_TO_DISPLAY: Record<string, string> = {
-  kiwix: 'Kiwix',
   tauron: 'Tauron',
   helicity: 'Helicity',
   zamsizing: 'ZAM',
@@ -248,7 +247,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
     setupDoneRef.current = true
     window.scrollTo(0, scrollFromRef.current)
 
-    // After layout settles, place Capoo directly on Kiwix's first word
+    // After layout settles, place Capoo directly on the first project's first word
     const placeId = window.setTimeout(() => {
       const first = findFirstWordRectForCard(PROJECT_NAMES[0])
       if (first) {
@@ -577,7 +576,6 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
     window.scrollTo(0, scrollFromRef.current)
     currentCardIdxRef.current = 0
     reachedCardRef.current = PROJECT_NAMES[0]
-    capooYRef.current = 40
     capooVyRef.current = 0
     onWordElRef.current = null
     onWordRectRef.current = null
@@ -592,22 +590,36 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
     reachedFlagsRef.current.clear()
     document.querySelectorAll('.flag-reached').forEach(el => el.classList.remove('flag-reached'))
     setReachedFlagsTick(n => n + 1)
-    // Position Capoo directly on top of the first card's first word
-    setTimeout(() => {
+    // Hide Capoo offscreen until we can find the spawn point — prevents the
+    // "spawns at top" flash while the rail re-renders after scrollTo.
+    capooYRef.current = -CAPOO_H * 4
+    capooXRef.current = window.innerWidth * 0.35
+    // Wait for layout to settle after the scrollTo, then place Capoo on the
+    // first card's first word before transitioning to 'starting'.
+    const placeAndStart = (attempts = 0) => {
       const first = findFirstWordRectForCard(PROJECT_NAMES[0])
       if (first) {
         const r = first.rect
         capooXRef.current = (r.left + r.right) / 2
         capooYRef.current = r.top - CAPOO_H
+        setPhaseSync('starting')
+        window.setTimeout(() => {
+          setPhaseSync('playing')
+          startCardRace(0)
+        }, START_DELAY_MS)
+      } else if (attempts < 20) {
+        requestAnimationFrame(() => placeAndStart(attempts + 1))
       } else {
-        capooXRef.current = window.innerWidth * 0.35
+        // Fallback: start anyway with default x; gravity will land Capoo somewhere
+        capooYRef.current = 40
+        setPhaseSync('starting')
+        window.setTimeout(() => {
+          setPhaseSync('playing')
+          startCardRace(0)
+        }, START_DELAY_MS)
       }
-    }, 50)
-    setPhaseSync('starting')
-    setTimeout(() => {
-      setPhaseSync('playing')
-      startCardRace(0)
-    }, START_DELAY_MS)
+    }
+    requestAnimationFrame(() => placeAndStart())
   }, [setPhaseSync, startCardRace])
 
   // Keep a ref pointing at the latest restart so the input handler (which only
@@ -616,7 +628,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
 
   // Start the race from the intro screen
   const beginPlay = useCallback(() => {
-    // Re-place Capoo on Kiwix's first word in case layout shifted
+    // Re-place Capoo on the first project's first word in case layout shifted
     const first = findFirstWordRectForCard(PROJECT_NAMES[0])
     if (first) {
       const r = first.rect

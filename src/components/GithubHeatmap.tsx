@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
+import { motion } from 'framer-motion'
 import { Section } from './ui/section'
 import { RippleButton } from './ui/ripple-button'
 
@@ -659,24 +660,25 @@ export function GithubHeatmap() {
                     <span>{total.toLocaleString()} contributions in {YEAR}</span>
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 font-medium transition-opacity active:scale-95 lg:hidden"
-                      style={{ color: '#0671A4' }}
+                      className="flex items-center gap-2 text-[10px] lg:text-sm bg-transparent border-0 p-0 cursor-pointer select-none lg:hidden"
+                      style={{ color: 'rgba(6, 113, 164, 0.45)' }}
                       onClick={play}
                     >
-                      <svg
-                        width="12"
-                        height="12"
+                      <motion.svg
+                        className="size-2.5 lg:size-3.5"
                         viewBox="0 0 24 24"
-                        fill="none"
+                        fill="currentColor"
                         stroke="currentColor"
-                        strokeWidth="1.8"
+                        strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         aria-hidden="true"
+                        animate={{ scale: [1, 1.15, 1] }}
+                        transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
                       >
                         <path d="M5 3l14 9-14 9V3z" />
-                      </svg>
-                      <span>Click to play</span>
+                      </motion.svg>
+                      Snake
                     </button>
                   </>
                 )}

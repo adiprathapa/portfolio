@@ -501,7 +501,7 @@ export function Contact() {
     <section
       ref={sectionRef}
       id="contact"
-      className="px-6 pb-28 pt-24 md:py-28 lg:flex lg:items-start lg:pb-16 lg:pt-28"
+      className="px-6 pb-8 pt-24 md:py-28 lg:flex lg:items-start lg:pb-16 lg:pt-28"
       style={isLg && gamePanelHeight ? { paddingBottom: `calc(4rem + ${gamePanelHeight + 16}px)` } : undefined}
     >
       <div className="max-w-7xl mx-auto w-full">
@@ -839,7 +839,8 @@ export function Contact() {
               onClick={startGame}
             >
               <motion.svg
-                width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                className="size-3 lg:size-4"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                 animate={{ x: [0, 3, -3, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
               >
@@ -848,7 +849,7 @@ export function Contact() {
                 <path d="M17 12h.01" />
                 <path d="M7 12h.01" />
               </motion.svg>
-              <span className="text-sm font-medium">Sticker placement</span>
+              <span className="text-[10px] lg:text-sm font-medium">Sticker placement</span>
             </motion.button>
           )}
 

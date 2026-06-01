@@ -301,15 +301,8 @@ export function ProjectsIntro() {
             layout
             transition={{ layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] } }}
             onClick={() => { if (conveyorGameActive) { handleEndConveyorGame() } else { setShowMemoryGame(true) } }}
-            className="shrink-0 self-center lg:self-auto flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full cursor-pointer"
-            style={{
-              color: '#0671A4',
-              background: 'rgba(6, 113, 164, 0.08)',
-              border: '1px solid rgba(6, 113, 164, 0.15)',
-              transition: 'background 0.2s ease, border-color 0.2s ease',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6, 113, 164, 0.15)'; e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.4)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(6, 113, 164, 0.08)'; e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.15)' }}
+            className="shrink-0 self-center lg:self-auto flex items-center gap-2 text-[10px] lg:text-sm bg-transparent border-0 p-0 cursor-pointer select-none"
+            style={{ color: 'rgba(6, 113, 164, 0.45)' }}
           >
             <AnimatePresence mode="popLayout" initial={false}>
               {conveyorGameActive ? (
@@ -322,7 +315,7 @@ export function ProjectsIntro() {
                   transition={{ duration: 0.18, ease: 'easeOut' }}
                   className="flex items-center gap-2 whitespace-nowrap"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="size-3 lg:size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 6L6 18M6 6l12 12" />
                   </svg>
                   End Game
@@ -337,11 +330,29 @@ export function ProjectsIntro() {
                   transition={{ duration: 0.18, ease: 'easeOut' }}
                   className="flex items-center gap-2 whitespace-nowrap"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="2" width="8" height="8" rx="1" />
-                    <rect x="14" y="2" width="8" height="8" rx="1" />
-                    <rect x="2" y="14" width="8" height="8" rx="1" />
-                    <rect x="14" y="14" width="8" height="8" rx="1" />
+                  <svg className="size-3 lg:size-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    {[
+                      { x: 2, y: 2, delay: 0 },
+                      { x: 14, y: 2, delay: 0.3 },
+                      { x: 14, y: 14, delay: 0.6 },
+                      { x: 2, y: 14, delay: 0.9 },
+                    ].map((r) => (
+                      <motion.rect
+                        key={`${r.x}-${r.y}`}
+                        x={r.x}
+                        y={r.y}
+                        width="8"
+                        height="8"
+                        rx="1"
+                        animate={{ fillOpacity: [0, 1, 0] }}
+                        transition={{
+                          duration: 1.2,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                          delay: r.delay,
+                        }}
+                      />
+                    ))}
                   </svg>
                   Matching
                 </motion.span>

@@ -55,7 +55,7 @@ export function OpenSource() {
       className="open-source-section relative"
       style={{
         background: '#f4f4f4',
-        paddingTop: 'clamp(6rem, 13vh, 10rem)',
+        paddingTop: 'clamp(2.5rem, 6vh, 5rem)',
         paddingBottom: 'clamp(7rem, 14vh, 11rem)',
       }}
     >

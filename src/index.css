@@ -39,7 +39,7 @@ html::-webkit-scrollbar {
   --mobile-card-inset: clamp(44px, 14vw, 96px);
   --project-card-h: min(calc(100vw - var(--mobile-card-inset)), 470px);
   --project-stack-card-h: var(--project-card-h);
-  --project-sticky-pt: 0.75rem;
+  --project-sticky-pt: 2.5rem;
   --footer-blue: #2f9fd1;
 }
 @media (min-width: 1024px) {
@@ -663,7 +663,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .video-footer__inner {
-    padding-top: 2.5rem;
+    padding-top: 0.5rem;
   }
 
   .video-footer__word {

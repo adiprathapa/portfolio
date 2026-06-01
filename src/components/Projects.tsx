@@ -198,7 +198,7 @@ function readStickyPtPx() {
   return parseFloat(raw) || 0
 }
 
-export function Projects() {
+export function Projects({ onPlatformer, platformerActive = false }: { onPlatformer?: () => void; platformerActive?: boolean } = {}) {
   const containerRef = useRef<HTMLDivElement>(null)
   const cardHProbeRef = useRef<HTMLDivElement>(null)
   const experienceRef = useRef<HTMLDivElement>(null)
@@ -272,9 +272,18 @@ export function Projects() {
   const cardProgress = useTransform(scrollYProgress,
     [0, Math.min(cardAnimationEnd, 0.9999)],
     [0, 1])
+  const [platformerVisible, setPlatformerVisible] = useState(true)
+  const [platformerDismissed, setPlatformerDismissed] = useState(false)
+  useEffect(() => {
+    if (!platformerActive) setPlatformerDismissed(false)
+  }, [platformerActive])
   useMotionValueEvent(cardProgress, 'change', (latest) => {
     const nextIndex = Math.max(0, Math.min(projectOrder.length - 1, Math.floor(latest * (projectOrder.length - 1) + 0.001)))
     setActiveCardIndex((current) => current === nextIndex ? current : nextIndex)
+    setPlatformerVisible((current) => {
+      const next = latest < 0.012
+      return current === next ? current : next
+    })
   })
   const seg = 1 / 6
 
@@ -327,6 +336,42 @@ export function Projects() {
     <>
     <div id="projects-rail" ref={containerRef} className="relative" style={{ height: sectionHeight, zIndex: 5, ...(isMobile ? {} : { backgroundColor: '#E4EFF5' }) }}>
       <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen pt-[var(--project-sticky-pt)] px-6" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-420px' : '-600px'} 0px)` }}>
+        {onPlatformer && (
+          <div
+            className="pointer-events-none absolute z-[20] mx-auto flex justify-start lg:justify-end max-w-[calc(100vw-var(--mobile-card-inset))] lg:max-w-7xl"
+            style={{
+              top: 'calc(var(--project-sticky-pt) - 2rem)',
+              left: '1.5rem',
+              right: '1.5rem',
+            }}
+          >
+            <motion.button
+              type="button"
+              onClick={(e) => { setPlatformerDismissed(true); onPlatformer(); (e.currentTarget as HTMLButtonElement).blur() }}
+              className="pointer-events-auto flex items-center gap-2 text-[10px] lg:text-sm bg-transparent border-0 p-0 cursor-pointer select-none"
+              style={{ color: 'rgba(6, 113, 164, 0.45)' }}
+              animate={{ opacity: platformerVisible && !platformerDismissed ? 1 : 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <motion.svg
+                className="size-3 lg:size-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                animate={{ y: [0, 3, 0, 3, 0] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeOut', times: [0, 0.25, 0.5, 0.75, 1] }}
+              >
+                <path d="M12 5v14" />
+                <path d="M19 12l-7 7-7-7" />
+              </motion.svg>
+              Platformer
+            </motion.button>
+          </div>
+        )}
         {/* Phase 2 wrapper: scrolls cards + Experience up together after
             the card animation ends, keeping the 48px gap constant. */}
         <motion.div style={{ y: phase2Offset, position: 'relative' }}>

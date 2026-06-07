@@ -24,7 +24,7 @@ const projectDisplayNames: Record<string, string> = {
 const projectDescriptions: Record<string, string> = {
   helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up multimodel LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
   tauron: "Trained a GRU and GraphSAGE model over a 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
-  zamsizing: "Built a fullstack web app automating market sizing analysis using Google Gemini AI with automatic model fallback. Features a nested hexagon visualization for TAM/SAM/SOM metrics with one click PNG export, deployed serverless on Vercel.",
+  zamsizing: "Built a market sizing tool grounding Groq powered analyses with RAG over real industry benchmarks and comparable company data. Switched from Gemini embeddings to BM25 retrieval after hitting Vercel size limits, matching semantic search performance with zero cold start.",
   macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
   galatea: "Built for the Palantir Foundry FDSE technical challenge. Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry.",
   paramgolf: "Submitted a non record entry to OpenAI's Parameter Golf, a language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment, reaching 1.107 val bpb on a single H100 across 86 FineWeb shards.",
@@ -76,7 +76,7 @@ const projectLogos: Record<string, string> = {
 const projectTaglines: Record<string, string> = {
   tauron: "Predicting livestock disease 48 hours before symptoms appear ",
   helicity: "AI powered liquidity stress scoring with verifiable audit trails ",
-  zamsizing: "One click AI market sizing with TAM/SAM/SOM visualization ",
+  zamsizing: "RAG grounded AI market sizing with TAM/SAM/SOM analysis ",
   macroplace: "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge ",
   galatea: "Real time blockchain risk analytics with Palantir Foundry ",
   paramgolf: "OpenAI Parameter Golf submission at 1.107 val bpb under 16 MB ",
@@ -106,7 +106,7 @@ const projectGradientColors: Record<string, string> = {
 const projectTechStacks: Record<string, string[]> = {
   tauron: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
   helicity: ["FastAPI", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas", "NumPy"],
-  zamsizing: ["JavaScript", "React", "Node.js", "Express", "MongoDB", "Gemini API", "Vercel"],
+  zamsizing: ["JavaScript", "React", "Node.js", "Express", "MongoDB", "Groq", "RAG", "BM25", "Vercel"],
   macroplace: ["PyTorch", "GNN", "NumPy", "FFT", "Python"],
   galatea: ["NetworkX", "Palantir Foundry", "JavaScript"],
   paramgolf: ["PyTorch", "CUDA", "FlashAttention 3", "Brotli", "SentencePiece", "Hugging Face", "Python"],

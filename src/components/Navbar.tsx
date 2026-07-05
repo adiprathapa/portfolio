@@ -19,7 +19,6 @@ const navLinks = [
   { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
   { label: 'Education', href: '#education' },
-  { label: 'Open Source', href: '#open-source' },
   { label: 'Resume', href: RESUME_PAGE_URL },
   { label: 'Contact', href: '#contact' },
 ]
@@ -190,12 +189,13 @@ export function Navbar() {
             <a
               href="/#top"
               className="font-heading font-semibold text-lg text-primary"
+              style={{ marginLeft: '0' }}
               onClick={() => {
                 announceHomeSectionNavigation('#top')
                 window.location.href = '/#top'
               }}
             >
-              &#x0906;&#x0926;&#x093F;
+              Adi Prathapa
             </a>
 
             {/* Desktop nav */}

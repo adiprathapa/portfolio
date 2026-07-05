@@ -19,7 +19,7 @@ const navLinks = [
   { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
   { label: 'Education', href: '#education' },
-  { label: 'Resume', href: RESUME_PAGE_URL },
+  { label: 'Open Source', href: '#open-source' },
   { label: 'Contact', href: '#contact' },
 ]
 

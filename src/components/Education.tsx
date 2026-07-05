@@ -23,7 +23,7 @@ const items: EduItem[] = [
     school: 'Cornell University',
     degree: 'B.A. Computer Science',
     period: 'Ithaca, NY',
-    date: 'Anticipated 2028',
+    date: '',
     description: 'College of Arts and Sciences and Ann S. Bowers College of Computing and Information Science, minor in Artificial Intelligence.',
     bullets: [
       'Data Structures, Object-Oriented Programming, Theory of Computation, Discrete Math, Python Design and Development, Calculus 1, Calculus 2, Linear Algebra for Engineers',

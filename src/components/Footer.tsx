@@ -1,9 +1,7 @@
 import { scrollToSection } from '../lib/scrollToSection'
 import { type MouseEvent } from 'react'
-import { warmCalendarPage, warmResumePage } from '../lib/prefetch'
+import { warmCalendarPage } from '../lib/prefetch'
 import { announceHomeSectionNavigation } from '../lib/homeSectionNavigation'
-
-const RESUME_PAGE_URL = '/resume.html'
 
 const footerLinks = [
   { label: 'About', href: '#about' },
@@ -15,7 +13,6 @@ const footerLinks = [
 ]
 
 const resourceLinks = [
-  { label: 'Resume', href: RESUME_PAGE_URL },
   { label: 'Calendar', href: '/calendar.html' },
 ]
 
@@ -79,9 +76,9 @@ export function Footer() {
                 <a
                   key={link.href}
                   href={link.href}
-                  onMouseEnter={link.href === RESUME_PAGE_URL ? warmResumePage : warmCalendarPage}
-                  onFocus={link.href === RESUME_PAGE_URL ? warmResumePage : warmCalendarPage}
-                  onTouchStart={link.href === RESUME_PAGE_URL ? warmResumePage : warmCalendarPage}
+                  onMouseEnter={warmCalendarPage}
+                  onFocus={warmCalendarPage}
+                  onTouchStart={warmCalendarPage}
                 >
                   {link.label}
                 </a>

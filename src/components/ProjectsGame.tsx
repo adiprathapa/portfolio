@@ -192,6 +192,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
   const jumpBufferedUntilRef = useRef(0) // jump press is queued until this perf time
   const jumpHeldRef = useRef(false)
   const restartRef = useRef<(() => void) | null>(null)
+  const advanceToNextCardRef = useRef<(() => void) | null>(null)
   const currentCardIdxRef = useRef(0)
   const teleportingRef = useRef(false)
   const scrollAnimRef = useRef<{ from: number; to: number; startedAt: number; duration: number } | null>(null)
@@ -470,7 +471,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
               if (f.key === FINAL_PROJECT_KEY) {
                 setPhaseSync('won')
               } else {
-                advanceToNextCard()
+                advanceToNextCardRef.current?.()
               }
             }
             break
@@ -625,6 +626,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
   // Keep a ref pointing at the latest restart so the input handler (which only
   // closes over the initial value) can call the current one.
   useEffect(() => { restartRef.current = restart }, [restart])
+  useEffect(() => { advanceToNextCardRef.current = advanceToNextCard }, [advanceToNextCard])
 
   // Start the race from the intro screen
   const beginPlay = useCallback(() => {

@@ -432,7 +432,7 @@ export function Hero() {
             fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)',
           }}
         >
-          Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI.
+          I'm a Computer Science student at Cornell University minoring in AI, building graph ML and full stack systems.
         </motion.p>
         </div>
 

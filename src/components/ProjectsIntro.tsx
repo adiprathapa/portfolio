@@ -291,11 +291,11 @@ export function ProjectsIntro() {
         </h2>
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mt-2">
           <p className="text-black leading-relaxed max-w-4xl" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>
-            I am a fullstack developer who mainly works in Python, Java, and for frontend
-            in JavaScript and TypeScript. I have experience working with a variety of machine
-            learning and data science libraries like PyTorch, TensorFlow, scikit-learn, pandas,
-            and more. My projects range from fintech applications to machine learning focused
-            projects to apps that combine both.
+            I'm a full stack developer who works mainly in Python and Java, with JavaScript
+            and TypeScript on the frontend. I've worked with a range of machine learning and
+            data science libraries including PyTorch, TensorFlow, scikit-learn, and pandas.
+            My projects range from fintech applications to machine learning focused work to
+            apps that combine both.
           </p>
           <motion.button
             layout

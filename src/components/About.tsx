@@ -200,7 +200,7 @@ const majorTech: TechItem[] = [
   { name: 'Python', icon: '/icons/python-0671A4.svg', url: 'https://python.org', blurb: 'Trained ML models and shipped backend APIs for data insights' },
   { name: 'TypeScript', icon: '/icons/typescript-0671A4.svg', url: 'https://typescriptlang.org', blurb: 'Architected type safe frontends for clients' },
   { name: 'PyTorch', icon: '/icons/pytorch-0671A4.svg', url: 'https://pytorch.org', blurb: 'Trained GRU and GraphSAGE models for complex data analysis' },
-  { name: 'Node.js', icon: '/icons/nodedotjs-0671A4.svg', url: 'https://nodejs.org', blurb: 'Deployed fullstack apps and REST APIs to founders' },
+  { name: 'Node.js', icon: '/icons/nodedotjs-0671A4.svg', url: 'https://nodejs.org', blurb: 'Deployed full stack apps and REST APIs for client projects' },
   { name: 'Java', icon: '/icons/openjdk-0671A4.svg', url: 'https://dev.java', blurb: 'Engineered backend systems and data structures' },
   { name: 'NetworkX', icon: '/networkx.png', url: 'https://networkx.org', blurb: 'Constructed knowledge graphs and contact networks to detect anomalies' },
   { name: 'Google ADK', icon: '/icons/google-0671A4.svg', url: 'https://google.github.io/adk-docs/', blurb: 'Orchestrated sequential multi agent workflows' },
@@ -240,10 +240,10 @@ const minorTech: TechItem[] = [
   { name: 'GitHub Actions', icon: '/icons/githubactions-0671A4.svg', url: 'https://github.com/features/actions' },
   { name: 'IPFS', icon: '/icons/ipfs-0671A4.svg', url: 'https://ipfs.tech' },
   { name: 'Claude API', icon: '/claude.svg', url: 'https://docs.anthropic.com' },
-  { name: 'Gemini API', icon: '/icons/googlegemini-0671A4.svg', url: 'https://ai.google.dev', blurb: 'Built multimodel AI workflows and fallback orchestration for production apps' },
+  { name: 'Gemini API', icon: '/icons/googlegemini-0671A4.svg', url: 'https://ai.google.dev', blurb: 'Built multi-model AI workflows and fallback orchestration for production apps' },
   { name: 'Mistral AI', icon: '/icons/mistralai-0671A4.svg', url: 'https://mistral.ai' },
   { name: 'Leaflet', icon: '/icons/leaflet-0671A4.svg', url: 'https://leafletjs.com' },
-  { name: 'Palantir Foundry', icon: '/icons/palantir-0671A4.svg', url: 'https://www.palantir.com/platforms/foundry/', blurb: 'Built Galatea, an end to end blockchain risk analytics platform with address clustering and case management on Foundry' },
+  { name: 'Palantir Foundry', icon: '/icons/palantir-0671A4.svg', url: 'https://www.palantir.com/platforms/foundry/', blurb: 'Built Galatea, an on-chain risk prototype with graph risk scoring and case management on Foundry' },
   { name: 'MediaPipe', icon: '/icons/mediapipe-0671A4.svg', url: 'https://ai.google.dev/edge/mediapipe', blurb: 'Streamed real time pose keypoints from phone cameras to a 60Hz game server for hit detection' },
   { name: 'ElevenLabs', icon: '/icons/elevenlabs-0671A4.svg', url: 'https://elevenlabs.io', blurb: 'Generated low latency AI commentary voices for live in browser game streams' },
   { name: 'Matplotlib', icon: '/matplotlib-mark.svg', url: 'https://matplotlib.org', blurb: 'Visualized macro placements, training metrics, and sensor signals across ML and EDA projects' },
@@ -617,7 +617,7 @@ const CARDS: {
   bgPosition?: string
   topLeftBlue?: boolean
 }[] = [
-  { id: 'card-1', image: '/img3.webp', caption: 'Cornell Data Strategy Meeting' },
+  { id: 'card-1', image: '/img3.webp', caption: 'Cornell Data & Strategy Meeting' },
   { id: 'card-2', image: '/team-presentation.webp', caption: 'Stablecoin Presentation at Cornell Hackathon' },
   { id: 'card-3', image: '/img3-stack.webp', caption: 'Formal Organizing Group' },
   { id: 'card-6', image: '/treman-hiking.webp', caption: 'Hiking in Robert H. Treman State Park', topLeftBlue: true },
@@ -953,8 +953,9 @@ export function About() {
               apps and experimenting with ML models.
             </motion.p>
             <motion.p variants={heroChild} className="text-black leading-relaxed mb-4" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>
-              Lately I've been diving deep into web3, stablecoins, and IPFS, the idea of
-              programmable money and decentralized finance is something I enjoy working with and learning about. I'm always looking for ways to connect what I'm learning in AI
+              Lately I've been spending most of my time on graph learning, from GNNs for cyber event data
+              and chip placement to livestock health prediction. I still enjoy web3, stablecoins, and IPFS, and
+              the idea of programmable money is something I keep coming back to. I'm always looking for ways to connect what I'm learning in AI
               with applications outside the classroom, in clubs, hackathons, and through open source work.
             </motion.p>
             <motion.p variants={heroChild} className="text-black leading-relaxed" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>

@@ -22,12 +22,12 @@ const projectDisplayNames: Record<string, string> = {
 }
 
 const projectDescriptions: Record<string, string> = {
-  helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up multimodel LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
-  tauron: "Trained a GRU and GraphSAGE model over a 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
+  helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up a multi-model LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
+  tauron: "Trained a GRU and GraphSAGE model over a synthetic 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
   zamsizing: "Built a market sizing tool grounding Groq powered analyses with RAG over real industry benchmarks and comparable company data. Switched from Gemini embeddings to BM25 retrieval after hitting Vercel size limits, matching semantic search performance with zero cold start.",
   macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
-  galatea: "Built for the Palantir Foundry FDSE technical challenge. Created end to end risk analytics platform for blockchain transactions, featuring real time address clustering, risk scoring, and case management. Processes millions of transactions using advanced graph algorithms and machine learning to detect suspicious activity through Palantir Foundry.",
-  paramgolf: "Submitted a non record entry to OpenAI's Parameter Golf, a language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment, reaching 1.107 val bpb on a single H100 across 86 FineWeb shards.",
+  galatea: "Built for the Palantir Foundry FDSE technical challenge. An end to end on-chain risk prototype with a Foundry Workshop UI, NetworkX graph risk scoring, AIP agent triage, and case management over a synthetic blockchain transaction dataset.",
+  paramgolf: "Submitted a non-record entry to OpenAI's Parameter Golf, a language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment, reaching 1.107 val bpb on a single H100 across 86 FineWeb shards.",
   spectre: "Built for the Cornell Claude Builders Club Hackathon. A 1v1 fighting game where players throw real punches at their phone cameras while silhouettes battle in a shared browser overlay, with a live AI commentator powered by Claude API and ElevenLabs TTS.",
 }
 
@@ -35,20 +35,20 @@ const projectLinks: Record<string, string> = {
   tauron: "https://adiprathapa.github.io/Tauron/reveal_slides",
   helicity: "https://helicity-theta.vercel.app/",
   zamsizing: "https://zamsizing.vercel.app/",
-  macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026",
-  galatea: "https://galatea.usw-3.palantirfoundry.com/stargate/oidc/ee802905-77f2-44a2-a9d0-ed41e2caea0e",
+  macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
+  galatea: "https://github.com/adiprathapa/galatea",
   paramgolf: "https://github.com/openai/parameter-golf/pull/2161",
-  spectre: "https://github.com/cx18121/claude-hackathon26",
+  spectre: "https://github.com/cx18121/spectre",
 }
 
 const projectRepoLinks: Record<string, string> = {
   tauron: "https://github.com/adiprathapa/Tauron",
   helicity: "https://github.com/AI-HackathonNYC/helicity",
   zamsizing: "https://github.com/adiprathapa/ZAM",
-  macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026",
+  macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
   galatea: "https://github.com/adiprathapa/galatea",
   paramgolf: "https://github.com/openai/parameter-golf/pull/2161",
-  spectre: "https://github.com/cx18121/claude-hackathon26",
+  spectre: "https://github.com/cx18121/spectre",
 }
 
 const projectOrder = ['tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea', 'paramgolf', 'spectre']
@@ -74,13 +74,13 @@ const projectLogos: Record<string, string> = {
 }
 
 const projectTaglines: Record<string, string> = {
-  tauron: "Predicting livestock disease 48 hours before symptoms appear ",
-  helicity: "AI powered liquidity stress scoring with verifiable audit trails ",
-  zamsizing: "RAG grounded AI market sizing with TAM/SAM/SOM analysis ",
-  macroplace: "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge ",
-  galatea: "Real time blockchain risk analytics with Palantir Foundry ",
-  paramgolf: "OpenAI Parameter Golf submission at 1.107 val bpb under 16 MB ",
-  spectre: "Real time 1v1 fighting powered by phone cameras and AI commentary ",
+  tauron: "Predicting livestock disease 48 hours before symptoms appear",
+  helicity: "AI powered liquidity stress scoring with verifiable audit trails",
+  zamsizing: "RAG grounded AI market sizing with TAM/SAM/SOM analysis",
+  macroplace: "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge",
+  galatea: "On-chain risk co-pilot prototype on Palantir Foundry",
+  paramgolf: "OpenAI Parameter Golf submission at 1.107 val bpb under 16 MB",
+  spectre: "Real time 1v1 fighting powered by phone cameras and AI commentary",
 }
 
 const projectBgImages: Record<string, string> = {
@@ -105,7 +105,7 @@ const projectGradientColors: Record<string, string> = {
 
 const projectTechStacks: Record<string, string[]> = {
   tauron: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
-  helicity: ["FastAPI", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas", "NumPy"],
+  helicity: ["FastAPI", "NetworkX", "FastMCP", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas"],
   zamsizing: ["JavaScript", "React", "Node.js", "Express", "MongoDB", "Groq", "RAG", "BM25", "Vercel"],
   macroplace: ["PyTorch", "GNN", "NumPy", "FFT", "Python"],
   galatea: ["NetworkX", "Palantir Foundry", "JavaScript"],

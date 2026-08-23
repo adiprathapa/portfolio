@@ -168,10 +168,10 @@
 
       \resumeProjectHeading
           {\textbf{Tauron} $|$ \emph{PyTorch Geometric, FastAPI, React, D3.js, Ollama}}{
-          \underline{\href{https://tauron.vercel.app/}{Website}}}
+          \underline{\href{https://adiprathapa.github.io/Tauron/}{Website}}}
 
           \resumeItemListStart
-            \resumeItem{Built a GRU + GraphSAGE model over a 60 cow contact graph encoding 9 sensor features to predict mastitis, BRD, and lameness risk 48 hours ahead on 581 labeled graph snapshots}
+            \resumeItem{Built a GRU + GraphSAGE model over a synthetic 60 cow contact graph encoding 9 sensor features to predict mastitis, BRD, and lameness risk 48 hours ahead on 581 labeled graph snapshots}
             \resumeItem{Replaced GNNExplainer with gradient based feature attribution, reducing per cow explanation latency by 40$\times$}
             \resumeItem{Served real time risk scores and LLM generated farmer alerts (Mistral-7B via Ollama) through a FastAPI backend and React + D3.js force directed herd map}
           \resumeItemListEnd

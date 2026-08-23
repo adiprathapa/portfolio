@@ -5,13 +5,12 @@ import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
 import { usePostHog } from '@posthog/react'
 import { scrollToSection, sectionScrollTop } from '../lib/scrollToSection'
-import { warmCalendarPage, warmResumePage } from '../lib/prefetch'
+import { warmCalendarPage } from '../lib/prefetch'
 import {
   announceHomeSectionNavigation,
   HOME_SECTION_NAVIGATION_EVENT,
 } from '../lib/homeSectionNavigation'
 
-const RESUME_PAGE_URL = '/resume.html'
 const CALENDAR_PAGE_URL = '/calendar.html'
 
 const navLinks = [
@@ -150,11 +149,6 @@ export function Navbar() {
   }, [])
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href === RESUME_PAGE_URL) {
-      posthog?.capture('resume_viewed')
-      return
-    }
-
     posthog?.capture('nav_link_clicked', { section: href.replace('#', '') })
     if (href.startsWith('#')) {
       announceHomeSectionNavigation(href)
@@ -210,9 +204,6 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    onMouseEnter={link.href === RESUME_PAGE_URL ? warmResumePage : undefined}
-                    onFocus={link.href === RESUME_PAGE_URL ? warmResumePage : undefined}
-                    onTouchStart={link.href === RESUME_PAGE_URL ? warmResumePage : undefined}
                     className={`relative text-base font-medium rounded-xl px-4 py-1.5 transition-all duration-300 ${
                       isActive
                         ? 'text-primary bg-primary/10'

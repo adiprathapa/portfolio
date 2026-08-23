@@ -20,12 +20,6 @@ function preconnect(origin: string) {
   appendLink('preconnect', origin, { crossorigin: 'anonymous' })
 }
 
-export function warmResumePage() {
-  prefetchDocument('/resume.html')
-  preconnect('https://cdnjs.cloudflare.com')
-  preconnect('https://amethyst-high-ostrich-443.mypinata.cloud')
-}
-
 export function warmCalendarPage() {
   prefetchDocument('/calendar.html')
   preconnect('https://app.cal.com')

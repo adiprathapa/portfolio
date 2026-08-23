@@ -40,7 +40,7 @@ const items: EduItem[] = [
     description: 'Math Higher Level, Biology Higher Level, English Higher Level, Psychology Standard Level, Spanish Standard Level, Music Standard Level.',
     bullets: [
       'AP Spanish, AP Human Geography, AP World History, AP Physics, AP Computer Science Principles',
-      'National Honors Society, Spanish Honors Society, Varsity Marching Band, Speech, Mustang Mentoring',
+      'National Honor Society, Spanish Honor Society, Varsity Marching Band, Speech, Mustang Mentoring',
     ],
     bgImage: '/mnhs.webp',
     color: '#004d2c',

@@ -34,13 +34,17 @@ const work: ExperienceItem[] = [
     id: 'mitre',
     company: 'MITRE',
     role: 'Data Science Intern',
-    duration: 'Incoming Summer 2026',
+    duration: 'May — August 2026',
     description:
-      'Working on graph neural networks and graph attention networks',
-    bullets: ['Incoming'],
+      'Graph learning on cyber event data with PyTorch Geometric',
+    bullets: [
+      'Built PyTorch Geometric graph learning workflows using GINEConv to model cyber event relationships',
+      'Applied Optuna based hyperparameter optimization across model architecture and training parameters',
+      'Refactored a legacy training codebase into modular scripts and built an end to end pipeline testing suite',
+    ],
     tech: [
       { name: 'PyTorch Geometric', icon: '/icons/pytorch.svg' },
-      { name: 'Dash', icon: '/icons/plotly.svg' },
+      { name: 'Optuna', icon: '' },
     ],
     logo: '/mitre.png',
     logoHeight: 91,
@@ -57,7 +61,7 @@ const work: ExperienceItem[] = [
     role: 'CSMore Intern',
     duration: 'January 2026',
     description:
-      'Implementing modular class designs, data structures, and algorithms',
+      'Implemented modular class designs, data structures, and algorithms',
     bullets: [
       'Developed modular Java applications using object-oriented design patterns, inheritance hierarchies, and encapsulation',
       'Implemented and benchmarked linked lists, trees, hash maps, and graphs, analyzing time and space complexity tradeoffs',
@@ -86,7 +90,7 @@ const work: ExperienceItem[] = [
       'Iterated rapidly through weekly prototyping cycles, prioritizing user experience, accessibility compliance, and product clarity',
     ],
     tech: [
-      { name: 'ChatGPT API', icon: '/icons/chatbot.svg' },
+      { name: 'OpenAI API', icon: '/icons/chatbot.svg' },
       { name: 'JavaScript', icon: '/icons/javascript.svg' },
     ],
     logo: '/mines.png',
@@ -105,7 +109,7 @@ const work: ExperienceItem[] = [
     description:
       'Data visualization through 3D printing for Bohmian trajectories',
     bullets: [
-      'Created Python simulation programs to model Bohmian trajectories and visualize quantum behavior using Scikit-learn',
+      'Created Python simulation programs to model Bohmian trajectories and visualize quantum behavior using scikit-learn',
       'Produced 3D printed models from simulation data using Matplotlib visualizations to support educational demonstrations',
       'Presented findings at the Nebraska Summer Research Symposium after biweekly reviews with professor to refine methodology',
     ],
@@ -128,8 +132,8 @@ const involvement: ExperienceItem[] = [
   {
     id: 'cds',
     company: 'Cornell Data & Strategy',
-    role: 'Tech Implementation Associate',
-    duration: 'Fall 2025 — Present',
+    role: 'Technology Implementation Associate',
+    duration: 'September 2025 — Present',
     description:
       'Delivering data prediction and visualization tools to clients',
     bullets: [],
@@ -150,12 +154,12 @@ const involvement: ExperienceItem[] = [
     id: 'c2s2',
     company: 'Cornell Custom Silicon Systems',
     role: 'Operations Engineer',
-    duration: 'Fall 2025 — Present',
+    duration: 'November 2025 — Present',
     description:
-      'Designing and taping out custom silicon chips as part of a student led project team',
+      'Migrated the team site to React and deploy web apps to Apache for a student led chip tapeout team',
     bullets: [],
     tech: [
-      { name: 'Confluence', icon: '/icons/confluence.svg' },
+      { name: 'React', icon: '/icons/react.svg' },
       { name: 'Apache HTTP Server', icon: '/icons/apache.svg' },
     ],
     logo: '/c2s2logo.png',
@@ -665,7 +669,7 @@ export function Experience() {
               style={{ color: '#4B5563', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
             >
               I have experience in software engineering, research, and full stack development.
-              Looking for Summer 2027 Software and AI/ML engineering internship roles.
+              Looking for summer 2027 software and AI/ML engineering internship roles.
             </p>
           </div>
 

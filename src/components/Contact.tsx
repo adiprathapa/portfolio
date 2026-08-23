@@ -522,7 +522,7 @@ export function Contact() {
               className="text-black lg:mb-10 max-w-lg leading-relaxed"
               style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
             >
-              Have a project or opportunity in mind or just want to connect? Drop your email and
+              Have a project or opportunity in mind, or just want to connect? Drop your email and
               I'll reach out.
             </p>
             </div>
@@ -716,7 +716,7 @@ export function Contact() {
               <Sticker getNextZ={bumpStickerZ} constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-acsu2.png" alt="ACSU" label="From Association of Computer Science Undergraduates" tooltipTop={-56} style={{ bottom: 'calc(10% + 18px)', left: 'calc(68% + 17px)', width: '23.3%' }} hoverArea={{ top: '5%', left: '2%', width: '96%', height: '89%', zIndex: 10 }} />
               <Sticker getNextZ={bumpStickerZ} constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-acsu.png" alt="Riley's Way" label="From Team Mentor Role at Riley's Way Retreat '26" tooltipTop={-56} style={{ bottom: 'calc(10% + 11px)', left: 'calc(55% - 13px)', width: '16%' }} hoverArea={{ top: '4%', left: '6%', width: '83%', height: '96%', zIndex: 10 }} />
               <Sticker getNextZ={bumpStickerZ} constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-tata.png" alt="Tata-Cornell Institute" label="From Cornell Food Hackathon Sponsored by Tata-Cornell Institute" tooltipTop={0} style={{ bottom: 'calc(10% - 31px)', left: 'calc(30% - 86px)', width: '37%' }} hoverArea={{ top: '33%', left: '20%', width: '69%', height: '36%', zIndex: 10 }} />
-              <Sticker getNextZ={bumpStickerZ} constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-data.png" alt="Cornell Data Strategy" label="From Cornell Data Strategy" tooltipTop={-19} style={{ bottom: 'calc(10% - 40px)', left: 'calc(6% - 72px)', width: '37%' }} hoverArea={{ top: '24%', left: '32%', width: '36%', height: '47%', zIndex: 10 }} />
+              <Sticker getNextZ={bumpStickerZ} constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-data.png" alt="Cornell Data & Strategy" label="From Cornell Data & Strategy" tooltipTop={-19} style={{ bottom: 'calc(10% - 40px)', left: 'calc(6% - 72px)', width: '37%' }} hoverArea={{ top: '24%', left: '32%', width: '36%', height: '47%', zIndex: 10 }} />
               {/* Row middle */}
               <Sticker getNextZ={bumpStickerZ} constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-frog.png" alt="TrexQuant" label="From first Career Fair at Cornell" tooltipTop={-56} style={{ bottom: 'calc(10% + 91px)', left: 'calc(70% + 40px)', width: '14.4%' }} hoverArea={{ top: '7%', left: '8%', width: '85%', height: '85%', zIndex: 10 }} />
               <Sticker getNextZ={bumpStickerZ} constraintsRef={lidRef} disabled={!laptopOpen} src="/sticker-c2s2.png" alt="C2S2" label="From Cornell Custom Silicon Systems" tooltipTop={-56} style={{ bottom: isLg ? 'calc(10% + 105px)' : 'calc(10% + 110px)', left: 'calc(55% + 20px)', width: '15.04%' }} hoverArea={{ top: '5%', left: '5%', width: '92%', height: '92%', zIndex: 10 }} />

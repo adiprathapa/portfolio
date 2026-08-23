@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Button } from './ui/button'
 import { scrollToSection } from '../lib/scrollToSection'
-import { warmCalendarPage, warmResumePage } from '../lib/prefetch'
+import { warmCalendarPage } from '../lib/prefetch'
 
 interface MobileMenuProps {
   isOpen: boolean
@@ -50,8 +50,6 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
                 <a
                   key={link.href}
                   href={link.href}
-                  onFocus={link.href === '/resume.html' ? warmResumePage : undefined}
-                  onTouchStart={link.href === '/resume.html' ? warmResumePage : undefined}
                   onClick={(e) => {
                     if (link.href.startsWith('#')) {
                       e.preventDefault()

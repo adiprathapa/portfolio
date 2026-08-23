@@ -4,19 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI." />
+    <meta name="description" content="Book time with Aditya (Adi) Prathapa, a Cornell CS student working on graph ML, full stack systems, and open source." />
     <title>Adi Prathapa | Let's Talk</title>
     <link rel="canonical" href="https://adiprathapa.space/calendar.html" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://adiprathapa.space/calendar.html" />
     <meta property="og:title" content="Adi Prathapa | Let's Talk" />
-    <meta property="og:description" content="Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI." />
+    <meta property="og:description" content="Book time with Aditya (Adi) Prathapa, a Cornell CS student working on graph ML, full stack systems, and open source." />
     <meta property="og:image" content="https://adiprathapa.space/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Adi Prathapa | Let's Talk" />
-    <meta name="twitter:description" content="Aditya (Adi) Prathapa is a Computer Science student at Cornell University minoring in AI." />
+    <meta name="twitter:description" content="Book time with Aditya (Adi) Prathapa, a Cornell CS student working on graph ML, full stack systems, and open source." />
     <meta name="twitter:image" content="https://adiprathapa.space/og-image.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -633,7 +633,6 @@
 
             <nav aria-label="Resources">
               <h4>Resources</h4>
-              <a href="/resume.html">Resume</a>
               <a href="/calendar.html">Calendar</a>
             </nav>
 
@@ -647,7 +646,7 @@
         </div>
 
         <div class="video-footer__bottom">
-          <a href="/#top" class="video-footer__bottom-logo" aria-label="Back to hero">&#x0906;&#x0926;&#x093F;</a>
+          <a href="/#top" class="video-footer__bottom-logo" aria-label="Back to hero">Adi Prathapa</a>
           <span>&copy; <script>document.write(new Date().getFullYear())</script> Adi Prathapa. All rights reserved.</span>
           <button type="button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">Back to top</button>
         </div>
@@ -658,7 +657,7 @@
       <div class="footer-inner">
         <div class="footer-grid">
           <div class="footer-brand">
-            <a href="/" class="brand-logo" style="text-decoration:none;color:var(--primary)">&#x0906;&#x0926;&#x093F;</a>
+            <a href="/" class="brand-logo" style="text-decoration:none;color:var(--primary)">Adi Prathapa</a>
           </div>
 
           <div class="footer-col">
@@ -690,7 +689,6 @@
           <div class="footer-col">
             <h4>Resources</h4>
             <ul>
-              <li><a href="/resume.html">Resume</a></li>
               <li><a href="/calendar.html">Calendar</a></li>
             </ul>
           </div>
@@ -745,21 +743,11 @@
         Object.entries(extras).forEach(([name, value]) => link.setAttribute(name, value));
         document.head.appendChild(link);
       }
-      function warmResumePage() {
-        appendWarmLink('prefetch', '/resume.html', { as: 'document' });
-        appendWarmLink('preconnect', 'https://cdnjs.cloudflare.com', { crossorigin: 'anonymous' });
-        appendWarmLink('preconnect', 'https://amethyst-high-ostrich-443.mypinata.cloud', { crossorigin: 'anonymous' });
-      }
       function warmCalendarPage() {
         appendWarmLink('prefetch', '/calendar.html', { as: 'document' });
         appendWarmLink('preconnect', 'https://app.cal.com', { crossorigin: 'anonymous' });
         appendWarmLink('preconnect', 'https://cal.com', { crossorigin: 'anonymous' });
       }
-      document.querySelectorAll('[data-warm-page="resume"]').forEach((link) => {
-        link.addEventListener('mouseenter', warmResumePage);
-        link.addEventListener('focus', warmResumePage);
-        link.addEventListener('touchstart', warmResumePage, { passive: true });
-      });
       document.querySelectorAll('[data-warm-page="calendar"]').forEach((link) => {
         link.addEventListener('mouseenter', warmCalendarPage);
         link.addEventListener('focus', warmCalendarPage);

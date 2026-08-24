@@ -636,8 +636,9 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .video-footer__content {
-    justify-content: center;
-    margin-top: clamp(2rem, 3vw, 3.5rem);
+    justify-content: flex-end;
+    margin-top: clamp(3.5rem, 5vw, 6rem);
+    padding-right: 79px;
     padding-left: 0;
   }
 
@@ -648,6 +649,7 @@ h1, h2, h3, h4, h5, h6 {
 
   .video-footer__columns {
     gap: clamp(3rem, 6vw, 6rem);
+    transform: translateX(clamp(0px, 4vw, 71px));
   }
 
   .video-footer__columns nav,

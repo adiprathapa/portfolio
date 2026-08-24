@@ -27,7 +27,7 @@ const PRELOAD_IMAGES = [
   '/logo-tauron.png', '/logo-helicity.png',
   '/logo-apature.png', '/logo-hrt.png', '/logo-partcl.png',
   '/tauronbg.webp', '/helicitybg.webp',
-  '/verdictbg.webp', '/sigilbg.webp', '/macroplace-bg.webp',
+  '/verdictbg.webp', '/macroplace-bg.webp',
   '/pexels-andrewshelley-8454632.webp',
 ]
 

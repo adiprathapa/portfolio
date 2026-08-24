@@ -7,7 +7,7 @@ This site is a single page React app; the sections below describe its content.
 ## Sections
 
 - [Home](https://adiprathapa.space/): hero, about, experience (MITRE data science intern summer 2026, Colorado School of Mines, UNL research), education (Cornell, B.A. CS)
-- [Projects](https://adiprathapa.space/#projects): Verdict (VLM design reviewer), macro placement GNN, Tauron (livestock disease GNN), Sigil (LLM eval statistics library), OpenAI Parameter Golf entry, Helicity (stablecoin liquidity stress)
+- [Projects](https://adiprathapa.space/#projects): Apature (Verdict VLM design reviewer and Sigil eval statistics library), macro placement GNN, Tauron (livestock disease GNN), OpenAI Parameter Golf entry, Helicity (stablecoin liquidity stress)
 - [Open Source](https://adiprathapa.space/#open-source): Kiwix/openZIM, Kubeflow, Jenkins, CockroachDB contributions
 - [Calendar](https://adiprathapa.space/calendar.html): book a meeting
 - [Privacy](https://adiprathapa.space/privacy.html)

@@ -59,6 +59,7 @@ interface FlipSafariProps {
   cardHeight?: string
   enableBackground?: boolean
   interactive?: boolean
+  logoBlendMode?: 'screen' | 'normal'
 }
 
 export function FlipSafari({
@@ -75,6 +76,7 @@ export function FlipSafari({
   cardHeight = 'var(--project-card-h)',
   enableBackground = true,
   interactive = true,
+  logoBlendMode,
 }: FlipSafariProps) {
   const [showVideo, setShowVideo] = useState(false)
   const [isVideoHovered, setIsVideoHovered] = useState(false)
@@ -410,7 +412,7 @@ export function FlipSafari({
                   transform: cardHovered ? 'scale(1.08)' : 'scale(1)',
                   transition: 'transform 0.4s ease',
                   isolation: 'auto',
-                  mixBlendMode: 'screen',
+                  mixBlendMode: logoBlendMode ?? 'screen',
                 }}
               >
                 {logoContent}

@@ -12,93 +12,83 @@ import { Education } from './Education'
 // const images = slugs.map(...)
 
 const projectDisplayNames: Record<string, string> = {
-  verdict: "Verdict",
-  tauron: "Tauron",
+  apature: "Apature",
   macroplace: "Macro Placement",
-  sigil: "Sigil",
+  tauron: "Tauron",
   paramgolf: "Parameter Golf",
   helicity: "Helicity",
 }
 
 const projectDescriptions: Record<string, string> = {
-  verdict: "Built at Apature, my design tooling startup. A grounded VLM design reviewer that captures a running web UI with a deterministic headless Chromium pipeline, computes WCAG contrast and overflow facts straight from the DOM, then has a vision model critique the screenshots against the repo's own design tokens, deleting every finding it cannot point at a captured element. Ships a calibration gated confidence pipeline, a Rust perceptual diff crate, and a one command demo verified by CI.",
-  tauron: "Trained a GRU and GraphSAGE model over a synthetic 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
+  apature: "My design tooling startup. Verdict, the core product, is a grounded VLM design reviewer: it captures a running web UI with a deterministic headless Chromium pipeline, computes WCAG contrast and overflow facts straight from the DOM, then has a vision model critique the screenshots against the repo's own design tokens, deleting every finding it cannot point at a captured element. Sigil, its open source companion library, puts error bars on LLM-as-judge evals with finite sample risk certificates and anytime valid drift monitoring.",
   macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
-  sigil: "An open source TypeScript library from Apature that puts error bars on LLM-as-judge evals: judge calibration metrics, exact finite sample risk certificates with certified abstention thresholds, and anytime valid drift monitoring built on e-processes. Dependency free, fully offline, property tested, with byte reproducible signed reports.",
+  tauron: "Trained a GRU and GraphSAGE model over a synthetic 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
   paramgolf: "Entered OpenAI's Parameter Golf, a language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment, reaching 1.107 val bpb on a single H100 across 86 FineWeb shards.",
   helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up a multi-model LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
 }
 
 const projectLinks: Record<string, string> = {
-  verdict: "https://github.com/apatureai/verdict",
-  tauron: "https://adiprathapa.github.io/Tauron/reveal_slides",
+  apature: "https://github.com/apatureai",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
-  sigil: "https://github.com/apatureai/sigil",
+  tauron: "https://adiprathapa.github.io/Tauron/reveal_slides",
   paramgolf: "https://github.com/adiprathapa/parameter-golf/tree/codex/sp4096-qk45-budget/records/track_non_record_16mb/2026-05-07_sp4096_budget_repro",
   helicity: "https://helicity-theta.vercel.app/",
 }
 
 const projectRepoLinks: Record<string, string> = {
-  verdict: "https://github.com/apatureai/verdict",
-  tauron: "https://github.com/adiprathapa/Tauron",
+  apature: "https://github.com/apatureai/verdict",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
-  sigil: "https://github.com/apatureai/sigil",
+  tauron: "https://github.com/adiprathapa/Tauron",
   paramgolf: "https://github.com/adiprathapa/parameter-golf/tree/codex/sp4096-qk45-budget/records/track_non_record_16mb/2026-05-07_sp4096_budget_repro",
   helicity: "https://github.com/AI-HackathonNYC/helicity",
 }
 
-const projectOrder = ['verdict', 'macroplace', 'tauron', 'sigil', 'paramgolf', 'helicity']
+const projectOrder = ['apature', 'macroplace', 'tauron', 'paramgolf', 'helicity']
 
 const projectSafariProps: Record<string, { url: string; videoSrc?: string; posterSrc?: string; imageSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
-  verdict: { url: projectLinks['verdict'], imageSrc: "/verdict-poster.webp" },
-  tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mp4", posterSrc: "/tauron-poster.webp", videoCropTop: 25 },
+  apature: { url: projectLinks['apature'] },
   macroplace: { url: projectLinks['macroplace'], imageSrc: "/macroplace-poster.webp" },
-  sigil: { url: projectLinks['sigil'], imageSrc: "/sigil-poster.webp" },
+  tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mp4", posterSrc: "/tauron-poster.webp", videoCropTop: 25 },
   paramgolf: { url: projectLinks['paramgolf'], imageSrc: "/paramgolf-poster.webp" },
   helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mp4", posterSrc: "/helicity-poster.webp" },
 }
 
 const projectLogos: Record<string, string> = {
-  verdict: "",
-  tauron: "/logo-tauron.png",
+  apature: "",
   macroplace: "",
-  sigil: "",
+  tauron: "/logo-tauron.png",
   paramgolf: "",
   helicity: "/logo-helicity.png",
 }
 
 const projectTaglines: Record<string, string> = {
-  verdict: "VLM design review that checks judgment, not pixels",
-  tauron: "Predicting livestock disease 48 hours before symptoms appear",
+  apature: "VLM design review that checks judgment, not pixels",
   macroplace: "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge",
-  sigil: "Error bars for LLM-as-judge evals in dependency-free TypeScript",
+  tauron: "Predicting livestock disease 48 hours before symptoms appear",
   paramgolf: "OpenAI Parameter Golf submission at 1.107 val bpb under 16 MB",
   helicity: "AI powered liquidity stress scoring with verifiable audit trails",
 }
 
 const projectBgImages: Record<string, string> = {
-  verdict: '/verdictbg.webp',
-  tauron: '/tauronbg.webp',
+  apature: '/verdictbg.webp',
   macroplace: '/macroplace-bg.webp',
-  sigil: '/sigilbg.webp',
+  tauron: '/tauronbg.webp',
   paramgolf: '/pexels-andrewshelley-8454632.webp',
   helicity: '/helicitybg.webp',
 }
 
 const projectGradientColors: Record<string, string> = {
-  verdict: '#3B4FD8',
-  tauron: '#4C867A',
+  apature: '#232B66',
   macroplace: '#1a1a2e',
-  sigil: '#2E3163',
+  tauron: '#4C867A',
   paramgolf: '#0E1F1B',
   helicity: '#6366F1',
 }
 
 const projectTechStacks: Record<string, string[]> = {
-  verdict: ["TypeScript", "Playwright", "Rust", "Python", "PostgreSQL", "Docker", "VLM"],
-  tauron: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
+  apature: ["TypeScript", "Playwright", "Rust", "Python", "PostgreSQL", "VLM", "Conformal Prediction"],
   macroplace: ["PyTorch", "GNN", "NumPy", "FFT", "Python"],
-  sigil: ["TypeScript", "Node.js", "Conformal Prediction", "E-processes"],
+  tauron: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
   paramgolf: ["PyTorch", "CUDA", "FlashAttention 3", "Brotli", "SentencePiece", "Hugging Face", "Python"],
   helicity: ["FastAPI", "NetworkX", "FastMCP", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas"],
 }
@@ -166,13 +156,16 @@ function ProjectCard({
             className="h-14 object-contain"
             style={{ filter: 'brightness(0) invert(1)', opacity: 0.95 }}
           />
-        ) : projectKey === 'verdict' || projectKey === 'sigil' ? (
-          <div className="flex flex-col items-center gap-3" style={{ opacity: 0.95 }}>
-            <img src="/logo-apature.png" alt="Apature" className="h-16 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
-            <span className="text-white text-2xl font-light uppercase" style={{ letterSpacing: '0.25em' }}>{projectKey}</span>
-          </div>
+        ) : projectKey === 'apature' ? (
+          <img
+            src="/logo-apature.png"
+            alt="Apature"
+            className="h-32 object-contain"
+            style={{ filter: 'drop-shadow(0 0 36px rgba(255, 255, 255, 0.3)) drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4))' }}
+          />
         ) : undefined}
         techStack={projectTechStacks[projectKey]}
+        logoBlendMode={projectKey === 'apature' ? 'normal' : undefined}
         gradientColor={projectGradientColors[projectKey]}
         bgImage={projectBgImages[projectKey]}
         enableBackground={enableBackground}

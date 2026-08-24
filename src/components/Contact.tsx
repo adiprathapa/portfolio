@@ -2,7 +2,7 @@ import { type FormEvent, type CSSProperties, useRef, useState, useEffect, useCal
 import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, animate, AnimatePresence } from 'framer-motion'
 import { Button } from './ui/button'
 import { RippleButton } from './ui/ripple-button'
-import { usePostHog } from '@posthog/react'
+import { posthog } from '../lib/analytics'
 
 function Sticker({ src, alt, label, style, tooltipTop, tooltipBottom, tooltipOffsetX, hoverArea, disabled, rotation, constraintsRef, active = true, getNextZ }: { src: string; alt: string; label: string; style: CSSProperties; tooltipTop?: number; tooltipBottom?: number; tooltipOffsetX?: number; hoverArea?: CSSProperties; disabled?: boolean; rotation?: number; constraintsRef?: React.RefObject<HTMLDivElement | null>; active?: boolean; getNextZ?: () => number }) {
   const [hovered, setHovered] = useState(false)
@@ -278,7 +278,6 @@ function getFinalMessage(avg: number) {
 }
 
 export function Contact() {
-  const posthog = usePostHog()
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -522,8 +521,9 @@ export function Contact() {
               className="text-black lg:mb-10 max-w-lg leading-relaxed"
               style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
             >
-              Have a project or opportunity in mind, or just want to connect? Drop your email and
-              I'll reach out.
+              Have a project or opportunity in mind, or just want to connect? Email me at{' '}
+              <a href="mailto:aprathapa01@gmail.com" className="underline underline-offset-4 hover:text-white transition-colors">aprathapa01@gmail.com</a>, grab a slot on my{' '}
+              <a href="/calendar.html" className="underline underline-offset-4 hover:text-white transition-colors">calendar</a>, or drop your email and I'll reach out.
             </p>
             </div>
 
@@ -653,6 +653,32 @@ export function Contact() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="/calendar.html"
+                className="flex items-center justify-center w-11 h-11 rounded-full transition-colors"
+                style={{ background: 'rgba(255,255,255,0.15)' }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = 'rgba(255,255,255,0.25)')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = 'rgba(255,255,255,0.15)')
+                }
+                onClick={() => posthog?.capture('social_link_clicked', { platform: 'calendar', location: 'contact' })}
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="white"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
               </a>

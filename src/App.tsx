@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
+import { MotionConfig } from 'framer-motion'
 import { Analytics } from '@vercel/analytics/react'
 import { Navbar } from './components/Navbar'
 import { HorizontalScrollSection } from './components/HorizontalScrollSection'
@@ -105,7 +106,7 @@ function App() {
   }, [])
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       <Analytics />
       <Navbar />
       <main style={{ background: '#f4f4f4' }}>
@@ -130,7 +131,7 @@ function App() {
           </div>
         </div>
       </main>
-    </>
+    </MotionConfig>
   )
 }
 

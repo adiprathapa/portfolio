@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { AnimatedGradientBackground } from './ui/animated-gradient-background'
 import { FluidCursor } from './ui/fluid-cursor'
 import { heroStagger, heroChild } from '../lib/animations'
-import { usePostHog } from '@posthog/react'
+import { posthog } from '../lib/analytics'
 
 const LENS_SIZE = 140
 const LENS_RADIUS = LENS_SIZE / 2
@@ -176,7 +176,7 @@ function useTypewriter(
 }
 
 export function Hero() {
-  const posthog = usePostHog()
+  const prefersReducedMotion = useReducedMotion()
   const [effectsActive, setEffectsActive] = useState(true)
   const [tooltipActive, setTooltipActive] = useState(false)
   const [headingHovered, setHeadingHovered] = useState(false)
@@ -305,7 +305,7 @@ export function Hero() {
       style={{ paddingBottom: '0' }}
     >
       <AnimatedGradientBackground active={effectsActive} />
-      <FluidCursor active={effectsActive} />
+      <FluidCursor active={effectsActive && !prefersReducedMotion} />
 
       <motion.div
         className="relative z-10 text-center md:text-left max-w-5xl w-full px-6 flex flex-col-reverse md:flex-row items-center md:items-center gap-8 md:gap-12"

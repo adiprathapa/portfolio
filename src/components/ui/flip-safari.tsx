@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useLayoutEffect, type CSSProperties, Fragm
 import { Safari } from './safari'
 import { RippleButton } from './ripple-button'
 import type { SafariProps } from './safari'
-import { usePostHog } from '@posthog/react'
+import { posthog } from '../../lib/analytics'
 
 const warmedProjectVideos = new Map<string, HTMLVideoElement>()
 
@@ -76,7 +76,6 @@ export function FlipSafari({
   enableBackground = true,
   interactive = true,
 }: FlipSafariProps) {
-  const posthog = usePostHog()
   const [showVideo, setShowVideo] = useState(false)
   const [isVideoHovered, setIsVideoHovered] = useState(false)
   const [cardHovered, setCardHovered] = useState(false)
@@ -286,7 +285,7 @@ export function FlipSafari({
             )}
 
             <div className="flex justify-center lg:justify-start gap-2.5 lg:mt-[18px] items-center">
-              {safariProps.videoSrc && (
+              {(safariProps.videoSrc || safariProps.imageSrc) && (
               <RippleButton
                 className="hidden lg:inline-flex px-5 py-2.5 text-base"
                 rippleColor="#38BDF8"
@@ -311,7 +310,7 @@ export function FlipSafari({
                 onClick={handleFlipToVideo}
               >
                 <span className="inline-flex items-center gap-1.5">
-                  <span>View Video</span>
+                  <span>{safariProps.videoSrc ? 'View Video' : 'Preview'}</span>
                   <svg
                     width="13"
                     height="13"

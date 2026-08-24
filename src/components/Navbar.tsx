@@ -3,7 +3,7 @@ import { useScrolled } from '../hooks/useScrolled'
 import { useActiveSection } from '../hooks/useActiveSection'
 import { RippleButton } from './ui/ripple-button'
 import { MobileMenu } from './MobileMenu'
-import { usePostHog } from '@posthog/react'
+import { posthog } from '../lib/analytics'
 import { scrollToSection, sectionScrollTop } from '../lib/scrollToSection'
 import { warmCalendarPage } from '../lib/prefetch'
 import {
@@ -23,7 +23,6 @@ const navLinks = [
 ]
 
 export function Navbar() {
-  const posthog = usePostHog()
   const { scrolled, hidden } = useScrolled(50)
   const activeSection = useActiveSection()
   const showSocialActions =

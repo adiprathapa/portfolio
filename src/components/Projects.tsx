@@ -53,13 +53,13 @@ const projectRepoLinks: Record<string, string> = {
 
 const projectOrder = ['tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea', 'paramgolf', 'spectre']
 
-const projectSafariProps: Record<string, { url: string; videoSrc?: string; posterSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
+const projectSafariProps: Record<string, { url: string; videoSrc?: string; posterSrc?: string; imageSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
   tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mp4", posterSrc: "/tauron-poster.webp", videoCropTop: 25 },
   helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mp4", posterSrc: "/helicity-poster.webp" },
   zamsizing: { url: projectLinks['zamsizing'], videoSrc: "/zam-copy.mp4", posterSrc: "/zam-copy-poster.webp", videoCropTop: 110, videoCropBottom: 30, videoCropLeft: 270, videoCropRight: 272 },
-  macroplace: { url: projectLinks['macroplace'] },
+  macroplace: { url: projectLinks['macroplace'], imageSrc: "/macroplace-poster.webp" },
   galatea: { url: projectLinks['galatea'], videoSrc: "/recording-1.mp4", posterSrc: "/recording-1-poster.webp", videoCropTop: 23 },
-  paramgolf: { url: projectLinks['paramgolf'] },
+  paramgolf: { url: projectLinks['paramgolf'], imageSrc: "/paramgolf-poster.webp" },
   spectre: { url: projectLinks['spectre'], videoSrc: "/spectre.mp4", posterSrc: "/spectre-poster.webp", videoCropTop: "10%", videoStartTime: 10 },
 }
 

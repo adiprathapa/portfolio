@@ -15,7 +15,7 @@ const items: Contribution[] = [
     name: 'Kiwix / openZIM',
     logoSrc: '/oss-logo-kiwix.webp',
     description:
-      'Shipped system wide dark mode, translation handling, internationalized reset dialogs, and a failed check visual flash in the freeCodeCamp offliner.',
+      'Shipped system wide dark mode, translation handling, and internationalized dialogs in the freeCodeCamp offliner.',
     prListUrl:
       'https://github.com/search?q=is%3Apr+author%3Aadiprathapa+org%3Aopenzim&type=pullrequests',
   },
@@ -24,7 +24,7 @@ const items: Contribution[] = [
     name: 'Kubeflow',
     logoSrc: '/oss-logo-kubeflow.webp',
     description:
-      'Merged validation for reserved MPI environment variables in the Trainer runtimes; a Spark Connect URL fix and a custom device fallback for the Python SDK are in review.',
+      'Merged reserved MPI environment variable validation in the Trainer runtimes; two Python SDK fixes are in review.',
     prListUrl:
       'https://github.com/search?q=is%3Apr+author%3Aadiprathapa+org%3Akubeflow&type=pullrequests',
   },
@@ -33,7 +33,7 @@ const items: Contribution[] = [
     name: 'Jenkins',
     logoSrc: '/oss-logo-jenkins.webp',
     description:
-      'Merged a custom update center URL flag in the plugin installation manager; Jest tests for chat export in the AI chatbot plugin and credential ID validation in the credentials plugin are in review.',
+      'Merged a custom update center URL flag in the plugin installation manager; AI chatbot and credentials plugin PRs are in review.',
     prListUrl:
       'https://github.com/search?q=is%3Apr+author%3Aadiprathapa+org%3Ajenkinsci&type=pullrequests',
   },
@@ -42,18 +42,9 @@ const items: Contribution[] = [
     name: 'CockroachDB',
     logoSrc: '/oss-logo-cockroachdb.webp',
     description:
-      'Submitted a jsonpath scanner fix so keys starting with a digit report trailing junk consistently, matching Postgres diagnostics.',
+      'Submitted a jsonpath scanner fix aligning trailing junk errors with Postgres diagnostics.',
     prListUrl:
       'https://github.com/search?q=is%3Apr+author%3Aadiprathapa+org%3Acockroachdb&type=pullrequests',
-  },
-  {
-    id: 'ccextractor',
-    name: 'CCExtractor',
-    logoSrc: '/oss-logo-ccextractor.webp',
-    description:
-      'Built test suites hardening the ccsync Tasks page UI, covering Reports Toggle behavior and selection state in the multi select utilities.',
-    prListUrl:
-      'https://github.com/search?q=is%3Apr+author%3Aadiprathapa+org%3ACCExtractor&type=pullrequests',
   },
 ]
 
@@ -78,7 +69,7 @@ export function OpenSource() {
         </GradientText>
       </div>
 
-      <div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2 lg:mt-16 lg:grid-cols-5 lg:gap-8">
+      <div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-12">
         {items.map((item) => (
           <div key={item.id} className="flex flex-col">
             <img

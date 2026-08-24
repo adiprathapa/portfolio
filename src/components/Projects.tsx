@@ -47,7 +47,7 @@ const projectRepoLinks: Record<string, string> = {
   helicity: "https://github.com/AI-HackathonNYC/helicity",
 }
 
-const projectOrder = ['verdict', 'tauron', 'macroplace', 'sigil', 'paramgolf', 'helicity']
+const projectOrder = ['verdict', 'macroplace', 'tauron', 'sigil', 'paramgolf', 'helicity']
 
 const projectSafariProps: Record<string, { url: string; videoSrc?: string; posterSrc?: string; imageSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
   verdict: { url: projectLinks['verdict'], imageSrc: "/verdict-poster.webp" },

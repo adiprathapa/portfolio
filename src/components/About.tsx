@@ -292,6 +292,10 @@ function SmallCard({ tech }: { tech: TechItem }) {
       onMouseDown={() => { if (canHoverRef.current) setPressed(true) }}
       onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
       onClick={() => window.open(tech.url, '_blank')}
+      role="link"
+      tabIndex={0}
+      aria-label={tech.name}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.open(tech.url, '_blank') } }}
     >
       {showIcon && (
         <motion.div
@@ -400,6 +404,10 @@ function TallCard({ tech }: { tech: TechItem }) {
         onMouseDown={() => { if (canHoverRef.current) setPressed(true) }}
         onMouseUp={() => { if (canHoverRef.current) setPressed(false) }}
         onClick={() => window.open(tech.url, '_blank')}
+        role="link"
+        tabIndex={0}
+        aria-label={tech.name}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.open(tech.url, '_blank') } }}
       >
         {showIcon && (
           <motion.div
@@ -609,6 +617,8 @@ export function ProjectMarquee({ active }: { active: boolean }) {
     )
   }
 
+const COARSE_POINTER = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+
 const CARDS: {
   id: string
   image: string
@@ -744,7 +754,8 @@ function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab, on
   return (
     <motion.div
       ref={cardRef}
-      drag
+      drag={COARSE_POINTER ? 'x' : true}
+      dragDirectionLock={COARSE_POINTER}
       onDragStart={resetThrowSample}
       onDrag={sampleThrowMotion}
       dragElastic={0.8}
@@ -757,6 +768,7 @@ function ThrowableCard({ card, zIndex, rotation, imageLoaded, onGone, onGrab, on
       style={{
         zIndex,
         rotate: rotation,
+        ...(COARSE_POINTER ? { touchAction: 'pan-y' as const } : {}),
         border: '1.5px solid rgba(6, 113, 164, 0.3)',
         boxSizing: 'border-box',
         backgroundClip: 'padding-box',

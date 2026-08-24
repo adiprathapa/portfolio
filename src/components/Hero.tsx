@@ -485,6 +485,10 @@ export function Hero() {
                 backfaceVisibility: 'hidden',
                 cursor: 'pointer',
               }}
+              role="link"
+              tabIndex={0}
+              aria-label="LinkedIn profile"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); posthog?.capture('linkedin_profile_clicked', { location: 'hero_coin' }); window.open('https://www.linkedin.com/in/adi-prathapa/', '_blank') } }}
               onClick={() => { posthog?.capture('linkedin_profile_clicked', { location: 'hero_coin' }); window.open('https://www.linkedin.com/in/adi-prathapa/', '_blank') }}
             >
               <img
@@ -527,6 +531,10 @@ export function Hero() {
                 transform: 'rotateY(180deg)',
                 cursor: 'pointer',
               }}
+              role="link"
+              tabIndex={0}
+              aria-label="GitHub profile"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); posthog?.capture('github_profile_clicked', { location: 'hero_coin' }); window.open('https://github.com/adiprathapa', '_blank') } }}
               onClick={() => { posthog?.capture('github_profile_clicked', { location: 'hero_coin' }); window.open('https://github.com/adiprathapa', '_blank') }}
             >
               <img

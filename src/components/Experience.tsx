@@ -243,6 +243,9 @@ function CarouselCard({
   return (
     <div
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick() } }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="relative overflow-hidden cursor-pointer"
@@ -723,6 +726,7 @@ export function Experience() {
               >
                 {/* Arrow buttons — always visible (infinite loop) */}
                 <button
+                  aria-label="Previous experience"
                   onClick={() => {
                     navigateToPrev()
                     if (timerRef.current) clearInterval(timerRef.current)
@@ -745,6 +749,7 @@ export function Experience() {
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
                 </button>
                 <button
+                  aria-label="Next experience"
                   onClick={() => {
                     advanceToNext()
                     if (timerRef.current) clearInterval(timerRef.current)
@@ -863,6 +868,7 @@ export function Experience() {
                       opacity: mobileCarouselIdx === 0 ? 0.4 : 1,
                       transition: 'opacity 0.2s',
                     }}
+                    aria-label="Previous experience"
                     disabled={mobileCarouselIdx === 0}
                     onClick={() => { if (mobileCarouselIdx > 0) setMobileCarouselIdx(mobileCarouselIdx - 1) }}
                   >
@@ -875,6 +881,7 @@ export function Experience() {
                       opacity: mobileCarouselIdx === allEntries.length - 1 ? 0.4 : 1,
                       transition: 'opacity 0.2s',
                     }}
+                    aria-label="Next experience"
                     disabled={mobileCarouselIdx === allEntries.length - 1}
                     onClick={() => { if (mobileCarouselIdx < allEntries.length - 1) setMobileCarouselIdx(mobileCarouselIdx + 1) }}
                   >

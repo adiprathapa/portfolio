@@ -538,7 +538,12 @@ export function Contact() {
                 <>
                   <div className="glassmorphism mx-auto flex max-w-md flex-col items-stretch gap-2 rounded-xl p-2 sm:flex-row sm:items-center lg:mx-0">
                     <input
-                      type="text"
+                      type="email"
+                      name="email"
+                      autoComplete="email"
+                      aria-label="Your email address"
+                      aria-invalid={!!error}
+                      aria-describedby={error ? 'contact-email-error' : undefined}
                       placeholder="your@email.com"
                       value={email}
                       onChange={(e) => { setEmail(e.target.value); if (error) setError('') }}
@@ -578,7 +583,7 @@ export function Contact() {
                     </Button>
                   </div>
                   {error && (
-                    <p className="mt-3 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                    <p id="contact-email-error" role="alert" className="mt-3 text-sm font-medium" style={{ color: '#FFFFFF' }}>
                       {error}
                     </p>
                   )}

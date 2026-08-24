@@ -231,8 +231,18 @@ export function FlipSafari({
               } : undefined}
             >
             <div>
+            {(safariProps.posterSrc || safariProps.imageSrc) && (
+              <img
+                src={safariProps.posterSrc || safariProps.imageSrc}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="lg:hidden w-full aspect-video object-cover object-top rounded-lg mb-4"
+                style={{ border: '1px solid rgba(6, 113, 164, 0.2)' }}
+              />
+            )}
             <h3
-              className="font-normal font-heading text-left text-[16px] lg:text-[clamp(1.5rem,1vw+1rem,1.875rem)] gradient-text"
+              className="font-normal font-heading text-left text-[16px] lg:text-[clamp(1.5rem,1vw+1rem,1.875rem)] text-[#0671A4] lg:gradient-text"
               style={{ lineHeight: 1.16 }}
             >
               {projectTagline || projectName}
@@ -284,10 +294,10 @@ export function FlipSafari({
               </div>
             )}
 
-            <div className="flex justify-center lg:justify-start gap-2.5 lg:mt-[18px] items-center">
+            <div className="flex justify-start gap-2.5 lg:mt-[18px] items-center">
               {(safariProps.videoSrc || safariProps.imageSrc) && (
               <RippleButton
-                className="hidden lg:inline-flex px-5 py-2.5 text-base"
+                className="inline-flex px-3 py-1.5 text-[13px] lg:px-5 lg:py-2.5 lg:text-base"
                 rippleColor="#38BDF8"
                 style={{
                   backgroundColor: '#0671A4',
@@ -424,6 +434,10 @@ export function FlipSafari({
         {/* Back face — Safari video */}
         <div
           onClick={handleFlipToCard}
+          role="button"
+          tabIndex={showVideo ? 0 : -1}
+          aria-label="Back to project details"
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleFlipToCard() } }}
           style={{
             cursor: 'pointer',
             backfaceVisibility: 'hidden',

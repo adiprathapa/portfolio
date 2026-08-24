@@ -500,6 +500,10 @@ export function GithubHeatmap() {
               {/* cell grid */}
               <div
                 className={`overflow-hidden relative ${phase === 'idle' ? 'github-heatmap-fade group cursor-pointer' : ''}`}
+                role={phase === 'idle' ? 'button' : undefined}
+                tabIndex={phase === 'idle' ? 0 : -1}
+                aria-label={phase === 'idle' ? 'Play the contribution graph game' : undefined}
+                onKeyDown={(e) => { if (phase === 'idle' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick() } }}
                 style={{
                   width: gameW ?? clip ?? 'fit-content',
                   maxWidth: '100%',

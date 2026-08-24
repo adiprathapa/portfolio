@@ -333,6 +333,7 @@ export function MemoryMatch({ onClose, onConveyorGame }: { onClose: () => void; 
             )}
             <button
               onClick={onClose}
+              aria-label="Close game"
               className="w-7 h-7 flex items-center justify-center rounded-full transition-colors"
               style={{ color: '#0671A4' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6, 113, 164, 0.1)' }}

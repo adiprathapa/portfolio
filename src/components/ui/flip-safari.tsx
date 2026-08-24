@@ -155,7 +155,11 @@ export function FlipSafari({
   }, [])
 
   const handleFlipToVideo = () => {
-    posthog?.capture('project_video_viewed', { project_name: projectName })
+    if (tiltRafRef.current !== null) {
+      cancelAnimationFrame(tiltRafRef.current)
+      tiltRafRef.current = null
+    }
+    posthog?.capture('project_video_viewed', { project_name: projectName, media: safariProps.videoSrc ? 'video' : 'image' })
     if (innerRef.current) {
       innerRef.current.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
       innerRef.current.style.transform = 'rotateY(180deg)'

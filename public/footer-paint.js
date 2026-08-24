@@ -247,9 +247,9 @@
   }
 
   function init() {
+    setupHomeSectionLinks();
     var el = document.querySelector('.video-footer__word');
     if (!el) return;
-    setupHomeSectionLinks();
     setupVideoLoading(el);
     applyAadiMask(el);
     setupPaint(el);

@@ -243,7 +243,7 @@ const minorTech: TechItem[] = [
   { name: 'Gemini API', icon: '/icons/googlegemini-0671A4.svg', url: 'https://ai.google.dev', blurb: 'Built multi-model AI workflows and fallback orchestration for production apps' },
   { name: 'Mistral AI', icon: '/icons/mistralai-0671A4.svg', url: 'https://mistral.ai' },
   { name: 'Leaflet', icon: '/icons/leaflet-0671A4.svg', url: 'https://leafletjs.com' },
-  { name: 'Palantir Foundry', icon: '/icons/palantir-0671A4.svg', url: 'https://www.palantir.com/platforms/foundry/', blurb: 'Built Galatea, an on-chain risk prototype with graph risk scoring and case management on Foundry' },
+  { name: 'Palantir Foundry', icon: '/icons/palantir-0671A4.svg', url: 'https://www.palantir.com/platforms/foundry/', blurb: 'Built an on-chain risk prototype with graph risk scoring and case management on Foundry' },
   { name: 'MediaPipe', icon: '/icons/mediapipe-0671A4.svg', url: 'https://ai.google.dev/edge/mediapipe', blurb: 'Streamed real time pose keypoints from phone cameras to a 60Hz game server for hit detection' },
   { name: 'ElevenLabs', icon: '/icons/elevenlabs-0671A4.svg', url: 'https://elevenlabs.io', blurb: 'Generated low latency AI commentary voices for live in browser game streams' },
   { name: 'Matplotlib', icon: '/matplotlib-mark.svg', url: 'https://matplotlib.org', blurb: 'Visualized macro placements, training metrics, and sensor signals across ML and EDA projects' },

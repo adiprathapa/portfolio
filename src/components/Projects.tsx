@@ -20,7 +20,7 @@ const projectDisplayNames: Record<string, string> = {
 }
 
 const projectDescriptions: Record<string, string> = {
-  apature: "My design tooling startup. Verdict, the core product, is a grounded VLM design reviewer: it captures a running web UI with a deterministic headless Chromium pipeline, computes WCAG contrast and overflow facts straight from the DOM, then has a vision model critique the screenshots against the repo's own design tokens, deleting every finding it cannot point at a captured element. Sigil, its open source companion library, puts error bars on LLM-as-judge evals with finite sample risk certificates and anytime valid drift monitoring.",
+  apature: "My design tooling startup. Verdict, the core product, is a grounded VLM design reviewer: it captures a running web UI with deterministic headless Chromium, critiques it against the repo's own design system, and deletes every finding it cannot point at a captured element. Sigil, its open source companion library, puts error bars on LLM-as-judge evals.",
   macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
   tauron: "Trained a GRU and GraphSAGE model over a synthetic 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
   paramgolf: "Entered OpenAI's Parameter Golf, a language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment, reaching 1.107 val bpb on a single H100 across 86 FineWeb shards.",
@@ -161,7 +161,7 @@ function ProjectCard({
             src="/logo-apature.png"
             alt="Apature"
             className="h-32 object-contain"
-            style={{ filter: 'drop-shadow(0 0 36px rgba(255, 255, 255, 0.3)) drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4))' }}
+            style={{ filter: 'brightness(0) invert(1) drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4))', opacity: 0.95 }}
           />
         ) : undefined}
         techStack={projectTechStacks[projectKey]}
@@ -252,7 +252,7 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
   const expH = experienceRef.current?.offsetHeight ?? 550
   const stickyPt = readStickyPtPx()
   const experienceOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
-  const cardAnimationRail = 6 * spacing
+  const cardAnimationRail = (projectOrder.length - 1) * spacing
   const totalRail = cardAnimationRail + experienceOverflow
   const cardAnimationEnd = totalRail > 0 ? cardAnimationRail / totalRail : 1
 
@@ -273,7 +273,7 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
       return current === next ? current : next
     })
   })
-  const seg = 1 / 6
+  const seg = 1 / (projectOrder.length - 1)
 
   const cardY1 = useTransform(cardProgress, [0, 1], [0, 0])
 
@@ -290,26 +290,16 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
     [spacing * 3, spacing * 2 + stagger, spacing + stagger * 2, stagger * 3, stagger * 3])
 
   const cardY5 = useTransform(cardProgress,
-    [0, seg, seg * 2, seg * 3, seg * 4, 1],
-    [spacing * 4, spacing * 3 + stagger, spacing * 2 + stagger * 2, spacing + stagger * 3, stagger * 4, stagger * 4])
+    [0, seg, seg * 2, seg * 3, seg * 4],
+    [spacing * 4, spacing * 3 + stagger, spacing * 2 + stagger * 2, spacing + stagger * 3, 0])
 
-  const cardY6 = useTransform(cardProgress,
-    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, 1],
-    [spacing * 5, spacing * 4 + stagger, spacing * 3 + stagger * 2, spacing * 2 + stagger * 3, spacing + stagger * 4, stagger * 5, stagger * 5])
+  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5]
 
-  const cardY7 = useTransform(cardProgress,
-    [0, seg, seg * 2, seg * 3, seg * 4, seg * 5, seg * 6],
-    [spacing * 6, spacing * 5 + stagger, spacing * 4 + stagger * 2, spacing * 3 + stagger * 3, spacing * 2 + stagger * 4, spacing + stagger * 5, 0])
-
-  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5, cardY6, cardY7]
-
-  const hideOp0 = useTransform(cardY7, (y: number) => Number(y > 0))
-  const hideOp1 = useTransform(cardY7, (y: number) => Number(y > stagger))
-  const hideOp2 = useTransform(cardY7, (y: number) => Number(y > stagger * 2))
-  const hideOp3 = useTransform(cardY7, (y: number) => Number(y > stagger * 3))
-  const hideOp4 = useTransform(cardY7, (y: number) => Number(y > stagger * 4))
-  const hideOp5 = useTransform(cardY7, (y: number) => Number(y > stagger * 5))
-  const cardOpacities: (MotionValue<number> | undefined)[] = [hideOp0, hideOp1, hideOp2, hideOp3, hideOp4, hideOp5, undefined]
+  const hideOp0 = useTransform(cardY5, (y: number) => Number(y > 0))
+  const hideOp1 = useTransform(cardY5, (y: number) => Number(y > stagger))
+  const hideOp2 = useTransform(cardY5, (y: number) => Number(y > stagger * 2))
+  const hideOp3 = useTransform(cardY5, (y: number) => Number(y > stagger * 3))
+  const cardOpacities: (MotionValue<number> | undefined)[] = [hideOp0, hideOp1, hideOp2, hideOp3, undefined]
 
   // Phase 2: after cards finish, scroll everything up so Experience fills viewport
   const phase2Offset = useTransform(scrollYProgress,
@@ -318,7 +308,7 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
 
   // Experience Y relative to the phase2 wrapper (no stickyPt — the wrapper
   // is inside the section's padded area, so stickyPt is already accounted for)
-  const experienceInsideY = useTransform(cardY7, (y: number) => y + cardH + 96)
+  const experienceInsideY = useTransform(cardY5, (y: number) => y + cardH + 96)
 
   return (
     <>
@@ -376,7 +366,7 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
               />
             ))}
           </div>
-          {/* Experience follows card 7 — same wrapper = constant gap */}
+          {/* Experience follows the last card — same wrapper = constant gap */}
           <motion.div
             style={{
               position: 'absolute',

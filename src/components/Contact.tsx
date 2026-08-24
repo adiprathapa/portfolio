@@ -475,7 +475,7 @@ export function Contact() {
     setError('')
     setSubmitting(true)
     try {
-      await fetch('https://formsubmit.co/ajax/aprathapa01@gmail.com', {
+      const res = await fetch('https://formsubmit.co/ajax/aprathapa01@gmail.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
@@ -484,9 +484,10 @@ export function Contact() {
           _subject: 'New contact from portfolio site',
         }),
       })
+      if (!res.ok) throw new Error(`formsubmit ${res.status}`)
       setSubmitted(true)
       setEmail('')
-      posthog?.capture('contact_form_submitted', { email_domain: email.split('@')[1] })
+      posthog?.capture('contact_form_submitted')
     } catch (err) {
       setError('Something went wrong. Please try again.')
       posthog?.captureException(err)
@@ -587,6 +588,9 @@ export function Contact() {
                       {error}
                     </p>
                   )}
+                  <p className="mt-3 text-xs" style={{ color: 'rgba(255,255,255,0.9)' }}>
+                    Delivered via FormSubmit. See the <a href="/privacy.html" className="underline underline-offset-2">privacy page</a>.
+                  </p>
                 </>
               )}
             </form>
@@ -598,7 +602,8 @@ export function Contact() {
               <a
                 href="https://github.com/adiprathapa"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
+                aria-label="GitHub profile"
                 className="flex items-center justify-center w-11 h-11 rounded-full transition-colors"
                 style={{ background: 'rgba(255,255,255,0.15)' }}
                 onMouseEnter={(e) =>
@@ -617,6 +622,7 @@ export function Contact() {
                 href="https://www.linkedin.com/in/adi-prathapa"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="LinkedIn profile"
                 className="flex items-center justify-center w-11 h-11 rounded-full transition-colors"
                 style={{ background: 'rgba(255,255,255,0.15)' }}
                 onMouseEnter={(e) =>
@@ -637,6 +643,7 @@ export function Contact() {
               </a>
               <a
                 href="mailto:aprathapa01@gmail.com"
+                aria-label="Email Adi"
                 className="flex items-center justify-center w-11 h-11 rounded-full transition-colors"
                 style={{ background: 'rgba(255,255,255,0.15)' }}
                 onMouseEnter={(e) =>
@@ -663,6 +670,7 @@ export function Contact() {
               </a>
               <a
                 href="/calendar.html"
+                aria-label="Book a call"
                 className="flex items-center justify-center w-11 h-11 rounded-full transition-colors"
                 style={{ background: 'rgba(255,255,255,0.15)' }}
                 onMouseEnter={(e) =>
@@ -860,7 +868,7 @@ export function Contact() {
               transition={{ duration: 0.3 }}
               className="flex items-center gap-2 mt-0 mb-4 mx-auto select-none cursor-pointer lg:absolute lg:top-0 lg:mb-0 lg:mt-4"
               style={{
-                color: 'rgba(255, 255, 255, 0.7)',
+                color: '#FFFFFF',
                 background: 'none',
                 border: 'none',
                 padding: 0,

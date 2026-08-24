@@ -14,6 +14,7 @@ const footerLinks = [
 
 const resourceLinks = [
   { label: 'Calendar', href: '/calendar.html' },
+  { label: 'Privacy', href: '/privacy.html' },
 ]
 
 export function Footer() {
@@ -62,7 +63,7 @@ export function Footer() {
         <div className="video-footer__content">
           <div className="video-footer__columns">
             <nav aria-label="Footer navigation">
-              <h4>Explore</h4>
+              <h3>Explore</h3>
               {footerLinks.map((link) => (
                 <a key={link.href} href={link.href} onClick={handleFooterLinkClick(link.href)}>
                   {link.label}
@@ -71,7 +72,7 @@ export function Footer() {
             </nav>
 
             <nav aria-label="Resources">
-              <h4>Resources</h4>
+              <h3>Resources</h3>
               {resourceLinks.map((link) => (
                 <a
                   key={link.href}
@@ -86,10 +87,10 @@ export function Footer() {
             </nav>
 
             <div>
-              <h4>Contact</h4>
+              <h3>Contact</h3>
               <a href="mailto:aprathapa01@gmail.com">Email</a>
               <a href="https://www.linkedin.com/in/adi-prathapa" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-              <a href="https://github.com/adiprathapa" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://github.com/adiprathapa" target="_blank" rel="me noopener noreferrer">GitHub</a>
             </div>
           </div>
         </div>
@@ -98,7 +99,6 @@ export function Footer() {
           <a
             href="/#top"
             className="video-footer__bottom-logo"
-            aria-label="Back to hero"
           >
             Adi Prathapa
           </a>

@@ -14,11 +14,17 @@ export const posthog = {
 }
 
 export function initAnalytics() {
+  const nav = navigator as Navigator & { globalPrivacyControl?: boolean }
+  if (nav.doNotTrack === '1' || nav.globalPrivacyControl === true) return
   const load = () => {
     import('posthog-js').then(({ default: ph }) => {
       ph.init(import.meta.env.VITE_PUBLIC_POSTHOG_TOKEN, {
         api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
         defaults: '2026-01-30',
+        persistence: 'memory',
+        autocapture: false,
+        respect_dnt: true,
+        person_profiles: 'identified_only',
       })
       client = ph
       pending.splice(0).forEach(([event, properties]) => ph.capture(event, properties))

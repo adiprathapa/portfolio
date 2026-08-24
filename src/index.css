@@ -534,6 +534,7 @@ h1, h2, h3, h4, h5, h6 {
   gap: clamp(2rem, 4vw, 4rem);
 }
 
+.video-footer__columns h3,
 .video-footer__columns h4 {
   color: #ffffff;
   font-size: 0.95rem;
@@ -692,7 +693,8 @@ h1, h2, h3, h4, h5, h6 {
     gap: 1rem;
   }
 
-  .video-footer__columns h4 {
+  .video-footer__columns h3,
+.video-footer__columns h4 {
     font-size: 0.82rem;
     margin-bottom: 0.65rem;
   }

@@ -665,7 +665,7 @@ export function GithubHeatmap() {
                     <button
                       type="button"
                       className="flex items-center gap-2 text-[10px] lg:text-sm bg-transparent border-0 p-0 cursor-pointer select-none lg:hidden"
-                      style={{ color: 'rgba(6, 113, 164, 0.45)' }}
+                      style={{ color: 'rgba(6, 113, 164, 0.75)' }}
                       onClick={play}
                     >
                       <motion.svg

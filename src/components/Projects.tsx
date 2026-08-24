@@ -344,7 +344,7 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
               type="button"
               onClick={(e) => { setPlatformerDismissed(true); onPlatformer(); (e.currentTarget as HTMLButtonElement).blur() }}
               className="pointer-events-auto flex items-center gap-2 text-[10px] lg:text-sm bg-transparent border-0 p-0 cursor-pointer select-none"
-              style={{ color: 'rgba(6, 113, 164, 0.45)' }}
+              style={{ color: 'rgba(6, 113, 164, 0.75)' }}
               animate={{ opacity: platformerVisible && !platformerDismissed ? 1 : 0 }}
               transition={{ duration: 0.25 }}
             >

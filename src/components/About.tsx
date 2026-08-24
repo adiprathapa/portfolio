@@ -998,7 +998,7 @@ export function About() {
           </div>
           <motion.p
             className="mt-4 lg:mt-6 flex items-center gap-2 text-[10px] lg:text-sm select-none"
-            style={{ color: 'rgba(6, 113, 164, 0.45)' }}
+            style={{ color: 'rgba(6, 113, 164, 0.75)' }}
             animate={lastThrowSpeed !== null ? { opacity: 1, x: 0 } : hasGrabbed ? { opacity: 0 } : { x: [0, 6, -6, 0] }}
             transition={lastThrowSpeed !== null || hasGrabbed ? { duration: 0.2 } : { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
           >

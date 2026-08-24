@@ -307,7 +307,7 @@ export function ProjectsIntro() {
             transition={{ layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] } }}
             onClick={() => { if (conveyorGameActive) { handleEndConveyorGame() } else { setShowMemoryGame(true) } }}
             className="shrink-0 self-center lg:self-auto flex items-center gap-2 text-[10px] lg:text-sm bg-transparent border-0 p-0 cursor-pointer select-none"
-            style={{ color: 'rgba(6, 113, 164, 0.45)' }}
+            style={{ color: 'rgba(6, 113, 164, 0.75)' }}
           >
             <AnimatePresence mode="popLayout" initial={false}>
               {conveyorGameActive ? (

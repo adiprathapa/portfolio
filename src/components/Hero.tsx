@@ -326,6 +326,7 @@ export function Hero() {
             className="font-heading font-bold text-heading tracking-tight whitespace-nowrap"
             style={{ lineHeight: 1.3, minHeight: '2.6em', fontSize: 'clamp(2rem, 5vw, 4.5rem)' }}
           >
+            <span className="sr-only">Aditya (Adi) Prathapa</span>
             <span
               className="text-primary"
               style={{ cursor: headingHovered ? 'none' : undefined }}
@@ -576,7 +577,7 @@ export function Hero() {
                 exit={{ opacity: 0 }}
                 transition={{ y: { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' } }}
                 className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 whitespace-nowrap cursor-pointer"
-                style={{ bottom: isMobile ? '-14%' : '-2%', color: 'rgba(6, 113, 164, 0.45)' }}
+                style={{ bottom: isMobile ? '-14%' : '-2%', color: 'rgba(6, 113, 164, 0.75)' }}
                 onClick={tossCoin}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -594,7 +595,7 @@ export function Hero() {
                 exit={{ opacity: 0 }}
                 transition={{ y: { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' } }}
                 className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 whitespace-nowrap cursor-pointer"
-                style={{ bottom: isMobile ? '-14%' : '-2%', color: 'rgba(6, 113, 164, 0.45)' }}
+                style={{ bottom: isMobile ? '-14%' : '-2%', color: 'rgba(6, 113, 164, 0.75)' }}
                 onClick={tossCoin}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -645,7 +646,8 @@ export function Hero() {
             }}
           >
             {/* Text clone — scaled from cursor point */}
-            <h1
+            <div
+              aria-hidden
               className="font-heading font-bold text-heading tracking-tight absolute whitespace-nowrap"
               style={{
                 left: cloneLeft,
@@ -660,7 +662,7 @@ export function Hero() {
                 {renderSegmentedText(displayText, current.segments)}
                 <span className="ml-0.5 text-primary/60">|</span>
               </span>
-            </h1>
+            </div>
           </div>,
           document.body
         )

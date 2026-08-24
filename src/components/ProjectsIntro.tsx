@@ -296,6 +296,11 @@ export function ProjectsIntro() {
             data science libraries including PyTorch, TensorFlow, scikit-learn, and pandas.
             My projects range from fintech applications to machine learning focused work to
             apps that combine both.
+            <span className="block mt-3" style={{ fontSize: 'clamp(0.875rem, 0.4vw + 0.7rem, 1.05rem)', color: '#4B5563' }}>
+              <span className="font-medium" style={{ color: '#0671A4' }}>Currently building:</span>{' '}
+              <a href="https://github.com/apatureai" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 decoration-[#0671A4]/40 hover:decoration-[#0671A4]">Apature</a>, a vision-model layer that reviews machine-generated UIs for design judgment, not pixels, and a
+              preregistered study of what makes GNNs generalize to larger graphs.
+            </span>
           </p>
           <motion.button
             layout

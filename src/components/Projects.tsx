@@ -12,105 +12,95 @@ import { Education } from './Education'
 // const images = slugs.map(...)
 
 const projectDisplayNames: Record<string, string> = {
+  verdict: "Verdict",
   tauron: "Tauron",
-  helicity: "Helicity",
-  zamsizing: "ZAM",
   macroplace: "Macro Placement",
-  galatea: "Galatea",
+  sigil: "Sigil",
   paramgolf: "Parameter Golf",
-  spectre: "Spectre",
+  helicity: "Helicity",
 }
 
 const projectDescriptions: Record<string, string> = {
-  helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up a multi-model LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
+  verdict: "Built at Apature, my design tooling startup. A grounded VLM design reviewer that captures a running web UI with a deterministic headless Chromium pipeline, computes WCAG contrast and overflow facts straight from the DOM, then has a vision model critique the screenshots against the repo's own design tokens, deleting every finding it cannot point at a captured element. Ships a calibration gated confidence pipeline, a Rust perceptual diff crate, and a one command demo verified by CI.",
   tauron: "Trained a GRU and GraphSAGE model over a synthetic 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
-  zamsizing: "Built a market sizing tool grounding Groq powered analyses with RAG over real industry benchmarks and comparable company data. Switched from Gemini embeddings to BM25 retrieval after hitting Vercel size limits, matching semantic search performance with zero cold start.",
   macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
-  galatea: "Built for the Palantir Foundry FDSE technical challenge. An end to end on-chain risk prototype with a Foundry Workshop UI, NetworkX graph risk scoring, AIP agent triage, and case management over a synthetic blockchain transaction dataset.",
-  paramgolf: "Submitted a non-record entry to OpenAI's Parameter Golf, a language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment, reaching 1.107 val bpb on a single H100 across 86 FineWeb shards.",
-  spectre: "Built for the Cornell Claude Builders Club Hackathon. A 1v1 fighting game where players throw real punches at their phone cameras while silhouettes battle in a shared browser overlay, with a live AI commentator powered by Claude API and ElevenLabs TTS.",
+  sigil: "An open source TypeScript library from Apature that puts error bars on LLM-as-judge evals: judge calibration metrics, exact finite sample risk certificates with certified abstention thresholds, and anytime valid drift monitoring built on e-processes. Dependency free, fully offline, property tested, with byte reproducible signed reports.",
+  paramgolf: "Entered OpenAI's Parameter Golf, a language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment, reaching 1.107 val bpb on a single H100 across 86 FineWeb shards.",
+  helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up a multi-model LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
 }
 
 const projectLinks: Record<string, string> = {
+  verdict: "https://github.com/apatureai/verdict",
   tauron: "https://adiprathapa.github.io/Tauron/reveal_slides",
-  helicity: "https://helicity-theta.vercel.app/",
-  zamsizing: "https://zamsizing.vercel.app/",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
-  galatea: "https://github.com/adiprathapa/galatea",
-  paramgolf: "https://github.com/openai/parameter-golf/pull/2161",
-  spectre: "https://github.com/cx18121/spectre",
+  sigil: "https://github.com/apatureai/sigil",
+  paramgolf: "https://github.com/adiprathapa/parameter-golf/tree/codex/sp4096-qk45-budget/records/track_non_record_16mb/2026-05-07_sp4096_budget_repro",
+  helicity: "https://helicity-theta.vercel.app/",
 }
 
 const projectRepoLinks: Record<string, string> = {
+  verdict: "https://github.com/apatureai/verdict",
   tauron: "https://github.com/adiprathapa/Tauron",
-  helicity: "https://github.com/AI-HackathonNYC/helicity",
-  zamsizing: "https://github.com/adiprathapa/ZAM",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
-  galatea: "https://github.com/adiprathapa/galatea",
-  paramgolf: "https://github.com/openai/parameter-golf/pull/2161",
-  spectre: "https://github.com/cx18121/spectre",
+  sigil: "https://github.com/apatureai/sigil",
+  paramgolf: "https://github.com/adiprathapa/parameter-golf/tree/codex/sp4096-qk45-budget/records/track_non_record_16mb/2026-05-07_sp4096_budget_repro",
+  helicity: "https://github.com/AI-HackathonNYC/helicity",
 }
 
-const projectOrder = ['tauron', 'helicity', 'zamsizing', 'macroplace', 'galatea', 'paramgolf', 'spectre']
+const projectOrder = ['verdict', 'tauron', 'macroplace', 'sigil', 'paramgolf', 'helicity']
 
 const projectSafariProps: Record<string, { url: string; videoSrc?: string; posterSrc?: string; imageSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
+  verdict: { url: projectLinks['verdict'], imageSrc: "/verdict-poster.webp" },
   tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mp4", posterSrc: "/tauron-poster.webp", videoCropTop: 25 },
-  helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mp4", posterSrc: "/helicity-poster.webp" },
-  zamsizing: { url: projectLinks['zamsizing'], videoSrc: "/zam-copy.mp4", posterSrc: "/zam-copy-poster.webp", videoCropTop: 110, videoCropBottom: 30, videoCropLeft: 270, videoCropRight: 272 },
   macroplace: { url: projectLinks['macroplace'], imageSrc: "/macroplace-poster.webp" },
-  galatea: { url: projectLinks['galatea'], videoSrc: "/recording-1.mp4", posterSrc: "/recording-1-poster.webp", videoCropTop: 23 },
+  sigil: { url: projectLinks['sigil'], imageSrc: "/sigil-poster.webp" },
   paramgolf: { url: projectLinks['paramgolf'], imageSrc: "/paramgolf-poster.webp" },
-  spectre: { url: projectLinks['spectre'], videoSrc: "/spectre.mp4", posterSrc: "/spectre-poster.webp", videoCropTop: "10%", videoStartTime: 10 },
+  helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mp4", posterSrc: "/helicity-poster.webp" },
 }
 
 const projectLogos: Record<string, string> = {
+  verdict: "",
   tauron: "/logo-tauron.png",
-  helicity: "/logo-helicity.png",
-  zamsizing: "/logo-zamsizing.png",
   macroplace: "",
-  galatea: "/logo-galatea.png",
+  sigil: "",
   paramgolf: "",
-  spectre: "/claude.png",
+  helicity: "/logo-helicity.png",
 }
 
 const projectTaglines: Record<string, string> = {
+  verdict: "VLM design review that checks judgment, not pixels",
   tauron: "Predicting livestock disease 48 hours before symptoms appear",
-  helicity: "AI powered liquidity stress scoring with verifiable audit trails",
-  zamsizing: "RAG grounded AI market sizing with TAM/SAM/SOM analysis",
   macroplace: "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge",
-  galatea: "On-chain risk co-pilot prototype on Palantir Foundry",
+  sigil: "Error bars for LLM-as-judge evals in dependency-free TypeScript",
   paramgolf: "OpenAI Parameter Golf submission at 1.107 val bpb under 16 MB",
-  spectre: "Real time 1v1 fighting powered by phone cameras and AI commentary",
+  helicity: "AI powered liquidity stress scoring with verifiable audit trails",
 }
 
 const projectBgImages: Record<string, string> = {
+  verdict: '/verdictbg.webp',
   tauron: '/tauronbg.webp',
-  helicity: '/helicitybg.webp',
-  zamsizing: '/zamsizingbg.webp',
   macroplace: '/macroplace-bg.webp',
-  galatea: '/galateabg.webp',
+  sigil: '/sigilbg.webp',
   paramgolf: '/pexels-andrewshelley-8454632.webp',
-  spectre: '/pexels-dichupdi-35168139.webp',
+  helicity: '/helicitybg.webp',
 }
 
 const projectGradientColors: Record<string, string> = {
+  verdict: '#3B4FD8',
   tauron: '#4C867A',
-  helicity: '#6366F1',
-  zamsizing: '#E8740C',
   macroplace: '#1a1a2e',
-  galatea: '#2c2c2c',
+  sigil: '#2E3163',
   paramgolf: '#0E1F1B',
-  spectre: '#DA7756',
+  helicity: '#6366F1',
 }
 
 const projectTechStacks: Record<string, string[]> = {
+  verdict: ["TypeScript", "Playwright", "Rust", "Python", "PostgreSQL", "Docker", "VLM"],
   tauron: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
-  helicity: ["FastAPI", "NetworkX", "FastMCP", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas"],
-  zamsizing: ["JavaScript", "React", "Node.js", "Express", "MongoDB", "Groq", "RAG", "BM25", "Vercel"],
   macroplace: ["PyTorch", "GNN", "NumPy", "FFT", "Python"],
-  galatea: ["NetworkX", "Palantir Foundry", "JavaScript"],
+  sigil: ["TypeScript", "Node.js", "Conformal Prediction", "E-processes"],
   paramgolf: ["PyTorch", "CUDA", "FlashAttention 3", "Brotli", "SentencePiece", "Hugging Face", "Python"],
-  spectre: ["MediaPipe", "FastAPI", "React", "PixiJS", "Claude API", "ElevenLabs", "WebSocket"],
+  helicity: ["FastAPI", "NetworkX", "FastMCP", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas"],
 }
 
 // const allTechStack = [...new Set(Object.values(projectTechStacks).flat())]
@@ -176,6 +166,11 @@ function ProjectCard({
             className="h-14 object-contain"
             style={{ filter: 'brightness(0) invert(1)', opacity: 0.95 }}
           />
+        ) : projectKey === 'verdict' || projectKey === 'sigil' ? (
+          <div className="flex flex-col items-center gap-3" style={{ opacity: 0.95 }}>
+            <img src="/logo-apature.png" alt="Apature" className="h-16 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+            <span className="text-white text-2xl font-light uppercase" style={{ letterSpacing: '0.25em' }}>{projectKey}</span>
+          </div>
         ) : undefined}
         techStack={projectTechStacks[projectKey]}
         gradientColor={projectGradientColors[projectKey]}

@@ -52,18 +52,17 @@ type FlagRect = {
 
 // Project display names used as data-game-word / data-card-flag identifiers.
 // Order matches Projects.tsx so we know which flag is the final goal.
-const PROJECT_NAMES = ['Tauron', 'Helicity', 'ZAM', 'Macro Placement', 'Galatea', 'Parameter Golf', 'Spectre']
-const FINAL_PROJECT_KEY = 'Spectre'
+const PROJECT_NAMES = ['Verdict', 'Tauron', 'Macro Placement', 'Sigil', 'Parameter Golf', 'Helicity']
+const FINAL_PROJECT_KEY = 'Helicity'
 
 // data-project-card uses the lowercase key; data-game-word/data-card-flag use the display name
 const PROJECT_KEY_TO_DISPLAY: Record<string, string> = {
+  verdict: 'Verdict',
   tauron: 'Tauron',
-  helicity: 'Helicity',
-  zamsizing: 'ZAM',
   macroplace: 'Macro Placement',
-  galatea: 'Galatea',
+  sigil: 'Sigil',
   paramgolf: 'Parameter Golf',
-  spectre: 'Spectre',
+  helicity: 'Helicity',
 }
 
 const DISPLAY_TO_PROJECT_KEY: Record<string, string> = Object.fromEntries(

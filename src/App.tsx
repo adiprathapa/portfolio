@@ -25,10 +25,10 @@ const PRELOAD_IMAGES = [
   '/cornell-data-strategy.webp', '/c2s2.webp', '/cas.webp',
   // Project logos & backgrounds
   '/logo-tauron.png', '/logo-helicity.png',
-  '/logo-zamsizing.png', '/logo-galatea.png', '/logo-hrt.png', '/logo-partcl.png',
+  '/logo-apature.png', '/logo-hrt.png', '/logo-partcl.png',
   '/tauronbg.webp', '/helicitybg.webp',
-  '/zamsizingbg.webp', '/macroplace-bg.webp', '/galateabg.webp',
-  '/pexels-andrewshelley-8454632.webp', '/pexels-dichupdi-35168139.webp',
+  '/verdictbg.webp', '/sigilbg.webp', '/macroplace-bg.webp',
+  '/pexels-andrewshelley-8454632.webp',
 ]
 
 function preloadAssets() {

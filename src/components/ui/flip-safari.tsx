@@ -237,16 +237,6 @@ export function FlipSafari({
               } : undefined}
             >
             <div>
-            {(safariProps.posterSrc || safariProps.imageSrc) && (
-              <img
-                src={safariProps.posterSrc || safariProps.imageSrc}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="lg:hidden w-full aspect-video object-cover object-top rounded-lg mb-4"
-                style={{ border: '1px solid rgba(6, 113, 164, 0.2)' }}
-              />
-            )}
             <h3
               className="font-normal font-heading text-left text-[16px] lg:text-[clamp(1.5rem,1vw+1rem,1.875rem)] text-[#0671A4] lg:gradient-text"
               style={{ lineHeight: 1.16 }}

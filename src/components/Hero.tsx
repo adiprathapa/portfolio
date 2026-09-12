@@ -81,15 +81,15 @@ const greetings: Greeting[] = [
     ],
   },
   {
-    text: '你好，我是 Adi',
-    segments: ['你好，', '我是 ', 'Adi'],
+    text: '你好，我叫 Adi',
+    segments: ['你好，', '我叫 ', 'Adi'],
     subtitle: 'Mandarin (Beginner)',
     icons: [
       { src: '/nsli.png', link: 'https://www.virtualbadge.io/certificate-validator?credential=39cfa8cb-56a1-4e8e-be87-b5b67cbd8874', height: 18 },
     ],
     breakdown: [
       { phonetic: 'Nǐ hǎo', meaning: 'Hello' },
-      { phonetic: 'Wǒ shì', meaning: 'I am' },
+      { phonetic: 'Wǒ jiào', meaning: 'I am called' },
       { phonetic: 'Adi', meaning: 'Adi' },
     ],
   },

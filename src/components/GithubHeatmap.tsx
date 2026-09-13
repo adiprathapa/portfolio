@@ -37,27 +37,24 @@ function blendHex(h1: string, h2: string, t: number) {
   return `rgb(${lerp(p(h1, 1), p(h2, 1), t)},${lerp(p(h1, 3), p(h2, 3), t)},${lerp(p(h1, 5), p(h2, 5), t)})`
 }
 
-/** Generate a plausible random heatmap when the API is unreachable. */
-function makeFallback(): number[][] {
-  const d0 = new Date(YEAR, 0, 1)
-  const pad = d0.getDay()
+function localIsoDate(date: Date) {
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${m}-${d}`
+}
+
+/** Blank out days after today and drop weeks that haven't started, so the
+ *  graph ends at the current week even if the cached file covers the full year. */
+function trimFutureDays(weeks: number[][]): number[][] {
   const now = new Date()
-  const weeks: number[][] = []
-  let wk: number[] = Array(pad).fill(-1)
-  for (let i = 0; ; i++) {
-    const dt = new Date(YEAR, 0, 1 + i)
-    if (dt.getFullYear() !== YEAR || dt > now) break
-    const wd = dt.getDay() > 0 && dt.getDay() < 6
-    const r = Math.random()
-    wk.push(
-      wd
-        ? r < 0.28 ? 0 : r < 0.52 ? 1 : r < 0.76 ? 2 : r < 0.92 ? 3 : 4
-        : r < 0.52 ? 0 : r < 0.78 ? 1 : r < 0.92 ? 2 : 3,
-    )
-    if (wk.length === 7) { weeks.push(wk); wk = [] }
-  }
-  if (wk.length) { while (wk.length < 7) wk.push(-1); weeks.push(wk) }
-  return weeks
+  const jan1 = new Date(YEAR, 0, 1)
+  const today = new Date(YEAR, now.getMonth(), now.getDate())
+  // round, not floor: a DST shift makes the span an hour short of whole days
+  const todayIndex = jan1.getDay() + Math.round((today.getTime() - jan1.getTime()) / 86_400_000)
+  const lastWeek = Math.floor(todayIndex / 7)
+  return weeks.slice(0, lastWeek + 1).map((week, w) =>
+    week.map((level, d) => (w * 7 + d > todayIndex ? -1 : level)),
+  )
 }
 
 function buildWeeksFromContributions(days: { date: string; count: number; level: number }[]) {
@@ -94,7 +91,7 @@ export function GithubHeatmap() {
   /* visual sizing (state drives render, refs let game loop read latest) */
   const [cell, setCell] = useState(18)
   const [gap, setGap] = useState(4)
-  const [clip, setClip] = useState<number | undefined>()
+  const [visibleCols, setVisibleCols] = useState<number | undefined>()
   const cellRef = useRef(18)
   const gapRef = useRef(4)
 
@@ -102,11 +99,13 @@ export function GithubHeatmap() {
   const [grid, setGrid] = useState<number[][]>([])     // grid[week][day] = level 0-4 or -1
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [unavailable, setUnavailable] = useState(false)
 
   /* game */
   const [phase, setPhase] = useState<Phase>('idle')
   const [score, setScore] = useState(0)
   const [best, setBest] = useState(0)
+  const [gameStart, setGameStart] = useState(0)            // first grid week shown while playing
   const [, bump] = useState(0)                          // render trigger for non-food ticks
 
   const gridRef    = useRef<number[][]>([])              // live game grid
@@ -126,7 +125,8 @@ export function GithubHeatmap() {
   /* ═══════════════════════════════ data fetch ═══════════════════════════════ */
   useEffect(() => {
     let cancelled = false
-    const applyHeatmap = (weeks: number[][], nextTotal: number) => {
+    const applyHeatmap = (fullYear: number[][], nextTotal: number) => {
+      const weeks = trimFutureDays(fullYear)
       origRef.current = weeks.map(w => [...w])
       gridRef.current = weeks.map(w => [...w])
       setGrid(weeks)
@@ -151,9 +151,10 @@ export function GithubHeatmap() {
         )
         if (!res.ok) throw 0
         const json = await res.json()
+        const today = localIsoDate(new Date())
         const days: { date: string; count: number; level: number }[] =
           (json.contributions ?? []).filter((d: { date?: string }) =>
-            d.date?.startsWith(`${YEAR}`),
+            !!d.date && d.date.startsWith(`${YEAR}`) && d.date <= today,
           )
         days.sort((a, b) => a.date.localeCompare(b.date))
 
@@ -164,8 +165,9 @@ export function GithubHeatmap() {
         applyHeatmap(weeks, tot)
       } catch {
         if (cancelled) return
-        const fb = makeFallback()
-        applyHeatmap(fb, fb.flat().filter(v => v > 0).length * 3)
+        // Hide the graph rather than showing made-up activity.
+        setUnavailable(true)
+        setLoading(false)
       }
     })()
     return () => { cancelled = true }
@@ -179,12 +181,9 @@ export function GithubHeatmap() {
       const g = mob ? 3 : 4
       setCell(sz); setGap(g)
       cellRef.current = sz; gapRef.current = g
-      if (mob && wrapRef.current) {
+      if (wrapRef.current) {
         const avail = wrapRef.current.clientWidth
-        const stride = sz + g
-        setClip(Math.max(1, Math.floor((avail + g) / stride)) * stride - g)
-      } else {
-        setClip(undefined)
+        setVisibleCols(Math.max(1, Math.floor((avail + g) / (sz + g))))
       }
     }
     calc()
@@ -281,11 +280,13 @@ export function GithubHeatmap() {
 
   /* ═══════════════════════════ start / exit ═════════════════════════════════ */
   const play = useCallback(() => {
-    gridRef.current = origRef.current.map(w => [...w])
-    // visible columns = game area
+    // visible columns = game area, taken from the most recent weeks
     const cw = wrapRef.current?.clientWidth ?? 800
     const stride = cellRef.current + gapRef.current
-    const cols = Math.min(gridRef.current.length, Math.floor((cw + gapRef.current) / stride))
+    const cols = Math.min(origRef.current.length, Math.floor((cw + gapRef.current) / stride))
+    const start = origRef.current.length - cols
+    setGameStart(start)
+    gridRef.current = origRef.current.slice(start).map(w => [...w])
     gameColsRef.current = cols
 
     // count food in game area
@@ -437,11 +438,16 @@ export function GithubHeatmap() {
     })
   }
 
-  const displayGrid = isGame ? gridRef.current : grid
+  // Show the most recent weeks that fit, so the graph ends at today instead of
+  // cutting off after the first few months on narrower screens.
+  const startCol = Math.max(0, grid.length - (visibleCols ?? grid.length))
+  const displayGrid = isGame ? gridRef.current : grid.slice(startCol)
+  const colOffset = isGame ? gameStart : startCol
   const stride = cell + gap
   const gameW = isGame && gameColsRef.current > 0
     ? gameColsRef.current * stride - gap
     : undefined
+  const clip = grid.length > startCol ? (grid.length - startCol) * stride - gap : undefined
 
   const cellColor = (c: number, r: number, lvl: number): string => {
     if (lvl === -1) return 'transparent'
@@ -463,7 +469,7 @@ export function GithubHeatmap() {
           className="order-2 lg:order-1 w-full lg:flex-1 min-w-0 flex flex-col items-center lg:block"
           style={{ colorScheme: 'light' }}
         >
-          {loading ? (
+          {unavailable ? null : loading ? (
             <div style={{ height: ROWS * cell + (ROWS - 1) * gap + 24 }} />
           ) : (
             <>
@@ -479,7 +485,7 @@ export function GithubHeatmap() {
                   }}
                 >
                   {displayGrid.map((_, c) => {
-                    const ml = monthLabels.find(m => m.col === c)
+                    const ml = monthLabels.find(m => m.col === c + colOffset)
                     return (
                       <div
                         key={c}
@@ -507,6 +513,12 @@ export function GithubHeatmap() {
                 style={{
                   width: gameW ?? clip ?? 'fit-content',
                   maxWidth: '100%',
+                  // The newest week sits on the right now, so fade the oldest
+                  // edge instead, and only when earlier weeks are cut off.
+                  ...(phase === 'idle' ? {
+                    maskImage: startCol > 0 ? 'linear-gradient(to left, black 88%, transparent 100%)' : 'none',
+                    WebkitMaskImage: startCol > 0 ? 'linear-gradient(to left, black 88%, transparent 100%)' : 'none',
+                  } : {}),
                   touchAction: phase === 'playing' ? 'none' : 'pan-y',
                   WebkitUserSelect: 'none',
                   userSelect: 'none',

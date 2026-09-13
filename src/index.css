@@ -327,14 +327,8 @@ h1, h2, h3, h4, h5, h6 {
   border: 1.5px solid rgba(255, 255, 255, 0.25);
 }
 
-/* Fade the heatmap's right edge where the 52-week grid overflows the column
-   at desktop sizes. Mobile uses overflow-hidden alone — no mask. */
-@media (min-width: 1024px) {
-  .github-heatmap-fade {
-    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
-    mask-image: linear-gradient(to right, black 85%, transparent 100%);
-  }
-}
+/* The heatmap's edge fade is set inline in GithubHeatmap.tsx: it shows only the
+   most recent weeks that fit, so it fades the oldest (left) edge when cut off. */
 
 .github-heatmap-fade,
 .github-heatmap-fade * {
@@ -714,7 +708,7 @@ h1, h2, h3, h4, h5, h6 {
   body {
     overflow-x: clip;
     overscroll-behavior-x: none;
-    touch-action: pan-y;
+    touch-action: pan-y pinch-zoom;
   }
 
   [data-navbar] {

@@ -17,7 +17,9 @@ export function useActiveSection() {
     // Detect it via scroll position instead. On mobile it flows normally and
     // is found by the regular probe loop below.
     const isDesktop = () => window.innerWidth >= 1024
-    const aboutStart = () => window.innerHeight * 1.1
+    // The About nav link lands at exactly one viewport height, so start a bit
+    // before that or the click settles with nothing highlighted.
+    const aboutStart = () => window.innerHeight * 0.9
     const projectsRegionStart = () => {
       // Projects region begins at projects-intro (which sits above the
       // sticky projects section in document flow).

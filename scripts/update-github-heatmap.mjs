@@ -36,8 +36,11 @@ if (!response.ok) {
 }
 
 const payload = await response.json()
+// The API returns every day of the year, with zeros for days that haven't
+// happened yet. Drop those so the graph ends today.
+const today = new Date().toISOString().slice(0, 10)
 const days = (payload.contributions ?? [])
-  .filter((day) => day.date?.startsWith(`${YEAR}`))
+  .filter((day) => day.date?.startsWith(`${YEAR}`) && day.date <= today)
   .sort((a, b) => a.date.localeCompare(b.date))
 
 const cache = {

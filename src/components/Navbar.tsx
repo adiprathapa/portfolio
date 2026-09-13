@@ -181,7 +181,7 @@ export function Navbar() {
             {/* Logo */}
             <a
               href="/#top"
-              className="font-heading font-semibold text-lg text-primary"
+              className="font-heading font-semibold text-lg text-primary whitespace-nowrap"
               style={{ marginLeft: '0' }}
               onClick={() => {
                 announceHomeSectionNavigation('#top')
@@ -192,10 +192,9 @@ export function Navbar() {
             </a>
 
             {/* Desktop nav */}
-            <nav
-              className="hidden lg:flex items-center"
-              style={{ gap: '1.5rem' }}
-            >
+            {/* Tighter spacing between 1024 and 1280 so the links, CTA and
+                avatar fit on one line before the wider xl layout kicks in. */}
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-6">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href.slice(1)
                 return (
@@ -203,7 +202,7 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`relative text-base font-medium rounded-xl px-4 py-1.5 transition-all duration-300 ${
+                    className={`relative whitespace-nowrap text-[15px] xl:text-base font-medium rounded-xl px-2.5 xl:px-4 py-1.5 transition-all duration-300 ${
                       isActive
                         ? 'text-primary bg-primary/10'
                         : 'text-heading hover:text-primary/70'

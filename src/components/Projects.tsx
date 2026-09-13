@@ -15,7 +15,7 @@ const projectDisplayNames: Record<string, string> = {
   apature: "Apature",
   macroplace: "Macro Placement",
   tauron: "Tauron",
-  paramgolf: "Parameter Golf",
+  hexmend: "Hexmend",
   helicity: "Helicity",
 }
 
@@ -23,7 +23,7 @@ const projectDescriptions: Record<string, string> = {
   apature: "My design tooling startup. Verdict, the core product, is a grounded VLM design reviewer: it captures a running web UI with deterministic headless Chromium, critiques it against the repo's own design system, and deletes every finding it cannot point at a captured element. Sigil, its open source companion library, puts error bars on LLM-as-judge evals.",
   macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
   tauron: "Trained a GRU and GraphSAGE model over a synthetic 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
-  paramgolf: "Entered OpenAI's Parameter Golf, a language model compression challenge with a 16 MB artifact cap. Forked Kevin Clark's SP4096 record and added a QK_GAIN_INIT=4.5 experiment, reaching 1.107 val bpb on a single H100 across 86 FineWeb shards.",
+  hexmend: "Built an agent evaluation environment disguised as a graph native spell game. Seven WebMCP tools let an agent inspect, simulate, diagnose, and patch a typed spell graph while preserving the constraints a human sets, and a 23 point rubric scores every step across 96 deterministic tasks with exportable trajectories.",
   helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up a multi-model LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
 }
 
@@ -31,7 +31,7 @@ const projectLinks: Record<string, string> = {
   apature: "https://github.com/apatureai",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
   tauron: "https://adiprathapa.github.io/Tauron/reveal_slides",
-  paramgolf: "https://github.com/adiprathapa/parameter-golf/tree/codex/sp4096-qk45-budget/records/track_non_record_16mb/2026-05-07_sp4096_budget_repro",
+  hexmend: "https://hexmend.hex-machina.workers.dev",
   helicity: "https://helicity-theta.vercel.app/",
 }
 
@@ -39,17 +39,17 @@ const projectRepoLinks: Record<string, string> = {
   apature: "https://github.com/apatureai/verdict",
   macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
   tauron: "https://github.com/adiprathapa/Tauron",
-  paramgolf: "https://github.com/adiprathapa/parameter-golf/tree/codex/sp4096-qk45-budget/records/track_non_record_16mb/2026-05-07_sp4096_budget_repro",
+  hexmend: "https://github.com/adiprathapa/hexmend",
   helicity: "https://github.com/AI-HackathonNYC/helicity",
 }
 
-const projectOrder = ['apature', 'macroplace', 'tauron', 'paramgolf', 'helicity']
+const projectOrder = ['apature', 'hexmend', 'macroplace', 'tauron', 'helicity']
 
 const projectSafariProps: Record<string, { url: string; videoSrc?: string; posterSrc?: string; imageSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
   apature: { url: projectLinks['apature'] },
   macroplace: { url: projectLinks['macroplace'], imageSrc: "/macroplace-poster.webp" },
   tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mp4", posterSrc: "/tauron-poster.webp", videoCropTop: 25 },
-  paramgolf: { url: projectLinks['paramgolf'], imageSrc: "/paramgolf-poster.webp" },
+  hexmend: { url: projectLinks['hexmend'], imageSrc: "/hexmend-poster.webp" },
   helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mp4", posterSrc: "/helicity-poster.webp" },
 }
 
@@ -57,7 +57,7 @@ const projectLogos: Record<string, string> = {
   apature: "",
   macroplace: "",
   tauron: "/logo-tauron.png",
-  paramgolf: "",
+  hexmend: "",
   helicity: "/logo-helicity.png",
 }
 
@@ -65,7 +65,7 @@ const projectTaglines: Record<string, string> = {
   apature: "VLM design review that checks judgment, not pixels",
   macroplace: "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge",
   tauron: "Predicting livestock disease 48 hours before symptoms appear",
-  paramgolf: "OpenAI Parameter Golf submission at 1.107 val bpb under 16 MB",
+  hexmend: "An agent gym where humans decide what matters and agents prove the smallest repair",
   helicity: "AI powered liquidity stress scoring with verifiable audit trails",
 }
 
@@ -73,7 +73,7 @@ const projectBgImages: Record<string, string> = {
   apature: '/verdictbg.webp',
   macroplace: '/macroplace-bg.webp',
   tauron: '/tauronbg.webp',
-  paramgolf: '/pexels-andrewshelley-8454632.webp',
+  hexmend: '/hexmend-bg.webp',
   helicity: '/helicitybg.webp',
 }
 
@@ -81,7 +81,7 @@ const projectGradientColors: Record<string, string> = {
   apature: '#232B66',
   macroplace: '#1a1a2e',
   tauron: '#4C867A',
-  paramgolf: '#0E1F1B',
+  hexmend: '#0B0D12',
   helicity: '#6366F1',
 }
 
@@ -89,7 +89,7 @@ const projectTechStacks: Record<string, string[]> = {
   apature: ["TypeScript", "Playwright", "Rust", "Python", "PostgreSQL", "VLM", "Conformal Prediction"],
   macroplace: ["PyTorch", "GNN", "NumPy", "FFT", "Python"],
   tauron: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
-  paramgolf: ["PyTorch", "CUDA", "FlashAttention 3", "Brotli", "SentencePiece", "Hugging Face", "Python"],
+  hexmend: ["TypeScript", "React", "WebMCP", "MCP", "Cloudflare Workers", "Python"],
   helicity: ["FastAPI", "NetworkX", "FastMCP", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas"],
 }
 
@@ -149,13 +149,11 @@ function ProjectCard({
             <span className="text-white text-4xl font-light">&times;</span>
             <img src="/logo-partcl.png" alt="Partcl" className="h-20 object-contain" style={{ filter: 'grayscale(1) invert(1) brightness(3) contrast(10)' }} />
           </div>
-        ) : projectKey === 'paramgolf' ? (
-          <img
-            src="/openai.png"
-            alt="OpenAI"
-            className="h-14 object-contain"
-            style={{ filter: 'brightness(0) invert(1)', opacity: 0.95 }}
-          />
+        ) : projectKey === 'hexmend' ? (
+          <div className="flex items-center gap-4">
+            <img src="/logo-hexmend.png" alt="" className="h-16 w-16 object-contain" />
+            <span className="font-heading text-white text-5xl font-semibold tracking-tight">Hexmend</span>
+          </div>
         ) : projectKey === 'apature' ? (
           <img
             src="/logo-apature.png"
@@ -165,7 +163,7 @@ function ProjectCard({
           />
         ) : undefined}
         techStack={projectTechStacks[projectKey]}
-        logoBlendMode={projectKey === 'apature' ? 'normal' : undefined}
+        logoBlendMode={projectKey === 'apature' || projectKey === 'hexmend' ? 'normal' : undefined}
         gradientColor={projectGradientColors[projectKey]}
         bgImage={projectBgImages[projectKey]}
         enableBackground={enableBackground}

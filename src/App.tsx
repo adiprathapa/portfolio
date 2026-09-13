@@ -28,7 +28,7 @@ const PRELOAD_IMAGES = [
   '/logo-apature.png', '/logo-hrt.png', '/logo-partcl.png',
   '/tauronbg.webp', '/helicitybg.webp',
   '/verdictbg.webp', '/macroplace-bg.webp',
-  '/pexels-andrewshelley-8454632.webp',
+  '/hexmend-bg.webp', '/logo-hexmend.png',
 ]
 
 function preloadAssets() {

@@ -84,6 +84,24 @@ export function sectionScrollTop(href: string) {
 
   if (href === '#experience') {
     const container = projectsContainer()
+    const section = document.getElementById('projects')
+    const experience = document.getElementById('experience')
+    if (container && section && experience && window.innerWidth >= 1024) {
+      // Experience rides inside the sticky projects rail. Once the last card
+      // has landed it moves up 1:1 with scroll, so solve for the scroll
+      // position that puts its heading just below the navbar.
+      const sectionStyle = getComputedStyle(section)
+      const stickyTop = Number.parseFloat(sectionStyle.top) || 0
+      const stickyPaddingTop = Number.parseFloat(sectionStyle.paddingTop) || 0
+      const cardH = section.querySelector<HTMLElement>(':scope > div[aria-hidden]')?.offsetHeight ?? 500
+      const cardCount = section.querySelectorAll('[data-project-card]').length || 5
+      const cardRail = (cardCount - 1) * (cardH + 150)
+      const heading = experience.querySelector('h2') ?? experience
+      const headingInset = heading.getBoundingClientRect().top - experience.getBoundingClientRect().top
+      const headingTopAtRest = stickyTop + stickyPaddingTop + cardH + 96 + headingInset
+      const desiredHeadingTop = 150
+      return documentTop(container) + cardRail + headingTopAtRest - desiredHeadingTop
+    }
     if (container) {
       const nudge = window.innerWidth < 1024 ? 70 : 25
       return documentTop(container) + container.offsetHeight - window.innerHeight + experienceTopInsideViewport() - offset - 50 + nudge

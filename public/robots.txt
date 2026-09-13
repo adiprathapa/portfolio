@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://adiprathapa.space/sitemap.xml
+Sitemap: https://www.adiprathapa.space/sitemap.xml

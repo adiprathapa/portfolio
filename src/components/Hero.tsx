@@ -313,7 +313,7 @@ export function Hero() {
         initial="hidden"
         animate="visible"
       >
-        <div className="flex-1 min-w-0" style={{ marginLeft: -20 }}>
+        <div className="flex-1 min-w-0 xl:-ml-5">
         {/* Heading with typewriter */}
         <motion.div
           variants={heroChild}
@@ -428,7 +428,9 @@ export function Hero() {
           variants={heroChild}
           className="text-black mb-10 max-w-md mx-auto md:mx-0"
           style={{
-            marginTop: isMobile ? '-20px' : tooltipActive ? '92px' : '-76px',
+            // Pull the subtitle up into the h1's reserved second line, scaled to
+            // the heading size so tall scripts (Telugu) clear it on tablets.
+            marginTop: isMobile ? '-20px' : tooltipActive ? '92px' : 'calc(-0.75 * clamp(2rem, 5vw, 4.5rem) - 24px)',
             transition: 'margin-top 280ms ease',
             fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)',
           }}

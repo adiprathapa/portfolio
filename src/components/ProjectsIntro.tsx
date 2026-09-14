@@ -1,3 +1,6 @@
+import { posthog } from '../lib/analytics'
+import { warmDocument } from '../lib/prefetch'
+import { projects } from '../data/projects'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ProjectMarquee } from './About'
@@ -286,9 +289,27 @@ export function ProjectsIntro() {
     <section ref={ref} id="projects-intro" className="pt-6 pb-0 lg:pt-12" style={{ background: '#E4EFF5' }}>
       {/* Projects heading + description */}
       <div className="mx-auto max-w-7xl px-6">
-        <h2 className="font-normal gradient-text" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
-          Projects
-        </h2>
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 className="font-normal gradient-text" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
+            Projects
+          </h2>
+          <a
+            href="/projects/"
+            className="group inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-medium transition-opacity hover:opacity-70"
+            style={{ color: '#0671A4', fontSize: 'clamp(0.95rem, 0.4vw + 0.8rem, 1.125rem)' }}
+            onMouseEnter={() => warmDocument('/projects/')}
+            onFocus={() => warmDocument('/projects/')}
+            onTouchStart={() => warmDocument('/projects/')}
+            onClick={() => posthog?.capture('projects_index_link_clicked', { source: 'home_intro' })}
+          >
+            <span>See all {projects.length} projects</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path className="transition-opacity group-hover:opacity-0" d="M8 5l7 7-7 7" />
+              <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M5 12h14" />
+              <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mt-2">
           <p className="text-black leading-relaxed max-w-4xl" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>
             I'm a full stack developer who works mainly in Python and Java, with JavaScript

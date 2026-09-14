@@ -1,3 +1,5 @@
+import { featuredProjects } from '../data/projects'
+
 type ScrollBehaviorOption = ScrollBehavior | undefined
 
 function documentTop(el: Element) {
@@ -94,7 +96,7 @@ export function sectionScrollTop(href: string) {
       const stickyTop = Number.parseFloat(sectionStyle.top) || 0
       const stickyPaddingTop = Number.parseFloat(sectionStyle.paddingTop) || 0
       const cardH = section.querySelector<HTMLElement>(':scope > div[aria-hidden]')?.offsetHeight ?? 500
-      const cardCount = section.querySelectorAll('[data-project-card]').length || 5
+      const cardCount = section.querySelectorAll('[data-project-card]').length || featuredProjects.length
       const cardRail = (cardCount - 1) * (cardH + 150)
       const heading = experience.querySelector('h2') ?? experience
       const headingInset = heading.getBoundingClientRect().top - experience.getBoundingClientRect().top

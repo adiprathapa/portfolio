@@ -20,6 +20,10 @@ function preconnect(origin: string) {
   appendLink('preconnect', origin, { crossorigin: 'anonymous' })
 }
 
+export function warmDocument(href: string) {
+  prefetchDocument(href)
+}
+
 export function warmCalendarPage() {
   prefetchDocument('/calendar.html')
   preconnect('https://app.cal.com')

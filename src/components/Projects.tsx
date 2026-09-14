@@ -1,115 +1,35 @@
 import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from 'framer-motion'
-import { FlipSafari } from './ui/flip-safari'
+import { ProjectStackCard } from './ui/project-stack-card'
 import { Experience } from './Experience'
 import { Education } from './Education'
-// GradientText used in About section's desktop projects intro
+import { featuredProjects, type Project } from '../data/projects'
+import { stackCardY } from '../lib/projectStack'
+import { posthog } from '../lib/analytics'
+import { warmDocument } from '../lib/prefetch'
 
-// Globe data kept but not used
-// import { IconCloud } from './ui/icon-cloud'
-// const slugs = [...]
-// const slugToName = {...}
-// const images = slugs.map(...)
+const cardCount = featuredProjects.length
 
-const projectDisplayNames: Record<string, string> = {
-  apature: "Apature",
-  macroplace: "Macro Placement",
-  tauron: "Tauron",
-  hexmend: "Hexmend",
-  helicity: "Helicity",
-}
-
-const projectDescriptions: Record<string, string> = {
-  apature: "My design tooling startup. Verdict, the core product, is a grounded VLM design reviewer: it captures a running web UI with deterministic headless Chromium, critiques it against the repo's own design system, and deletes every finding it cannot point at a captured element. Sigil, its open source companion library, puts error bars on LLM-as-judge evals.",
-  macroplace: "Built a hybrid GNN + electrostatic macro placer for the Partcl x HRT chip design challenge. GNN initialization on the netlist graph, ePlace style FFT density optimization, then density equalization and congestion aware coordinate descent refinement. Evaluated on 17 IBM benchmarks with zero overlaps.",
-  tauron: "Trained a GRU and GraphSAGE model over a synthetic 60 cow contact graph encoding 9 sensor features to predict mastitis, bovine respiratory disease, and lameness risk 48 hours ahead. Built gradient based feature attribution reducing per cow explanation latency by 40x.",
-  hexmend: "Built an agent evaluation environment disguised as a graph native spell game. Seven WebMCP tools let an agent inspect, simulate, diagnose, and patch a typed spell graph while preserving the constraints a human sets, and a 23 point rubric scores every step across 96 deterministic tasks with exportable trajectories.",
-  helicity: "Built a composite liquidity stress scoring engine over a NetworkX knowledge graph linking stablecoins, banks, and jurisdictions. Set up a multi-model LLM jury using Claude and Gemini for consensus causal narratives, with scores pinned to IPFS for verifiable audit trails.",
-}
-
-const projectLinks: Record<string, string> = {
-  apature: "https://github.com/apatureai",
-  macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
-  tauron: "https://adiprathapa.github.io/Tauron/reveal_slides",
-  hexmend: "https://hexmend.hex-machina.workers.dev",
-  helicity: "https://helicity-theta.vercel.app/",
-}
-
-const projectRepoLinks: Record<string, string> = {
-  apature: "https://github.com/apatureai/verdict",
-  macroplace: "https://github.com/adiprathapa/macro-place-challenge-2026/tree/main/submissions/gnn_placer",
-  tauron: "https://github.com/adiprathapa/Tauron",
-  hexmend: "https://github.com/adiprathapa/hexmend",
-  helicity: "https://github.com/AI-HackathonNYC/helicity",
-}
-
-const projectOrder = ['apature', 'macroplace', 'hexmend', 'tauron', 'helicity']
-
-const projectSafariProps: Record<string, { url: string; videoSrc?: string; posterSrc?: string; imageSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
-  apature: { url: projectLinks['apature'] },
-  macroplace: { url: projectLinks['macroplace'], imageSrc: "/macroplace-poster.webp" },
-  tauron: { url: projectLinks['tauron'], videoSrc: "/tauron.mp4", posterSrc: "/tauron-poster.webp", videoCropTop: 25 },
-  hexmend: { url: projectLinks['hexmend'], imageSrc: "/hexmend-poster.webp" },
-  helicity: { url: projectLinks['helicity'], videoSrc: "/helicity.mp4", posterSrc: "/helicity-poster.webp" },
-}
-
-const projectLogos: Record<string, string> = {
-  apature: "",
-  macroplace: "",
-  tauron: "/logo-tauron.png",
-  hexmend: "",
-  helicity: "/logo-helicity.png",
-}
-
-const projectTaglines: Record<string, string> = {
-  apature: "VLM design review that checks judgment, not pixels",
-  macroplace: "GNN + electrostatic hybrid macro placer for the Partcl x HRT challenge",
-  tauron: "Predicting livestock disease 48 hours before symptoms appear",
-  hexmend: "An agent gym where humans decide what matters and agents prove the smallest repair",
-  helicity: "AI powered liquidity stress scoring with verifiable audit trails",
-}
-
-const projectBgImages: Record<string, string> = {
-  apature: '/verdictbg.webp',
-  macroplace: '/macroplace-bg.webp',
-  tauron: '/tauronbg.webp',
-  hexmend: '/hexmend-bg.webp',
-  helicity: '/helicitybg.webp',
-}
-
-const projectGradientColors: Record<string, string> = {
-  apature: '#232B66',
-  macroplace: '#1a1a2e',
-  tauron: '#4C867A',
-  hexmend: '#0B0D12',
-  helicity: '#6366F1',
-}
-
-const projectTechStacks: Record<string, string[]> = {
-  apature: ["TypeScript", "Playwright", "Rust", "Python", "PostgreSQL", "VLM", "Conformal Prediction"],
-  macroplace: ["PyTorch", "GNN", "NumPy", "FFT", "Python"],
-  tauron: ["PyTorch", "FastAPI", "React", "Ollama", "D3.js", "Mistral AI", "NetworkX", "scikit-learn"],
-  hexmend: ["TypeScript", "React", "WebMCP", "MCP", "Cloudflare Workers", "Python"],
-  helicity: ["FastAPI", "NetworkX", "FastMCP", "Claude API", "Gemini API", "IPFS", "Leaflet", "React", "pandas"],
-}
-
-// const allTechStack = [...new Set(Object.values(projectTechStacks).flat())]
-
-function ProjectCard({
-  projectKey,
-  yValue,
-  zIndex,
-  opacity,
-  enableBackground,
+function StackCard({
+  project,
+  index,
+  cardProgress,
+  lastY,
+  spacing,
+  stagger,
   interactive,
 }: {
-  projectKey: string
-  yValue: MotionValue<number>
-  zIndex: number
-  opacity?: MotionValue<number>
-  enableBackground: boolean
+  project: Project
+  index: number
+  cardProgress: MotionValue<number>
+  lastY: MotionValue<number>
+  spacing: number
+  stagger: number
   interactive: boolean
 }) {
+  const yValue = useTransform(cardProgress, (p) => stackCardY(index, p, cardCount, spacing, stagger))
+  // Earlier cards disappear once the last card has covered them.
+  const hideOpacity = useTransform(lastY, (y) => Number(y > stagger * index))
   // Full size once the card's top reaches the bottom of the previous card (~500px),
   // smallest at 1120px away, linear ramp between
   const scale = useTransform(yValue, (y) => {
@@ -119,56 +39,25 @@ function ProjectCard({
     const t = Math.min((y - fullSizeAt) / (1120 - fullSizeAt), 1)
     return 1 - t * (1 - minScale)
   })
+  const isLast = index === cardCount - 1
 
   return (
     <motion.div
-      data-project-card={projectKey}
+      data-project-card={project.slug}
       className="absolute inset-x-0 top-0 w-full origin-bottom"
       style={{
         y: yValue,
         scale,
-        zIndex,
-        ...(opacity ? { opacity } : {}),
+        zIndex: index + 1,
+        ...(isLast ? {} : { opacity: hideOpacity }),
         willChange: 'transform',
       }}
     >
-      <FlipSafari
-        safariProps={{
-          ...projectSafariProps[projectKey],
-          style: { width: '100%' },
-        }}
+      <ProjectStackCard
+        project={project}
+        position={index + 1}
         cardHeight="var(--project-stack-card-h)"
-        projectName={projectDisplayNames[projectKey]}
-        projectDescription={projectDescriptions[projectKey]}
-        projectTagline={projectTaglines[projectKey]}
-        projectUrl={projectRepoLinks[projectKey]}
-        logoSrc={projectLogos[projectKey]}
-        logoContent={projectKey === 'macroplace' ? (
-          <div className="flex items-center gap-4" style={{ opacity: 0.9 }}>
-            <img src="/logo-hrt.png" alt="HRT" className="h-20 object-contain" style={{ filter: 'grayscale(1) invert(1) brightness(3) contrast(10)' }} />
-            <span className="text-white text-4xl font-light">&times;</span>
-            <img src="/logo-partcl.png" alt="Partcl" className="h-20 object-contain" style={{ filter: 'grayscale(1) invert(1) brightness(3) contrast(10)' }} />
-          </div>
-        ) : projectKey === 'hexmend' ? (
-          <img
-            src="/logo-hexmend.png"
-            alt="Hexmend"
-            className="h-38 object-contain"
-            style={{ filter: 'brightness(0) invert(1) drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4))', opacity: 0.95 }}
-          />
-        ) : projectKey === 'apature' ? (
-          <img
-            src="/logo-apature.png"
-            alt="Apature"
-            className="h-32 object-contain"
-            style={{ filter: 'brightness(0) invert(1) drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4))', opacity: 0.95 }}
-          />
-        ) : undefined}
-        techStack={projectTechStacks[projectKey]}
-        logoBlendMode={projectKey === 'apature' || projectKey === 'hexmend' ? 'normal' : undefined}
-        gradientColor={projectGradientColors[projectKey]}
-        bgImage={projectBgImages[projectKey]}
-        enableBackground={enableBackground}
+        enableBackground
         interactive={interactive}
       />
     </motion.div>
@@ -210,7 +99,7 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
       const fallbackCardH = mobile ? Math.min(Math.max(vh * 0.52, 360), 470) : 500
       const cardH = cardHProbeRef.current?.offsetHeight ?? fallbackCardH
       const spacing = mobile ? cardH + Math.round(cardH * 0.15) : cardH + 150
-      const totalTravel = spacing * (projectOrder.length - 1)
+      const totalTravel = spacing * Math.max(0, cardCount - 1)
       const stickyPt = readStickyPtPx()
       const expH = experienceRef.current?.offsetHeight ?? 550
       const expOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
@@ -252,63 +141,39 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
   const expH = experienceRef.current?.offsetHeight ?? 550
   const stickyPt = readStickyPtPx()
   const experienceOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
-  const cardAnimationRail = (projectOrder.length - 1) * spacing
+  const cardAnimationRail = Math.max(0, cardCount - 1) * spacing
   const totalRail = cardAnimationRail + experienceOverflow
-  const cardAnimationEnd = totalRail > 0 ? cardAnimationRail / totalRail : 1
+  // Keep the card phase's input range non-empty even with a single card.
+  const cardAnimationEnd = Math.min(Math.max(totalRail > 0 ? cardAnimationRail / totalRail : 1, 0.0001), 0.9999)
 
   // Phase 1: remap scrollYProgress [0, cardAnimationEnd] → [0, 1] for cards
-  const cardProgress = useTransform(scrollYProgress,
-    [0, Math.min(cardAnimationEnd, 0.9999)],
-    [0, 1])
+  const cardProgress = useTransform(scrollYProgress, [0, cardAnimationEnd], [0, 1])
   const [platformerVisible, setPlatformerVisible] = useState(true)
   const [platformerDismissed, setPlatformerDismissed] = useState(false)
   useEffect(() => {
     if (!platformerActive) setPlatformerDismissed(false)
   }, [platformerActive])
   useMotionValueEvent(cardProgress, 'change', (latest) => {
-    const nextIndex = Math.max(0, Math.min(projectOrder.length - 1, Math.floor(latest * (projectOrder.length - 1) + 0.001)))
+    const nextIndex = Math.max(0, Math.min(cardCount - 1, Math.floor(latest * (cardCount - 1) + 0.001)))
     setActiveCardIndex((current) => current === nextIndex ? current : nextIndex)
     setPlatformerVisible((current) => {
       const next = latest < 0.012
       return current === next ? current : next
     })
   })
-  const seg = 1 / (projectOrder.length - 1)
 
-  const cardY1 = useTransform(cardProgress, [0, 1], [0, 0])
-
-  const cardY2 = useTransform(cardProgress,
-    [0, seg, 1],
-    [spacing, stagger, stagger])
-
-  const cardY3 = useTransform(cardProgress,
-    [0, seg, seg * 2, 1],
-    [spacing * 2, spacing + stagger, stagger * 2, stagger * 2])
-
-  const cardY4 = useTransform(cardProgress,
-    [0, seg, seg * 2, seg * 3, 1],
-    [spacing * 3, spacing * 2 + stagger, spacing + stagger * 2, stagger * 3, stagger * 3])
-
-  const cardY5 = useTransform(cardProgress,
-    [0, seg, seg * 2, seg * 3, seg * 4],
-    [spacing * 4, spacing * 3 + stagger, spacing * 2 + stagger * 2, spacing + stagger * 3, 0])
-
-  const cardYValues = [cardY1, cardY2, cardY3, cardY4, cardY5]
-
-  const hideOp0 = useTransform(cardY5, (y: number) => Number(y > 0))
-  const hideOp1 = useTransform(cardY5, (y: number) => Number(y > stagger))
-  const hideOp2 = useTransform(cardY5, (y: number) => Number(y > stagger * 2))
-  const hideOp3 = useTransform(cardY5, (y: number) => Number(y > stagger * 3))
-  const cardOpacities: (MotionValue<number> | undefined)[] = [hideOp0, hideOp1, hideOp2, hideOp3, undefined]
+  const lastY = useTransform(cardProgress, (p) => stackCardY(cardCount - 1, p, cardCount, spacing, stagger))
 
   // Phase 2: after cards finish, scroll everything up so Experience fills viewport
   const phase2Offset = useTransform(scrollYProgress,
-    [Math.min(cardAnimationEnd, 0.9999), 1],
+    [cardAnimationEnd, 1],
     [0, -experienceOverflow])
 
   // Experience Y relative to the phase2 wrapper (no stickyPt — the wrapper
   // is inside the section's padded area, so stickyPt is already accounted for)
-  const experienceInsideY = useTransform(cardY5, (y: number) => y + cardH + 96)
+  const experienceInsideY = useTransform(lastY, (y: number) => y + cardH + 96)
+  // The "See all projects" button sits in the 96px gap under the last card.
+  const seeAllY = useTransform(lastY, (y: number) => y + cardH + 24)
 
   return (
     <>
@@ -354,18 +219,41 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
             the card animation ends, keeping the 48px gap constant. */}
         <motion.div style={{ y: phase2Offset, position: 'relative' }}>
           <div className="relative z-[3]" style={{ maxWidth: isMobile ? 'calc(100vw - var(--mobile-card-inset))' : 1280, marginLeft: 'auto', marginRight: 'auto', height: isMobile ? 'var(--project-stack-card-h)' : 500, overflow: 'visible' }}>
-            {projectOrder.map((key, i) => (
-              <ProjectCard
-                key={key}
-                projectKey={key}
-                yValue={cardYValues[i]}
-                zIndex={i + 1}
-                opacity={cardOpacities[i]}
-                enableBackground
+            {featuredProjects.map((project, i) => (
+              <StackCard
+                key={project.slug}
+                project={project}
+                index={i}
+                cardProgress={cardProgress}
+                lastY={lastY}
+                spacing={spacing}
+                stagger={stagger}
                 interactive={i >= activeCardIndex && i <= activeCardIndex + 1}
               />
             ))}
           </div>
+          {/* See all projects: rides in the gap under the last card */}
+          <motion.div
+            className="pointer-events-none absolute inset-x-0 top-0 flex justify-center"
+            style={{ y: seeAllY, zIndex: cardCount + 1 }}
+          >
+            <a
+              href="/projects/"
+              className="group pointer-events-auto inline-flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-[15px] font-medium transition-colors lg:text-base bg-[#0671A4] hover:bg-[#055a84]"
+              style={{ color: '#FFFFFF', border: '2px solid transparent' }}
+              onMouseEnter={() => warmDocument('/projects/')}
+              onFocus={() => warmDocument('/projects/')}
+              onTouchStart={() => warmDocument('/projects/')}
+              onClick={() => posthog?.capture('projects_index_link_clicked', { source: 'home_stack_button' })}
+            >
+              <span>See all projects</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path className="transition-opacity group-hover:opacity-0" d="M8 5l7 7-7 7" />
+                <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M5 12h14" />
+                <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </motion.div>
           {/* Experience follows the last card — same wrapper = constant gap */}
           <motion.div
             style={{
@@ -374,7 +262,7 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
               left: '-1.5rem',
               right: '-1.5rem',
               y: experienceInsideY,
-              zIndex: projectOrder.length + 1,
+              zIndex: cardCount + 1,
             }}
           >
             <div ref={experienceRef}>

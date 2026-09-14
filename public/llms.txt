@@ -2,12 +2,13 @@
 
 > Aditya (Adi) Prathapa is a Computer Science student at Cornell University (AI minor) building graph ML and full stack systems, contributing to Jenkins and Kubeflow, and founding Apature, a design review tooling startup.
 
-This site is a single page React app; the sections below describe its content.
+This site is a React app: a homepage plus an all-projects page with a page for each project. The sections below describe its content.
 
 ## Sections
 
 - [Home](https://www.adiprathapa.space/): hero, about, experience (MITRE data science intern summer 2026, Colorado School of Mines, UNL research), education (Cornell, B.A. CS)
-- [Projects](https://www.adiprathapa.space/#projects): Apature (Verdict VLM design reviewer and Sigil eval statistics library), macro placement GNN, Hexmend (WebMCP agent gym disguised as a spell game), Tauron (livestock disease GNN), Helicity (stablecoin liquidity stress)
+- [Projects](https://www.adiprathapa.space/projects/): all projects, each with its own page
+<!-- PROJECTS -->
 - [Open Source](https://www.adiprathapa.space/#open-source): Kiwix/openZIM, Kubeflow, Jenkins, CockroachDB contributions
 - [Calendar](https://www.adiprathapa.space/calendar.html): book a meeting
 - [Privacy](https://www.adiprathapa.space/privacy.html)

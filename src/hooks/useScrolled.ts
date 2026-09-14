@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-export function useScrolled(threshold = 10) {
+export function useScrolled(threshold = 10, { startAt = 0.96 }: { startAt?: number } = {}) {
   const [scrolled, setScrolled] = useState(false)
   const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
@@ -11,7 +11,8 @@ export function useScrolled(threshold = 10) {
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY
-      const sectionEnd = window.innerHeight * 0.96
+      // Fraction of the viewport height the page must scroll past before the bar containerizes.
+      const sectionEnd = window.innerHeight * startAt
       const isScrolled = currentY > sectionEnd + threshold
       setScrolled(isScrolled)
 
@@ -49,7 +50,7 @@ export function useScrolled(threshold = 10) {
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [threshold])
+  }, [threshold, startAt])
 
   return { scrolled, hidden }
 }

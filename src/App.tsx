@@ -9,7 +9,8 @@ import { OpenSource } from './components/OpenSource'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { jumpToSection, scrollToSection } from './lib/scrollToSection'
-import { announceHomeSectionNavigation } from './lib/homeSectionNavigation'
+import { announceHomeSectionNavigation, PENDING_HOME_SECTION_KEY } from './lib/homeSectionNavigation'
+import { featuredProjects } from './data/projects'
 
 const ProjectsGame = lazy(() =>
   import('./components/ProjectsGame').then((module) => ({ default: module.ProjectsGame })),
@@ -23,13 +24,9 @@ const PRELOAD_IMAGES = [
   '/nell.webp', '/cornell.svg', '/mnhs.webp', '/mnhs-removebg-preview.png',
   '/pexels-pinamon-17647329.webp', '/bowers.webp', '/mines-bg.webp', '/unl-bg.webp',
   '/cornell-data-strategy.webp', '/c2s2.webp', '/cas.webp',
-  // Project logos & backgrounds
-  '/logo-tauron.png', '/logo-helicity.png',
-  '/logo-apature.png', '/logo-hrt.png', '/logo-partcl.png',
-  '/tauronbg.webp', '/helicitybg.webp',
-  '/verdictbg.webp', '/macroplace-bg.webp',
-  '/hexmend-bg.webp', '/logo-hexmend.png',
-]
+  // Featured project logos & backgrounds
+  ...featuredProjects.flatMap((p) => [p.brand.bgImage, ...(p.logo?.marks.map((m) => m.src) ?? [])]),
+].filter((src): src is string => !!src)
 
 function preloadAssets() {
   let i = 0
@@ -63,9 +60,9 @@ function App() {
     // Start preloading after initial render
     preloadAssets()
 
-    const pendingHomeSection = sessionStorage.getItem('pending-home-section')
+    const pendingHomeSection = sessionStorage.getItem(PENDING_HOME_SECTION_KEY)
     if (pendingHomeSection) {
-      sessionStorage.removeItem('pending-home-section')
+      sessionStorage.removeItem(PENDING_HOME_SECTION_KEY)
       window.history.replaceState(null, '', pendingHomeSection)
     }
 

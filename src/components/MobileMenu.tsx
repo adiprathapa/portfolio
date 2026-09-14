@@ -7,9 +7,11 @@ interface MobileMenuProps {
   isOpen: boolean
   onClose: () => void
   links: { label: string; href: string }[]
+  /** Set off the homepage: section links hand off to the homepage instead of scrolling. */
+  onSectionLink?: (hash: string) => void
 }
 
-export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
+export function MobileMenu({ isOpen, onClose, links, onSectionLink }: MobileMenuProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -49,11 +51,15 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
               {links.map((link) => (
                 <a
                   key={link.href}
-                  href={link.href}
+                  href={onSectionLink && link.href.startsWith('#') ? `/${link.href}` : link.href}
                   onClick={(e) => {
                     if (link.href.startsWith('#')) {
                       e.preventDefault()
                       onClose()
+                      if (onSectionLink) {
+                        onSectionLink(link.href)
+                        return
+                      }
                       setTimeout(() => scrollToSection(link.href), 100)
                       return
                     }

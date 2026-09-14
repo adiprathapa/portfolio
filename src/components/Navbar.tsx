@@ -8,6 +8,7 @@ import { scrollToSection, sectionScrollTop } from '../lib/scrollToSection'
 import { warmCalendarPage } from '../lib/prefetch'
 import {
   announceHomeSectionNavigation,
+  goToHomeSection,
   HOME_SECTION_NAVIGATION_EVENT,
 } from '../lib/homeSectionNavigation'
 
@@ -22,9 +23,12 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ]
 
-export function Navbar() {
-  const { scrolled, hidden } = useScrolled(50)
-  const activeSection = useActiveSection()
+export function Navbar({ page = 'home' }: { page?: 'home' | 'projects' } = {}) {
+  const isHome = page === 'home'
+  // Off the homepage there's no hero to scroll past, so the bar reacts right away.
+  const { scrolled, hidden } = useScrolled(50, { startAt: isHome ? 0.96 : 0 })
+  const homeActiveSection = useActiveSection(isHome)
+  const activeSection = isHome ? homeActiveSection : 'projects'
   const showSocialActions =
     scrolled ||
     activeSection === 'about' ||
@@ -122,7 +126,7 @@ export function Navbar() {
   // We track whether we've scrolled past About (= top of projects-intro).
   useEffect(() => {
     const update = () => {
-      if (window.innerWidth >= 1024) {
+      if (!isHome || window.innerWidth >= 1024) {
         setPastAboutMobile(false)
         return
       }
@@ -145,15 +149,18 @@ export function Navbar() {
       window.removeEventListener('scroll', update)
       window.removeEventListener('resize', onResize)
     }
-  }, [])
+  }, [isHome])
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    posthog?.capture('nav_link_clicked', { section: href.replace('#', '') })
-    if (href.startsWith('#')) {
-      announceHomeSectionNavigation(href)
-      e.preventDefault()
-      scrollToSection(href)
+    posthog?.capture('nav_link_clicked', { section: href.replace('#', ''), from_page: page })
+    if (!href.startsWith('#')) return
+    e.preventDefault()
+    if (!isHome) {
+      goToHomeSection(href)
+      return
     }
+    announceHomeSectionNavigation(href)
+    scrollToSection(href)
   }
 
   return (
@@ -200,7 +207,7 @@ export function Navbar() {
                 return (
                   <a
                     key={link.href}
-                    href={link.href}
+                    href={isHome ? link.href : `/${link.href}`}
                     onClick={(e) => handleNavClick(e, link.href)}
                     className={`relative whitespace-nowrap text-[15px] xl:text-base font-medium rounded-xl px-2.5 xl:px-4 py-1.5 transition-all duration-300 ${
                       isActive
@@ -323,7 +330,7 @@ export function Navbar() {
         </header>
       </div>
 
-      <MobileMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} links={navLinks} />
+      <MobileMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} links={navLinks} onSectionLink={isHome ? undefined : goToHomeSection} />
     </>
   )
 }

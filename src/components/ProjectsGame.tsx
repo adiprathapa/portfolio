@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { RippleButton } from './ui/ripple-button'
+import { featuredProjects } from '../data/projects'
 
 // Capoo sprite size — slightly smaller on mobile so he's less obtrusive on the smaller cards
 const CAPOO_W = typeof window !== 'undefined' && window.innerWidth < 1024 ? 22 : 26
@@ -50,28 +51,17 @@ type FlagRect = {
   right: number
 }
 
-// Project display names used as data-game-word / data-card-flag identifiers.
-// Order matches Projects.tsx so we know which flag is the final goal.
-const PROJECT_NAMES = ['Apature', 'Macro Placement', 'Hexmend', 'Tauron', 'Helicity']
-const FINAL_PROJECT_KEY = 'Helicity'
+// Featured project slugs in stack order. data-project-card, data-game-word and
+// data-card-flag all use the slug, and the last card's flag is the final goal.
+const PROJECT_SLUGS = featuredProjects.map((p) => p.slug)
+const FINAL_PROJECT_SLUG = PROJECT_SLUGS[PROJECT_SLUGS.length - 1]
 
-// data-project-card uses the lowercase key; data-game-word/data-card-flag use the display name
-const PROJECT_KEY_TO_DISPLAY: Record<string, string> = {
-  apature: 'Apature',
-  hexmend: 'Hexmend',
-  macroplace: 'Macro Placement',
-  tauron: 'Tauron',
-  helicity: 'Helicity',
+function titleOf(slug: string | null) {
+  return featuredProjects.find((p) => p.slug === slug)?.title ?? slug ?? ''
 }
 
-const DISPLAY_TO_PROJECT_KEY: Record<string, string> = Object.fromEntries(
-  Object.entries(PROJECT_KEY_TO_DISPLAY).map(([k, v]) => [v, k])
-)
-
-function findCardElByDisplayName(displayKey: string): HTMLElement | null {
-  const lower = DISPLAY_TO_PROJECT_KEY[displayKey]
-  if (!lower) return null
-  return document.querySelector<HTMLElement>(`[data-project-card="${lower}"]`)
+function findCardEl(slug: string): HTMLElement | null {
+  return document.querySelector<HTMLElement>(`[data-project-card="${slug}"]`)
 }
 
 function findFirstWordRectForCard(displayKey: string): { rect: DOMRect; el: HTMLElement } | null {
@@ -81,7 +71,7 @@ function findFirstWordRectForCard(displayKey: string): { rect: DOMRect; el: HTML
 }
 
 // Returns true if a project card LATER than `currentDisplayKey` in
-// PROJECT_NAMES is the topmost element painted at any point along Capoo's
+// PROJECT_SLUGS is the topmost element painted at any point along Capoo's
 // body — i.e. the next/upcoming card has stacked far enough to overlap his
 // sprite. Brushing a previous card's tagline sliver while jumping high does
 // NOT count as a smoosh.
@@ -91,7 +81,7 @@ function isNextCardTouchingCapoo(
   capooTopY: number,
   capooBottomY: number,
 ): boolean {
-  const currentIdx = PROJECT_NAMES.indexOf(currentDisplayKey)
+  const currentIdx = PROJECT_SLUGS.indexOf(currentDisplayKey)
   if (currentIdx < 0) return false
   const samples = [capooTopY + 2, (capooTopY + capooBottomY) / 2, capooBottomY - 2]
   for (const y of samples) {
@@ -102,9 +92,7 @@ function isNextCardTouchingCapoo(
       if (el.closest('[data-game-ui]')) continue
       const cardEl = el.closest('[data-project-card]') as HTMLElement | null
       if (!cardEl) continue
-      const cardKey = cardEl.dataset.projectCard || ''
-      const display = PROJECT_KEY_TO_DISPLAY[cardKey] || cardKey
-      const cardIdx = PROJECT_NAMES.indexOf(display)
+      const cardIdx = PROJECT_SLUGS.indexOf(cardEl.dataset.projectCard || '')
       // Only count it if a LATER project's card is on top here.
       if (cardIdx > currentIdx) return true
       break
@@ -225,7 +213,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
     document.documentElement.classList.add('capoo-game')
 
     // Clear any flag-reached classes left over from a previous game session
-    // (flags live in FlipSafari cards which don't unmount with the game)
+    // (flags live in the project stack cards, which don't unmount with the game)
     document.querySelectorAll('.flag-reached').forEach(el => el.classList.remove('flag-reached'))
     reachedFlagsRef.current.clear()
 
@@ -242,13 +230,13 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
     capooYRef.current = 40
     capooVyRef.current = 0
     currentCardIdxRef.current = 0
-    reachedCardRef.current = PROJECT_NAMES[0]
+    reachedCardRef.current = PROJECT_SLUGS[0]
     setupDoneRef.current = true
     window.scrollTo(0, scrollFromRef.current)
 
     // After layout settles, place Capoo directly on the first project's first word
     const placeId = window.setTimeout(() => {
-      const first = findFirstWordRectForCard(PROJECT_NAMES[0])
+      const first = findFirstWordRectForCard(PROJECT_SLUGS[0])
       if (first) {
         const r = first.rect
         capooXRef.current = (r.left + r.right) / 2
@@ -374,7 +362,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
         // While teleporting between cards, lock Capoo directly on top of the
         // new card's first word — the scroll animation is moving the page
         // underneath him.
-        const targetDisplay = PROJECT_NAMES[currentCardIdxRef.current]
+        const targetDisplay = PROJECT_SLUGS[currentCardIdxRef.current]
         const first = findFirstWordRectForCard(targetDisplay)
         if (first) {
           const r = first.rect
@@ -420,7 +408,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
 
         // Only consider words from the card Capoo is currently playing —
         // each card is its own isolated level.
-        const currentDisplayKey = PROJECT_NAMES[currentCardIdxRef.current]
+        const currentDisplayKey = PROJECT_SLUGS[currentCardIdxRef.current]
         const words = getWordRects().filter(w => w.key === currentDisplayKey)
         let landedRect: WordRect | null = null
         let landedEl: HTMLElement | null = null
@@ -466,7 +454,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
               reachedFlagsRef.current.add(f.key)
               f.el.classList.add('flag-reached')
               setReachedFlagsTick(n => n + 1)
-              if (f.key === FINAL_PROJECT_KEY) {
+              if (f.key === FINAL_PROJECT_SLUG) {
                 setPhaseSync('won')
               } else {
                 advanceToNextCardRef.current?.()
@@ -483,7 +471,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
 
         // Death: fell below the current card's bottom edge — each card is
         // an isolated level, there's nothing beneath it.
-        const currentCardEl = findCardElByDisplayName(currentDisplayKey)
+        const currentCardEl = findCardEl(currentDisplayKey)
         if (currentCardEl) {
           const cardBottom = currentCardEl.getBoundingClientRect().bottom
           if (capooYRef.current > cardBottom - 4) {
@@ -546,9 +534,9 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
   // Teleport Capoo to the next card and snap-scroll the page to that card's view.
   const advanceToNextCard = useCallback(() => {
     const nextIdx = currentCardIdxRef.current + 1
-    if (nextIdx >= PROJECT_NAMES.length) return
+    if (nextIdx >= PROJECT_SLUGS.length) return
     currentCardIdxRef.current = nextIdx
-    const nextDisplay = PROJECT_NAMES[nextIdx]
+    const nextDisplay = PROJECT_SLUGS[nextIdx]
     reachedCardRef.current = nextDisplay
     teleportingRef.current = true
     capooVyRef.current = 0
@@ -574,7 +562,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
   const restart = useCallback(() => {
     window.scrollTo(0, scrollFromRef.current)
     currentCardIdxRef.current = 0
-    reachedCardRef.current = PROJECT_NAMES[0]
+    reachedCardRef.current = PROJECT_SLUGS[0]
     capooVyRef.current = 0
     onWordElRef.current = null
     onWordRectRef.current = null
@@ -596,7 +584,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
     // Wait for layout to settle after the scrollTo, then place Capoo on the
     // first card's first word before transitioning to 'starting'.
     const placeAndStart = (attempts = 0) => {
-      const first = findFirstWordRectForCard(PROJECT_NAMES[0])
+      const first = findFirstWordRectForCard(PROJECT_SLUGS[0])
       if (first) {
         const r = first.rect
         capooXRef.current = (r.left + r.right) / 2
@@ -626,10 +614,28 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
   useEffect(() => { restartRef.current = restart }, [restart])
   useEffect(() => { advanceToNextCardRef.current = advanceToNextCard }, [advanceToNextCard])
 
+  // Dev-only hook so automated checks can reach each card's flag without
+  // playing: puts Capoo on the current card's flag for the next frame.
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+    const w = window as Window & { __capooTest?: { touchFlag: () => boolean } }
+    w.__capooTest = {
+      touchFlag: () => {
+        const flag = getFlagRects().find((f) => f.key === PROJECT_SLUGS[currentCardIdxRef.current])
+        if (!flag || teleportingRef.current) return false
+        capooXRef.current = (flag.left + flag.right) / 2
+        capooYRef.current = (flag.top + flag.bottom) / 2 - CAPOO_H / 2
+        capooVyRef.current = 0
+        return true
+      },
+    }
+    return () => { delete w.__capooTest }
+  }, [])
+
   // Start the race from the intro screen
   const beginPlay = useCallback(() => {
     // Re-place Capoo on the first project's first word in case layout shifted
-    const first = findFirstWordRectForCard(PROJECT_NAMES[0])
+    const first = findFirstWordRectForCard(PROJECT_SLUGS[0])
     if (first) {
       const r = first.rect
       capooXRef.current = (r.left + r.right) / 2
@@ -656,7 +662,7 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
             }}
             key={reachedFlagsTick}
           >
-            Flags {reachedFlagsRef.current.size} / {PROJECT_NAMES.length}
+            Flags {reachedFlagsRef.current.size} / {PROJECT_SLUGS.length}
           </div>
         )}
 
@@ -940,9 +946,9 @@ export function ProjectsGame({ onExit }: { onExit: () => void }) {
               {phase === 'won'
                 ? 'You hopped through every project all the way to Experience.'
                 : phase === 'dead-squish'
-                  ? `The next card squished you on ${reachedCardRef.current}. Reach the flag faster next time.`
+                  ? `The next card squished you on ${titleOf(reachedCardRef.current)}. Reach the flag faster next time.`
                   : reachedCardRef.current
-                    ? `You made it to ${reachedCardRef.current}.`
+                    ? `You made it to ${titleOf(reachedCardRef.current)}.`
                     : 'Land on a platform, fall through the gaps — use ← → to find an opening.'}
             </div>
             <div className="flex gap-3">

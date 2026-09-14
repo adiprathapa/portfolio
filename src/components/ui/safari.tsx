@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, type HTMLAttributes } from "react"
+import { useState, useRef, useEffect, useId, type HTMLAttributes } from "react"
 
 const SAFARI_WIDTH = 1203
 const SAFARI_HEIGHT = 753
@@ -41,6 +41,8 @@ export function Safari({
   ...props
 }: SafariProps) {
   const [videoLoaded, setVideoLoaded] = useState(false)
+  // Unique SVG ids so several frames on one page don't share (and break) masks.
+  const uid = useId().replace(/:/g, '')
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -124,6 +126,8 @@ export function Safari({
             <img
               src={posterSrc}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 block size-full object-cover object-top"
             />
           )}
@@ -168,6 +172,8 @@ export function Safari({
           <img
             src={imageSrc}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="block size-full object-cover object-top"
           />
         </div>
@@ -181,7 +187,7 @@ export function Safari({
         style={{ transform: "translateZ(0)" }}
       >
         <defs>
-          <mask id="safariPunch" maskUnits="userSpaceOnUse">
+          <mask id={`safariPunch-${uid}`} maskUnits="userSpaceOnUse">
             <rect
               x="0"
               y="0"
@@ -195,11 +201,11 @@ export function Safari({
             />
           </mask>
 
-          <clipPath id="path0">
+          <clipPath id={`path0-${uid}`}>
             <rect width={SAFARI_WIDTH} height={SAFARI_HEIGHT} fill="#F4F4F4" />
           </clipPath>
 
-          <clipPath id="roundedBottom">
+          <clipPath id={`roundedBottom-${uid}`}>
             <path
               d="M1 52H1201V741C1201 747.075 1196.08 752 1190 752H12C5.92486 752 1 747.075 1 741V52Z"
               fill="#F4F4F4"
@@ -208,8 +214,8 @@ export function Safari({
         </defs>
 
         <g
-          clipPath="url(#path0)"
-          mask={hasMedia ? "url(#safariPunch)" : undefined}
+          clipPath={`url(#path0-${uid})`}
+          mask={hasMedia ? `url(#safariPunch-${uid})` : undefined}
         >
           <path
             d="M0 52H1202V741C1202 747.627 1196.63 753 1190 753H12C5.37258 753 0 747.627 0 741V52Z"

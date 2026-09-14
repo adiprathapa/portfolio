@@ -1,7 +1,7 @@
 import { scrollToSection } from '../lib/scrollToSection'
 import { type MouseEvent } from 'react'
-import { warmCalendarPage } from '../lib/prefetch'
-import { announceHomeSectionNavigation } from '../lib/homeSectionNavigation'
+import { warmCalendarPage, warmDocument } from '../lib/prefetch'
+import { announceHomeSectionNavigation, goToHomeSection } from '../lib/homeSectionNavigation'
 
 const footerLinks = [
   { label: 'About', href: '#about' },
@@ -13,14 +13,20 @@ const footerLinks = [
 ]
 
 const resourceLinks = [
+  { label: 'All projects', href: '/projects/' },
   { label: 'Calendar', href: '/calendar.html' },
   { label: 'Privacy', href: '/privacy.html' },
 ]
 
-export function Footer() {
+export function Footer({ page = 'home' }: { page?: 'home' | 'projects' } = {}) {
+  const isHome = page === 'home'
   const handleFooterLinkClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     if (href.startsWith('#')) {
       e.preventDefault()
+      if (!isHome) {
+        goToHomeSection(href)
+        return
+      }
       announceHomeSectionNavigation(href)
       scrollToSection(href)
     }
@@ -65,7 +71,7 @@ export function Footer() {
             <nav aria-label="Footer navigation">
               <h3>Explore</h3>
               {footerLinks.map((link) => (
-                <a key={link.href} href={link.href} onClick={handleFooterLinkClick(link.href)}>
+                <a key={link.href} href={isHome ? link.href : `/${link.href}`} onClick={handleFooterLinkClick(link.href)}>
                   {link.label}
                 </a>
               ))}
@@ -73,17 +79,20 @@ export function Footer() {
 
             <nav aria-label="Resources">
               <h3>Resources</h3>
-              {resourceLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onMouseEnter={warmCalendarPage}
-                  onFocus={warmCalendarPage}
-                  onTouchStart={warmCalendarPage}
-                >
-                  {link.label}
-                </a>
-              ))}
+              {resourceLinks.map((link) => {
+                const warm = link.href === '/calendar.html' ? warmCalendarPage : () => warmDocument(link.href)
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onMouseEnter={warm}
+                    onFocus={warm}
+                    onTouchStart={warm}
+                  >
+                    {link.label}
+                  </a>
+                )
+              })}
             </nav>
 
             <div>

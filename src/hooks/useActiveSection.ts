@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 
 const SECTIONS = ['about', 'projects', 'experience', 'education', 'open-source', 'contact'] as const
 
-export function useActiveSection() {
+export function useActiveSection(enabled = true) {
   const [active, setActive] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!enabled) return
     // Navbar sits at the top of the viewport. We check which section the
     // navbar overlaps by comparing section bounding rects to a probe point
     // slightly below the top of the viewport (to account for the navbar
@@ -73,7 +74,7 @@ export function useActiveSection() {
     handleScroll() // set initial state
 
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [enabled])
 
   return active
 }

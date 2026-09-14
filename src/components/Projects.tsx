@@ -57,7 +57,7 @@ const projectLogos: Record<string, string> = {
   apature: "",
   macroplace: "",
   tauron: "/logo-tauron.png",
-  hexmend: "",
+  hexmend: "/logo-hexmend.png",
   helicity: "/logo-helicity.png",
 }
 
@@ -149,11 +149,6 @@ function ProjectCard({
             <span className="text-white text-4xl font-light">&times;</span>
             <img src="/logo-partcl.png" alt="Partcl" className="h-20 object-contain" style={{ filter: 'grayscale(1) invert(1) brightness(3) contrast(10)' }} />
           </div>
-        ) : projectKey === 'hexmend' ? (
-          <div className="flex items-center gap-4">
-            <img src="/logo-hexmend.png" alt="" className="h-16 w-16 object-contain" />
-            <span className="font-heading text-white text-5xl font-semibold tracking-tight">Hexmend</span>
-          </div>
         ) : projectKey === 'apature' ? (
           <img
             src="/logo-apature.png"
@@ -163,7 +158,7 @@ function ProjectCard({
           />
         ) : undefined}
         techStack={projectTechStacks[projectKey]}
-        logoBlendMode={projectKey === 'apature' || projectKey === 'hexmend' ? 'normal' : undefined}
+        logoBlendMode={projectKey === 'apature' ? 'normal' : undefined}
         gradientColor={projectGradientColors[projectKey]}
         bgImage={projectBgImages[projectKey]}
         enableBackground={enableBackground}

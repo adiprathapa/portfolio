@@ -75,8 +75,12 @@ export function FilterMenu({ label, icon, options, selected, open, onOpenChange,
     }
   }
 
+  // Close when focus moves to something outside (Tab). A null relatedTarget
+  // means a click on non-focusable content, like an option row's text; closing
+  // then would swallow that click, and outside clicks are handled above.
   const onBlur = (e: FocusEvent<HTMLDivElement>) => {
-    if (open && !rootRef.current?.contains(e.relatedTarget as Node | null)) onOpenChange(false)
+    const next = e.relatedTarget as Node | null
+    if (open && next && !rootRef.current?.contains(next)) onOpenChange(false)
   }
 
   const active = selected.length > 0

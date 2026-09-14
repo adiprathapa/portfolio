@@ -43,7 +43,7 @@ const projectRepoLinks: Record<string, string> = {
   helicity: "https://github.com/AI-HackathonNYC/helicity",
 }
 
-const projectOrder = ['apature', 'hexmend', 'macroplace', 'tauron', 'helicity']
+const projectOrder = ['apature', 'macroplace', 'hexmend', 'tauron', 'helicity']
 
 const projectSafariProps: Record<string, { url: string; videoSrc?: string; posterSrc?: string; imageSrc?: string; videoCropTop?: number | string; videoCropBottom?: number | string; videoCropLeft?: number | string; videoCropRight?: number | string; videoStartTime?: number }> = {
   apature: { url: projectLinks['apature'] },
@@ -57,7 +57,7 @@ const projectLogos: Record<string, string> = {
   apature: "",
   macroplace: "",
   tauron: "/logo-tauron.png",
-  hexmend: "/logo-hexmend.png",
+  hexmend: "",
   helicity: "/logo-helicity.png",
 }
 
@@ -149,6 +149,13 @@ function ProjectCard({
             <span className="text-white text-4xl font-light">&times;</span>
             <img src="/logo-partcl.png" alt="Partcl" className="h-20 object-contain" style={{ filter: 'grayscale(1) invert(1) brightness(3) contrast(10)' }} />
           </div>
+        ) : projectKey === 'hexmend' ? (
+          <img
+            src="/logo-hexmend.png"
+            alt="Hexmend"
+            className="h-38 object-contain"
+            style={{ filter: 'brightness(0) invert(1) drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4))', opacity: 0.95 }}
+          />
         ) : projectKey === 'apature' ? (
           <img
             src="/logo-apature.png"
@@ -158,7 +165,7 @@ function ProjectCard({
           />
         ) : undefined}
         techStack={projectTechStacks[projectKey]}
-        logoBlendMode={projectKey === 'apature' ? 'normal' : undefined}
+        logoBlendMode={projectKey === 'apature' || projectKey === 'hexmend' ? 'normal' : undefined}
         gradientColor={projectGradientColors[projectKey]}
         bgImage={projectBgImages[projectKey]}
         enableBackground={enableBackground}

@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react'
-import { DOMAIN_LABELS, TYPE_LABELS, projectBySlug, type LinkKind, type ProjectLink } from '../../data/projects'
+import { TYPE_LABELS, projectBySlug, type LinkKind, type ProjectLink } from '../../data/projects'
 import { projectWriteups } from '../../data/project-writeups'
-import { formatDateRange } from '../../data/format'
 import { posthog } from '../../lib/analytics'
 import { ProjectLogo } from '../../components/ui/project-logo'
 import { TechPill } from '../../components/ui/tech-pill'
@@ -24,20 +23,10 @@ const LINK_LABELS: Record<LinkKind, string> = {
   marketplace: 'GitHub Marketplace',
 }
 
-const CARD_STYLE = { background: '#F4F4F4', border: '1.5px solid rgba(6, 113, 164, 0.3)' }
 const BODY_TEXT = { color: '#374151', fontSize: 'clamp(1rem, 0.3vw + 0.9rem, 1.125rem)' }
 
 function sortLinks(links: ProjectLink[]) {
   return [...links].sort((a, b) => LINK_ORDER.indexOf(a.kind) - LINK_ORDER.indexOf(b.kind))
-}
-
-function MetaRow({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="py-3 first:pt-0 last:pb-0" style={{ borderTop: '1px solid rgba(6, 113, 164, 0.12)' }}>
-      <dt className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#7A7D72' }}>{label}</dt>
-      <dd className="mt-1 font-medium" style={{ color: '#111827' }}>{children}</dd>
-    </div>
-  )
 }
 
 export function ProjectDetailPage({ slug }: { slug: string }) {
@@ -55,25 +44,26 @@ export function ProjectDetailPage({ slug }: { slug: string }) {
 
   return (
     <article className="mx-auto max-w-7xl px-6">
-      <ProjectBreadcrumb title={project.title} backHref={backHref} />
+      {/* Single centered column for the write-up; "More projects" below uses the full width. */}
+      <div className="mx-auto max-w-4xl">
+        <ProjectBreadcrumb title={project.title} backHref={backHref} />
 
-      <div
-        className="relative mt-8 flex items-center justify-center overflow-hidden rounded-xl"
-        style={{ backgroundColor: color, height: 'clamp(10rem, 22vw, 18rem)' }}
-      >
-        {project.brand.bgImage ? (
-          <img src={project.brand.bgImage} alt="" fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: project.brand.bgPosition }} />
-        ) : (
-          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.22) 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
-        )}
-        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${color}73 0%, ${color}D9 60%, ${color}FF 100%)` }} />
-        <div className="relative" style={{ mixBlendMode: project.logo?.blend ?? 'normal' }}>
-          <ProjectLogo project={project} variant="hero" />
+        <div
+          className="relative mt-8 flex items-center justify-center overflow-hidden rounded-xl"
+          style={{ backgroundColor: color, height: 'clamp(10rem, 22vw, 16rem)' }}
+        >
+          {project.brand.bgImage ? (
+            <img src={project.brand.bgImage} alt="" fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: project.brand.bgPosition }} />
+          ) : (
+            <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.22) 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
+          )}
+          <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${color}73 0%, ${color}D9 60%, ${color}FF 100%)` }} />
+          <div className="relative" style={{ mixBlendMode: project.logo?.blend ?? 'normal' }}>
+            <ProjectLogo project={project} variant="hero" />
+          </div>
         </div>
-      </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-x-14">
-        <header className="min-w-0 lg:col-start-1 lg:row-start-1">
+        <header className="mt-10">
           <span
             className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium"
             style={{ background: 'rgba(6, 113, 164, 0.08)', color: '#0671A4', border: '1px solid rgba(6, 113, 164, 0.15)' }}
@@ -111,38 +101,7 @@ export function ProjectDetailPage({ slug }: { slug: string }) {
           )}
         </header>
 
-        <aside className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
-          <div className="rounded-xl p-6 lg:sticky lg:top-24" style={CARD_STYLE}>
-            <dl>
-              <MetaRow label="Type">{TYPE_LABELS[project.type]}</MetaRow>
-              {project.event && (
-                <MetaRow label="Event">
-                  {project.event.url ? (
-                    <a href={project.event.url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4" style={{ color: '#0671A4' }}>
-                      {project.event.name}
-                    </a>
-                  ) : project.event.name}
-                </MetaRow>
-              )}
-              {project.teamSize && <MetaRow label="Team">{project.teamSize} people</MetaRow>}
-              <MetaRow label="Role">{project.role}</MetaRow>
-              <MetaRow label="Timeline">{formatDateRange(project.start, project.end)}</MetaRow>
-              {project.domains.length > 0 && (
-                <MetaRow label="Domains">
-                  <span className="flex flex-wrap gap-x-3 gap-y-1">
-                    {project.domains.map((d) => (
-                      <a key={d} href={`/projects/?domain=${d}`} className="underline underline-offset-4 transition-opacity hover:opacity-70" style={{ color: '#0671A4' }}>
-                        {DOMAIN_LABELS[d]}
-                      </a>
-                    ))}
-                  </span>
-                </MetaRow>
-              )}
-            </dl>
-          </div>
-        </aside>
-
-        <div className="min-w-0 lg:col-start-1 lg:row-start-2">
+        <div className="mt-10">
           {project.media.map((media) => (
             <div key={media.src} className="mb-10">
               <ProjectMedia media={media} />

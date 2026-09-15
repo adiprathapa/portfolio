@@ -290,7 +290,7 @@ export const projects: Project[] = [
       { kind: 'video', href: 'https://www.youtube.com/watch?v=Afx3NxmBlJA', label: 'Watch the demo' },
     ],
     media: [
-      { kind: 'image', src: '/spectre-poster.webp', alt: 'Two silhouettes fighting in the Spectre spectator overlay', url: 'youtube.com/watch?v=Afx3NxmBlJA' },
+      { kind: 'image', src: '/spectre-overlay.webp', alt: 'The Spectre spectator overlay mid-round: health bars, round timer, and both fighters as glowing silhouettes', url: 'youtube.com/watch?v=Afx3NxmBlJA' },
     ],
     logo: whiteLogo('/logo-claude-icon.png', 'Claude Builders Club', ORG_MARK),
     brand: { color: '#DA7756', bgImage: '/pexels-dichupdi-35168139.webp' },

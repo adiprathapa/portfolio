@@ -1,52 +1,8 @@
 import { Section } from './ui/section'
 import { GradientText } from './ui/gradient-text'
-
-type Contribution = {
-  id: string
-  name: string
-  logoSrc: string
-  description: string
-  prListUrl: string
-}
-
-const items: Contribution[] = [
-  {
-    id: 'kiwix',
-    name: 'Kiwix / openZIM',
-    logoSrc: '/oss-logo-kiwix.webp',
-    description:
-      'Shipped system wide dark mode, translation handling, and internationalized dialogs in the freeCodeCamp offliner.',
-    prListUrl:
-      'https://github.com/search?q=is%3Apr+author%3Aadiprathapa+org%3Aopenzim&type=pullrequests',
-  },
-  {
-    id: 'kubeflow',
-    name: 'Kubeflow',
-    logoSrc: '/oss-logo-kubeflow.webp',
-    description:
-      'Merged reserved MPI environment variable validation in the Trainer runtimes; two Python SDK fixes are in review.',
-    prListUrl:
-      'https://github.com/search?q=is%3Apr+author%3Aadiprathapa+org%3Akubeflow&type=pullrequests',
-  },
-  {
-    id: 'jenkins',
-    name: 'Jenkins',
-    logoSrc: '/oss-logo-jenkins.webp',
-    description:
-      'Merged a custom update center URL flag in the plugin installation manager; AI chatbot and credentials plugin PRs are in review.',
-    prListUrl:
-      'https://github.com/search?q=is%3Apr+author%3Aadiprathapa+org%3Ajenkinsci&type=pullrequests',
-  },
-  {
-    id: 'cockroachdb',
-    name: 'CockroachDB',
-    logoSrc: '/oss-logo-cockroachdb.webp',
-    description:
-      'Submitted a jsonpath scanner fix aligning trailing junk errors with Postgres diagnostics.',
-    prListUrl:
-      'https://github.com/search?q=is%3Apr+author%3Aadiprathapa+org%3Acockroachdb&type=pullrequests',
-  },
-]
+import { ArrowIcon } from './ui/icons'
+import { contributions } from '../data/openSource'
+import { COLOR, SURFACE, TEXT } from '../lib/theme'
 
 export function OpenSource() {
   return (
@@ -54,23 +10,19 @@ export function OpenSource() {
       id="open-source"
       className="open-source-section relative"
       style={{
-        background: '#f4f4f4',
+        background: SURFACE.page,
         paddingTop: 'clamp(2.5rem, 6vh, 5rem)',
         paddingBottom: 'clamp(7rem, 14vh, 11rem)',
       }}
     >
       <div className="mx-auto max-w-3xl text-center">
-        <GradientText
-          as="h2"
-          className="font-normal"
-          style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}
-        >
+        <GradientText as="h2" className="font-normal" style={{ fontSize: TEXT.h2 }}>
           Open Source Contributions
         </GradientText>
       </div>
 
       <div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-12">
-        {items.map((item) => (
+        {contributions.map((item) => (
           <div key={item.id} className="flex flex-col">
             <img
               src={item.logoSrc}
@@ -80,33 +32,15 @@ export function OpenSource() {
               loading="lazy"
               decoding="async"
               className="h-12 w-12 object-contain"
-              style={{
-                filter:
-                  item.id === 'kubeflow'
-                    ? 'grayscale(1)'
-                    : item.id === 'kiwix'
-                      ? 'grayscale(1) brightness(1.4) contrast(0.6)'
-                      : 'grayscale(1) contrast(1.4)',
-                opacity: 0.85,
-                mixBlendMode: 'multiply',
-              }}
+              style={{ filter: item.logoFilter, opacity: 0.85, mixBlendMode: 'multiply' }}
             />
             <h3
               className="mt-7 font-medium leading-tight"
-              style={{
-                color: '#111827',
-                fontSize: 'clamp(1.125rem, 0.6vw + 0.85rem, 1.375rem)',
-              }}
+              style={{ color: COLOR.heading, fontSize: 'clamp(1.125rem, 0.6vw + 0.85rem, 1.375rem)' }}
             >
               {item.name}
             </h3>
-            <p
-              className="mt-3 leading-relaxed"
-              style={{
-                color: '#515850',
-                fontSize: 'clamp(1rem, 0.4vw + 0.8rem, 1.125rem)',
-              }}
-            >
+            <p className="mt-3 leading-relaxed" style={{ color: COLOR.prose, fontSize: 'clamp(1rem, 0.4vw + 0.8rem, 1.125rem)' }}>
               {item.description}
             </p>
             <a
@@ -114,27 +48,10 @@ export function OpenSource() {
               target="_blank"
               rel="noopener noreferrer"
               className="group mt-auto inline-flex items-center gap-2 self-start pt-6 font-medium transition-opacity hover:opacity-70"
-              style={{
-                color: '#0671A4',
-                fontSize: 'clamp(1.0625rem, 0.4vw + 0.9rem, 1.1875rem)',
-              }}
+              style={{ color: COLOR.primary, fontSize: 'clamp(1.0625rem, 0.4vw + 0.9rem, 1.1875rem)' }}
             >
               <span>View PRs</span>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path className="transition-opacity group-hover:opacity-0" d="M8 5l7 7-7 7" />
-                <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M5 12h14" />
-                <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M12 5l7 7-7 7" />
-              </svg>
+              <ArrowIcon size={16} />
             </a>
           </div>
         ))}

@@ -1,12 +1,16 @@
-import { useRef, useState, useEffect, useLayoutEffect } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { ProjectStackCard } from './ui/project-stack-card'
+import { ArrowIcon } from './ui/icons'
 import { Experience } from './Experience'
 import { Education } from './Education'
 import { featuredProjects, type Project } from '../data/projects'
 import { stackCardY } from '../lib/projectStack'
 import { posthog } from '../lib/analytics'
 import { warmDocument } from '../lib/prefetch'
+import { clamp, rootFontSize } from '../lib/math'
+import { COLOR, DESKTOP_BP, PRIMARY, SURFACE } from '../lib/theme'
+import { useIsMobile } from '../hooks/useMediaQuery'
 
 const cardCount = featuredProjects.length
 
@@ -68,46 +72,50 @@ function readStickyPtPx() {
   const raw = getComputedStyle(document.documentElement)
     .getPropertyValue('--project-sticky-pt').trim()
   if (raw.endsWith('vh')) return window.innerHeight * (parseFloat(raw) / 100)
-  if (raw.endsWith('rem')) {
-    const rootFs = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
-    return parseFloat(raw) * rootFs
-  }
+  if (raw.endsWith('rem')) return parseFloat(raw) * rootFontSize()
   return parseFloat(raw) || 0
+}
+
+/** Gap between the last card and the Experience heading that follows it. */
+const EXPERIENCE_GAP = 96
+const FALLBACK_EXPERIENCE_H = 550
+
+function fallbackCardHeight(mobile: boolean) {
+  return mobile ? clamp(window.innerHeight * 0.52, 360, 470) : 500
+}
+
+/** Vertical distance between consecutive cards in the stack. */
+function cardSpacing(cardH: number, mobile: boolean) {
+  return mobile ? cardH + Math.round(cardH * 0.15) : cardH + 150
+}
+
+/** How far Experience extends past the viewport once the cards have landed. */
+function experienceOverflow(cardH: number, experienceH: number) {
+  return Math.max(0, readStickyPtPx() + cardH + EXPERIENCE_GAP + experienceH - window.innerHeight)
 }
 
 export function Projects({ onPlatformer, platformerActive = false }: { onPlatformer?: () => void; platformerActive?: boolean } = {}) {
   const containerRef = useRef<HTMLDivElement>(null)
   const cardHProbeRef = useRef<HTMLDivElement>(null)
   const experienceRef = useRef<HTMLDivElement>(null)
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024)
+  const isMobile = useIsMobile(true)
   const [activeCardIndex, setActiveCardIndex] = useState(0)
   const [sectionHeight, setSectionHeight] = useState('calc(100dvh + clamp(8rem, 20dvh, 12rem))')
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
 
-  // Size the sticky rail from the same travel distance used by the card
-  // animation. Experience should not be pulled upward before the last card is
-  // done; it naturally follows the rail with a small amount of breathing room.
+  // Size the sticky rail from the same travel distance the cards animate over,
+  // so Experience is never pulled up before the last card has landed.
   useLayoutEffect(() => {
     const compute = () => {
-      const vh = window.innerHeight
-      const mobile = window.innerWidth < 1024
-      const fallbackCardH = mobile ? Math.min(Math.max(vh * 0.52, 360), 470) : 500
-      const cardH = cardHProbeRef.current?.offsetHeight ?? fallbackCardH
-      const spacing = mobile ? cardH + Math.round(cardH * 0.15) : cardH + 150
-      const totalTravel = spacing * Math.max(0, cardCount - 1)
-      const stickyPt = readStickyPtPx()
-      const expH = experienceRef.current?.offsetHeight ?? 550
-      const expOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
-      setSectionHeight(`${Math.ceil(vh + totalTravel + expOverflow)}px`)
+      const mobile = window.innerWidth < DESKTOP_BP
+      const cardH = cardHProbeRef.current?.offsetHeight ?? fallbackCardHeight(mobile)
+      const travel = cardSpacing(cardH, mobile) * Math.max(0, cardCount - 1)
+      const experienceH = experienceRef.current?.offsetHeight ?? FALLBACK_EXPERIENCE_H
+      setSectionHeight(`${Math.ceil(window.innerHeight + travel + experienceOverflow(cardH, experienceH))}px`)
     }
     compute()
-    // iOS Safari fires resize on URL bar collapse; recomputing on every
-    // scroll-driven resize causes layout jerks. Only react to width changes.
+
+    // iOS Safari fires resize when the URL bar collapses; recomputing on those
+    // scroll-driven resizes causes layout jerks, so only width changes count.
     let lastWidth = window.innerWidth
     const onResize = () => {
       if (window.innerWidth === lastWidth) return
@@ -123,61 +131,56 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
       ro.disconnect()
     }
   }, [])
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  })
 
-  const vh = window.innerHeight
-  const cardH = cardHProbeRef.current?.offsetHeight ?? (isMobile ? Math.min(Math.max(vh * 0.52, 360), 470) : 500)
-  const spacing = isMobile ? cardH + Math.round(cardH * 0.15) : cardH + 150
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end end'] })
 
-  // Two-phase scroll: Phase 1 = card stacking, Phase 2 = scroll Experience
-  // into viewport. Both share the same sticky section so they stay in sync.
-  // Stagger scales proportionally so the stack visually matches desktop on
-  // mobile (same stagger/cardH ratio, 28/500 ≈ 5.6%) instead of taking a
-  // disproportionately larger fraction of the smaller mobile card.
+  // Recomputed on every render from live layout, which is what keeps the rail
+  // in step with the cards as fonts settle and media loads.
+  /* eslint-disable react-hooks/refs */
+  const cardH = cardHProbeRef.current?.offsetHeight ?? fallbackCardHeight(isMobile)
+  const experienceH = experienceRef.current?.offsetHeight ?? FALLBACK_EXPERIENCE_H
+
+  const spacing = cardSpacing(cardH, isMobile)
+  // Scale the stagger with the card so mobile matches desktop's 28/500 ratio
+  // instead of eating a disproportionate slice of the smaller card.
   const stagger = isMobile ? Math.max(14, Math.round(cardH * 0.056)) : 28
-  const expH = experienceRef.current?.offsetHeight ?? 550
-  const stickyPt = readStickyPtPx()
-  const experienceOverflow = Math.max(0, stickyPt + cardH + 96 + expH - vh)
-  const cardAnimationRail = Math.max(0, cardCount - 1) * spacing
-  const totalRail = cardAnimationRail + experienceOverflow
-  // Keep the card phase's input range non-empty even with a single card.
-  const cardAnimationEnd = Math.min(Math.max(totalRail > 0 ? cardAnimationRail / totalRail : 1, 0.0001), 0.9999)
+  const overflow = experienceOverflow(cardH, experienceH)
+  /* eslint-enable react-hooks/refs */
 
-  // Phase 1: remap scrollYProgress [0, cardAnimationEnd] → [0, 1] for cards
+  // Two-phase scroll over one sticky section: phase 1 stacks the cards, phase 2
+  // lifts the whole group so Experience fills the viewport.
+  const cardRail = Math.max(0, cardCount - 1) * spacing
+  const totalRail = cardRail + overflow
+  // Keep phase 1's input range non-empty even with a single card.
+  const cardAnimationEnd = clamp(totalRail > 0 ? cardRail / totalRail : 1, 0.0001, 0.9999)
+
   const cardProgress = useTransform(scrollYProgress, [0, cardAnimationEnd], [0, 1])
+  const lastY = useTransform(cardProgress, (p) => stackCardY(cardCount - 1, p, cardCount, spacing, stagger))
+  const phase2Offset = useTransform(scrollYProgress, [cardAnimationEnd, 1], [0, -overflow])
+  // Both ride the phase-2 wrapper, so their gap to the last card stays constant.
+  const experienceInsideY = useTransform(lastY, (y: number) => y + cardH + EXPERIENCE_GAP)
+  const seeAllY = useTransform(lastY, (y: number) => y + cardH + 24)
+
   const [platformerVisible, setPlatformerVisible] = useState(true)
   const [platformerDismissed, setPlatformerDismissed] = useState(false)
   useEffect(() => {
     if (!platformerActive) setPlatformerDismissed(false)
   }, [platformerActive])
+
   useMotionValueEvent(cardProgress, 'change', (latest) => {
-    const nextIndex = Math.max(0, Math.min(cardCount - 1, Math.floor(latest * (cardCount - 1) + 0.001)))
-    setActiveCardIndex((current) => current === nextIndex ? current : nextIndex)
+    const nextIndex = clamp(Math.floor(latest * (cardCount - 1) + 0.001), 0, cardCount - 1)
+    setActiveCardIndex((current) => (current === nextIndex ? current : nextIndex))
     setPlatformerVisible((current) => {
       const next = latest < 0.012
       return current === next ? current : next
     })
   })
 
-  const lastY = useTransform(cardProgress, (p) => stackCardY(cardCount - 1, p, cardCount, spacing, stagger))
-
-  // Phase 2: after cards finish, scroll everything up so Experience fills viewport
-  const phase2Offset = useTransform(scrollYProgress,
-    [cardAnimationEnd, 1],
-    [0, -experienceOverflow])
-
-  // Experience Y relative to the phase2 wrapper (no stickyPt — the wrapper
-  // is inside the section's padded area, so stickyPt is already accounted for)
-  const experienceInsideY = useTransform(lastY, (y: number) => y + cardH + 96)
-  // The "See all projects" button sits in the 96px gap under the last card.
-  const seeAllY = useTransform(lastY, (y: number) => y + cardH + 24)
+  const warmProjects = () => warmDocument('/projects/')
 
   return (
     <>
-    <div id="projects-rail" ref={containerRef} className="relative" style={{ height: sectionHeight, zIndex: 5, ...(isMobile ? {} : { backgroundColor: '#E4EFF5' }) }}>
+    <div id="projects-rail" ref={containerRef} className="relative" style={{ height: sectionHeight, zIndex: 5, ...(isMobile ? {} : { backgroundColor: SURFACE.tint }) }}>
       <section id="projects" className="sticky top-16 h-[calc(100vh-4rem)] lg:top-0 lg:h-screen pt-[var(--project-sticky-pt)] px-6" style={{ clipPath: `inset(-200px 0px ${isMobile ? '-420px' : '-600px'} 0px)` }}>
         {onPlatformer && (
           <div
@@ -192,7 +195,7 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
               type="button"
               onClick={(e) => { setPlatformerDismissed(true); onPlatformer(); (e.currentTarget as HTMLButtonElement).blur() }}
               className="pointer-events-auto flex items-center gap-2 text-[10px] lg:text-sm bg-transparent border-0 p-0 cursor-pointer select-none"
-              style={{ color: 'rgba(6, 113, 164, 0.75)' }}
+              style={{ color: PRIMARY.a75 }}
               animate={{ opacity: platformerVisible && !platformerDismissed ? 1 : 0 }}
               transition={{ duration: 0.25 }}
             >
@@ -240,21 +243,17 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
             <a
               href="/projects/"
               className="group pointer-events-auto inline-flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-[15px] font-medium transition-colors lg:text-base bg-[#0671A4] hover:bg-[#055a84]"
-              style={{ color: '#FFFFFF', border: '2px solid transparent' }}
-              onMouseEnter={() => warmDocument('/projects/')}
-              onFocus={() => warmDocument('/projects/')}
-              onTouchStart={() => warmDocument('/projects/')}
+              style={{ color: COLOR.white, border: '2px solid transparent' }}
+              onMouseEnter={warmProjects}
+              onFocus={warmProjects}
+              onTouchStart={warmProjects}
               onClick={() => posthog?.capture('projects_index_link_clicked', { source: 'home_stack_button' })}
             >
               <span>See all projects</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path className="transition-opacity group-hover:opacity-0" d="M8 5l7 7-7 7" />
-                <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M5 12h14" />
-                <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M12 5l7 7-7 7" />
-              </svg>
+              <ArrowIcon />
             </a>
           </motion.div>
-          {/* Experience follows the last card — same wrapper = constant gap */}
+          {/* Experience follows the last card; the shared wrapper keeps the gap constant. */}
           <motion.div
             style={{
               position: 'absolute',
@@ -284,7 +283,7 @@ export function Projects({ onPlatformer, platformerActive = false }: { onPlatfor
         />
       </section>
     </div>
-    <div className="relative" style={{ backgroundColor: '#E4EFF5' }}>
+    <div className="relative" style={{ backgroundColor: SURFACE.tint }}>
       <Education />
     </div>
     </>

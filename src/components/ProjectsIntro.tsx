@@ -1,387 +1,150 @@
+import { useCallback, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ProjectMarquee } from './about/ProjectMarquee'
+import { GithubHeatmap } from './GithubHeatmap'
+import { MemoryMatch } from './games/MemoryMatch'
+import { ConveyorMatchGame } from './games/ConveyorMatchGame'
+import { ArrowIcon, CloseIcon } from './ui/icons'
+import { projects } from '../data/projects'
 import { posthog } from '../lib/analytics'
 import { warmDocument } from '../lib/prefetch'
-import { projects } from '../data/projects'
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ProjectMarquee } from './About'
-import { GithubHeatmap } from './GithubHeatmap'
-import { MemoryMatch, TECH_POOL, buildDeck, FlipCard, formatTime } from './MemoryMatch'
-import type { TechCard } from './MemoryMatch'
-import { RippleButton } from './ui/ripple-button'
+import { COLOR, PRIMARY, SURFACE, TEXT } from '../lib/theme'
+import { useInView } from '../hooks/useInView'
 
-const CONVEYOR_GAME_CSS = `
-@keyframes cg-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@keyframes cg-right {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
-}
-`
+const FLIP_TRANSITION = { duration: 0.6, ease: [0.4, 0, 0.2, 1] } as const
+/** Half the flip, so each face swaps while it is edge-on and invisible. */
+const FACE_SWAP = { duration: 0.08, delay: 0.26 } as const
 
-function ConveyorMatchGame({ onClose }: { onClose: () => void }) {
-  const [cards, setCards] = useState<TechCard[]>(() => buildDeck(TECH_POOL.length))
-  const [flipped, setFlipped] = useState<Set<number>>(new Set())
-  const [matched, setMatched] = useState<Set<number>>(new Set())
-  const [selected, setSelected] = useState<number[]>([])
-  const [moves, setMoves] = useState(0)
-  const [startTime, setStartTime] = useState<number | null>(null)
-  const [elapsed, setElapsed] = useState(0)
-  const [gameOver, setGameOver] = useState(false)
-  const [paused, setPaused] = useState(false)
-  const canHoverRef = useRef(false)
-  const lockRef = useRef(false)
-
-  useEffect(() => {
-    const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const update = () => { canHoverRef.current = mql.matches }
-    update()
-    mql.addEventListener('change', update)
-    return () => mql.removeEventListener('change', update)
-  }, [])
-
-  useEffect(() => {
-    if (!startTime || gameOver) return
-    const id = setInterval(() => setElapsed(Date.now() - startTime), 200)
-    return () => clearInterval(id)
-  }, [startTime, gameOver])
-
-  useEffect(() => {
-    if (cards.length > 0 && matched.size === cards.length) setGameOver(true)
-  }, [matched, cards.length])
-
-  const handleFlip = useCallback((id: number) => {
-    if (lockRef.current) return
-    if (flipped.has(id) || matched.has(id)) return
-    if (!startTime) setStartTime(Date.now())
-
-    const newSelected = [...selected, id]
-    setFlipped(prev => new Set([...prev, id]))
-    setSelected(newSelected)
-
-    if (newSelected.length === 2) {
-      setMoves(m => m + 1)
-      lockRef.current = true
-      const [firstId, secondId] = newSelected
-      const first = cards.find(c => c.id === firstId)!
-      const second = cards.find(c => c.id === secondId)!
-
-      if (first.pairIndex === second.pairIndex) {
-        setTimeout(() => {
-          setMatched(prev => new Set([...prev, firstId, secondId]))
-          setSelected([])
-          lockRef.current = false
-        }, 500)
-      } else {
-        setTimeout(() => {
-          setFlipped(prev => {
-            const next = new Set(prev)
-            next.delete(firstId)
-            next.delete(secondId)
-            return next
-          })
-          setSelected([])
-          lockRef.current = false
-        }, 800)
-      }
-    }
-  }, [selected, flipped, matched, cards, startTime])
-
-  const restart = () => {
-    setCards(buildDeck(TECH_POOL.length))
-    setFlipped(new Set())
-    setMatched(new Set())
-    setSelected([])
-    setMoves(0)
-    setStartTime(null)
-    setElapsed(0)
-    setGameOver(false)
-    setPaused(false)
-    lockRef.current = false
-  }
-
-  const row1 = cards.slice(0, Math.ceil(cards.length / 2))
-  const row2 = cards.slice(Math.ceil(cards.length / 2))
-
-  const cardSize = 'w-[var(--conveyor-card-size)] h-[var(--conveyor-card-size)]'
-
+function MatchingIcon() {
+  const squares = [
+    { x: 2, y: 2, delay: 0 },
+    { x: 14, y: 2, delay: 0.3 },
+    { x: 14, y: 14, delay: 0.6 },
+    { x: 2, y: 14, delay: 0.9 },
+  ]
   return (
-    <div className="h-full flex flex-col">
-      <style>{CONVEYOR_GAME_CSS}</style>
+    <svg className="size-3 lg:size-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {squares.map((s) => (
+        <motion.rect
+          key={`${s.x}-${s.y}`}
+          x={s.x}
+          y={s.y}
+          width="8"
+          height="8"
+          rx="1"
+          animate={{ fillOpacity: [0, 1, 0] }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut', delay: s.delay }}
+        />
+      ))}
+    </svg>
+  )
+}
 
-      {/* Stats bar */}
-      <div className="mx-auto max-w-7xl px-6 mb-2 flex items-center gap-3">
-        <span className="text-sm font-normal" style={{ color: '#0671A4' }}>Very Hard</span>
-        <span className="text-xs font-mono" style={{ color: 'rgba(6, 113, 164, 0.5)' }}>
-          {formatTime(elapsed)} &middot; {moves} {moves === 1 ? 'move' : 'moves'} &middot; {matched.size / 2}/{cards.length / 2}
-        </span>
-      </div>
+/** One label of the marquee/game toggle, cross-fading with the other. */
+function ToggleLabel({ id, icon, children }: { id: string; icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <motion.span
+      key={id}
+      layout
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -4 }}
+      transition={{ duration: 0.18, ease: 'easeOut' }}
+      className="flex items-center gap-2 whitespace-nowrap"
+    >
+      {icon}
+      {children}
+    </motion.span>
+  )
+}
 
-      {gameOver ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center justify-center py-16 md:py-20"
-        >
-          <p className="font-normal mb-1" style={{ color: '#0671A4', fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>Nice!</p>
-          <p className="text-sm mb-5" style={{ color: 'rgba(6, 113, 164, 0.5)' }}>
-            Very Hard &middot; {formatTime(elapsed)} &middot; {moves} moves
-          </p>
-          <div className="flex gap-3">
-            <RippleButton
-              onClick={restart}
-              className="px-5 py-2 rounded-full text-sm font-medium text-white cursor-pointer"
-              rippleColor="#38BDF8"
-              style={{
-                backgroundColor: '#0671A4',
-                border: '2px solid transparent',
-                boxShadow: '0 2px 8px rgba(6, 113, 164, 0.12)',
-                transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#055a84' }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0671A4' }}
-            >
-              Play Again
-            </RippleButton>
-            <RippleButton
-              onClick={onClose}
-              className="px-5 py-2 rounded-full text-sm font-normal cursor-pointer"
-              rippleColor="#38BDF8"
-              style={{
-                color: '#0671A4',
-                backgroundColor: 'transparent',
-                border: '2px solid rgba(6, 113, 164, 0.3)',
-                transition: 'background-color 0.3s, border-color 0.3s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(6, 113, 164, 0.06)'
-                e.currentTarget.style.borderColor = '#0671A4'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent'
-                e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.3)'
-              }}
-            >
-              Exit
-            </RippleButton>
-          </div>
-        </motion.div>
-      ) : (
-        <div
-          className="flex-1 flex flex-col justify-center space-y-2 md:space-y-3"
-          onMouseEnter={() => { if (canHoverRef.current) setPaused(true) }}
-          onMouseLeave={() => { if (canHoverRef.current) setPaused(false) }}
-        >
-          {/* Row 1 — scrolls left */}
-          <div className="conveyor-row-clip">
-            <div
-              className="flex gap-3 md:gap-4"
-              style={{
-                width: 'max-content',
-                animation: 'cg-left 60s linear infinite',
-                animationPlayState: paused ? 'paused' : 'running',
-              }}
-            >
-              {[...row1, ...row1].map((card, i) => (
-                <FlipCard
-                  key={`r1-${i}`}
-                  card={card}
-                  isFlipped={flipped.has(card.id) || matched.has(card.id)}
-                  isMatched={matched.has(card.id)}
-                  onFlip={() => handleFlip(card.id)}
-                  sizeClass={cardSize}
-                />
-              ))}
-            </div>
-          </div>
-          {/* Row 2 — scrolls right */}
-          <div className="conveyor-row-clip">
-            <div
-              className="flex gap-3 md:gap-4"
-              style={{
-                width: 'max-content',
-                animation: 'cg-right 65s linear infinite',
-                animationPlayState: paused ? 'paused' : 'running',
-              }}
-            >
-              {[...row2, ...row2].map((card, i) => (
-                <FlipCard
-                  key={`r2-${i}`}
-                  card={card}
-                  isFlipped={flipped.has(card.id) || matched.has(card.id)}
-                  isMatched={matched.has(card.id)}
-                  onFlip={() => handleFlip(card.id)}
-                  sizeClass={cardSize}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+/** Fades the marquee edges into the section background. */
+function EdgeFade({ side }: { side: 'left' | 'right' }) {
+  return (
+    <div
+      className={`pointer-events-none absolute inset-y-0 z-10 w-8 lg:w-32 ${side === 'left' ? 'left-0' : 'right-0'}`}
+      style={{ background: `linear-gradient(to ${side === 'left' ? 'right' : 'left'}, ${SURFACE.tint}, transparent)` }}
+    />
   )
 }
 
 export function ProjectsIntro() {
-  const [active, setActive] = useState(false)
-  const [heavyContentReady, setHeavyContentReady] = useState(false)
   const [showMemoryGame, setShowMemoryGame] = useState(false)
-  const [conveyorGameActive, setConveyorGameActive] = useState(false)
-  const [conveyorGameKey, setConveyorGameKey] = useState(0)
-  const [lockedHeight, setLockedHeight] = useState<number | undefined>(undefined)
-  const [unlockHeightAfterReturn, setUnlockHeightAfterReturn] = useState(false)
-  const ref = useRef<HTMLElement>(null)
-  const conveyorRef = useRef<HTMLDivElement>(null)
+  const [conveyorActive, setConveyorActive] = useState(false)
+  const [conveyorKey, setConveyorKey] = useState(0)
+  // The flip stage keeps the marquee's height while the game is showing, so
+  // the page below it does not jump when the two faces differ in height.
+  const [lockedHeight, setLockedHeight] = useState<number | undefined>()
+  const [unlockAfterReturn, setUnlockAfterReturn] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setActive(true) },
-      { threshold: 0.15 },
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
+  const marqueeActive = useInView(sectionRef, { threshold: 0.15, once: true })
+  const heavyContentReady = useInView(sectionRef, { once: true, rootMargin: '700px 0px', threshold: 0.01 })
+
+  const startConveyorGame = useCallback(() => {
+    if (stageRef.current) setLockedHeight(stageRef.current.offsetHeight)
+    setUnlockAfterReturn(false)
+    setShowMemoryGame(false)
+    setConveyorKey((key) => key + 1)
+    setConveyorActive(true)
+    setTimeout(() => stageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
   }, [])
 
-  useEffect(() => {
-    const el = ref.current
-    if (!el || heavyContentReady) return
+  const endConveyorGame = useCallback(() => {
+    setConveyorActive(false)
+    setUnlockAfterReturn(true)
+  }, [])
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHeavyContentReady(true)
-          observer.disconnect()
-        }
-      },
-      {
-        rootMargin: '700px 0px',
-        threshold: 0.01,
-      },
-    )
-
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [heavyContentReady])
-
-  const handleConveyorGame = () => {
-    // Capture current height before switching
-    if (conveyorRef.current) {
-      setLockedHeight(conveyorRef.current.offsetHeight)
-    }
-    setUnlockHeightAfterReturn(false)
-    setShowMemoryGame(false)
-    setConveyorGameKey((key) => key + 1)
-    setConveyorGameActive(true)
-    setTimeout(() => {
-      conveyorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }, 100)
-  }
-
-  const handleEndConveyorGame = () => {
-    setConveyorGameActive(false)
-    setUnlockHeightAfterReturn(true)
-  }
+  const warmProjects = () => warmDocument('/projects/')
 
   return (
-    <section ref={ref} id="projects-intro" className="pt-6 pb-0 lg:pt-12" style={{ background: '#E4EFF5' }}>
-      {/* Projects heading + description */}
+    <section ref={sectionRef} id="projects-intro" className="pb-0 pt-6 lg:pt-12" style={{ background: SURFACE.tint }}>
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex items-baseline justify-between gap-4">
-          <h2 className="font-normal gradient-text" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
-            Projects
-          </h2>
+          <h2 className="gradient-text font-normal" style={{ fontSize: TEXT.h2 }}>Projects</h2>
           <a
             href="/projects/"
             className="group inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-medium transition-opacity hover:opacity-70"
-            style={{ color: '#0671A4', fontSize: 'clamp(0.95rem, 0.4vw + 0.8rem, 1.125rem)' }}
-            onMouseEnter={() => warmDocument('/projects/')}
-            onFocus={() => warmDocument('/projects/')}
-            onTouchStart={() => warmDocument('/projects/')}
+            style={{ color: COLOR.primary, fontSize: TEXT.link }}
+            onMouseEnter={warmProjects}
+            onFocus={warmProjects}
+            onTouchStart={warmProjects}
             onClick={() => posthog?.capture('projects_index_link_clicked', { source: 'home_intro' })}
           >
             <span>See all {projects.length} projects</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path className="transition-opacity group-hover:opacity-0" d="M8 5l7 7-7 7" />
-              <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M5 12h14" />
-              <path className="opacity-0 transition-opacity group-hover:opacity-100" d="M12 5l7 7-7 7" />
-            </svg>
+            <ArrowIcon size={15} />
           </a>
         </div>
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mt-2">
-          <p className="text-black leading-relaxed max-w-4xl" style={{ fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}>
+
+        <div className="mt-2 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <p className="max-w-4xl leading-relaxed text-black" style={{ fontSize: TEXT.body }}>
             I'm a full stack developer who works mainly in Python and Java, with JavaScript
             and TypeScript on the frontend. I've worked with a range of machine learning and
             data science libraries including PyTorch, TensorFlow, scikit-learn, and pandas.
             My projects range from fintech applications to machine learning focused work to
             apps that combine both.
-            <span className="block mt-3" style={{ fontSize: 'clamp(0.875rem, 0.4vw + 0.7rem, 1.05rem)', color: '#4B5563' }}>
-              <span className="font-medium" style={{ color: '#0671A4' }}>Currently building:</span>{' '}
-              <a href="https://github.com/apatureai" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 decoration-[#0671A4]/40 hover:decoration-[#0671A4]">Apature</a>, a vision-model layer that reviews machine-generated UIs for design judgment, not pixels, and a
+            <span className="mt-3 block" style={{ fontSize: TEXT.bodySm, color: COLOR.body }}>
+              <span className="font-medium" style={{ color: COLOR.primary }}>Currently building:</span>{' '}
+              <a href="https://github.com/apatureai" target="_blank" rel="noopener noreferrer" className="underline decoration-[#0671A4]/40 underline-offset-4 hover:decoration-[#0671A4]">Apature</a>, a vision-model layer that reviews machine-generated UIs for design judgment, not pixels, and a
               preregistered study of what makes GNNs generalize to larger graphs.
             </span>
           </p>
+
           <motion.button
             layout
             transition={{ layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] } }}
-            onClick={() => { if (conveyorGameActive) { handleEndConveyorGame() } else { setShowMemoryGame(true) } }}
-            className="shrink-0 self-center lg:self-auto flex items-center gap-2 text-[10px] lg:text-sm bg-transparent border-0 p-0 cursor-pointer select-none"
-            style={{ color: 'rgba(6, 113, 164, 0.75)' }}
+            onClick={() => (conveyorActive ? endConveyorGame() : setShowMemoryGame(true))}
+            className="flex shrink-0 cursor-pointer select-none items-center gap-2 self-center border-0 bg-transparent p-0 text-[10px] lg:self-auto lg:text-sm"
+            style={{ color: PRIMARY.a75 }}
           >
             <AnimatePresence mode="popLayout" initial={false}>
-              {conveyorGameActive ? (
-                <motion.span
-                  key="end-game"
-                  layout
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.18, ease: 'easeOut' }}
-                  className="flex items-center gap-2 whitespace-nowrap"
-                >
-                  <svg className="size-3 lg:size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
+              {conveyorActive ? (
+                <ToggleLabel id="end-game" icon={<CloseIcon size={16} className="size-3 lg:size-4" strokeWidth={2} />}>
                   End Game
-                </motion.span>
+                </ToggleLabel>
               ) : (
-                <motion.span
-                  key="matching-game"
-                  layout
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.18, ease: 'easeOut' }}
-                  className="flex items-center gap-2 whitespace-nowrap"
-                >
-                  <svg className="size-3 lg:size-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    {[
-                      { x: 2, y: 2, delay: 0 },
-                      { x: 14, y: 2, delay: 0.3 },
-                      { x: 14, y: 14, delay: 0.6 },
-                      { x: 2, y: 14, delay: 0.9 },
-                    ].map((r) => (
-                      <motion.rect
-                        key={`${r.x}-${r.y}`}
-                        x={r.x}
-                        y={r.y}
-                        width="8"
-                        height="8"
-                        rx="1"
-                        animate={{ fillOpacity: [0, 1, 0] }}
-                        transition={{
-                          duration: 1.2,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                          delay: r.delay,
-                        }}
-                      />
-                    ))}
-                  </svg>
-                  Matching
-                </motion.span>
+                <ToggleLabel id="matching-game" icon={<MatchingIcon />}>Matching</ToggleLabel>
               )}
             </AnimatePresence>
           </motion.button>
@@ -390,91 +153,68 @@ export function ProjectsIntro() {
 
       <AnimatePresence>
         {showMemoryGame && (
-          <MemoryMatch
-            onClose={() => setShowMemoryGame(false)}
-            onConveyorGame={handleConveyorGame}
-          />
+          <MemoryMatch onClose={() => setShowMemoryGame(false)} onConveyorGame={startConveyorGame} />
         )}
       </AnimatePresence>
 
-      {/* Marquee conveyor / Conveyor game */}
+      {/* Marquee on the front face, conveyor game on the back. */}
       <div
-        ref={conveyorRef}
-        className="conveyor-flip-stage relative mt-6 lg:mt-10 -my-4"
+        ref={stageRef}
+        className="conveyor-flip-stage relative -my-4 mt-6 lg:mt-10"
         style={{
           perspective: 1200,
-          height: lockedHeight ? lockedHeight : undefined,
+          height: lockedHeight,
           overflowX: 'hidden',
-          overflowY: conveyorGameActive ? 'visible' : 'hidden',
+          overflowY: conveyorActive ? 'visible' : 'hidden',
         }}
       >
         <motion.div
           className="h-full"
-          animate={{ rotateX: conveyorGameActive ? 180 : 0 }}
-          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+          animate={{ rotateX: conveyorActive ? 180 : 0 }}
+          transition={FLIP_TRANSITION}
           style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
           onAnimationComplete={() => {
-            if (!conveyorGameActive && unlockHeightAfterReturn) {
+            if (!conveyorActive && unlockAfterReturn) {
               setLockedHeight(undefined)
-              setUnlockHeightAfterReturn(false)
+              setUnlockAfterReturn(false)
             }
           }}
         >
           <motion.div
             className="relative h-full"
-            animate={{ opacity: conveyorGameActive ? 0 : 1 }}
-            transition={{ duration: 0.08, delay: conveyorGameActive ? 0.26 : 0.26 }}
+            animate={{ opacity: conveyorActive ? 0 : 1 }}
+            transition={FACE_SWAP}
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
-              pointerEvents: conveyorGameActive ? 'none' : 'auto',
+              pointerEvents: conveyorActive ? 'none' : 'auto',
             }}
           >
-            {heavyContentReady ? (
-              <div className="project-marquee">
-                <ProjectMarquee active={active && !conveyorGameActive} />
-              </div>
-            ) : (
-              <div className="project-marquee" aria-hidden="true" />
-            )}
-            <div
-              className="pointer-events-none absolute inset-y-0 left-0 w-8 lg:w-32 z-10"
-              style={{ background: 'linear-gradient(to right, #E4EFF5, transparent)' }}
-            />
-            <div
-              className="pointer-events-none absolute inset-y-0 right-0 w-8 lg:w-32 z-10"
-              style={{ background: 'linear-gradient(to left, #E4EFF5, transparent)' }}
-            />
+            <div className="project-marquee" aria-hidden={!heavyContentReady}>
+              {heavyContentReady && <ProjectMarquee active={marqueeActive && !conveyorActive} />}
+            </div>
+            <EdgeFade side="left" />
+            <EdgeFade side="right" />
           </motion.div>
+
           <motion.div
             className="absolute inset-0 h-full"
-            animate={{ opacity: conveyorGameActive ? 1 : 0 }}
-            transition={{ duration: 0.08, delay: conveyorGameActive ? 0.26 : 0.26 }}
+            animate={{ opacity: conveyorActive ? 1 : 0 }}
+            transition={FACE_SWAP}
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
               transform: 'rotateX(180deg)',
-              pointerEvents: conveyorGameActive ? 'auto' : 'none',
+              pointerEvents: conveyorActive ? 'auto' : 'none',
             }}
           >
-            <div
-              style={{
-                height: '100%',
-              }}
-            >
-              <ConveyorMatchGame key={conveyorGameKey} onClose={handleEndConveyorGame} />
-            </div>
+            <ConveyorMatchGame key={conveyorKey} onClose={endConveyorGame} />
           </motion.div>
         </motion.div>
       </div>
 
-      {/* GitHub heatmap */}
       <div className="mt-4 lg:mt-8">
-        {heavyContentReady ? (
-          <GithubHeatmap />
-        ) : (
-          <div className="projects-intro-heatmap-placeholder" aria-hidden="true" />
-        )}
+        {heavyContentReady ? <GithubHeatmap /> : <div className="projects-intro-heatmap-placeholder" aria-hidden="true" />}
       </div>
     </section>
   )

@@ -1,557 +1,187 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { CSSProperties } from 'react'
 import { motion } from 'framer-motion'
 import { Section } from './ui/section'
-import { RippleButton } from './ui/ripple-button'
+import { PillButton } from './ui/pill-button'
+import { ArrowIcon, RestartIcon } from './ui/icons'
+import { useSnakeGame } from './github/useSnakeGame'
+import {
+  fetchHeatmap,
+  trimFutureDays,
+  buildMonthLabels,
+  GITHUB_USER,
+  HEATMAP_YEAR,
+  ROWS,
+  EMPTY_CELL,
+} from './github/contributions'
+import { COLOR, SURFACE, TEXT } from '../lib/theme'
+import { lerp } from '../lib/math'
+import { useIsDesktop } from '../hooks/useMediaQuery'
 
-/* ─── types ─── */
-type Phase = 'idle' | 'playing' | 'over'
-type Dir = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
-interface Pos { r: number; c: number }
-interface CachedHeatmap {
-  year: number
-  updatedAt: string
-  total: number
-  weeks: number[][]
+const LEVEL_COLORS = [SURFACE.panel, '#BAE0F5', '#7CCAF0', COLOR.accent, COLOR.primary]
+const SNAKE_HEAD = COLOR.ink
+const SNAKE_TAIL = '#38bdf8'
+
+/** Blends two `#rrggbb` strings for the snake's head-to-tail gradient. */
+function blendHex(from: string, to: string, t: number) {
+  const channel = (hex: string, offset: number) => parseInt(hex.slice(offset, offset + 2), 16)
+  const mix = (offset: number) => Math.round(lerp(channel(from, offset), channel(to, offset), t))
+  return `rgb(${mix(1)},${mix(3)},${mix(5)})`
 }
 
-/* ─── palette & constants ─── */
-const LEVELS = ['#EFF3F8', '#BAE0F5', '#7CCAF0', '#38BDF8', '#0671A4']
-const SNAKE_HD = '#0f172a'
-const SNAKE_TL = '#38bdf8'
-const ROWS = 7
-const USER = 'adiprathapa'
-const YEAR = new Date().getFullYear()
-const MO = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const BASE_MS = 135
-const MIN_MS = 72
-const ACCEL = 2
-const SWIPE_THRESHOLD = 22
+/** Cell and gap size, plus how many columns currently fit. */
+function useGridMetrics(wrapRef: React.RefObject<HTMLDivElement | null>) {
+  const isDesktop = useIsDesktop()
+  const cell = isDesktop ? 18 : 14
+  const gap = isDesktop ? 4 : 3
+  const [visibleCols, setVisibleCols] = useState<number | undefined>()
 
-/* ─── helpers ─── */
-function lerp(a: number, b: number, t: number) {
-  return Math.round(a + (b - a) * t)
-}
-function blendHex(h1: string, h2: string, t: number) {
-  const p = (h: string, o: number) => parseInt(h.slice(o, o + 2), 16)
-  return `rgb(${lerp(p(h1, 1), p(h2, 1), t)},${lerp(p(h1, 3), p(h2, 3), t)},${lerp(p(h1, 5), p(h2, 5), t)})`
-}
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const measure = () => setVisibleCols(Math.max(1, Math.floor((el.clientWidth + gap) / (cell + gap))))
+    measure()
+    window.addEventListener('resize', measure)
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => {
+      window.removeEventListener('resize', measure)
+      ro.disconnect()
+    }
+  }, [wrapRef, cell, gap])
 
-function localIsoDate(date: Date) {
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${date.getFullYear()}-${m}-${d}`
+  return { cell, gap, visibleCols, stride: cell + gap }
 }
 
-/** Blank out days after today and drop weeks that haven't started, so the
- *  graph ends at the current week even if the cached file covers the full year. */
-function trimFutureDays(weeks: number[][]): number[][] {
-  const now = new Date()
-  const jan1 = new Date(YEAR, 0, 1)
-  const today = new Date(YEAR, now.getMonth(), now.getDate())
-  // round, not floor: a DST shift makes the span an hour short of whole days
-  const todayIndex = jan1.getDay() + Math.round((today.getTime() - jan1.getTime()) / 86_400_000)
-  const lastWeek = Math.floor(todayIndex / 7)
-  return weeks.slice(0, lastWeek + 1).map((week, w) =>
-    week.map((level, d) => (w * 7 + d > todayIndex ? -1 : level)),
-  )
-}
-
-function buildWeeksFromContributions(days: { date: string; count: number; level: number }[]) {
-  const weeks: number[][] = []
-  let week: number[] = []
-  if (days.length) {
-    const dow = new Date(days[0].date + 'T00:00').getDay()
-    for (let i = 0; i < dow; i++) week.push(-1)
-  }
-  for (const day of days) {
-    week.push(Math.min(4, day.level ?? 0))
-    if (week.length === 7) { weeks.push(week); week = [] }
-  }
-  if (week.length) { while (week.length < 7) week.push(-1); weeks.push(week) }
-  return weeks
-}
-
-function isCachedHeatmap(value: unknown): value is CachedHeatmap {
-  if (!value || typeof value !== 'object') return false
-  const candidate = value as Partial<CachedHeatmap>
-  return (
-    candidate.year === YEAR &&
-    typeof candidate.updatedAt === 'string' &&
-    typeof candidate.total === 'number' &&
-    Array.isArray(candidate.weeks) &&
-    candidate.weeks.every((week) => Array.isArray(week))
-  )
-}
-
-/* ─── component ─── */
 export function GithubHeatmap() {
   const wrapRef = useRef<HTMLDivElement>(null)
+  const { cell, gap, visibleCols, stride } = useGridMetrics(wrapRef)
 
-  /* visual sizing (state drives render, refs let game loop read latest) */
-  const [cell, setCell] = useState(18)
-  const [gap, setGap] = useState(4)
-  const [visibleCols, setVisibleCols] = useState<number | undefined>()
-  const cellRef = useRef(18)
-  const gapRef = useRef(4)
-
-  /* contribution data */
-  const [grid, setGrid] = useState<number[][]>([])     // grid[week][day] = level 0-4 or -1
+  const [grid, setGrid] = useState<number[][]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [unavailable, setUnavailable] = useState(false)
+  const [linkHovered, setLinkHovered] = useState(false)
 
-  /* game */
-  const [phase, setPhase] = useState<Phase>('idle')
-  const [score, setScore] = useState(0)
-  const [best, setBest] = useState(0)
-  const [gameStart, setGameStart] = useState(0)            // first grid week shown while playing
-  const [, bump] = useState(0)                          // render trigger for non-food ticks
-
-  const gridRef    = useRef<number[][]>([])              // live game grid
-  const origRef    = useRef<number[][]>([])              // pristine copy for resets
-  const snakeRef   = useRef<Pos[]>([])
-  const dirRef     = useRef<Dir>('RIGHT')
-  const nextDirRef = useRef<Dir>('RIGHT')
-  const phaseRef   = useRef<Phase>('idle')
-  const scoreRef   = useRef(0)
-  const speedRef   = useRef(BASE_MS)
-  const timerRef   = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
-  const gameColsRef = useRef(0)
-  const foodRef    = useRef(0)
-  const touchRef   = useRef<{ x: number; y: number } | undefined>(undefined)
-  const [linkHov, setLinkHov] = useState(false)
-
-  /* ═══════════════════════════════ data fetch ═══════════════════════════════ */
   useEffect(() => {
     let cancelled = false
-    const applyHeatmap = (fullYear: number[][], nextTotal: number) => {
-      const weeks = trimFutureDays(fullYear)
-      origRef.current = weeks.map(w => [...w])
-      gridRef.current = weeks.map(w => [...w])
-      setGrid(weeks)
-      setTotal(nextTotal)
-      setLoading(false)
-    }
-
-    ;(async () => {
-      try {
-        const cachedResponse = await fetch('/github-heatmap.json')
-        if (cachedResponse.ok) {
-          const cached = await cachedResponse.json()
-          if (isCachedHeatmap(cached)) {
-            if (cancelled) return
-            applyHeatmap(cached.weeks, cached.total)
-            return
-          }
-        }
-
-        const res = await fetch(
-          `https://github-contributions-api.jogruber.de/v4/${USER}?y=${YEAR}`,
-        )
-        if (!res.ok) throw 0
-        const json = await res.json()
-        const today = localIsoDate(new Date())
-        const days: { date: string; count: number; level: number }[] =
-          (json.contributions ?? []).filter((d: { date?: string }) =>
-            !!d.date && d.date.startsWith(`${YEAR}`) && d.date <= today,
-          )
-        days.sort((a, b) => a.date.localeCompare(b.date))
-
-        const weeks = buildWeeksFromContributions(days)
-        const tot = days.reduce((sum, day) => sum + day.count, 0)
+    fetchHeatmap()
+      .then(({ weeks, total: nextTotal }) => {
         if (cancelled) return
-
-        applyHeatmap(weeks, tot)
-      } catch {
+        setGrid(trimFutureDays(weeks))
+        setTotal(nextTotal)
+        setLoading(false)
+      })
+      .catch(() => {
         if (cancelled) return
         // Hide the graph rather than showing made-up activity.
         setUnavailable(true)
         setLoading(false)
-      }
-    })()
+      })
     return () => { cancelled = true }
   }, [])
 
-  /* ══════════════════════════════ responsive ════════════════════════════════ */
-  useEffect(() => {
-    const calc = () => {
-      const mob = window.innerWidth < 1024
-      const sz = mob ? 14 : 18
-      const g = mob ? 3 : 4
-      setCell(sz); setGap(g)
-      cellRef.current = sz; gapRef.current = g
-      if (wrapRef.current) {
-        const avail = wrapRef.current.clientWidth
-        setVisibleCols(Math.max(1, Math.floor((avail + g) / (sz + g))))
-      }
-    }
-    calc()
-    window.addEventListener('resize', calc)
-    const ro = new ResizeObserver(calc)
-    if (wrapRef.current) ro.observe(wrapRef.current)
-    return () => { window.removeEventListener('resize', calc); ro.disconnect() }
-  }, [])
+  const gameColumns = useCallback(
+    () => Math.floor(((wrapRef.current?.clientWidth ?? 800) + gap) / stride),
+    [gap, stride],
+  )
+  const game = useSnakeGame({ source: grid, columns: gameColumns })
+  const monthLabels = useMemo(() => buildMonthLabels(grid), [grid])
 
-  /* ═══════════════════════════ month labels ═════════════════════════════════ */
-  const monthLabels = useMemo(() => {
-    if (!grid.length) return []
-    const dow0 = new Date(YEAR, 0, 1).getDay()
-    const out: { label: string; col: number }[] = []
-    let prev = -1
-    for (let w = 0; w < grid.length; w++) {
-      const fi = grid[w].findIndex(v => v >= 0)
-      if (fi < 0) continue
-      const dt = new Date(YEAR, 0, 1 + w * 7 + fi - dow0)
-      const m = dt.getMonth()
-      if (m !== prev) { out.push({ label: MO[m], col: w }); prev = m }
-    }
-    return out
-  }, [grid])
+  const isGame = game.phase !== 'idle'
+  const idleStartCol = Math.max(0, grid.length - (visibleCols ?? grid.length))
+  const displayGrid = isGame ? game.liveGrid : grid.slice(idleStartCol)
+  const colOffset = isGame ? game.startCol : idleStartCol
 
-  /* ═══════════════════════════ game tick ════════════════════════════════════ */
-  const stepRef = useRef<() => void>(() => {})
-  stepRef.current = () => {
-    if (phaseRef.current !== 'playing') return
-    const g = gridRef.current
-    const sn = snakeRef.current
-    const cols = gameColsRef.current
-
-    dirRef.current = nextDirRef.current
-    const head = sn[0]
-    let nr = head.r
-    let nc = head.c
-    const advance = () => {
-      if (dirRef.current === 'UP') nr--
-      else if (dirRef.current === 'DOWN') nr++
-      else if (dirRef.current === 'LEFT') nc--
-      else nc++
-
-      if (nr < 0) nr = ROWS - 1
-      if (nr >= ROWS) nr = 0
-      if (nc < 0) nc = cols - 1
-      if (nc >= cols) nc = 0
-    }
-
-    advance()
-    // Calendar padding cells are visual blanks, not playable squares. Skip them
-    // in the current direction so they behave like part of the wrapped edge.
-    let skipped = 0
-    while (g[nc]?.[nr] === -1 && skipped < ROWS * cols) {
-      advance()
-      skipped++
-    }
-
-    const cellVal = g[nc]?.[nr]
-    const willEat = cellVal !== undefined && cellVal > 0
-    const hitSelf = sn.some(
-      (s, i) => s.r === nr && s.c === nc && (willEat || i < sn.length - 1),
-    )
-    if (cellVal === undefined || hitSelf) {
-      phaseRef.current = 'over'; setPhase('over')
-      if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = undefined }
-      setBest(b => Math.max(b, scoreRef.current))
-      return
-    }
-
-    sn.unshift({ r: nr, c: nc })
-
-    if (willEat) {
-      scoreRef.current++; setScore(scoreRef.current)
-      g[nc][nr] = 0
-      foodRef.current--
-      if (foodRef.current <= 0) {
-        // ate every contribution — you win
-        phaseRef.current = 'over'; setPhase('over')
-        if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = undefined }
-        setBest(b => Math.max(b, scoreRef.current))
-        return
-      }
-      if (speedRef.current > MIN_MS) {
-        speedRef.current -= ACCEL
-        if (timerRef.current) clearInterval(timerRef.current)
-        timerRef.current = setInterval(() => stepRef.current(), speedRef.current)
-      }
-    } else {
-      sn.pop()
-      bump(t => t + 1) // force re-render when score didn't change
-    }
-  }
-
-  /* ═══════════════════════════ start / exit ═════════════════════════════════ */
-  const play = useCallback(() => {
-    // visible columns = game area, taken from the most recent weeks
-    const cw = wrapRef.current?.clientWidth ?? 800
-    const stride = cellRef.current + gapRef.current
-    const cols = Math.min(origRef.current.length, Math.floor((cw + gapRef.current) / stride))
-    const start = origRef.current.length - cols
-    setGameStart(start)
-    gridRef.current = origRef.current.slice(start).map(w => [...w])
-    gameColsRef.current = cols
-
-    // count food in game area
-    let fc = 0
-    for (let c = 0; c < cols; c++)
-      for (let r = 0; r < ROWS; r++)
-        if (gridRef.current[c]?.[r] > 0) fc++
-    foodRef.current = fc
-
-    // place snake mid-left
-    const sc = Math.max(2, Math.floor(cols / 4))
-    const sr = 3
-    snakeRef.current = [
-      { r: sr, c: sc },
-      { r: sr, c: sc - 1 },
-      { r: sr, c: sc - 2 },
-    ]
-    // ensure starting cells are valid
-    for (const s of snakeRef.current)
-      if (gridRef.current[s.c]?.[s.r] === -1) gridRef.current[s.c][s.r] = 0
-
-    dirRef.current = 'RIGHT'; nextDirRef.current = 'RIGHT'
-    scoreRef.current = 0; setScore(0)
-    speedRef.current = BASE_MS
-    phaseRef.current = 'playing'; setPhase('playing')
-    if (timerRef.current) clearInterval(timerRef.current)
-    timerRef.current = setInterval(() => stepRef.current(), BASE_MS)
-  }, [])
-
-  const exit = useCallback(() => {
-    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = undefined }
-    phaseRef.current = 'idle'; setPhase('idle')
-    gridRef.current = origRef.current.map(w => [...w])
-  }, [])
-
-  const steer = useCallback((next: Dir) => {
-    const current = dirRef.current
-    if (next === 'UP' && current === 'DOWN') return
-    if (next === 'DOWN' && current === 'UP') return
-    if (next === 'LEFT' && current === 'RIGHT') return
-    if (next === 'RIGHT' && current === 'LEFT') return
-    nextDirRef.current = next
-  }, [])
-
-  const steerFromSwipe = useCallback((dx: number, dy: number) => {
-    if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return false
-
-    if (Math.abs(dx) > Math.abs(dy)) {
-      steer(dx > 0 ? 'RIGHT' : 'LEFT')
-    } else {
-      steer(dy > 0 ? 'DOWN' : 'UP')
-    }
-
-    return true
-  }, [steer])
-
-  /* ═══════════════════════════ keyboard ═════════════════════════════════════ */
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (phaseRef.current === 'playing') {
-        if (e.key === 'ArrowUp' || e.key === 'w')
-          { e.preventDefault(); steer('UP') }
-        else if (e.key === 'ArrowDown' || e.key === 's')
-          { e.preventDefault(); steer('DOWN') }
-        else if (e.key === 'ArrowLeft' || e.key === 'a')
-          { e.preventDefault(); steer('LEFT') }
-        else if (e.key === 'ArrowRight' || e.key === 'd')
-          { e.preventDefault(); steer('RIGHT') }
-      }
-      if (e.key === 'Escape' && phaseRef.current !== 'idle') { e.preventDefault(); exit() }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [play, exit, steer])
-
-  /* ═══════════════════════════ touch / swipe ════════════════════════════════ */
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    if (phaseRef.current !== 'playing') return
-    if (e.touches.length !== 1) return
-    touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
-  }, [])
-
-  const onTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!touchRef.current || phaseRef.current !== 'playing' || e.touches.length !== 1) return
-    e.preventDefault()
-
-    const touch = e.touches[0]
-    const dx = touch.clientX - touchRef.current.x
-    const dy = touch.clientY - touchRef.current.y
-    if (steerFromSwipe(dx, dy)) {
-      touchRef.current = { x: touch.clientX, y: touch.clientY }
-    }
-  }, [steerFromSwipe])
-
-  const onTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (!touchRef.current || phaseRef.current !== 'playing') return
-    const dx = e.changedTouches[0].clientX - touchRef.current.x
-    const dy = e.changedTouches[0].clientY - touchRef.current.y
-    touchRef.current = undefined
-    steerFromSwipe(dx, dy)
-  }, [steerFromSwipe])
-
-  const onTouchCancel = useCallback(() => {
-    touchRef.current = undefined
-  }, [])
-
-  const handleClick = useCallback(() => {
-    if (phaseRef.current === 'idle') play()
-  }, [play])
-
-  const gameButtonStyle = {
-    borderRadius: 999,
-    border: '2px solid rgba(6, 113, 164, 0.3)',
-    color: '#0671A4',
-    fontSize: 13,
-    fontWeight: 500,
-    lineHeight: 1,
-    minHeight: 34,
-    padding: '0 14px',
-    backgroundColor: '#E4EFF5',
-    transition: 'background-color 0.3s, border-color 0.3s, color 0.3s',
-  } satisfies CSSProperties
-
-  const primaryGameButtonStyle = {
-    ...gameButtonStyle,
-    color: '#FFFFFF',
-    backgroundColor: '#0671A4',
-    border: '2px solid transparent',
-    boxShadow: '0 2px 8px rgba(6, 113, 164, 0.12)',
-  } satisfies CSSProperties
-
-  /* cleanup */
-  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current) }, [])
-
-  /* ═══════════════════════════ render prep ══════════════════════════════════ */
-  const sn = snakeRef.current
-  const isGame = phase !== 'idle'
-
-  // precompute snake lookup & gradient colors
-  const snakeMap = new Map<string, number>()
-  const snakeColors: string[] = []
-  if (isGame && sn.length) {
-    const len = sn.length
-    sn.forEach((s, i) => {
-      snakeMap.set(`${s.c},${s.r}`, i)
-      snakeColors.push(
-        i === 0 ? SNAKE_HD : blendHex(SNAKE_HD, SNAKE_TL, i / Math.max(1, len - 1)),
-      )
+  // Precompute the snake's cells and their gradient so the render is a lookup.
+  const snakeColors = useMemo(() => {
+    const map = new Map<string, string>()
+    if (!isGame) return map
+    const length = game.snake.length
+    game.snake.forEach((cell, i) => {
+      map.set(`${cell.c},${cell.r}`, i === 0 ? SNAKE_HEAD : blendHex(SNAKE_HEAD, SNAKE_TAIL, i / Math.max(1, length - 1)))
     })
+    return map
+  }, [isGame, game.snake])
+
+  const cellColor = (c: number, r: number, level: number) => {
+    if (level === EMPTY_CELL) return 'transparent'
+    return (isGame && snakeColors.get(`${c},${r}`)) || LEVEL_COLORS[level] || LEVEL_COLORS[0]
   }
 
-  // Show the most recent weeks that fit, so the graph ends at today instead of
-  // cutting off after the first few months on narrower screens.
-  const startCol = Math.max(0, grid.length - (visibleCols ?? grid.length))
-  const displayGrid = isGame ? gridRef.current : grid.slice(startCol)
-  const colOffset = isGame ? gameStart : startCol
-  const stride = cell + gap
-  const gameW = isGame && gameColsRef.current > 0
-    ? gameColsRef.current * stride - gap
-    : undefined
-  const clip = grid.length > startCol ? (grid.length - startCol) * stride - gap : undefined
+  const boardWidth = isGame && game.columnCount > 0
+    ? game.columnCount * stride - gap
+    : grid.length > idleStartCol
+      ? (grid.length - idleStartCol) * stride - gap
+      : 'fit-content'
 
-  const cellColor = (c: number, r: number, lvl: number): string => {
-    if (lvl === -1) return 'transparent'
-    if (isGame) {
-      const idx = snakeMap.get(`${c},${r}`)
-      if (idx !== undefined) return snakeColors[idx]
-    }
-    return LEVELS[lvl] ?? LEVELS[0]
-  }
+  const fadeOldestEdge = idleStartCol > 0 ? 'linear-gradient(to left, black 88%, transparent 100%)' : 'none'
 
-  /* ═══════════════════════════ JSX ══════════════════════════════════════════ */
   return (
-    <Section id="github" className="!pt-[8vh] !pb-[2vh]">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
-
-        {/* ── heatmap / snake ── */}
+    <Section id="github" className="!pb-[2vh] !pt-[8vh]">
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
         <div
           ref={wrapRef}
-          className="order-2 lg:order-1 w-full lg:flex-1 min-w-0 flex flex-col items-center lg:block"
+          className="order-2 flex w-full min-w-0 flex-col items-center lg:order-1 lg:block lg:flex-1"
           style={{ colorScheme: 'light' }}
         >
           {unavailable ? null : loading ? (
             <div style={{ height: ROWS * cell + (ROWS - 1) * gap + 24 }} />
           ) : (
             <>
-              {/* month labels */}
-              <div className="overflow-hidden" style={{ width: gameW ?? clip ?? 'fit-content', maxWidth: '100%', marginBottom: 4 }}>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateRows: '1fr',
-                    gridAutoFlow: 'column',
-                    gridAutoColumns: `${cell}px`,
-                    gap: `0 ${gap}px`,
-                  }}
-                >
-                  {displayGrid.map((_, c) => {
-                    const ml = monthLabels.find(m => m.col === c + colOffset)
-                    return (
-                      <div
-                        key={c}
-                        style={{
-                          fontSize: cell < 16 ? 10 : 12,
-                          color: '#4B5563',
-                          whiteSpace: 'nowrap',
-                          lineHeight: '1.4',
-                        }}
-                      >
-                        {ml?.label ?? '\u00A0'}
-                      </div>
-                    )
-                  })}
+              <div className="overflow-hidden" style={{ width: boardWidth, maxWidth: '100%', marginBottom: 4 }}>
+                <div style={{ display: 'grid', gridTemplateRows: '1fr', gridAutoFlow: 'column', gridAutoColumns: `${cell}px`, gap: `0 ${gap}px` }}>
+                  {displayGrid.map((_, c) => (
+                    <div key={c} style={{ fontSize: cell < 16 ? 10 : 12, color: COLOR.body, whiteSpace: 'nowrap', lineHeight: 1.4 }}>
+                      {monthLabels.find((m) => m.col === c + colOffset)?.label ?? ' '}
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* cell grid */}
               <div
-                className={`overflow-hidden relative ${phase === 'idle' ? 'github-heatmap-fade group cursor-pointer' : ''}`}
-                role={phase === 'idle' ? 'button' : undefined}
-                tabIndex={phase === 'idle' ? 0 : -1}
-                aria-label={phase === 'idle' ? 'Play the contribution graph game' : undefined}
-                onKeyDown={(e) => { if (phase === 'idle' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick() } }}
+                className={`relative overflow-hidden ${game.phase === 'idle' ? 'github-heatmap-fade group cursor-pointer' : ''}`}
+                role={game.phase === 'idle' ? 'button' : undefined}
+                tabIndex={game.phase === 'idle' ? 0 : -1}
+                aria-label={game.phase === 'idle' ? 'Play the contribution graph game' : undefined}
+                onKeyDown={(e) => {
+                  if (game.phase === 'idle' && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault()
+                    game.play()
+                  }
+                }}
                 style={{
-                  width: gameW ?? clip ?? 'fit-content',
+                  width: boardWidth,
                   maxWidth: '100%',
-                  // The newest week sits on the right now, so fade the oldest
-                  // edge instead, and only when earlier weeks are cut off.
-                  ...(phase === 'idle' ? {
-                    maskImage: startCol > 0 ? 'linear-gradient(to left, black 88%, transparent 100%)' : 'none',
-                    WebkitMaskImage: startCol > 0 ? 'linear-gradient(to left, black 88%, transparent 100%)' : 'none',
-                  } : {}),
-                  touchAction: phase === 'playing' ? 'none' : 'pan-y',
+                  // The newest week sits on the right, so fade the oldest edge,
+                  // and only when earlier weeks are actually cut off.
+                  ...(game.phase === 'idle' ? { maskImage: fadeOldestEdge, WebkitMaskImage: fadeOldestEdge } : {}),
+                  touchAction: game.phase === 'playing' ? 'none' : 'pan-y',
                   WebkitUserSelect: 'none',
                   userSelect: 'none',
                 }}
-                onClick={handleClick}
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}
-                onTouchCancel={onTouchCancel}
+                onClick={() => { if (game.phase === 'idle') game.play() }}
+                {...game.touchHandlers}
               >
                 <div
-                  className={phase === 'idle' ? 'transition-opacity duration-200 group-hover:opacity-15' : ''}
+                  className={game.phase === 'idle' ? 'transition-opacity duration-200 group-hover:opacity-15' : ''}
                   style={{
                     display: 'grid',
-                    gridTemplateRows: `repeat(7, ${cell}px)`,
+                    gridTemplateRows: `repeat(${ROWS}, ${cell}px)`,
                     gridAutoFlow: 'column',
                     gridAutoColumns: `${cell}px`,
                     gap: `${gap}px`,
-                    opacity: phase === 'over' ? 0.15 : undefined,
+                    opacity: game.phase === 'over' ? 0.15 : undefined,
                   }}
                 >
-                  {displayGrid.map((wk, c) =>
-                    wk.map((lvl, r) => (
+                  {displayGrid.map((week, c) =>
+                    week.map((level, r) => (
                       <div
                         key={`${c}-${r}`}
                         style={{
                           width: cell,
                           height: cell,
                           borderRadius: 2,
-                          backgroundColor: cellColor(
-                            c, r,
-                            isGame ? (gridRef.current[c]?.[r] ?? lvl) : lvl,
-                          ),
+                          backgroundColor: cellColor(c, r, isGame ? (game.liveGrid[c]?.[r] ?? level) : level),
                           transition: isGame ? 'background-color 60ms' : 'none',
                         }}
                       />
@@ -559,135 +189,65 @@ export function GithubHeatmap() {
                   )}
                 </div>
 
-                {/* idle hover overlay */}
-                {phase === 'idle' && (
-                  <div
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
-                  >
-                    <span
-                      style={{
-                        color: '#0671A4',
-                        fontWeight: 400,
-                        fontSize: 15,
-                      }}
-                    >
-                      Click to play Snake
-                    </span>
+                {game.phase === 'idle' && (
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                    <span style={{ color: COLOR.primary, fontWeight: 400, fontSize: 15 }}>Click to play Snake</span>
                   </div>
                 )}
 
-                {/* score HUD */}
-                {phase === 'playing' && (
-                  <div
-                    className="absolute top-1 right-2 pointer-events-none select-none"
-                    style={{ color: '#0671A4', fontWeight: 600, fontSize: 13 }}
-                  >
-                    {score}
+                {game.phase === 'playing' && (
+                  <div className="pointer-events-none absolute right-2 top-1 select-none" style={{ color: COLOR.primary, fontWeight: 600, fontSize: 13 }}>
+                    {game.score}
                   </div>
                 )}
 
-                {/* game over overlay */}
-                {phase === 'over' && (
-                  <div
-                    className="absolute inset-0 flex flex-col items-center justify-center"
-                  >
-                    <span style={{ color: '#0f172a', fontWeight: 400, fontSize: 18 }}>
-                      {foodRef.current <= 0 ? 'You Win!' : 'Game Over'}
+                {game.phase === 'over' && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span style={{ color: COLOR.ink, fontWeight: 400, fontSize: 18 }}>
+                      {game.cleared ? 'You Win!' : 'Game Over'}
                     </span>
-                    <span style={{ color: '#0671A4', fontWeight: 400, fontSize: 14, marginTop: 4 }}>
-                      {score > 0 && score >= best
-                        ? `New Best Score: ${score}`
-                        : `Score: ${score}`}
+                    <span style={{ color: COLOR.primary, fontWeight: 400, fontSize: 14, marginTop: 4 }}>
+                      {game.score > 0 && game.score >= game.best ? `New Best Score: ${game.score}` : `Score: ${game.score}`}
                     </span>
                     <div className="mt-3 flex items-center justify-center gap-2">
-                      <RippleButton
-                        type="button"
-                        className="group rounded-full px-4 py-2 text-[13px]"
-                        rippleColor="#38BDF8"
-                        style={primaryGameButtonStyle}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#055a84'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#0671A4'
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          play()
-                        }}
+                      <PillButton
+                        className="group px-4 py-2 text-[13px]"
+                        onClick={(e) => { e.stopPropagation(); game.play() }}
                       >
                         <span className="inline-flex items-center gap-1.5">
-                          <svg
-                            width="13"
-                            height="13"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="transition-transform duration-500 group-hover:rotate-[360deg]"
-                            aria-hidden="true"
-                          >
-                            <path d="M21 12a9 9 0 1 1-2.64-6.36" />
-                            <path d="M21 3v6h-6" />
-                          </svg>
+                          <RestartIcon />
                           <span>Play Again</span>
                         </span>
-                      </RippleButton>
-                      <RippleButton
-                        type="button"
-                        className="rounded-full px-4 py-2 text-[13px]"
-                        rippleColor="#38BDF8"
-                        style={gameButtonStyle}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#D7E8F1'
-                          e.currentTarget.style.borderColor = '#0671A4'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#E4EFF5'
-                          e.currentTarget.style.borderColor = 'rgba(6, 113, 164, 0.3)'
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          exit()
-                        }}
+                      </PillButton>
+                      <PillButton
+                        variant="soft"
+                        className="px-4 py-2 text-[13px]"
+                        onClick={(e) => { e.stopPropagation(); game.exit() }}
                       >
                         Exit
-                      </RippleButton>
+                      </PillButton>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* footer line */}
               <div
                 className="flex items-center justify-between gap-3 lg:justify-start"
-                style={{
-                  width: gameW ?? clip ?? 'fit-content',
-                  maxWidth: '100%',
-                  marginTop: 6,
-                  fontSize: cell < 16 ? 11 : 13,
-                  color: '#4B5563',
-                }}
+                style={{ width: boardWidth, maxWidth: '100%', marginTop: 6, fontSize: cell < 16 ? 11 : 13, color: COLOR.body }}
               >
-                {phase === 'idle' && (
+                {game.phase === 'idle' && (
                   <>
-                    <span>{total.toLocaleString()} contributions in {YEAR}</span>
+                    <span>{total.toLocaleString()} contributions in {HEATMAP_YEAR}</span>
                     <button
                       type="button"
-                      className="flex items-center gap-2 text-[10px] lg:text-sm bg-transparent border-0 p-0 cursor-pointer select-none lg:hidden"
+                      className="flex cursor-pointer select-none items-center gap-2 border-0 bg-transparent p-0 text-[10px] lg:hidden lg:text-sm"
                       style={{ color: 'rgba(6, 113, 164, 0.75)' }}
-                      onClick={play}
+                      onClick={game.play}
                     >
                       <motion.svg
                         className="size-2.5 lg:size-3.5"
                         viewBox="0 0 24 24"
                         fill="currentColor"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
                         aria-hidden="true"
                         animate={{ scale: [1, 1.15, 1] }}
                         transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
@@ -698,7 +258,7 @@ export function GithubHeatmap() {
                     </button>
                   </>
                 )}
-                {phase === 'playing' && (
+                {game.phase === 'playing' && (
                   <span>
                     <span className="lg:hidden">Swipe to steer</span>
                     <span className="hidden lg:inline">Arrow keys to steer, Esc to quit</span>
@@ -709,51 +269,32 @@ export function GithubHeatmap() {
           )}
         </div>
 
-        {/* ── text panel ── */}
-        <div className="order-1 lg:order-2 w-full lg:w-auto lg:max-w-md lg:text-right lg:shrink-0">
-          <h2 className="font-normal gradient-text" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
-            View my projects on GitHub
-          </h2>
-          <p
-            className="mt-3 leading-relaxed"
-            style={{ color: '#4B5563', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
-          >
-            Every square is another commit toward open source work, research
-            prototypes, and side projects. Browse the full set on GitHub.
-          </p>
-          <a
-            href="https://github.com/adiprathapa"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 mt-4 font-medium transition-opacity hover:opacity-70"
-            style={{ color: '#0671A4', fontSize: 'clamp(1rem, 0.5vw + 0.75rem, 1.25rem)' }}
-            onMouseEnter={() => setLinkHov(true)}
-            onMouseLeave={() => setLinkHov(false)}
-          >
-            <span>github.com/adiprathapa</span>
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              {linkHov ? (
-                <>
-                  <path d="M5 12h14" />
-                  <path d="M12 5l7 7-7 7" />
-                </>
-              ) : (
-                <path d="M8 5l7 7-7 7" />
-              )}
-            </svg>
-          </a>
-        </div>
+        <HeatmapCopy hovered={linkHovered} setHovered={setLinkHovered} />
       </div>
     </Section>
+  )
+}
+
+function HeatmapCopy({ hovered, setHovered }: { hovered: boolean; setHovered: (v: boolean) => void }) {
+  return (
+    <div className="order-1 w-full lg:order-2 lg:w-auto lg:max-w-md lg:shrink-0 lg:text-right">
+      <h2 className="gradient-text font-normal" style={{ fontSize: TEXT.h2 }}>View my projects on GitHub</h2>
+      <p className="mt-3 leading-relaxed" style={{ color: COLOR.body, fontSize: TEXT.body }}>
+        Every square is another commit toward open source work, research
+        prototypes, and side projects. Browse the full set on GitHub.
+      </p>
+      <a
+        href={`https://github.com/${GITHUB_USER}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-4 inline-flex items-center gap-1.5 font-medium transition-opacity hover:opacity-70"
+        style={{ color: COLOR.primary, fontSize: TEXT.body }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <span>github.com/{GITHUB_USER}</span>
+        <ArrowIcon hovered={hovered} size={13} />
+      </a>
+    </div>
   )
 }

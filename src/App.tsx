@@ -10,118 +10,104 @@ import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { jumpToSection, scrollToSection } from './lib/scrollToSection'
 import { announceHomeSectionNavigation, PENDING_HOME_SECTION_KEY } from './lib/homeSectionNavigation'
+import { warmImages } from './lib/warmImages'
 import { featuredProjects } from './data/projects'
+import { SURFACE } from './lib/theme'
 
 const ProjectsGame = lazy(() =>
   import('./components/ProjectsGame').then((module) => ({ default: module.ProjectsGame })),
 )
 
-// Preload only lightweight below-fold images after the first interaction window.
-// Large videos are intentionally left on demand so they do not compete with the
-// hero/horizontal-scroll experience.
+/**
+ * Lightweight below-fold images only. Large videos stay on demand so they do
+ * not compete with the hero and horizontal-scroll experience.
+ */
 const PRELOAD_IMAGES = [
-  // About / Experience section
   '/nell.webp', '/cornell.svg', '/mnhs.webp', '/mnhs-removebg-preview.png',
   '/pexels-pinamon-17647329.webp', '/bowers.webp', '/mines-bg.webp', '/unl-bg.webp',
   '/cornell-data-strategy.webp', '/c2s2.webp', '/cas.webp',
-  // Featured project logos & backgrounds
   ...featuredProjects.flatMap((p) => [p.brand.bgImage, ...(p.logo?.marks.map((m) => m.src) ?? [])]),
 ].filter((src): src is string => !!src)
 
-function preloadAssets() {
-  let i = 0
-  function loadNext() {
-    if (i < PRELOAD_IMAGES.length) {
-      const img = new Image()
-      img.src = PRELOAD_IMAGES[i++]
-      img.onload = img.onerror = () => {
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(loadNext)
-        } else {
-          setTimeout(loadNext, 50)
-        }
-      }
+const PRELOAD_DELAY_MS = 2500
+
+/**
+ * Arriving from another page, the homepage restores the stored hash itself so
+ * the jump uses the same offsets as in-page nav, which a plain anchor would not.
+ */
+function useHashArrival() {
+  useEffect(() => {
+    const pending = sessionStorage.getItem(PENDING_HOME_SECTION_KEY)
+    if (pending) {
+      sessionStorage.removeItem(PENDING_HOME_SECTION_KEY)
+      window.history.replaceState(null, '', pending)
     }
-  }
-  const start = () => {
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(loadNext)
-    } else {
-      setTimeout(loadNext, 50)
+
+    const hash = pending || window.location.hash
+    if (!hash) return
+
+    if (!pending) {
+      // Give React a beat to render the target before a normal hash restore.
+      const id = setTimeout(() => scrollToSection(hash), 500)
+      return () => clearTimeout(id)
     }
-  }
-  setTimeout(start, 2500)
+
+    let cancelled = false
+    let retry: number | undefined
+    document.fonts.ready.then(() => {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (cancelled) return
+        announceHomeSectionNavigation(hash)
+        jumpToSection(hash)
+        // Late-loading media can shift the target, so land on it twice.
+        retry = window.setTimeout(() => jumpToSection(hash), 350)
+      }))
+    })
+    return () => {
+      cancelled = true
+      if (retry !== undefined) window.clearTimeout(retry)
+    }
+  }, [])
+}
+
+/** Sticky and full-bleed sections can leave a sliver of horizontal scroll. */
+function useLockHorizontalScroll() {
+  useEffect(() => {
+    const lock = () => {
+      if (window.scrollX !== 0) window.scrollTo(0, window.scrollY)
+    }
+    window.addEventListener('scroll', lock, { passive: true })
+    return () => window.removeEventListener('scroll', lock)
+  }, [])
 }
 
 function App() {
-  const [projectsGameActive, setProjectsGameActive] = useState(false)
+  const [platformerActive, setPlatformerActive] = useState(false)
 
-  useEffect(() => {
-    // Start preloading after initial render
-    preloadAssets()
-
-    const pendingHomeSection = sessionStorage.getItem(PENDING_HOME_SECTION_KEY)
-    if (pendingHomeSection) {
-      sessionStorage.removeItem(PENDING_HOME_SECTION_KEY)
-      window.history.replaceState(null, '', pendingHomeSection)
-    }
-
-    const hash = pendingHomeSection || window.location.hash
-    if (!hash) return
-
-    if (pendingHomeSection) {
-      const settleCrossPageArrival = async () => {
-        await document.fonts.ready
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            announceHomeSectionNavigation(hash)
-            jumpToSection(hash)
-            window.setTimeout(() => jumpToSection(hash), 350)
-          })
-        })
-      }
-
-      settleCrossPageArrival()
-      return
-    }
-
-    // Delay normal hash restores to let React render the target elements.
-    setTimeout(() => {
-      scrollToSection(hash)
-    }, 500)
-  }, [])
-
-  useEffect(() => {
-    const lockHorizontalScroll = () => {
-      if (window.scrollX !== 0) {
-        window.scrollTo(0, window.scrollY)
-      }
-    }
-
-    window.addEventListener('scroll', lockHorizontalScroll, { passive: true })
-    return () => window.removeEventListener('scroll', lockHorizontalScroll)
-  }, [])
+  useEffect(() => warmImages(PRELOAD_IMAGES, { startDelayMs: PRELOAD_DELAY_MS }), [])
+  useHashArrival()
+  useLockHorizontalScroll()
 
   return (
     <MotionConfig reducedMotion="user">
       <Analytics />
       <Navbar />
-      <main style={{ background: '#f4f4f4' }}>
+      <main style={{ background: SURFACE.page }}>
         <HorizontalScrollSection />
-        <div className="relative" style={{ background: '#E4EFF5' }}>
+        <div className="relative" style={{ background: SURFACE.tint }}>
           <ProjectsIntro />
           <div className="mt-2 lg:mt-0">
-            <Projects onPlatformer={() => setProjectsGameActive(true)} platformerActive={projectsGameActive} />
+            <Projects onPlatformer={() => setPlatformerActive(true)} platformerActive={platformerActive} />
           </div>
         </div>
-        {projectsGameActive && (
+        {platformerActive && (
           <Suspense fallback={null}>
-            <ProjectsGame onExit={() => setProjectsGameActive(false)} />
+            <ProjectsGame onExit={() => setPlatformerActive(false)} />
           </Suspense>
         )}
         <OpenSource />
-        <div className="contact-footer-handoff relative z-[1]" style={{ background: '#f4f4f4' }}>
-          <div aria-hidden style={{ height: 'var(--contact-mobile-pt, 0px)', background: '#f4f4f4' }} />
+        <div className="contact-footer-handoff relative z-[1]" style={{ background: SURFACE.page }}>
+          <div aria-hidden style={{ height: 'var(--contact-mobile-pt, 0px)', background: SURFACE.page }} />
           <div className="contact-footer-surface">
             <Contact />
             <Footer />

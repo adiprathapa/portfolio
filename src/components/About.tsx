@@ -1,18 +1,51 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { GradientText } from './ui/gradient-text'
 import { ThrowableCard } from './about/ThrowableCard'
 import { throwMessage } from './about/throwMessages'
 import { photoCards } from '../data/aboutCards'
+import { SITE } from '../data/site'
 import { heroChild, heroStagger, staggerContainer } from '../lib/animations'
 import { onIdle, warmImages } from '../lib/warmImages'
+import { warmDocument } from '../lib/prefetch'
+import { scrollToSection } from '../lib/scrollToSection'
+import { announceHomeSectionNavigation } from '../lib/homeSectionNavigation'
 import { PRIMARY, TEXT } from '../lib/theme'
 import { useInView } from '../hooks/useInView'
 
-const PARAGRAPHS = [
+const warmAnimePage = () => warmDocument(SITE.anime)
+
+const HIDDEN_LINK =
+  'inline-block rounded-sm transition-colors duration-200 hover:animate-[shake_0.4s_ease-in-out] hover:text-primary focus-visible:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:hover:animate-none'
+
+function goToOpenSource(e: MouseEvent<HTMLAnchorElement>) {
+  e.preventDefault()
+  announceHomeSectionNavigation('#open-source')
+  scrollToSection('#open-source')
+}
+
+const PARAGRAPHS: ReactNode[] = [
   "I'm a Computer Science student at Cornell minoring in AI, originally from Nebraska. I am really interested in building and working with full stack web apps and experimenting with ML models.",
-  "Lately I've been spending most of my time on graph learning, from GNNs for cyber event data and chip placement to livestock health prediction. I still enjoy web3, stablecoins, and IPFS, and the idea of programmable money is something I keep coming back to. I'm always looking for ways to connect what I'm learning in AI with applications outside the classroom, in clubs, hackathons, and through open source work.",
-  "Outside of code, I'm an Eagle Scout who still loves getting outdoors, camping, hiking, that kind of thing. When I'm not on a trail, you'll probably find me gaming, tinkering with some new tech, or catching up on anime and other shows.",
+  <>
+    Lately I've been spending most of my time on graph learning, from GNNs for cyber event data and chip placement to livestock health prediction. I still enjoy web3, stablecoins, and IPFS, and the idea of programmable money is something I keep coming back to. I'm always looking for ways to connect what I'm learning in AI with applications outside the classroom, in clubs, hackathons, and through{' '}
+    <a href="#open-source" onClick={goToOpenSource} className={HIDDEN_LINK}>
+      open source work
+    </a>
+    .
+  </>,
+  <>
+    Outside of code, I'm an Eagle Scout who still loves getting outdoors, camping, hiking, that kind of thing. When I'm not on a trail, you'll probably find me gaming, tinkering with some new tech, grabbing a sweet treat or drink, or catching up on{' '}
+    <a
+      href={SITE.anime}
+      onMouseEnter={warmAnimePage}
+      onFocus={warmAnimePage}
+      onTouchStart={warmAnimePage}
+      className={HIDDEN_LINK}
+    >
+      anime
+    </a>{' '}
+    and other shows.
+  </>,
 ]
 
 function DragHintIcon() {

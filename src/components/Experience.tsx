@@ -185,7 +185,7 @@ export function Experience() {
             <GradientText as="h2" className="font-normal" style={{ fontSize: TEXT.h2 }}>Experience</GradientText>
             <p className="mt-3 max-w-2xl leading-relaxed" style={{ color: COLOR.body, fontSize: TEXT.body }}>
               I have experience in software engineering, research, and full stack development.
-              Looking for summer 2027 software and AI/ML engineering internship roles.
+              Looking for software and AI/ML engineering co-ops and off cycle internships.
             </p>
           </div>
 

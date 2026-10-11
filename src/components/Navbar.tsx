@@ -119,12 +119,12 @@ function usePastAboutOnMobile(enabled: boolean) {
   return past
 }
 
-export function Navbar({ page = 'home' }: { page?: 'home' | 'projects' } = {}) {
+export function Navbar({ page = 'home' }: { page?: 'home' | 'projects' | 'anime' } = {}) {
   const isHome = page === 'home'
   // Off the homepage there is no hero to scroll past, so the bar reacts at once.
   const { scrolled, hidden } = useScrolled(50, { startAt: isHome ? 0.96 : 0 })
   const homeActiveSection = useActiveSection(isHome)
-  const activeSection = isHome ? homeActiveSection : 'projects'
+  const activeSection = isHome ? homeActiveSection : page === 'anime' ? 'about' : 'projects'
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [ctaHovered, setCtaHovered] = useState(false)

@@ -4,7 +4,7 @@ import { warmCalendarPage, warmDocument } from '../lib/prefetch'
 import { announceHomeSectionNavigation, goToHomeSection } from '../lib/homeSectionNavigation'
 import { resourceLinks, sectionLinks, SITE } from '../data/site'
 
-export function Footer({ page = 'home' }: { page?: 'home' | 'projects' } = {}) {
+export function Footer({ page = 'home' }: { page?: 'home' | 'projects' | 'anime' } = {}) {
   const isHome = page === 'home'
 
   const handleSectionClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {

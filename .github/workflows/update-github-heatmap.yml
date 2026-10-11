@@ -17,14 +17,16 @@ jobs:
         with:
           node-version: 20
       - run: node scripts/update-github-heatmap.mjs
-      - name: Commit refreshed cache
+      - run: node scripts/update-duolingo-stats.mjs
+        continue-on-error: true
+      - name: Commit refreshed caches
         run: |
-          if git diff --quiet -- public/github-heatmap.json; then
-            echo "No heatmap changes to commit."
+          if git diff --quiet -- public/github-heatmap.json public/duolingo-stats.json; then
+            echo "No cache changes to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/github-heatmap.json
-          git commit -m "chore: refresh github heatmap cache"
+          git add public/github-heatmap.json public/duolingo-stats.json
+          git commit -m "chore: refresh github heatmap and duolingo caches"
           git push

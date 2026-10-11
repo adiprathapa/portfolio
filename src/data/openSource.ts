@@ -3,6 +3,7 @@ export interface Contribution {
   name: string
   logoSrc: string
   description: string
+  note?: string
   prListUrl: string
   /** Each mark needs a different treatment to sit evenly on the light surface. */
   logoFilter: string
@@ -42,6 +43,7 @@ export const contributions: Contribution[] = [
     name: 'CockroachDB',
     logoSrc: '/oss-logo-cockroachdb.webp',
     description: 'Submitted a jsonpath scanner fix aligning trailing junk errors with Postgres diagnostics.',
+    note: 'CockroachDB no longer accepts open source contributions, so mine was closed too :(',
     prListUrl: prSearch('cockroachdb'),
     logoFilter: 'grayscale(1) contrast(1.4)',
   },

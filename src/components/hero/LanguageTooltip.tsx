@@ -1,5 +1,8 @@
-import { motion } from 'framer-motion'
-import type { Greeting } from '../../data/greetings'
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import type { Greeting, GreetingIcon } from '../../data/greetings'
+import { duolingoLabel, useDuolingoStats } from '../../hooks/useDuolingoStats'
+import { COLOR, SHADOW } from '../../lib/theme'
 
 const MONO = { fontFamily: "'Fira Code', monospace" }
 
@@ -10,6 +13,50 @@ function InfoIcon() {
       <path d="M8 7v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
       <circle cx="8" cy="5" r="0.75" fill="currentColor" />
     </svg>
+  )
+}
+
+function IconImage({ icon }: { icon: GreetingIcon }) {
+  const link = icon.link
+  return (
+    <img
+      src={icon.src}
+      alt=""
+      onClick={link ? () => window.open(link, '_blank') : undefined}
+      className={`relative -top-0.5 ml-0.5 shrink-0 hover:animate-[shake_0.4s_ease-in-out] ${link ? 'cursor-pointer' : ''}`}
+      style={{
+        height: icon.height ?? 32,
+        width: 'auto',
+        pointerEvents: 'auto',
+        ...(icon.ml ? { marginLeft: icon.ml } : {}),
+      }}
+    />
+  )
+}
+
+function DuolingoIcon({ icon }: { icon: GreetingIcon }) {
+  const [hovered, setHovered] = useState(false)
+  const stats = useDuolingoStats()
+  const label = stats ? duolingoLabel(stats, icon.duolingoCourse) : null
+
+  return (
+    <span className="relative inline-flex" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+      <IconImage icon={icon} />
+      <AnimatePresence>
+        {hovered && label && (
+          <motion.span
+            initial={{ opacity: 0, y: 4, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: 4, x: '-50%' }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+            className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 whitespace-nowrap rounded-lg px-2.5 py-1 text-xs font-medium"
+            style={{ background: COLOR.white, color: COLOR.heading, boxShadow: SHADOW.control }}
+          >
+            {label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </span>
   )
 }
 
@@ -34,21 +81,9 @@ export function LanguageTooltip({ greeting, hoveredWordIndex }: { greeting: Gree
           <InfoIcon />
           <span className="inline-flex items-center gap-2 text-sm font-medium text-heading" style={MONO}>
             {greeting.subtitle}
-            {greeting.icons?.map((icon) => (
-              <img
-                key={icon.src}
-                src={icon.src}
-                alt=""
-                onClick={() => window.open(icon.link, '_blank')}
-                className="relative -top-0.5 ml-0.5 shrink-0 cursor-pointer hover:animate-[shake_0.4s_ease-in-out]"
-                style={{
-                  height: icon.height ?? 32,
-                  width: 'auto',
-                  pointerEvents: 'auto',
-                  ...(icon.ml ? { marginLeft: icon.ml } : {}),
-                }}
-              />
-            ))}
+            {greeting.icons?.map((icon) =>
+              icon.duolingoCourse ? <DuolingoIcon key={icon.src} icon={icon} /> : <IconImage key={icon.src} icon={icon} />,
+            )}
           </span>
         </div>
 

@@ -52,6 +52,15 @@
     <!-- Preload critical hero assets -->
     <link rel="preload" href="/headshot.webp" as="image" />
     <link rel="preload" href="/pfp.png" as="image" />
+    <style>html.section-arrival body { visibility: hidden; }</style>
+    <script>
+      try {
+        if (sessionStorage.getItem('pending-home-section')) {
+          document.documentElement.classList.add('section-arrival')
+          setTimeout(function () { document.documentElement.classList.remove('section-arrival') }, 2000)
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

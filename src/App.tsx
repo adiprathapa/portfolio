@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { MotionConfig } from 'framer-motion'
 import { Analytics } from '@vercel/analytics/react'
 import { Navbar } from './components/Navbar'
@@ -14,10 +14,6 @@ import { warmImages } from './lib/warmImages'
 import { featuredProjects } from './data/projects'
 import { SURFACE } from './lib/theme'
 
-const ProjectsGame = lazy(() =>
-  import('./components/ProjectsGame').then((module) => ({ default: module.ProjectsGame })),
-)
-
 /**
  * Lightweight below-fold images only. Large videos stay on demand so they do
  * not compete with the hero and horizontal-scroll experience.
@@ -31,17 +27,30 @@ const PRELOAD_IMAGES = [
 
 const PRELOAD_DELAY_MS = 2500
 
+function takePendingSection() {
+  try {
+    const pending = sessionStorage.getItem(PENDING_HOME_SECTION_KEY)
+    if (pending) sessionStorage.removeItem(PENDING_HOME_SECTION_KEY)
+    return pending
+  } catch {
+    return null
+  }
+}
+
+const PENDING_SECTION = takePendingSection()
+
+function revealPage() {
+  document.documentElement.classList.remove('section-arrival')
+}
+
 /**
  * Arriving from another page, the homepage restores the stored hash itself so
  * the jump uses the same offsets as in-page nav, which a plain anchor would not.
  */
 function useHashArrival() {
   useEffect(() => {
-    const pending = sessionStorage.getItem(PENDING_HOME_SECTION_KEY)
-    if (pending) {
-      sessionStorage.removeItem(PENDING_HOME_SECTION_KEY)
-      window.history.replaceState(null, '', pending)
-    }
+    const pending = PENDING_SECTION
+    if (pending) window.history.replaceState(null, '', pending)
 
     const hash = pending || window.location.hash
     if (!hash) return
@@ -59,6 +68,7 @@ function useHashArrival() {
         if (cancelled) return
         announceHomeSectionNavigation(hash)
         jumpToSection(hash)
+        revealPage()
         // Late-loading media can shift the target, so land on it twice.
         retry = window.setTimeout(() => jumpToSection(hash), 350)
       }))
@@ -82,8 +92,6 @@ function useLockHorizontalScroll() {
 }
 
 function App() {
-  const [platformerActive, setPlatformerActive] = useState(false)
-
   useEffect(() => warmImages(PRELOAD_IMAGES, { startDelayMs: PRELOAD_DELAY_MS }), [])
   useHashArrival()
   useLockHorizontalScroll()
@@ -97,14 +105,9 @@ function App() {
         <div className="relative" style={{ background: SURFACE.tint }}>
           <ProjectsIntro />
           <div className="mt-2 lg:mt-0">
-            <Projects onPlatformer={() => setPlatformerActive(true)} platformerActive={platformerActive} />
+            <Projects />
           </div>
         </div>
-        {platformerActive && (
-          <Suspense fallback={null}>
-            <ProjectsGame onExit={() => setPlatformerActive(false)} />
-          </Suspense>
-        )}
         <OpenSource />
         <div className="contact-footer-handoff relative z-[1]" style={{ background: SURFACE.page }}>
           <div aria-hidden style={{ height: 'var(--contact-mobile-pt, 0px)', background: SURFACE.page }} />

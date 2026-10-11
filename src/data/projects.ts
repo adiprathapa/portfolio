@@ -168,7 +168,7 @@ export const projects: Project[] = [
       blend: 'normal',
     },
     brand: { color: '#1a1a2e', bgImage: '/macroplace-bg.webp' },
-    featured: 2,
+    featured: 3,
   },
   {
     slug: 'hexmend',
@@ -199,7 +199,7 @@ export const projects: Project[] = [
       blend: 'normal',
     },
     brand: { color: '#0B0D12', bgImage: '/hexmend-bg.webp' },
-    featured: 3,
+    featured: 4,
   },
   {
     slug: 'tauron',
@@ -250,6 +250,7 @@ export const projects: Project[] = [
     ],
     logo: whiteLogo('/logo-helicity-icon.png', 'Helicity', ORG_MARK),
     brand: { color: '#6366F1', bgImage: '/helicitybg.webp' },
+    featured: 2,
   },
   {
     slug: 'zam',

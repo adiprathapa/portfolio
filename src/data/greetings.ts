@@ -1,6 +1,7 @@
 export interface GreetingIcon {
   src: string
-  link: string
+  link?: string
+  duolingoCourse?: string
   height?: number
   /** Extra left margin, in px, for marks that sit too close to the text. */
   ml?: number
@@ -15,7 +16,7 @@ export interface Greeting {
   icons?: GreetingIcon[]
 }
 
-const DUOLINGO: GreetingIcon = { src: '/duo.png', link: 'https://www.duolingo.com/profile/adiP001', height: 32 }
+const duolingo = (course: string): GreetingIcon => ({ src: '/duo.png', duolingoCourse: course, height: 32 })
 
 export const greetings: Greeting[] = [
   {
@@ -33,7 +34,7 @@ export const greetings: Greeting[] = [
     segments: ['Hola, ', 'soy ', 'Adi'],
     subtitle: 'Spanish (Conversational)',
     icons: [
-      DUOLINGO,
+      duolingo('Spanish'),
       { src: '/nde.png', link: 'https://www.education.ne.gov/press_release/nebraska-students-awarded-seals-of-biliteracy-11/', height: 33 },
     ],
     breakdown: [
@@ -47,7 +48,7 @@ export const greetings: Greeting[] = [
     segments: ['नमस्ते, ', 'मैं ', 'आदि ', 'हूँ'],
     subtitle: 'Hindi (Conversational)',
     icons: [
-      DUOLINGO,
+      duolingo('Hindi'),
       { src: '/cornell.png', link: 'https://courses.cornell.edu/courses/hindi/', height: 26, ml: 1 },
     ],
     breakdown: [

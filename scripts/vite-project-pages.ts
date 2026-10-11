@@ -133,7 +133,7 @@ function validate(publicDir: string) {
 }
 
 function sitemap() {
-  const urls = ['/', '/projects/', ...projects.map((p) => projectPath(p.slug)), '/calendar.html', '/privacy.html']
+  const urls = ['/', '/projects/', ...projects.map((p) => projectPath(p.slug)), '/anime', '/calendar.html', '/privacy.html']
   const body = urls
     .map((u) => `  <url>\n    <loc>${SITE_ORIGIN}${u}</loc>\n  </url>`)
     .join('\n')

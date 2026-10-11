@@ -9,6 +9,7 @@ export const SITE = {
   calendar: '/calendar.html',
   privacy: '/privacy.html',
   allProjects: '/projects/',
+  anime: '/anime',
 } as const
 
 export interface NavLink {
@@ -28,6 +29,7 @@ export const sectionLinks: NavLink[] = [
 
 export const resourceLinks: NavLink[] = [
   { label: 'All projects', href: SITE.allProjects },
+  { label: 'Anime', href: SITE.anime },
   { label: 'Calendar', href: SITE.calendar },
   { label: 'Privacy', href: SITE.privacy },
 ]

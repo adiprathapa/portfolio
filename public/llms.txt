@@ -10,6 +10,7 @@ This site is a React app: a homepage plus an all-projects page with a page for e
 - [Projects](https://www.adiprathapa.space/projects/): all projects, each with its own page
 <!-- PROJECTS -->
 - [Open Source](https://www.adiprathapa.space/#open-source): Kiwix/openZIM, Kubeflow, Jenkins, CockroachDB contributions
+- [Anime](https://www.adiprathapa.space/anime): favorite anime and what's currently being watched and read
 - [Calendar](https://www.adiprathapa.space/calendar.html): book a meeting
 - [Privacy](https://www.adiprathapa.space/privacy.html)
 

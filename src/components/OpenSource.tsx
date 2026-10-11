@@ -43,6 +43,11 @@ export function OpenSource() {
             <p className="mt-3 leading-relaxed" style={{ color: COLOR.prose, fontSize: 'clamp(1rem, 0.4vw + 0.8rem, 1.125rem)' }}>
               {item.description}
             </p>
+            {item.note && (
+              <p className="mt-2 text-sm italic leading-relaxed" style={{ color: COLOR.muted }}>
+                {item.note}
+              </p>
+            )}
             <a
               href={item.prListUrl}
               target="_blank"

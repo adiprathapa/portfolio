@@ -12,6 +12,7 @@ export interface PhotoCard {
 
 export const photoCards: PhotoCard[] = [
   { id: 'card-1', image: '/img3.webp', caption: 'Cornell Data & Strategy Meeting', rotation: -8 },
+  { id: 'card-7', image: '/pwc-engineer-your-career.webp', caption: "PwC Engineer Your Career '26", rotation: 3 },
   { id: 'card-2', image: '/team-presentation.webp', caption: 'Stablecoin Presentation at Cornell Hackathon', rotation: -3 },
   { id: 'card-3', image: '/img3-stack.webp', caption: 'Formal Organizing Group', rotation: 2 },
   { id: 'card-6', image: '/treman-hiking.webp', caption: 'Hiking in Robert H. Treman State Park', rotation: 6, topLeftBlue: true },

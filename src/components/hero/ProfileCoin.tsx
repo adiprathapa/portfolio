@@ -1,12 +1,19 @@
-import { useRef, useState, type ReactNode } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react'
+import { animate, motion, useMotionValue, useMotionValueEvent } from 'framer-motion'
 import { GithubIcon, LinkedInIcon } from '../ui/icons'
 import { posthog } from '../../lib/analytics'
 import { PRIMARY } from '../../lib/theme'
 import { SITE } from '../../data/site'
 
-const SPIN_MS = 1500
-const SWIPE_THRESHOLD_PX = 30
+const DRAG_DEG_PER_PX = 0.75
+const CLICK_SLOP_PX = 6
+const CLICK_FACE_TOLERANCE_DEG = 10
+const MOMENTUM_S = 0.18
+const RELEASE_IDLE_MS = 80
+const SPRING = { type: 'spring', stiffness: 140, damping: 18, mass: 0.9 } as const
+
+const ICON_SIZE = 32
+const ICON_OFFSET = { margin: '-6px 0 0 -6px' }
 
 type Side = 'linkedin' | 'github'
 
@@ -17,7 +24,7 @@ const FACES: Record<Side, { href: string; label: string; event: string; image: s
     event: 'linkedin_profile_clicked',
     image: '/headshot.webp',
     alt: 'Adi Prathapa',
-    icon: <LinkedInIcon />,
+    icon: <LinkedInIcon size={ICON_SIZE} className="block" style={ICON_OFFSET} />,
     iconClass: 'absolute h-6 w-6 md:h-9 md:w-9',
     iconStyle: { bottom: 'calc(15% + 10px)', right: 'calc(10% + 11px)', color: '#F4F4F4' },
     imageStyle: { objectPosition: 'center 30%', transform: 'scale(1.1) translateY(-10px)' },
@@ -28,51 +35,59 @@ const FACES: Record<Side, { href: string; label: string; event: string; image: s
     event: 'github_profile_clicked',
     image: '/pfp.png',
     alt: 'GitHub avatar',
-    icon: <GithubIcon />,
+    icon: <GithubIcon size={ICON_SIZE} className="block" style={ICON_OFFSET} />,
     iconClass: 'absolute h-8 w-8 md:h-11 md:w-11',
     iconStyle: { bottom: 'calc(15% + 10px)', right: 'calc(10% + 5px)', color: '#F4F4F4' },
   },
 }
 
-function CoinFace({ side, showOverlay }: { side: Side; showOverlay: boolean }) {
+function openFace(side: Side) {
   const face = FACES[side]
-  const open = () => {
-    posthog?.capture(face.event, { location: 'hero_coin' })
-    window.open(face.href, '_blank')
-  }
+  posthog?.capture(face.event, { location: 'hero_coin' })
+  window.open(face.href, '_blank')
+}
+
+function CoinFace({ side, facing, showOverlay, onTurn }: { side: Side; facing: boolean; showOverlay: boolean; onTurn: (direction: 1 | -1) => void }) {
+  const face = FACES[side]
 
   return (
     <div
-      className="absolute inset-0 overflow-hidden"
+      className="absolute inset-0 overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0671A4]"
       style={{
         borderRadius: '50%',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
         border: `3px solid ${PRIMARY.a30}`,
         backfaceVisibility: 'hidden',
-        cursor: 'pointer',
         ...(side === 'github' ? { transform: 'rotateY(180deg)' } : {}),
       }}
       role="link"
-      tabIndex={0}
-      aria-label={face.label}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open() } }}
-      onClick={open}
+      tabIndex={facing ? 0 : -1}
+      aria-hidden={!facing}
+      aria-label={`${face.label}. Use the arrow keys to turn the coin.`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          openFace(side)
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.preventDefault()
+          onTurn(e.key === 'ArrowLeft' ? -1 : 1)
+        }
+      }}
     >
       <img
         src={face.image}
         alt={face.alt}
+        draggable={false}
         style={{ width: '100%', height: '100%', objectFit: 'cover', ...face.imageStyle }}
       />
       <div
         className="absolute inset-0"
-        onClick={(e) => { e.stopPropagation(); open() }}
         style={{
           borderRadius: '50%',
           background: 'rgba(0, 0, 0, 0.35)',
           transition: 'opacity 0.3s ease',
           opacity: showOverlay ? 1 : 0,
-          pointerEvents: showOverlay ? 'auto' : 'none',
-          cursor: 'pointer',
+          pointerEvents: 'none',
         }}
       >
         <span className={face.iconClass} style={face.iconStyle}>{face.icon}</span>
@@ -81,40 +96,36 @@ function CoinFace({ side, showOverlay }: { side: Side; showOverlay: boolean }) {
   )
 }
 
-function TossHint({ children, onClick, motionKey }: { children: ReactNode; onClick: () => void; motionKey: string }) {
-  return (
-    <motion.div
-      key={motionKey}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, y: [0, -5, 5, 0] }}
-      exit={{ opacity: 0 }}
-      transition={{ y: { duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' } }}
-      className="absolute left-1/2 flex -translate-x-1/2 cursor-pointer items-center gap-2 whitespace-nowrap"
-      style={{ bottom: '-2%', color: PRIMARY.a75 }}
-      onClick={onClick}
-    >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M4 4l7.07 17 2.51-7.39L21 11.07z" />
-      </svg>
-      <span className="text-sm font-light tracking-wide">{children}</span>
-    </motion.div>
-  )
+interface DragState {
+  pointerId: number
+  startX: number
+  startAngle: number
+  moved: boolean
+  lastX: number
+  lastT: number
+  velocity: number
 }
 
-/** Headshot on one side, GitHub avatar on the other. Flick or click to toss. */
-export function ProfileCoin({ isMobile }: { isMobile: boolean }) {
-  const [angle, setAngle] = useState(0)
-  const [hovered, setHovered] = useState(false)
-  const [spinning, setSpinning] = useState(false)
-  const [tossCount, setTossCount] = useState(0)
-  const [streak, setStreak] = useState(0)
-  const [lastSide, setLastSide] = useState<Side | null>(null)
-  const coinRef = useRef<HTMLDivElement>(null)
-  const touchStartX = useRef(0)
+const nearestFace = (angle: number) => Math.round(angle / 180) * 180
 
-  const faceAngle = ((angle % 360) + 360) % 360
-  const facing: Side = faceAngle > 90 && faceAngle < 270 ? 'github' : 'linkedin'
-  const showOverlay = hovered && !isMobile && !spinning
+function sideAt(angle: number): Side {
+  const normalized = ((angle % 360) + 360) % 360
+  return normalized > 90 && normalized < 270 ? 'github' : 'linkedin'
+}
+
+/** Headshot on one side, GitHub avatar on the other. Drag to turn, click to open the face showing. */
+export function ProfileCoin({ isMobile }: { isMobile: boolean }) {
+  const rotate = useMotionValue(0)
+  const [facing, setFacing] = useState<Side>('linkedin')
+  const [hovered, setHovered] = useState(false)
+  const [dragging, setDragging] = useState(false)
+  const coinRef = useRef<HTMLDivElement>(null)
+  const drag = useRef<DragState | null>(null)
+  const settle = useRef<ReturnType<typeof animate> | null>(null)
+
+  useMotionValueEvent(rotate, 'change', (value) => setFacing(sideAt(value)))
+
+  const showOverlay = hovered && !isMobile && !dragging
 
   // Hover only counts inside the circle, not the square that bounds it.
   const updateHover = (clientX: number, clientY: number) => {
@@ -127,28 +138,88 @@ export function ProfileCoin({ isMobile }: { isMobile: boolean }) {
     setHovered(dx * dx + dy * dy <= radius * radius)
   }
 
-  const toss = () => {
-    if (spinning) return
-    setSpinning(true)
+  const settleTo = (target: number, velocity = 0) => {
+    settle.current?.stop()
+    settle.current = animate(rotate, target, { ...SPRING, velocity })
+  }
 
-    const landsOnGithub = Math.random() > 0.5
-    const spins = 3 + Math.floor(Math.random() * 4)
-    const targetAngle = landsOnGithub ? 180 : 0
+  const turn = (direction: 1 | -1) => settleTo(nearestFace(rotate.get()) + direction * 180)
 
-    setAngle((prev) => {
-      const current = ((prev % 360) + 360) % 360
-      let delta = targetAngle - current
-      if (delta < 0) delta += 360
-      return prev + spins * 360 + delta
-    })
+  const endDrag = (allowClick: boolean) => {
+    const d = drag.current
+    if (!d) return
+    drag.current = null
+    setDragging(false)
+    const current = rotate.get()
 
-    const side: Side = landsOnGithub ? 'github' : 'linkedin'
-    setTimeout(() => {
-      setSpinning(false)
-      setTossCount((c) => c + 1)
-      setStreak((s) => (side === lastSide ? s + 1 : 1))
-      setLastSide(side)
-    }, SPIN_MS)
+    if (!d.moved) {
+      const restingOnFace = Math.abs(current - nearestFace(current)) < CLICK_FACE_TOLERANCE_DEG
+      if (allowClick && restingOnFace) openFace(sideAt(current))
+      settleTo(nearestFace(current))
+      return
+    }
+
+    const velocity = performance.now() - d.lastT > RELEASE_IDLE_MS ? 0 : d.velocity
+    const carry = Math.max(-180, Math.min(180, velocity * MOMENTUM_S))
+    settleTo(nearestFace(current + carry), velocity)
+  }
+
+  useEffect(() => {
+    const cancel = () => endDrag(false)
+    window.addEventListener('blur', cancel)
+    document.addEventListener('visibilitychange', cancel)
+    return () => {
+      window.removeEventListener('blur', cancel)
+      document.removeEventListener('visibilitychange', cancel)
+    }
+  })
+
+  const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return
+    settle.current?.stop()
+    drag.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startAngle: rotate.get(),
+      moved: false,
+      lastX: e.clientX,
+      lastT: e.timeStamp,
+      velocity: 0,
+    }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+
+  const handlePointerMove = (e: PointerEvent<HTMLDivElement>) => {
+    const d = drag.current
+    if (!d || d.pointerId !== e.pointerId) return
+    if (e.buttons === 0) {
+      endDrag(false)
+      return
+    }
+    const dx = e.clientX - d.startX
+    if (!d.moved) {
+      if (Math.abs(dx) < CLICK_SLOP_PX) return
+      d.moved = true
+      d.startX = e.clientX
+      d.lastX = e.clientX
+      d.lastT = e.timeStamp
+      setDragging(true)
+      return
+    }
+    const dt = e.timeStamp - d.lastT
+    if (dt > 0) {
+      const instant = ((e.clientX - d.lastX) * DRAG_DEG_PER_PX * 1000) / dt
+      d.velocity = d.velocity * 0.3 + instant * 0.7
+    }
+    d.lastX = e.clientX
+    d.lastT = e.timeStamp
+    rotate.set(d.startAngle + (e.clientX - d.startX) * DRAG_DEG_PER_PX)
+  }
+
+  const handlePointerEnd = (e: PointerEvent<HTMLDivElement>, allowClick: boolean) => {
+    if (drag.current?.pointerId !== e.pointerId) return
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId)
+    endDrag(allowClick)
   }
 
   return (
@@ -158,20 +229,10 @@ export function ProfileCoin({ isMobile }: { isMobile: boolean }) {
       onMouseEnter={(e) => updateHover(e.clientX, e.clientY)}
       onMouseMove={(e) => updateHover(e.clientX, e.clientY)}
       onMouseLeave={() => setHovered(false)}
-      onTouchStart={(e) => {
-        setHovered(false)
-        touchStartX.current = e.touches[0].clientX
-      }}
-      onTouchEnd={(e) => {
-        const dx = e.changedTouches[0].clientX - touchStartX.current
-        if (Math.abs(dx) <= SWIPE_THRESHOLD_PX) return
-        e.preventDefault()
-        setAngle((a) => a + (dx < 0 ? -180 : 180))
-      }}
     >
-      <div
+      <motion.div
         ref={coinRef}
-        className="absolute block"
+        className="absolute block select-none"
         style={{
           width: '85%',
           height: '85%',
@@ -179,28 +240,19 @@ export function ProfileCoin({ isMobile }: { isMobile: boolean }) {
           left: '5%',
           borderRadius: '50%',
           transformStyle: 'preserve-3d',
-          transition: spinning
-            ? `transform ${SPIN_MS}ms cubic-bezier(0.1, 0.7, 0.3, 1)`
-            : 'transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1)',
-          transform: `rotateY(${angle}deg)`,
+          rotateY: rotate,
+          cursor: dragging ? 'grabbing' : 'grab',
+          touchAction: 'pan-y',
         }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={(e) => handlePointerEnd(e, true)}
+        onPointerCancel={(e) => handlePointerEnd(e, false)}
+        onLostPointerCapture={(e) => handlePointerEnd(e, false)}
       >
-        <CoinFace side="linkedin" showOverlay={showOverlay && facing === 'linkedin'} />
-        <CoinFace side="github" showOverlay={showOverlay && facing === 'github'} />
-      </div>
-
-      {!isMobile && (
-        <AnimatePresence mode="wait">
-          {!spinning && tossCount === 0 && (
-            <TossHint motionKey="hint" onClick={toss}>Click here to toss</TossHint>
-          )}
-          {!spinning && tossCount > 0 && (
-            <TossHint motionKey={`result-${tossCount}`} onClick={toss}>
-              {lastSide === 'linkedin' ? 'LinkedIn' : 'GitHub'}!{streak >= 2 && ` ${streak}x`} Click Again
-            </TossHint>
-          )}
-        </AnimatePresence>
-      )}
+        <CoinFace side="linkedin" facing={facing === 'linkedin'} showOverlay={showOverlay && facing === 'linkedin'} onTurn={turn} />
+        <CoinFace side="github" facing={facing === 'github'} showOverlay={showOverlay && facing === 'github'} onTurn={turn} />
+      </motion.div>
     </div>
   )
 }

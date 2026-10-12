@@ -19,7 +19,7 @@ const stagger: Variants = {
 }
 
 const CLIP_WARM_DELAY_MS = 1200
-const FOCUS_SETTLE_MS = 150
+const FOCUS_SETTLE_MS = 80
 const FOCUS_BAND = 0.3
 const WARM_RANGE = 1.5
 const ROW_TOLERANCE_PX = 8
@@ -46,6 +46,7 @@ function sameKeys(a: Iterable<string>, b: Iterable<string>) {
 
 function useScrollFocus(enabled: boolean) {
   const cards = useRef(new Map<string, HTMLElement>())
+  const focusedRow = useRef<string[]>([])
   const [focus, setFocus] = useState<Focus>({ row: [], turn: 0 })
   const [nearby, setNearby] = useState<ReadonlySet<string>>(() => new Set())
 
@@ -57,13 +58,20 @@ function useScrollFocus(enabled: boolean) {
   useEffect(() => {
     if (!enabled) return
     let timer = 0
+    let frame = 0
+
+    const centerOffset = (el: HTMLElement) => {
+      const rect = el.getBoundingClientRect()
+      return Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2)
+    }
 
     const measure = () => {
       const height = window.innerHeight
-      const placed = [...cards.current].map(([key, el]) => {
-        const rect = el.getBoundingClientRect()
-        return { key, left: rect.left, offset: Math.abs(rect.top + rect.height / 2 - height / 2) }
-      })
+      const placed = [...cards.current].map(([key, el]) => ({
+        key,
+        left: el.getBoundingClientRect().left,
+        offset: centerOffset(el),
+      }))
       const warm = placed.filter((c) => c.offset < height * WARM_RANGE).map((c) => c.key)
       setNearby((prev) => (sameKeys(prev, warm) ? prev : new Set(warm)))
 
@@ -75,7 +83,16 @@ function useScrollFocus(enabled: boolean) {
               .sort((a, b) => a.left - b.left)
               .map((c) => c.key)
           : []
+      focusedRow.current = row
       setFocus((prev) => (sameKeys(prev.row, row) ? prev : { row, turn: 0 }))
+    }
+
+    const releaseIfLeft = () => {
+      frame = 0
+      const el = cards.current.get(focusedRow.current[0])
+      if (!el || centerOffset(el) < window.innerHeight * FOCUS_BAND) return
+      focusedRow.current = []
+      setFocus({ row: [], turn: 0 })
     }
 
     const schedule = () => {
@@ -83,12 +100,18 @@ function useScrollFocus(enabled: boolean) {
       timer = window.setTimeout(measure, FOCUS_SETTLE_MS)
     }
 
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(releaseIfLeft)
+      schedule()
+    }
+
     schedule()
-    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', schedule)
     return () => {
       window.clearTimeout(timer)
-      window.removeEventListener('scroll', schedule)
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', schedule)
     }
   }, [enabled])

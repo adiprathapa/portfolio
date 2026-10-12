@@ -3,6 +3,7 @@ import { TYPE_LABELS, projectBySlug, type LinkKind, type ProjectLink } from '../
 import { projectWriteups } from '../../data/project-writeups'
 import { posthog } from '../../lib/analytics'
 import { ProjectLogo } from '../../components/ui/project-logo'
+import { ArrowIcon } from '../../components/ui/icons'
 import { TechPill } from '../../components/ui/tech-pill'
 import { ProjectBreadcrumb } from '../components/ProjectsSubnav'
 import { ProjectGridCard } from '../components/ProjectGridCard'
@@ -157,8 +158,9 @@ export function ProjectDetailPage({ slug }: { slug: string }) {
             <h2 className="gradient-text font-normal" style={{ fontSize: 'clamp(1.5rem, 1vw + 1rem, 1.875rem)' }}>
               More projects
             </h2>
-            <a href={backHref} className="font-medium transition-opacity hover:opacity-70" style={{ color: '#0671A4' }}>
-              See all projects →
+            <a href={backHref} className="group inline-flex items-center gap-2 font-medium transition-opacity hover:opacity-70" style={{ color: '#0671A4' }}>
+              <span>See all projects</span>
+              <ArrowIcon size={16} />
             </a>
           </div>
           <ul className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Section } from './ui/section'
 import { GradientText } from './ui/gradient-text'
@@ -6,6 +6,7 @@ import { education, type EducationId, type EducationItem } from '../data/educati
 import { CARD_BORDER, CARD_RADIUS, COLOR, SURFACE, TEXT } from '../lib/theme'
 import { useElementSize } from '../hooks/useElementSize'
 import { useIsMobile } from '../hooks/useMediaQuery'
+import { OPEN_EDUCATION_EVENT } from '../lib/openEducation'
 
 function VisualCard({ item }: { item: EducationItem }) {
   return (
@@ -144,6 +145,12 @@ export function Education() {
   const isMobile = useIsMobile()
   const { height: visualHeight } = useElementSize(visualRef)
   const { floor, ghosts } = useStableColumnFloor()
+
+  useEffect(() => {
+    const onOpen = (e: Event) => setActiveId((e as CustomEvent<EducationId>).detail)
+    window.addEventListener(OPEN_EDUCATION_EVENT, onOpen)
+    return () => window.removeEventListener(OPEN_EDUCATION_EVENT, onOpen)
+  }, [])
 
   const active = education.find((item) => item.id === activeId) ?? education[0]
 

@@ -10,6 +10,7 @@ import { onIdle, warmImages } from '../lib/warmImages'
 import { warmDocument } from '../lib/prefetch'
 import { scrollToSection } from '../lib/scrollToSection'
 import { announceHomeSectionNavigation } from '../lib/homeSectionNavigation'
+import { openEducation } from '../lib/openEducation'
 import { PRIMARY, TEXT } from '../lib/theme'
 import { useInView } from '../hooks/useInView'
 
@@ -24,8 +25,21 @@ function goToOpenSource(e: MouseEvent<HTMLAnchorElement>) {
   scrollToSection('#open-source')
 }
 
+function goToCornell(e: MouseEvent<HTMLAnchorElement>) {
+  e.preventDefault()
+  openEducation('cornell')
+  announceHomeSectionNavigation('#education')
+  requestAnimationFrame(() => requestAnimationFrame(() => scrollToSection('#education')))
+}
+
 const PARAGRAPHS: ReactNode[] = [
-  "I'm a Computer Science student at Cornell minoring in AI, originally from Nebraska. I am really interested in building and working with full stack web apps and experimenting with ML models.",
+  <>
+    I'm a Computer Science student at{' '}
+    <a href="#education" onClick={goToCornell} className={HIDDEN_LINK}>
+      Cornell
+    </a>{' '}
+    minoring in AI, originally from Nebraska. I am really interested in building and working with full stack web apps and experimenting with ML models.
+  </>,
   <>
     Lately I've been spending most of my time on graph learning, from GNNs for cyber event data and chip placement to livestock health prediction. I still enjoy web3, stablecoins, and IPFS, and the idea of programmable money is something I keep coming back to. I'm always looking for ways to connect what I'm learning in AI with applications outside the classroom, in clubs, hackathons, and through{' '}
     <a href="#open-source" onClick={goToOpenSource} className={HIDDEN_LINK}>

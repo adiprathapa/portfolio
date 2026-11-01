@@ -44,10 +44,10 @@ export const favoriteAnime: AnimeEntry[] = [
     clip: '/anime/clips/steins-gate.mp4',
   },
   {
-    title: 'That Time I Got Reincarnated as a Slime',
-    image: '/anime/slime.webp',
-    url: 'https://myanimelist.net/anime/37430',
-    clip: '/anime/clips/slime.mp4',
+    title: 'Clannad',
+    image: '/anime/clannad.webp',
+    url: 'https://myanimelist.net/anime/2167',
+    clip: '/anime/clips/clannad.mp4',
   },
 ]
 
